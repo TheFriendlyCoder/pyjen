@@ -1,0 +1,1 @@
+Python wrapper around the REST interfaces provided by the Jenkins CI tool (http://www.http://jenkins-ci.org/)
