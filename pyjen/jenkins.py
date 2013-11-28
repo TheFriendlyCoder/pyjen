@@ -3,7 +3,7 @@ import json
 from view import view
 from node import node
 from job import job
-
+from utils.data_requester import data_requester
 
 class jenkins:
     """Python wrapper managing a Jenkins primary dashboard
@@ -11,21 +11,30 @@ class jenkins:
     Generally you should use this class as the primary entry
     point to the PyJen APIs. 
     """
+    
     def __init__ (self, url):
+        """constructor
+        
+        Parameter
+        ---------
+        url : string
+            Full web URL to the main Jenkins dashboard
+        """
         self.__url = url
         
     def get_url(self):
         return self.__url
     
     def get_views(self):
-        r = requests.get(self.__url + '/api/python')
-        assert(r.status_code == 200)
-        data = eval(r.text)
-        
+        requester = data_requester(self.__url + '/api/python')
+        data = requester.get_data()
         raw_views = data['views']
         retval = []
         for v in raw_views:
-            retval.append(view(v['url']))
+            if v['url'] == self.__url + "/":
+                retval.append(view(v['url'] + "view/" + v['name']))
+            else:
+                retval.append(view(v['url']))
                         
         return retval
     
@@ -54,6 +63,13 @@ class jenkins:
         return retval
     
     def get_version(self):
+        """Gets the version of Jenkins pointed to by this object
+        
+        Returns
+        -------
+        string
+            Version number of the currently running Jenkins instance
+        """
         r = requests.get(self.__url)
         assert(r.status_code == 200)
         if not 'x-jenkins' in r.headers:
@@ -130,3 +146,6 @@ class jenkins:
 if __name__ == '__main__':
 
     j = jenkins("http://localhost:8080")
+    views= j.get_views()
+    v = views[0]
+    print v.get_name()

@@ -13,6 +13,7 @@ class view:
     
     def get_name(self):
         r = requests.get(self.__url + "/api/python")
+        assert(r.status_code == 200)
         data = eval(r.text)
         
         return data['name']
