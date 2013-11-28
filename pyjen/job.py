@@ -1,9 +1,10 @@
 import requests
 from build import build
 from pyjen.utils.job_xml import job_xml
+from utils.data_requester import data_requester
 
-class job:
-    def __init__ (self, url):
+class job(object):
+    def __init__ (self, url, user=None, password=None):
         """Constructor
         
         Parameters
@@ -11,8 +12,18 @@ class job:
         url : string
             root URL of the job being managed by this object
             Example: 'http://jenkins/jobs/job1'
+        user : string
+            optional user name to authenticate to Jenkins dashboard
+        password : string
+            password for Jenkins login credentials 
+            if a user name is provided this parameter must be defined as well
         """
         self.__url = url
+        self.__user = user
+        self.__password = password
+        
+        if (self.__user != None):
+            assert (self.__password != None)
         
     def get_name(self):
         """Returns the name of the job managed by this object
@@ -22,10 +33,8 @@ class job:
         string
             The name of the job
         """
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        
-        data = eval(r.text)
+        requester = data_requester(self.__url + '/api/python', self.__user, self.__password)
+        data = requester.get_data()
         
         return data['name']
     
@@ -231,9 +240,8 @@ class job:
         string
             the full XML tree describing this jobs configuration
         """
-        
-        r = requests.get(self.__url + "/config.xml")
-        return r.text
+        requester = data_requester(self.__url + '/config.xml', self.__user, self.__password)
+        return requester.get_text()
     
     def set_config_xml(self, new_xml):
         """Allows a caller to manually override the entire job configuration

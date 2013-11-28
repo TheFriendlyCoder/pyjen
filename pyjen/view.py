@@ -1,12 +1,17 @@
 import requests
 from job import job
 
-class view:
+class view(object):
     #Class names for all supported view types
     LIST_VIEW = 'hudson.model.ListView'
     
-    def __init__ (self, url):
+    def __init__ (self, url, user=None, password=None):
         self.__url = url
+        self.__user = user
+        self.__password = password
+        
+        if (self.__user != None):
+            assert (self.__password != None)
         
     def get_url(self):
         return self.__url

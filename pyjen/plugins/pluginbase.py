@@ -11,6 +11,8 @@ class pluginbase(object):
     """
     
     #Root element of the XML tree for this plugin
+    #TIP: This member is accessible from derived classes using the following syntax:
+    #           self._pluginbase__root
     __root = None
     
     def __init__(self, xml):

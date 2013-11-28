@@ -5,14 +5,14 @@ from node import node
 from job import job
 from utils.data_requester import data_requester
 
-class jenkins:
+class jenkins(object):
     """Python wrapper managing a Jenkins primary dashboard
     
     Generally you should use this class as the primary entry
     point to the PyJen APIs. 
     """
     
-    def __init__ (self, url):
+    def __init__ (self, url, user=None, password=None):
         """constructor
         
         Parameter
@@ -21,6 +21,11 @@ class jenkins:
             Full web URL to the main Jenkins dashboard
         """
         self.__url = url
+        self.__user = user
+        self.__password = password
+        
+        if (self.__user != None):
+            assert (self.__password != None)
         
     def get_url(self):
         return self.__url

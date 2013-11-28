@@ -2,9 +2,14 @@ import requests
 import time
 import urllib
 
-class node:
-    def __init__(self, url):
+class node(object):
+    def __init__(self, url, user=None, password=None):
         self.__url = url
+        self.__user = user
+        self.__password = password
+        
+        if (self.__user != None):
+            assert (self.__password != None)
         
     def get_url(self):
         return self.__url

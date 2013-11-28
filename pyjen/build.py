@@ -1,14 +1,19 @@
 import requests
 import time
 
-class build:
+class build(object):
     """Class that encapsulates all jenkins related 'build' information
     
     Builds are executions of jobs and thus instances of this class are
     typically generated from the pyjen.job class.
     """
-    def __init__ (self, url):
+    def __init__ (self, url, user=None, password=None):
         self.__url = url
+        self.__user = user
+        self.__password = password
+        
+        if (self.__user != None):
+            assert (self.__password != None)
 
     def get_url(self):
         return self.__url

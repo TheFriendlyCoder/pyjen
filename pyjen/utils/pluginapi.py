@@ -1,13 +1,11 @@
 import importlib
 from pyjen.plugins.pluginbase import pluginbase
 
-def find_plugin(name, xml):
+def find_plugin(xml):
     """Dynamically locates the class for a Jenkins plugin
     
     Parameters
     ----------
-    name : string
-        the name of the plugin to find
     xml : string
         the xml representation of the plugin configuration properties
         as found in the associated config.xml

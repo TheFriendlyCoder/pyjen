@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ElementTree
 import pyjen.utils.pluginapi as pluginapi
 
-class job_xml():
+class job_xml(object):
     """ Wrapper around the config.xml for a Jenkins job
     
     The source xml can be loaded from nearly any URL by
@@ -83,6 +83,6 @@ class job_xml():
         node = self.__root.find('scm')
         xml = ElementTree.tostring(node)
         
-        return pluginapi.find_plugin('scm', xml)
+        return pluginapi.find_plugin(xml)
 
     
