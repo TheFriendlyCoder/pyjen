@@ -1,4 +1,3 @@
-import requests
 from build import build
 from pyjen.utils.job_xml import job_xml
 from utils.data_requester import data_requester
@@ -18,12 +17,12 @@ class job(object):
             password for Jenkins login credentials 
             if a user name is provided this parameter must be defined as well
         """
+        if (user != None):
+            assert (password != None)
+
         self.__url = url
-        self.__user = user
-        self.__password = password
+        self.__requester = data_requester(url, user, password)
         
-        if (self.__user != None):
-            assert (self.__password != None)
         
     def get_name(self):
         """Returns the name of the job managed by this object
@@ -32,9 +31,8 @@ class job(object):
         -------
         string
             The name of the job
-        """
-        requester = data_requester(self.__url + '/api/python', self.__user, self.__password)
-        data = requester.get_data()
+        """        
+        data = self.__requester.get_data('/api/python')
         
         return data['name']
     
@@ -56,10 +54,7 @@ class job(object):
         synonymous with the short list provided on the main info
         page for the job on the dashboard.
         """
-        
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        data = self.__requester.get_data('/api/python')
         
         builds = data['builds']
         
@@ -77,9 +72,7 @@ class job(object):
         pyjen.job
             A list of 0 or more jobs which depend on this one
         """
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        data = self.__requester.get_data('/api/python')
         
         jobs = data['downstreamProjects']
         
@@ -97,9 +90,7 @@ class job(object):
         pyjen.job
             A list of 0 or more jobs that this job depends on
         """
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        data = self.__requester.get_data('/api/python')
         
         jobs = data['upstreamProjects']
         
@@ -120,9 +111,7 @@ class job(object):
             object that provides information and control for the
             last build which completed with a status of 'success'
         """
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        data = self.__requester.get_data('/api/python')
         
         lgb = data['lastSuccessfulBuild']
         
@@ -137,9 +126,7 @@ class job(object):
             object that provides information and control for the
             most recent build of this job.
         """
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        data = self.__requester.get_data('/api/python')
         
         last_build = data['lastBuild']
         
@@ -153,9 +140,7 @@ class job(object):
         appropriate build queue where it will be scheduled
         for execution on the next available agent + executor.
         """
-        r = requests.post(self.__url + "/build")
-        assert (r.status_code == 200)
-        #TODO: Find a way to return a reference to the build
+        self.__requester.post("/build")
         
     def disable(self):
         """Disables this job
@@ -166,8 +151,7 @@ class job(object):
         Use in conjunction with the enable() and is_disabled()
         methods to control the state of the job.
         """
-        r = requests.post(self.__url + "/disable")
-        assert (r.status_code==200)
+        self.__requester.post("/disable")
         
     def enable(self):
         """Enables this job
@@ -181,8 +165,7 @@ class job(object):
         
         Use in conjunction with the disable() and is_disabled() methods
         """
-        r = requests.post(self.__url + "/enable")
-        assert (r.status_code == 200)
+        self.__requester.post("/enable")
         
     def is_disabled(self):
         """Indicates whether this job is disabled or not
@@ -192,41 +175,14 @@ class job(object):
         boolean
             true if the job is disabled, otherwise false
         """
-        r = requests.get(self.__url + "/api/python")
-        assert (r.status_code == 200)
-        
-        data = eval(r.text)
+        data = self.__requester.get_data('/api/python')
         
         return (data['color'] == "disabled")
         
-    def clone(self, new_job_name):
-        """Makes a copy of this job on the dashboard
-        
-        Parameters
-        ----------
-        new_job_name : string
-            the name of the newly created job whose settings will
-            be an exact copy of those found in this job
-        """
-        
-        params = {'name': new_job_name,
-                  'mode': 'copy',
-                  'from': self.name}
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
-        args = {}
-        args['params'] = params
-        args['data'] = ''
-        args['headers'] = headers
-        
-        #TODO: Take the self.__url and parse out the root server string
-        r = requests.post("http://localhost:8080/createItem", **args)
-        assert(r.status_code == 200)
         
     def delete (self):
         """Deletes this job from the Jenkins dashboard"""
-        r = requests.post(self.__url + "/doDelete")
-        assert (r.status_code == 200)
+        self.__requester.post("/doDelete")
         
     def get_config_xml(self):
         """Gets the raw XML configuration for the job
@@ -240,8 +196,7 @@ class job(object):
         string
             the full XML tree describing this jobs configuration
         """
-        requester = data_requester(self.__url + '/config.xml', self.__user, self.__password)
-        return requester.get_text()
+        return self.__requester.get_text('/config.xml')
     
     def set_config_xml(self, new_xml):
         """Allows a caller to manually override the entire job configuration
@@ -260,8 +215,7 @@ class job(object):
         args['data'] = new_xml
         args['headers'] = headers
         
-        r = requests.post(self.__url + "/config.xml", **args)
-        assert (r.status_code == 200)
+        self.__requester.post("/config.xml", **args)
         
     def set_custom_workspace(self, path):
         """Defines a new custom workspace for the job
@@ -295,8 +249,10 @@ class job(object):
         jobxml = job_xml(xml)
         return jobxml.get_scm()
         
+        
+        
 if __name__ == "__main__":
-    j = job("http://builds/job/ksp-git")
+    j = job("http://localhost:8080/job/test_job")
     print j.get_name()
     scm = j.get_scm()
 

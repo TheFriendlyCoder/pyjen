@@ -1,5 +1,5 @@
-import requests
 import time
+from utils.data_requester import data_requester
 
 class build(object):
     """Class that encapsulates all jenkins related 'build' information
@@ -7,39 +7,74 @@ class build(object):
     Builds are executions of jobs and thus instances of this class are
     typically generated from the pyjen.job class.
     """
+    
+    
     def __init__ (self, url, user=None, password=None):
-        self.__url = url
-        self.__user = user
-        self.__password = password
+        """constructor
         
-        if (self.__user != None):
-            assert (self.__password != None)
+        Parameters
+        ----------
+        url : string
+            root URL of the node being managed by this object
+            Example: 'http://jenkins/job/job1/789'
+        user : string
+            optional user name to authenticate with Jenkins
+        password : string
+            optional password for the specified user
+            if a user name is provided this parameter must be non-empty
+        """
+        if (user != None):
+            assert (password != None)
+        
+        self.__url = url
+        self.__requester = data_requester(self.__url, user, password)
+        
 
     def get_url(self):
+        """Returns the root URL for the REST API that manages this build
+        
+        Return
+        ------
+        string
+            the root URL for the REST API that controls this build
+        """
         return self.__url
     
     def get_build_number(self):
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        """Gets the numeric build number for this build
+        
+        This is the unique numeric identifier, typically a
+        sequential integer that is incremented with each build.
+        """
+        
+        data = self.__requester.get_data("/api/python")
         
         return data['number']
     
     def get_timestamp(self):
-        r = requests.get(self.__url + "/api/python")
-        assert(r.status_code == 200)
-        data = eval(r.text)
+        """Gets the time stamp of when this build was executed
+        
+        Return
+        ------
+        tuple
+            the local time at which this build was executed
+        """
+        
+        data = self.__requester.get_data("/api/python")
         
         time_in_seconds = data['timestamp'] * 0.001
         
         return time.localtime(time_in_seconds)
     
     def is_building(self):
-        r = requests.get(self.__url + "/api/python")
-        assert (r.status_code == 200)
-        data = eval(r.text)
+        """Checks to see whether this build is currently executing
+        
+        Return
+        ------
+        boolean
+            true if the build is executing otherwise false
+        """
+        data = self.__requester.get_data("/api/python")
         
         return data['building']
     
-    #def is_in_queue(self):
-    #    get path of parent job and look at its inQueue attribute

@@ -22,8 +22,15 @@ class subversion(pluginbase):
         
         Returns
         -------
-        list[string]
-            set of 0 or more paths to SVN repositories being monitored
+        list[dictionary]
+            set of 0 or repository configuration options exposed by this job. Each element
+            will contain the following keys:
+            
+            * 'url' - the URL of the repository tree monitored by this job
+            * 'local_directory' - the local working path, typically under the jobs workspace folder
+            * 'depth' - indicates the depth under which the SCM checkout operation should go
+            * 'ignore_externals'- boolean indicating whether SVN externals are being monitored
+                            by any SCM triggers associated with this job.
         """
         retval = []
         

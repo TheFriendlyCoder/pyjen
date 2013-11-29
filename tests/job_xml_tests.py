@@ -1,10 +1,8 @@
 import unittest
 from pyjen.utils.job_xml import job_xml
-
-
-
 import xml.etree.ElementTree as ElementTree
 from os import path
+
 class xml_test_case(unittest.TestCase):
     def assertEqualXML(self, expected, actual):
         """Compares two XML encoded character strings
