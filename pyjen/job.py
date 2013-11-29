@@ -103,35 +103,128 @@ class job(object):
     def get_last_good_build(self):
         """Gets the most recent successful build of this job
         
-        Synonymous with the last good build permalink on the jobs main dashboard
+        Synonymous with the "Last successful build" permalink on the jobs' main status page
         
         Return
         ------
         pyjen.build
             object that provides information and control for the
             last build which completed with a status of 'success'
+            If there are no such builds in the build history, this method returns None
         """
         data = self.__requester.get_data('/api/python')
         
         lgb = data['lastSuccessfulBuild']
+        
+        if lgb == None:
+            return None
         
         return build(lgb['url'])
         
     def get_last_build(self):
         """Returns a reference to the most recent build of this job
         
+        Synonymous with the "Last Build" permalink on the jobs' main status page
+        
         Return
         ------
         pyjen.build
             object that provides information and control for the
             most recent build of this job.
+            If there are no such builds in the build history, this method returns None
         """
         data = self.__requester.get_data('/api/python')
         
         last_build = data['lastBuild']
         
+        if last_build == None:
+            return None
+        
         return build (last_build['url'])
+    
+    def get_last_failed_build(self):
+        """Returns a reference to the most recent build of this job with a status of "failed"
+        
+        Synonymous with the "Last failed build" permalink on the jobs' main status page
+        
+        Returns
+        -------
+        pyjen.build
+            Most recent build with a status of 'failed'
+            If there are no such builds in the build history, this method returns None
+        """
+        data = self.__requester.get_data('/api/python')
+        print data
+        bld = data['lastFailedBuild']
+        
+        if bld == None:
+            return None
+        
+        return build(bld['url'])
                 
+    def get_last_stable_build(self):
+        """Returns a reference to the most recent build of this job with a status of "stable"
+        
+        Synonymous with the "Last stable build" permalink on the jobs' main status page
+        
+        Returns
+        -------
+        pyjen.build
+            Most recent build with a status of 'stable'
+            If there are no such builds in the build history, this method returns None
+        """
+        data = self.__requester.get_data('/api/python')
+
+        bld = data['lastCompletedBuild']
+        
+        if bld == None:
+            return None
+        
+        return build(bld['url'])
+    
+    def get_last_unsuccessful_build(self):
+        """Returns a reference to the most recent build of this job with a status of "unstable"
+        
+        Synonymous with the "Last unsuccessful build" permalink on the jobs' main status page
+        
+        Returns
+        -------
+        pyjen.build
+            Most recent build with a status of 'unstable'
+            If there are no such builds in the build history, this method returns None
+        """
+        data = self.__requester.get_data('/api/python')
+
+        bld = data['lastUnsuccessfulBuild']
+        
+        if bld == None:
+            return None
+        
+        return build(bld['url'])    
+        
+    def get_build_by_number(self, build_number):
+        """Gets a specific build of this job from the build history
+        
+        Parameters
+        ----------
+        build_number : integer
+            Numeric identifier of the build to retrieve
+            Value is typically non-negative
+            
+        Return
+        ------
+        pyjen.build
+            Build object for the build with the given numeric identifier
+            If such a build does not exist, returns None
+        """
+        try:
+            data = self.__requester.get_data("/" + str(build_number)  + "/api/python")
+        except AssertionError:
+            #TODO: Find a more elegant way to detect whether the build exists or not
+            return None
+        
+        return build(data['url'])
+    
     def start_build(self):
         """Forces a build of this job
         
@@ -256,9 +349,6 @@ if __name__ == "__main__":
     print j.get_name()
     scm = j.get_scm()
 
-    mods = scm.get_modules()
     print len(mods)
-    print mods
-
     
     
