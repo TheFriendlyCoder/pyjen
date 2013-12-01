@@ -1,5 +1,6 @@
 import time
 from utils.data_requester import data_requester
+from changeset import changeset
 
 class build(object):
     """Class that encapsulates all jenkins related 'build' information
@@ -9,7 +10,7 @@ class build(object):
     """
     
     
-    def __init__ (self, url, user=None, password=None):
+    def __init__ (self, url, user=None, password=None, custom_data_requester=None):
         """constructor
         
         Parameters
@@ -27,8 +28,10 @@ class build(object):
             assert (password != None)
         
         self.__url = url
-        self.__requester = data_requester(self.__url, user, password)
-        
+        if custom_data_requester == None:
+            self.__requester = data_requester(self.__url, user, password)
+        else:
+            self.__requester = custom_data_requester
 
     def get_url(self):
         """Returns the root URL for the REST API that manages this build
@@ -77,4 +80,21 @@ class build(object):
         data = self.__requester.get_data("/api/python")
         
         return data['building']
+    
+    def get_changeset(self):
+        """Gets changeset object associated with this build
+        
+        NOTE: This changeset may be empty if there were no SCM
+        changes associated with this build, as may be the case
+        with a forced build for example.
+        
+        Return
+        ------
+        pyjen.changeset
+            Changeset object representing the set of SCM changes
+            associated with / included in this build
+        """
+        data = self.__requester.get_data("/api/python")
+        
+        return changeset(data['changeSet'])
     
