@@ -348,7 +348,5 @@ if __name__ == "__main__":
     j = job("http://localhost:8080/job/test_job")
     print j.get_name()
     scm = j.get_scm()
-
-    print len(mods)
     
     
