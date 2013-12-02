@@ -1,6 +1,6 @@
-import time
 from utils.data_requester import data_requester
 from changeset import changeset
+from datetime import datetime
 
 class build(object):
     """Class that encapsulates all jenkins related 'build' information
@@ -54,20 +54,20 @@ class build(object):
         
         return data['number']
     
-    def get_timestamp(self):
+    def get_build_time(self):
         """Gets the time stamp of when this build was executed
         
         Return
         ------
-        tuple
-            the local time at which this build was executed
+        datetime object
+            the date and time at which this build was executed
         """
         
         data = self.__requester.get_data("/api/python")
         
         time_in_seconds = data['timestamp'] * 0.001
         
-        return time.localtime(time_in_seconds)
+        return datetime.fromtimestamp(time_in_seconds)
     
     def is_building(self):
         """Checks to see whether this build is currently executing
