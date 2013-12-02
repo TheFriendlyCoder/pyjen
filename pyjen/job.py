@@ -64,39 +64,76 @@ class job(object):
         
         return retval
     
-    def get_downstream_jobs(self):
+    def get_downstream_jobs(self, recursive=False):
         """Gets the list of immediate downstream dependencies for this job
         
+        Parameters
+        ----------
+        recursive : boolean
+            Set to True to recursively scan all downstream jobs
+            for their downstream dependencies and return the complete
+            list of all dependencies
+            
+            Set to False to only report the immediate downstream
+            dependencies - those directly triggered by this job.
+            
+            Defaults to False
+            
         Returns
         -------
-        pyjen.job
-            A list of 0 or more jobs which depend on this one
+        dictionary{job_name, pyjen.job}
+            A dictionary of 0 or more jobs which depend on this one
+            the keys in the dictionary are the names of the jobs that
+            were found in the dependency search
         """
         data = self.__requester.get_data('/api/python')
         
         jobs = data['downstreamProjects']
         
-        retval = []
+        retval = {}
+        
+        
         for j in jobs:
-            retval.append(job(j['url']))
+            temp = job(j['url'])
+            retval[temp.get_name()] = temp
+            if recursive:
+                retval.update(temp.get_downstream_jobs(recursive))
         
         return retval
     
-    def get_upstream_jobs(self):
-        """Gets the list of immediate upstream dependencies for this job
+    def get_upstream_jobs(self, recursive=False):
+        """Gets the list of upstream dependencies for this job
         
+        Parameters
+        ----------
+        recursive : boolean
+            Set to True to recursively scan all upstream jobs
+            for their upstream dependencies and return the complete
+            list of all dependencies
+            
+            Set to False to only report the immediate upstream
+            dependencies - those that directly trigger this job.
+            
+            Defaults to False
+            
         Returns
         -------
-        pyjen.job
-            A list of 0 or more jobs that this job depends on
+        dictionary{job_name, pyjen.job}
+            A dictionary of 0 or more jobs that this job depends on
+            the keys in the dictionary are the names of the jobs that
+            were found in the dependency search
         """
         data = self.__requester.get_data('/api/python')
         
         jobs = data['upstreamProjects']
         
-        retval = []
+        retval = {}
+                
         for j in jobs:
-            retval.append(job(j['url']))
+            temp = job(j['url'])
+            retval[temp.get_name()] = temp
+            if recursive:
+                retval.update(temp.get_upstream_jobs(recursive))
         
         return retval
     
@@ -345,8 +382,16 @@ class job(object):
         
         
 if __name__ == "__main__":
-    j = job("http://localhost:8080/job/test_job")
-    print j.get_name()
-    scm = j.get_scm()
+    j = job("http://localhost:8080/job/test-job/")
     
+    print "Downstreams:"
+    dsj = j.get_downstream_jobs(True)
+    for i in dsj.itervalues():
+        print i.get_name()
     
+    print "\n\nUpstreams:"
+    usj = j.get_upstream_jobs(True)
+    for i in usj.itervalues():
+        print i.get_name()
+        
+    print "done"
