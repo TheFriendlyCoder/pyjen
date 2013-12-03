@@ -282,6 +282,8 @@ class jenkins(object):
         
         self.__requests.post("/createItem", **args)
 
+    def clone_view(self, existing_view_name, new_view_name):
+        source_view = self.find_view(existing_view_name)
         
 if __name__ == '__main__':
 
