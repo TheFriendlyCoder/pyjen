@@ -1,5 +1,6 @@
 from utils.data_requester import data_requester
 from job import job
+from utils.view_xml import view_xml
 
 class view(object):
     """Class that encapsulates all Jenkins related 'view' information
@@ -129,3 +130,21 @@ class view(object):
         """Deletes this view from the dashboard"""
         self.__requester.post("/doDelete")
         
+    def get_type(self):
+        """Gets the Jenkins view-type descriptor for this view
+        
+        Returns
+        -------
+        string
+            descriptive string of the Jenkins view type this view derives from
+        """
+        
+        xml = self.get_config_xml()
+        vxml = view_xml(xml)
+        return vxml.get_type() 
+        
+        
+        
+if __name__ == "__main__":
+    v = view("http://builds/view/unified")
+    print v.get_type()
