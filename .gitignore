@@ -1,4 +1,4 @@
 *.pyc
 *~
 *.bak
-jenkins/jenkins*home
+jenkins/.jenkins
