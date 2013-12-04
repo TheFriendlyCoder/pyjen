@@ -135,8 +135,8 @@ class job(object):
             if recursive:
                 retval.update(temp.get_upstream_jobs(recursive))
         
-        return retval
-    
+        return retval    
+        
     def get_last_good_build(self):
         """Gets the most recent successful build of this job
         
@@ -191,7 +191,7 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         """
         data = self.__requester.get_data('/api/python')
-        print data
+        
         bld = data['lastFailedBuild']
         
         if bld == None:
@@ -378,20 +378,33 @@ class job(object):
         xml = self.get_config_xml()
         jobxml = job_xml(xml)
         return jobxml.get_scm()
+    
+    def get_builds_in_time_range(self, startTime, endTime):
+        """ Returns a list of all of the builds for a job that 
+            occurred between the specified start and end times
+            
+            Parameters
+            ----------
+                startTime 
+                    datetime object representing the ceiling of the range
+                endTime
+                    datetime object representing the floor of the range
+            Returns
+            -------
+                List[build]
+                    a list of builds            
+        """       
         
+        builds = []                
+        
+        for run in self.get_recent_builds():            
+            if (run.get_build_time() < startTime):
+                break
+            elif (run.get_build_time() >= startTime and run.get_build_time() <= endTime):
+                builds.append(run)                               
+        return builds     
         
         
 if __name__ == "__main__":
-    j = job("http://localhost:8080/job/test-job/")
-    
-    print "Downstreams:"
-    dsj = j.get_downstream_jobs(True)
-    for i in dsj.itervalues():
-        print i.get_name()
-    
-    print "\n\nUpstreams:"
-    usj = j.get_upstream_jobs(True)
-    for i in usj.itervalues():
-        print i.get_name()
-        
+  
     print "done"
