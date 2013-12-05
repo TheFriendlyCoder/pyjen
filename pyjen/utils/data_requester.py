@@ -52,8 +52,8 @@ class data_requester (object):
         else:
             r = requests.get(temp_url)
         
-        #todo: improve error detection and reporting (e.g.: if authentication failed, provide an appropriate notification)    
-        assert(r.status_code == 200)
+        if r.status_code != 200:
+            r.raise_for_status()
         
         return r.text
         
@@ -102,7 +102,9 @@ class data_requester (object):
         else:
             r = requests.get(temp_url)
             
-        assert(r.status_code == 200)
+        if r.status_code != 200:
+            r.raise_for_status()
+            
         return r.headers
     
     def post(self, sub_url=None, args=None):
@@ -132,4 +134,5 @@ class data_requester (object):
         else:
             r = requests.post(temp_url)
 
-        assert(r.status_code == 200)
+        if r.status_code != 200:?
+            r.raise_for_status()
