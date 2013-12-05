@@ -138,7 +138,6 @@ class view(object):
         string
             descriptive string of the Jenkins view type this view derives from
         """
-        
         xml = self.get_config_xml()
         vxml = view_xml(xml)
         return vxml.get_type() 
