@@ -141,7 +141,19 @@ class view(object):
         xml = self.get_config_xml()
         vxml = view_xml(xml)
         return vxml.get_type() 
+    
+    def delete_all_jobs(self):
+        """Helper method that allows callers to do bulk deletes of all jobs found in this view"""
         
+        my_jobs = self.get_jobs()
+        for j in my_jobs:
+            j.delete()
+            
+    def disable_all_jobs(self):
+        """Helper method that allows caller to bulk-disable all jobs found in this view""" 
+        my_jobs = self.get_jobs()
+        for j in my_jobs:
+            j.disable()
         
         
 if __name__ == "__main__":
