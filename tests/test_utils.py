@@ -1,6 +1,6 @@
 import subprocess
 import shlex
-from os import path, environ
+import os
 
 def get_sample_data_file(filename):
     """Given a filename, this method generates the full path to the file in the sample data folder
@@ -25,10 +25,10 @@ def get_sample_data_file(filename):
         Full path and file name of the sample data to be loaded
     """
     
-    working_path = path.dirname(path.realpath(__file__))
+    working_path = os.path.dirname(os.path.realpath(__file__))
     retval =  working_path + "/sample_data/" + filename
     
-    assert(path.exists(retval))
+    assert(os.path.exists(retval))
     
     return retval
 
@@ -53,14 +53,14 @@ def get_test_data_file(filename):
         Full path and file name of the test data to be loaded
     """
     
-    working_path = path.dirname(path.realpath(__file__))
+    working_path = os.path.dirname(os.path.realpath(__file__))
     retval =  working_path + "/test_data/" + filename
     
-    assert(path.exists(retval))
+    assert(os.path.exists(retval))
     
     return retval
 
-def start_jenkins():
+def start_jenkins(home_folder=None):
     """Attempts to launch an isolated instance of Jenkins for testing purposes
     
     This function will block until the instance of Jenkins is successfully
@@ -78,14 +78,24 @@ def start_jenkins():
         when this instance of Jenkins is no longer needed simply call the
         terminate() method on the returned object to close the app.
     """ 
-    #Get the java installation folder from the environment
-    if not 'JAVA_HOME' in environ:
-        raise "JAVA_HOME environment variable not found"
-    java_home = environ['JAVA_HOME']
+    #see if we have a JAVA_HOME env var set
+    java_home = os.getenv('JAVA_HOME')
     
     #Generate a command line for running Jenkins in an isolated environment
+    if java_home:
+        java_app = os.path.join(java_home, "bin", "java")
+    else:
+        #if JAVA_HOME env var is undefined lets assume the java executable
+        #can be located on the global system path
+        java_app = "java"
+        
     path_to_jenkins="../jenkins/jenkins.war"
-    cmd_line = '"' + java_home + '/java.exe" -jar ' + path_to_jenkins
+    
+    java_options=""
+    if home_folder:
+        java_options=' -DJENKINS_HOME="' + home_folder + '"'
+
+    cmd_line = '"' + java_app + '"' + java_options + ' -jar ' + path_to_jenkins
     args = shlex.split(cmd_line)
     
     #Now launch Jenkins in a secondary, non-blocking process
@@ -105,3 +115,6 @@ def start_jenkins():
         raise "Failed to launch Jenkins instance: " + path_to_jenkins
     
     return jenkins_process
+
+if __name__ == "__main__":
+    pass

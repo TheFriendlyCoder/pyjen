@@ -134,5 +134,5 @@ class data_requester (object):
         else:
             r = requests.post(temp_url)
 
-        if r.status_code != 200:?
+        if r.status_code != 200:
             r.raise_for_status()
