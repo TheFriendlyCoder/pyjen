@@ -72,6 +72,38 @@ class changeset (object):
             tmp['changes'] = item['paths']
             retval.append(tmp)
         return retval
+    
+    def __str__(self):    
+        outStr = ""    
+        changes = self.get_affected_items()
+        if (changes):
+            for change in changes:
+                outStr += "Author: %s\n"% change['author']
+                outStr += "Message: %s\n"% change['message']
+                outStr += "Revision: %s\n"% change['commitId']
+            
+                outStr += "\nTouched Files:\n"
+                for path in change['changes']:
+                    outStr += path['file']
+                    outStr += "\n"
+                outStr += "\n"
+        else:
+            outStr = "No Changes\n"                       
+        return outStr
+    
+    def has_changes(self):
+        """Checks whether or not there are any SCM changes
+        
+        Return
+        ------
+            boolean
+                True : changes have been found
+                False : there are no changes        
+        """
+        if (self.__data['items']):
+            return True
+        else:
+            return False
         
     def get_scm_type(self):
         """Gets the name of the SCM tool associated with this change
