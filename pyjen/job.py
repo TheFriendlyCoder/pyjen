@@ -1,7 +1,6 @@
 from build import build
 from pyjen.utils.job_xml import job_xml
 from utils.data_requester import data_requester
-from utils.common import get_root_url
 
 class job(object):
     def __init__ (self, url, user=None, password=None):
@@ -136,8 +135,8 @@ class job(object):
             if recursive:
                 retval.update(temp.get_upstream_jobs(recursive))
         
-        return retval
-    
+        return retval    
+        
     def get_last_good_build(self):
         """Gets the most recent successful build of this job
         
@@ -192,7 +191,7 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         """
         data = self.__requester.get_data('/api/python')
-        print data
+        
         bld = data['lastFailedBuild']
         
         if bld == None:
@@ -379,33 +378,33 @@ class job(object):
         xml = self.get_config_xml()
         jobxml = job_xml(xml)
         return jobxml.get_scm()
-        
-    def clone(self, new_job_name):
-        """Makes a copy of this job on the dashboard with a new name
-        
-        Parameters
-        ----------            
-        new_job_name : string
-            the name of the newly created job whose settings will
-            be an exact copy of this job. It is expected that this
-            new job name be unique across the dashboard.
-        """
-        
-        params = {'name': new_job_name,
-                  'mode': 'copy',
-                  'from': self.get_name()}
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
-        args = {}
-        args['params'] = params
-        args['data'] = ''
-        args['headers'] = headers
+    def get_builds_in_time_range(self, startTime, endTime):
+        """ Returns a list of all of the builds for a job that 
+            occurred between the specified start and end times
+            
+            Parameters
+            ----------
+                startTime 
+                    datetime object representing the ceiling of the range
+                endTime
+                    datetime object representing the floor of the range
+            Returns
+            -------
+                List[build]
+                    a list of builds            
+        """       
         
-        dashboard_url = get_root_url(self.get_url())
-        self.__requester.post(dashboard_url, "/createItem", args)
+        builds = []                
+        
+        for run in self.get_recent_builds():            
+            if (run.get_build_time() < startTime):
+                break
+            elif (run.get_build_time() >= startTime and run.get_build_time() <= endTime):
+                builds.append(run)                               
+        return builds     
+        
         
 if __name__ == "__main__":
-    j = job("http://localhost:8080/job/test_job/")
-    j.clone('new_job_name')
-    #j.clone_job("ksp_generated_subjob")
-    #print j.get_name()
+  
+    print "done"
