@@ -18,7 +18,7 @@ class changeset (object):
                    - all changes reported by this object are expected to be stored
                      in the same SCM tool
                      
-            'items' - list of 0 or more actual changesets inluded in the associated build
+            'items' - list of 0 or more actual changesets included in the associated build
         """
 
         assert(data.has_key('items'))

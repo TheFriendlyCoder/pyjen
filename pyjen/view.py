@@ -2,6 +2,7 @@ from utils.data_requester import data_requester
 from job import job
 from utils.view_xml import view_xml
 
+
 class view(object):
     """Class that encapsulates all Jenkins related 'view' information
     
@@ -154,8 +155,13 @@ class view(object):
         my_jobs = self.get_jobs()
         for j in my_jobs:
             j.disable()
-        
-        
+            
+    def enable_all_jobs(self):
+        """Helper method that allows caller to bulk-enable all jobs found in this view"""
+        my_jobs = self.get_jobs()
+        for j in my_jobs:
+            j.enable()
+    
 if __name__ == "__main__":
     v = view("http://builds/view/unified")
-    print v.get_type()
+    v.clone_all_jobs()

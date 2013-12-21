@@ -1,6 +1,7 @@
 from build import build
 from pyjen.utils.job_xml import job_xml
 from utils.data_requester import data_requester
+from utils.common import get_root_url
 
 class job(object):
     def __init__ (self, url, user=None, password=None):
@@ -379,19 +380,32 @@ class job(object):
         jobxml = job_xml(xml)
         return jobxml.get_scm()
         
+    def clone(self, new_job_name):
+        """Makes a copy of this job on the dashboard with a new name
         
+        Parameters
+        ----------            
+        new_job_name : string
+            the name of the newly created job whose settings will
+            be an exact copy of this job. It is expected that this
+            new job name be unique across the dashboard.
+        """
+        
+        params = {'name': new_job_name,
+                  'mode': 'copy',
+                  'from': self.get_name()}
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+        args = {}
+        args['params'] = params
+        args['data'] = ''
+        args['headers'] = headers
+        
+        dashboard_url = get_root_url(self.get_url())
+        self.__requester.post(dashboard_url, "/createItem", args)
         
 if __name__ == "__main__":
-    j = job("http://localhost:8080/job/test-job/")
-    
-    print "Downstreams:"
-    dsj = j.get_downstream_jobs(True)
-    for i in dsj.itervalues():
-        print i.get_name()
-    
-    print "\n\nUpstreams:"
-    usj = j.get_upstream_jobs(True)
-    for i in usj.itervalues():
-        print i.get_name()
-        
-    print "done"
+    j = job("http://localhost:8080/job/test_job/")
+    j.clone('new_job_name')
+    #j.clone_job("ksp_generated_subjob")
+    #print j.get_name()

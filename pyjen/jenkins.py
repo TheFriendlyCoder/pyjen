@@ -239,7 +239,7 @@ class jenkins(object):
             Defaults to a list view type
         """
         #TODO: consider rethinking this method. Perhaps it'd be better
-        #      suited to the view class. Alaternatively, maybe we just
+        #      suited to the view class. Alternatively, maybe we just
         #      construct the view class externally then insert it
         #      onto the dashboard here .... not sure.
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -255,32 +255,6 @@ class jenkins(object):
         args['headers'] = headers
 
         self.__requester.post('/createView', args)        
-
-    def clone_job(self, existing_job_name, new_job_name):
-        """Makes a copy of an existing job on the dashboard
-        
-        Parameters
-        ----------
-        existing_job_name : string
-            the name of an existing job already configured
-            on Jenkins which will be cloned
-            
-        new_job_name : string
-            the name of the newly created job whose settings will
-            be an exact copy of those found in this job
-        """
-        
-        params = {'name': new_job_name,
-                  'mode': 'copy',
-                  'from': existing_job_name}
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
-        args = {}
-        args['params'] = params
-        args['data'] = ''
-        args['headers'] = headers
-        
-        self.__requests.post("/createItem", **args)
         
 if __name__ == '__main__':
 

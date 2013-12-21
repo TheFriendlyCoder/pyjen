@@ -107,11 +107,17 @@ class data_requester (object):
             
         return r.headers
     
-    def post(self, sub_url=None, args=None):
+    def post(self, root_url=None, sub_url=None, args=None):
         """sends a post operation to the URL managed by this object
         
         Parameters
         ----------
+        root_url : string
+            optional root URL for the post action. This is needed
+            in certain cases when an object is initialized with one
+            main URL for most operations but may require the use
+            of an alternative URL for certain other operations.
+            
         sub_url : string
             optional sub-folder to append to the root API URL to use
             when processing this request.
@@ -125,7 +131,11 @@ class data_requester (object):
             * 'headers' - dictionary of HTTP header properties and their associated values
             * 'data' - dictionary of assorted / misc data properties and their values 
         """
-        temp_url = self.__url
+        if root_url == None:
+            temp_url = self.__url
+        else:
+            temp_url = root_url
+            
         if sub_url != None:
             temp_url = temp_url + sub_url
             
