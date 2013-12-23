@@ -97,4 +97,11 @@ class build(object):
         data = self.__requester.get_data("/api/python")
         
         return changeset(data['changeSet'])
+
+    def get_console_output(self):
+        """Gets the raw console output for this build as plain text"""
+        return self.__requester.get_text("/consoleText")
     
+if __name__ == "__main__":
+    j = build('http://localhost:8080/job/test_job/1')
+    print j.get_console_output()
