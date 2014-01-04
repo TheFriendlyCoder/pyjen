@@ -1,0 +1,1 @@
+Python wrapper around the [REST interfaces](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API) provided by the [Jenkins CI](http://jenkins-ci.org/) tool.
