@@ -1,3 +1,4 @@
+### Overview
 Extensible, user and developer friendly Python interface to the [Jenkins CI](http://jenkins-ci.org/) tool, wrapping
 the features exposed by the standard [REST API](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API) in a 
 Pythonic objects and functions.
@@ -16,3 +17,16 @@ via simple Python commands.
     for j in jobs:
     	print j.get_name()
     	
+### Example: Disable all jobs in a view named "My View"
+    from pyjen import *
+    jk = jenkins("http://localhost:8080")
+    vw = jk.find_view("My View")
+    vw.disable_all_jobs()
+    
+### Example: Get all upstream dependencies of a job named "JobA"
+    from pyjen import *
+    j = job("http://localhost:8080/job/JobA")
+    upstream = j.get_upstream_jobs(True)
+    
+    for u in upstream:
+    	print u.get_name()
