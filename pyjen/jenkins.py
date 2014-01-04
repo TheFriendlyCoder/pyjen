@@ -107,7 +107,7 @@ class jenkins(object):
         data = self.__requester.get_data('/api/python')
         
         default_view = data['primaryView']
-        return view(default_view['url'], default_view['name'])
+        return view(default_view['url'] + "view/" + default_view['name'])
     
     def get_nodes(self):
         """gets the list of nodes (aka: agents) managed by this Jenkins master
@@ -259,7 +259,5 @@ class jenkins(object):
 if __name__ == '__main__':
 
     j = jenkins("http://localhost:8080")
-    j.create_view('hello world')
-    v = j.find_view("hello world")
-    print v.get_url()
-    v.delete()
+    v = j.get_default_view()
+    print v.get_name()
