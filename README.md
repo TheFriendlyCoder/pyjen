@@ -7,7 +7,7 @@ language an easy way to manage Jenkins dashboards from a simple command prompt. 
 including views, jobs and builds are easily accessible and can be accessed, analyzed and even modified or created
 via simple Python commands.
 
-# Example: Displaying a list of all jobs on the default view
+### Example: Displaying a list of all jobs on the default view
     from pyjen import *
     jk = jenkins("http://localhost:8080")
     vw = jk.get_default_view()
