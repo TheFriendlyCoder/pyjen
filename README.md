@@ -1,3 +1,10 @@
+<!---
+This is a readme file encoded in markdown format, intended for use on the summary page for the pyjen
+github project. Care should be taken to make sure the encoding is compatible with github's markdown
+syntax. See this site for details:
+http://daringfireball.net/projects/markdown/syntax
+-->
+
 ### Overview
 Extensible, user and developer friendly Python interface to the [Jenkins CI](http://jenkins-ci.org/) tool, wrapping
 the features exposed by the standard [REST API](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API) in a 
