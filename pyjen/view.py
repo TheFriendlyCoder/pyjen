@@ -1,7 +1,7 @@
 from utils.data_requester import data_requester
 from job import job
 from utils.view_xml import view_xml
-
+import re
 
 class view(object):
     """Class that encapsulates all Jenkins related 'view' information
@@ -58,7 +58,6 @@ class view(object):
             the name of the view
         """
         data = self.__requester.get_data("/api/python")
-        
         return data['name']
         
     def get_jobs (self):
@@ -161,7 +160,28 @@ class view(object):
         my_jobs = self.get_jobs()
         for j in my_jobs:
             j.enable()
+            
+    def clone_all_jobs(self, search_regex, replacement_string):
+        """Helper method that does a batch clone on all jobs found in this view
+        
+        Returns
+        -------
+        list of newly created jobs
+        """
+        my_jobs = self.get_jobs()
+        retval = []
+        for j in my_jobs:
+            orig_name = j.get_name()
+            new_name = re.sub(search_regex, replacement_string, orig_name)
+            new_job = j.clone(new_name)
+            retval.append(new_job)
+        return retval
     
 if __name__ == "__main__":
-    v = view("http://builds/view/unified")
-    v.clone_all_jobs()
+    v = view("http://localhost:8080/view/asdf/")
+    tmp = v.clone_all_jobs("MyJob", "TestMyJob")
+    for j in tmp:
+        print j.get_name()
+    
+    #v = view("http://localhost:8080/view/NewClone")
+    #v.delete_all_jobs()
