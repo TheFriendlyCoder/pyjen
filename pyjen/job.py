@@ -413,6 +413,12 @@ class job(object):
             the name of the newly created job whose settings will
             be an exact copy of this job. It is expected that this
             new job name be unique across the dashboard.
+            
+        Returns
+        -------
+        pyjen.job
+            returns a reference to the newly created job resulting
+            from the clone operation
         """
         
         params = {'name': new_job_name,
@@ -426,10 +432,22 @@ class job(object):
         args['headers'] = headers
         
         dashboard_url = get_root_url(self.get_url())
-        self.__requester.post(dashboard_url, "/createItem", args)
+        self.__requester.post_url(dashboard_url + "/createItem", args)
+        
+        new_job_url = dashboard_url + "/job/" + new_job_name + "/"
+        new_job = job(new_job_url, self.__requester.get_auth_user(), self.__requester.get_auth_password())
+        
+        # Sanity check - lets make sure the job actually exists by checking its name
+        assert(new_job.get_name() == new_job_name)
+        
+        #as a precaution, lets disable the newly created job so it doesn't automatically start running
+        new_job.disable()
+        
+        return new_job 
         
 if __name__ == "__main__":
     j = job("http://localhost:8080/job/test_job/")
     j.clone('new_job_name')
+    #print j2.get_config_xml()
     #j.clone_job("ksp_generated_subjob")
     #print j.get_name()

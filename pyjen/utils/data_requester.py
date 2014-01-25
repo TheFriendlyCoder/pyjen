@@ -26,6 +26,28 @@ class data_requester (object):
         if self.__user != None:
             assert(self.__password != None)
     
+    def get_auth_user(self):
+        """ gets the user name used to authenticate to this HTTP request object
+        
+        Returns
+        -------
+        string
+            user name used to authenticate transactions made through this object
+            may be 'none'
+        """
+        return self.__user
+    
+    def get_auth_password(self):
+        """ gets the password used to authenticate to this HTTP request object
+        
+        Returns
+        -------
+        string
+            password used to authenticate transactions made through this object
+            may be 'none'
+        """
+        return self.__password
+    
     def get_text(self, sub_url=None):
         """ gets the raw text data from the URL associated with this object
         
@@ -107,17 +129,11 @@ class data_requester (object):
             
         return r.headers
     
-    def post(self, root_url=None, sub_url=None, args=None):
+    def post(self, sub_url=None, args=None):
         """sends a post operation to the URL managed by this object
         
         Parameters
         ----------
-        root_url : string
-            optional root URL for the post action. This is needed
-            in certain cases when an object is initialized with one
-            main URL for most operations but may require the use
-            of an alternative URL for certain other operations.
-            
         sub_url : string
             optional sub-folder to append to the root API URL to use
             when processing this request.
@@ -131,10 +147,7 @@ class data_requester (object):
             * 'headers' - dictionary of HTTP header properties and their associated values
             * 'data' - dictionary of assorted / misc data properties and their values 
         """
-        if root_url == None:
-            temp_url = self.__url
-        else:
-            temp_url = root_url
+        temp_url = self.__url
             
         if sub_url != None:
             temp_url = temp_url + sub_url
@@ -144,5 +157,27 @@ class data_requester (object):
         else:
             r = requests.post(temp_url)
 
+        if r.status_code != 200:
+            r.raise_for_status()
+            
+    def post_url(self, full_url, args = None):
+        """ posts data to an absolute URL instead of the default URL provided to this object upon creation
+        
+        Parameters
+        ----------
+        full_url : string
+            the full HTTP address to post the data to 
+        args : dictionary
+            optional set of data arguments to be sent with the post operation
+            supported keys are as follows:
+            
+            * 'headers' - dictionary of HTTP header properties and their associated values
+            * 'data' - dictionary of assorted / misc data properties and their values 
+        """
+        if args != None:
+            r = requests.post(full_url, **args)
+        else:
+            r = requests.post(full_url)
+        
         if r.status_code != 200:
             r.raise_for_status()
