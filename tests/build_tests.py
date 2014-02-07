@@ -1,25 +1,25 @@
 from pyjen.build import build
 import unittest
-from mock_data_requester import mock_data_requester
+from mock_data_requester import file_based_requester
 import test_utils
 from datetime import datetime
 
 class build_tests(unittest.TestCase):
     def test_get_build_time(self):
-        src = mock_data_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
+        src = file_based_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
         bld = build('', custom_data_requester=src)
         
         #Build date: 12:03:17am Nov. 30, 2013
         self.assertEqual(datetime.fromtimestamp(1385784197.000), bld.get_build_time())
         
     def test_is_not_building(self):
-        src = mock_data_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
+        src = file_based_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
         bld = build('', custom_data_requester=src)
         
         self.assertFalse(bld.is_building(), "Sample build project should not be building")
         
     def test_get_build_number(self):
-        src = mock_data_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
+        src = file_based_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
         bld = build('', custom_data_requester=src)
         self.assertEqual(169, bld.get_build_number())
         
@@ -27,7 +27,7 @@ class build_tests(unittest.TestCase):
 
 class changeset_tests(unittest.TestCase):
     def test_get_changeset_svn(self):
-        src = mock_data_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
+        src = file_based_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
         bld = build('', custom_data_requester=src)
         
         change = bld.get_changeset()
@@ -60,7 +60,7 @@ class changeset_tests(unittest.TestCase):
         self.assertEqual('/path/to/another/file2.pdf', item2['changes'][1]['file'])
                 
     def test_get_scm_type(self):
-        src = mock_data_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
+        src = file_based_requester(test_utils.get_sample_data_file("build_with_svn_changeset.txt"))
         bld = build('', custom_data_requester=src)
         
         change = bld.get_changeset()
