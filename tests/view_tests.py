@@ -19,8 +19,10 @@ class mock_view_with_jobs_data_requester:
         retval = {}
         retval['jobs'] = jobs
         return retval
+    
     def get_user(self):
         return self.__user
+    
     def get_password(self):
         return self.__pass
 

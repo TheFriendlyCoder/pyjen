@@ -26,7 +26,7 @@ class data_requester (object):
         if self.__user != None:
             assert(self.__password != None)
     
-    def get_auth_user(self):
+    def get_user(self):
         """ gets the user name used to authenticate to this HTTP request object
         
         Returns
@@ -37,7 +37,7 @@ class data_requester (object):
         """
         return self.__user
     
-    def get_auth_password(self):
+    def get_password(self):
         """ gets the password used to authenticate to this HTTP request object
         
         Returns

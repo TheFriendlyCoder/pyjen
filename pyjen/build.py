@@ -23,6 +23,11 @@ class build(object):
         password : string
             optional password for the specified user
             if a user name is provided this parameter must be non-empty
+        custom_data_requester : object
+            object providing interface for querying and posting data
+            from / to an HTTP URL. Typically used for unit testing by
+            allowing mock IO objects to be injected into the class.
+            If not provided the default HTTP request object will be used
         """
         if (user != None):
             assert (password != None)

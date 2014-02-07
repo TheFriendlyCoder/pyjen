@@ -47,6 +47,30 @@ class job(object):
         """
         return self.__url
     
+    def get_authenticated_user(self):
+        """Gets the user name portion of the credentials used to access this view
+        
+        See also: get_authenticated_password
+        
+        Return
+        ------
+        string
+            the user name used to authenticate transactions with this view
+        """
+        return self.__requester.get_user()
+    
+    def get_authenticated_password(self):
+        """Gets the password portion of the credentials used to access this view
+        
+        See also: get_authenticated_user
+        
+        Return
+        ------
+        string
+            the password used to authenticate transactions with this view
+        """
+        return self.__requester.get_password()
+    
     def get_recent_builds(self):
         """Gets a list of the most recent builds for this job
         
@@ -435,7 +459,7 @@ class job(object):
         self.__requester.post_url(dashboard_url + "/createItem", args)
         
         new_job_url = dashboard_url + "/job/" + new_job_name + "/"
-        new_job = job(new_job_url, self.__requester.get_auth_user(), self.__requester.get_auth_password())
+        new_job = job(new_job_url, self.__requester.get_user(), self.__requester.get_password())
         
         # Sanity check - lets make sure the job actually exists by checking its name
         assert(new_job.get_name() == new_job_name)

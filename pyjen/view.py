@@ -14,7 +14,7 @@ class view(object):
     #Class names for all supported view types
     LIST_VIEW = 'hudson.model.ListView'
     
-    def __init__ (self, url, user=None, password=None):
+    def __init__ (self, url, user=None, password=None, custom_data_requester=None):
         """constructor
         
         Parameters
@@ -27,12 +27,21 @@ class view(object):
         password : string
             optional password for the specified user
             if a user name is provided this parameter must be non-empty
+        custom_data_requester : object
+            object providing interface for querying and posting data
+            from / to an HTTP URL. Typically used for unit testing by
+            allowing mock IO objects to be injected into the class.
+            If not provided the default HTTP request object will be used
         """
         if (user != None):
             assert (password != None)
         
         self.__url = url
-        self.__requester = data_requester(self.__url, user, password)
+
+        if custom_data_requester == None:
+            self.__requester = data_requester(self.__url, user, password)
+        else:
+            self.__requester = custom_data_requester
 
         
     def get_url(self):
@@ -45,6 +54,30 @@ class view(object):
         """
 
         return self.__url
+    
+    def get_authenticated_user(self):
+        """Gets the user name portion of the credentials used to access this view
+        
+        See also: get_authenticated_password
+        
+        Return
+        ------
+        string
+            the user name used to authenticate transactions with this view
+        """
+        return self.__requester.get_user()
+    
+    def get_authenticated_password(self):
+        """Gets the password portion of the credentials used to access this view
+        
+        See also: get_authenticated_user
+        
+        Return
+        ------
+        string
+            the password used to authenticate transactions with this view
+        """
+        return self.__requester.get_password()
     
     def get_name(self):
         """Gets the display name for this view
@@ -79,7 +112,7 @@ class view(object):
 
         retval = []
         for j in view_jobs:        
-            retval.append(job(j['url']))
+            retval.append(job(j['url'], self.__requester.get_user(), self.__requester.get_password()))
             
         return retval
     
