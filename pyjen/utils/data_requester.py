@@ -153,9 +153,15 @@ class data_requester (object):
             temp_url = temp_url + sub_url
             
         if args != None:
-            r = requests.post(temp_url, **args)
+            if self.__user != None:
+                r = requests.post(temp_url, auth=(self.__user, self.__password), **args)
+            else:
+                r = requests.post(temp_url, **args)
         else:
-            r = requests.post(temp_url)
+            if self.__user != None:
+                r = requests.post(temp_url, auth=(self.__user, self.__password))
+            else:
+                r = requests.post(temp_url)
 
         if r.status_code != 200:
             r.raise_for_status()
