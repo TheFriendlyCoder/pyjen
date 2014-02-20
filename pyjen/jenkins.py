@@ -1,8 +1,8 @@
 import json
-from view import view
-from node import node
-from job import job
-from utils.data_requester import data_requester
+from pyjen.view import view
+from pyjen.node import node
+from pyjen.job import job
+from pyjen.utils.data_requester import data_requester
 
 class jenkins(object):
     """Python wrapper managing a Jenkins primary dashboard
