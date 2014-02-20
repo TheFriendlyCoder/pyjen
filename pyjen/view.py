@@ -1,6 +1,6 @@
-from utils.data_requester import data_requester
-from job import job
-from utils.view_xml import view_xml
+from pyjen.utils.data_requester import data_requester
+from pyjen.job import job
+from pyjen.utils.view_xml import view_xml
 import re
 
 class view(object):
@@ -186,6 +186,7 @@ class view(object):
         """Helper method that allows caller to bulk-disable all jobs found in this view""" 
         my_jobs = self.get_jobs()
         for j in my_jobs:
+            print "disabling " + j.get_name()
             j.disable()
             
     def enable_all_jobs(self):
@@ -211,10 +212,4 @@ class view(object):
         return retval
     
 if __name__ == "__main__":
-    v = view("http://localhost:8080/view/asdf/")
-    tmp = v.clone_all_jobs("MyJob", "TestMyJob")
-    for j in tmp:
-        print j.get_name()
-    
-    #v = view("http://localhost:8080/view/NewClone")
-    #v.delete_all_jobs()
+    pass
