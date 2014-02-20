@@ -1,7 +1,7 @@
 from pyjen.view import view
 import unittest
-from pyjen.tests.test_utils import *
-from pyjen.tests.mock_data_requester import *
+from tests.test_utils import *
+from tests.mock_data_requester import *
 
 class mock_view_with_jobs_data_requester:
     __user = ""
