@@ -1,7 +1,7 @@
 from build import build
 from pyjen.utils.job_xml import job_xml
-from utils.data_requester import data_requester
-from utils.common import get_root_url
+from pyjen.utils.data_requester import data_requester
+from pyjen.utils.common import get_root_url
 
 class job(object):
     def __init__ (self, url, user=None, password=None):
@@ -370,7 +370,7 @@ class job(object):
         args['data'] = new_xml
         args['headers'] = headers
         
-        self.__requester.post("/config.xml", **args)
+        self.__requester.post("/config.xml", args)
         
     def set_custom_workspace(self, path):
         """Defines a new custom workspace for the job
