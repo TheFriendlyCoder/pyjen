@@ -1,6 +1,6 @@
 import time
 import urllib
-from utils.data_requester import data_requester
+from pyjen.utils.data_requester import data_requester
 
 class node(object):
     """Wrapper around a Jenkins build agent (aka: node) configuration
