@@ -55,7 +55,7 @@ class xml_test_case(unittest.TestCase):
         self.__compareXMLAttributes(expected, actual)
         
         #recursively check all children
-        expected_children = expected.getchildren()
+        expected_children = list(expected)
         
         for echild in expected_children:
             
@@ -67,7 +67,7 @@ class xml_test_case(unittest.TestCase):
         #As a shortcut to detecting other discrepancies between the trees, 
         #just check to see if they have the same number of children. If not there
         #must be one or more nodes in the actual tree not in the expected 
-        actual_children = actual.getchildren()
+        actual_children = list(actual)
         self.assertEqual(len(expected_children), len(actual_children), "Tag '" + expected.tag + "' has different numbers of children")        
         
         
