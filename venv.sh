@@ -1,12 +1,12 @@
 #!/bin/bash
 which pip > /dev/null
-if [ $? -eq 1 ]
+if [ $? -ne 0 ]
 	then echo "ERROR: Python command line tool pip not found. Please check environment.";
 	exit 1;
 fi
 
-pip list | grep virtualenv > /dev/null
-if [ $? -eq 1 ] 
+pip freeze | grep virtualenv > /dev/null
+if [ $? -ne 0 ] 
 	then pip install virtualenv
 fi
 
