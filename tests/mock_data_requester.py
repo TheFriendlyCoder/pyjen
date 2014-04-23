@@ -22,7 +22,7 @@ class post_validate_requester:
     def __init__(self, expected_url):
         self.__expected_url=expected_url
     def post (self, sub_url=None, args=None):
-        print self.__expected_url
-        print sub_url
+        print (self.__expected_url)
+        print (sub_url)
         assert(sub_url == self.__expected_url)
         return

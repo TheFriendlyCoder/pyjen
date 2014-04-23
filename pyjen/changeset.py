@@ -21,8 +21,8 @@ class changeset (object):
             'items' - list of 0 or more actual changesets included in the associated build
         """
 
-        assert(data.has_key('items'))
-        assert(data.has_key('kind'))
+        assert('items' in data.keys())
+        assert('kind' in data.keys())
     
         self.__data = data
 

@@ -186,7 +186,7 @@ class view(object):
         """Helper method that allows caller to bulk-disable all jobs found in this view""" 
         my_jobs = self.get_jobs()
         for j in my_jobs:
-            print "disabling " + j.get_name()
+            print ("disabling " + j.get_name())
             j.disable()
             
     def enable_all_jobs(self):

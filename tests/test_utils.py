@@ -1,6 +1,7 @@
 import subprocess
 import shlex
 import os
+import locale
 
 def get_sample_data_file(filename):
     """Given a filename, this method generates the full path to the file in the sample data folder
@@ -104,10 +105,13 @@ def start_jenkins(home_folder=None):
     
     #Wait until the Jenkins service has completed its startup before continuing
     jenkinsRunning = False
+    
+    encoding = locale.getdefaultlocale()[1]
     while True:
         #TODO: probably should stream this output to a log file somewhere for debugging
         stderrdata = jenkins_process.stderr.readline()
-        if stderrdata.find("Jenkins is fully up and running") >= 0:
+        tmp = stderrdata.decode(encoding)
+        if tmp.find("Jenkins is fully up and running") >= 0:
             jenkinsRunning = True
             break
 

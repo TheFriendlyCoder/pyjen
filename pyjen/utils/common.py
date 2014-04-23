@@ -1,8 +1,11 @@
 """This module contains a set of common helper functions used by one or more
 objects in the pyjen package"""
-
-from urlparse import urlparse
-
+import sys
+if sys.version_info.major < 3:
+    from urlparse import urlparse
+else:
+    from urllib.parse import urlparse
+    
 def get_root_url(source_url):
     """Helper function to parse out the root / server URL from an arbitrary URL
     

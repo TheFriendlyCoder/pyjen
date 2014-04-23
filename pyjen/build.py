@@ -109,4 +109,4 @@ class build(object):
     
 if __name__ == "__main__":
     j = build('http://localhost:8080/job/test_job/1')
-    print j.get_console_output()
+    print (j.get_console_output())

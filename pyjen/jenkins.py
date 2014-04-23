@@ -260,4 +260,4 @@ if __name__ == '__main__':
 
     j = jenkins("http://localhost:8080")
     v = j.get_default_view()
-    print v.get_name()
+    print (v.get_name())

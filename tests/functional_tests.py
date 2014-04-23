@@ -16,7 +16,7 @@ class regression_tests(unittest.TestCase):
        
     @classmethod
     def setUpClass(self):
-        print "Preparing Jenkins Instance..."
+        print ("Preparing Jenkins Instance...")
         self.__jenkins_home = os.path.abspath("./jenkins_home")
         #TODO: Detect whether jenkins is already running at the default URL and prompt user if we should just use that one
         self.__jenkins_process = start_jenkins(self.__jenkins_home)

@@ -88,7 +88,7 @@ class xml_test_case(unittest.TestCase):
             XML object with the generated or produced attributes and values to be compared
         """
         for eatt in expected.attrib:
-            if actual.attrib.has_key(eatt):
+            if eatt in actual.attrib.keys():
                 self.assertEqual(expected.attrib[eatt], actual.attrib[eatt], "Attribute '" + eatt + "' of tag '" + expected.tag + "' should have equivalent values")
             else:
                 self.fail("Expected attribute not found: " + eatt)
