@@ -1,9 +1,25 @@
-virtualenv --no-site-packages -p python2 py2
-virtualenv --no-site-packages -p python3 py3
-source py2/bin/activate
-pip install requests
-deactivate
+#!/bin/bash
+which pip > /dev/null
+if [ $? -eq 1 ]
+	then echo "ERROR: Python command line tool pip not found. Please check environment.";
+	exit 1;
+fi
 
-source py3/bin/activate
-pip install requests
-deactivate
+pip list | grep virtualenv > /dev/null
+if [ $? -eq 1 ] 
+	then pip install virtualenv
+fi
+
+if [ ! -d py2 ]; then
+	virtualenv --no-site-packages -p python2 py2;
+	source py2/bin/activate;
+	pip install requests;
+	deactivate;
+fi
+
+if [ ! -d py3 ]; then
+	virtualenv --no-site-packages -p python3 py3;
+	source py3/bin/activate;
+	pip install requests;
+	deactivate;
+fi
