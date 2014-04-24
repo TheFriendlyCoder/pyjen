@@ -1,4 +1,12 @@
 *.pyc
 *~
 *.bak
+*.html
 jenkins/.jenkins
+.project
+.pydevproject
+pyjen.egg-info
+py2
+py3
+dist
+build
