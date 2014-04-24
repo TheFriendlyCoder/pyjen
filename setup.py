@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='pyjen',
@@ -8,6 +8,7 @@ setup(
     license='LICENSE.txt',
     packages=['pyjen'],
     description='Python wrapper for the Jenkins CI REST API',
-    long_description=open('README.txt').read(),
-    install_requires = ["requests >= 2.0.1"]
+    long_description=open('README.md').read(),
+    url='https://github.com/TheFriendlyCoder/pyjen',
+    requires = ["requests(>=2.0.1)"]
 )
