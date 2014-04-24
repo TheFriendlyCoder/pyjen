@@ -5,10 +5,10 @@ setup(
     version='0.0.1dev',
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
-    license='LICENSE.txt',
+    license=open('LICENSE.txt').read(),
     packages=['pyjen', 'pyjen.utils', 'pyjen.plugins'],
     description='Python wrapper for the Jenkins CI REST API',
-    long_description=open('README.md').read(),
+    long_description=open('README.txt').read(),
     url='https://github.com/TheFriendlyCoder/pyjen',
     install_requires = ["requests>=2.0.1"]
 )
