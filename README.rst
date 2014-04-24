@@ -9,7 +9,7 @@ Overview
 =============
 Extensible, user and developer friendly Python interface to the Jenkins_ CI tool, wrapping
 the features exposed by the standard REST API_ using
-Pythonic objects and functions.
+Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of Python.
 
 .. _Jenkins: http://jenkins-ci.org/
 .. _API: https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/

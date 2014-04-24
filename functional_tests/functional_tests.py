@@ -1,5 +1,5 @@
 import unittest
-from test_utils import start_jenkins
+from functional_tests.test_utils import start_jenkins
 from pyjen.jenkins import jenkins
 from pyjen.view import view
 import os

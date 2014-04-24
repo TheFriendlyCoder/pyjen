@@ -8,7 +8,7 @@ http://daringfireball.net/projects/markdown/syntax
 ### Overview
 Extensible, user and developer friendly Python interface to the [Jenkins CI](http://jenkins-ci.org/) tool, wrapping
 the features exposed by the standard [REST API](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API) in a 
-Pythonic objects and functions.
+Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of Python.
 
 With an intuitive and well thought out interface, PyJen offers anyone familiar with the Python programming
 language an easy way to manage Jenkins dashboards from a simple command prompt. All core primitives of Jenkins,
