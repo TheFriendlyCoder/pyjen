@@ -18,7 +18,7 @@ def export_config (url, output_filename):
     f.write(r.text)
     f.close()
     
-    print "Export completed successfully"
+    print ("Export completed successfully")
     
 if __name__ == '__main__':
     export_config('http://localhost:8080/job/job2a/config.xml', '/home/kevin/delme.xml')
