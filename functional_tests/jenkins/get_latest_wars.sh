@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ ! -f jenkins_latest.war ]; then
 	wget -O jenkins_latest.war http://mirrors.jenkins-ci.org/war/latest/jenkins.war;
 fi

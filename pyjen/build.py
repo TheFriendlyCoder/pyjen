@@ -1,5 +1,5 @@
-from pyjen.utils.data_requester import data_requester
-from pyjen.changeset import changeset
+from .utils.data_requester import data_requester
+from .changeset import changeset
 from datetime import datetime
 
 class build(object):
