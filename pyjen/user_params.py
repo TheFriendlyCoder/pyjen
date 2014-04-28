@@ -18,7 +18,7 @@ class UserParameters(object):
         Required sections
         ------------------
         [jenkins_config]
-        url=http://jenkins_server_url
+        jenkins_url=http://jenkins_server_url
         
         Optional Sections
         -------------------
@@ -56,7 +56,11 @@ class UserParameters(object):
         if not "url" in jenkins_params.keys():
             raise InvalidUserParamsError("Missing 'url' property in user configuration file.", config_file)    
             
-        self.__url = jenkins_params['url']
+        self.__jenkins_url = jenkins_params['url']
+        
+        #Make sure we're always have a trailing slash character to simplify later processes
+        if not self.__jenkins_url.endswith('/'):
+            self.__jenkins_url += '/'
         
         if parser.has_section("credentials"):
             credentials_params = {item[0]:item[1] for item in parser.items("credentials")}
@@ -76,7 +80,7 @@ class UserParameters(object):
         self.__anonymous = True
         self.__username = ""
         self.__password = ""
-        self.__url = "http://localhost:8080"
+        self.__jenkins_url = "http://localhost:8080"
         
     def set_credentials (self, username, password):
         """Overloads default login credentials
@@ -93,10 +97,12 @@ class UserParameters(object):
         self.__password = password
         self.__anonymous = False
         
+
+    
     @property
-    def url(self):
+    def jenkins_url(self):
         """Gets the root URL for the current Jenkins instance"""
-        return self.__url
+        return self.__jenkins_url
     
     @property
     def username(self):
@@ -113,6 +119,32 @@ class UserParameters(object):
         return self.__password
     
     @property
+    def credentials(self):
+        """Convenience method that returns the authentication credentials as a tuple
+        
+        Most authenticated methods that take a user name and password as input
+        require that those values be provided in a tuple, with the first element
+        being the username and the second element the password. This method simply
+        wraps the individual credentials provided by the username() and password()
+        properties in a tuple.
+        
+        Returns
+        -------
+        tuple
+            2-element tuple, containing the username and password for authenticated
+            connections
+            e.g. (username, password)
+            
+            NOTE: if this configuration does not support authentication 
+            (e.g.: anonymous_logon == True) this method will simply
+            return None.
+        """
+        if (self.anonymous_logon):
+            return None
+        
+        return (self.username, self.password)
+    
+    @property
     def anonymous_logon(self):
         """Checks to see whether anonymous authentication should be used when connecting to Jenkins
         
@@ -127,5 +159,37 @@ class UserParameters(object):
         """
         return self.__anonymous
     
+
+
+
+#---------------------------------- HELPER FUNCTIONS ------------------------------------
+def _FindDefaultConfigFile():
+    """Internal helper method used to search several predefined locations for a pyjen config file"""
+    
+    #static default file name to look for
+    default_config_filename = ".pyjen"
+    
+    #Step 1: Look in the current folder
+    f = os.path.join(os.getcwd(), default_config_filename)
+    if os.path.exists(f) and os.path.isfile(f):
+        return f
+    
+    #Step 2: Look in the users home folder
+    f = os.path.join(os.path.expanduser("~"), default_config_filename)
+    if os.path.exists(f) and os.path.isfile(f):
+        return f
+    
+    #Finally, if no default config file can be found, return None
+    return None
+
+
+_GlobalParams = None
+def GlobalParams():
+    """Singleton-like function exposing a global set of user parameters shareable across the entire PyJen API"""
+    global _GlobalParams
+    if _GlobalParams == None:
+        _GlobalParams = UserParameters(_FindDefaultConfigFile())
+    return _GlobalParams
+
 if __name__ == "__main__":
     pass

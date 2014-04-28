@@ -10,12 +10,12 @@ class build(object):
     """
     
     
-    def __init__ (self, url, user=None, password=None, custom_data_requester=None):
+    def __init__ (self, jenkins_url, user=None, password=None, custom_data_requester=None):
         """constructor
         
         Parameters
         ----------
-        url : string
+        jenkins_url : string
             root URL of the node being managed by this object
             Example: 'http://jenkins/job/job1/789'
         user : string
@@ -32,9 +32,9 @@ class build(object):
         if (user != None):
             assert (password != None)
         
-        self.__url = url
+        self.__jenkins_url = jenkins_url
         if custom_data_requester == None:
-            self.__requester = data_requester(self.__url, user, password)
+            self.__requester = data_requester(self.__jenkins_url, user, password)
         else:
             self.__requester = custom_data_requester
 
@@ -46,7 +46,7 @@ class build(object):
         string
             the root URL for the REST API that controls this build
         """
-        return self.__url
+        return self.__jenkins_url
     
     def get_build_number(self):
         """Gets the numeric build number for this build

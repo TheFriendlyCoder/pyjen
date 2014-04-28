@@ -3,11 +3,11 @@ import unittest
 
 
 class mock_view_with_jobs_data_requester:
-    __user = ""
-    __pass = ""
+    __username = ""
+    __password = ""
     def __init__ (self, user=None, password=None):
-        self.__user = user
-        self.__pass = password
+        self.__username = user
+        self.__password = password
     
     def get_data(self, sub_url=None):
         jobs = []
@@ -21,10 +21,10 @@ class mock_view_with_jobs_data_requester:
         return retval
     
     def get_user(self):
-        return self.__user
+        return self.__username
     
     def get_password(self):
-        return self.__pass
+        return self.__password
 
 class view_tests(unittest.TestCase):
     def test_get_all_jobs(self):

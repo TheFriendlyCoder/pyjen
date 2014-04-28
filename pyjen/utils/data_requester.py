@@ -1,189 +1,178 @@
 import requests
+import sys
+from pyjen.user_params import GlobalParams
+if sys.version_info.major < 3:
+    from urlparse import urljoin, urlparse
+else:
+    from urllib.parse import urljoin, urlparse
 
 class data_requester (object):
-    """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""
-    
-    def __init__ (self, url, user, password):
-        """constructor
+    """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
+        
+    def __init__(self, url=None):
+        """Constructor
         
         Parameters
-        ----------
+        --------------
         url : string
-            root URL of the REST API to be accessed for subsequent IO operations
-        user : string
-            user name to authenticate with the API
-            May be set to None for unauthenticated access
-        password : string
-            password for the specified user credentials
-            If a user name is provided this parameter must be non empty
+            Optional source URL to use for all subsequent IO operations
+            performed on this object. May be partial path, relative to
+            the Jenkins root URL, or a full standalone URL.
+            
+            If not defined, all operations will be directed at the
+            root Jenkins URL.
+            
+            NOTE: As a convenience, full URLs with the same root path
+            as that provided by the GlobalParams object are acceptable
+            inputs.
         """
+        self.__base_url = GlobalParams().jenkins_url.rstrip("/") + "/"
+        if (url == None):
+            return
         
-        self.__url = url
-        self.__user = user
-        self.__password = password
-        
-        #If the caller provides a user name they must provide a password
-        if self.__user != None:
-            assert(self.__password != None)
-    
-    def get_user(self):
-        """ gets the user name used to authenticate to this HTTP request object
-        
+        parsed_url = urlparse(url)
+        if (parsed_url.scheme != ""):
+            #if input URL has a connection scheme (e.g. 'http') prefix,
+            #assume it is a full URL and use it explicitly here
+            self.__base_url = url.rstrip("/") + "/"
+        else:
+            #the urlparse library does some weird things when there are
+            #superfluous leading or trailing / characters in any of the
+            #paths, so we need to take care to trim any such characters off
+            tmp_url = GlobalParams().jenkins_url
+            tmp_url = tmp_url.rstrip("/")
+            tmp_url += "/"
+            tmp_url = urljoin(tmp_url, url.lstrip("/").rstrip("/"))
+            self.__base_url = tmp_url + "/"
+            
+    def get_text(self, path=None):
+        """ gets the raw text data from a Jenkins URL
+
+        Parameters
+        ----------
+        path
+            optional extension path to append to the root
+            URL managed by this object when performing the
+            get operation
+            
         Returns
-        -------
+        --------
         string
-            user name used to authenticate transactions made through this object
-            may be 'none'
-        """
-        return self.__user
-    
-    def get_password(self):
-        """ gets the password used to authenticate to this HTTP request object
+            the text loaded from this objects' URL
         
-        Returns
-        -------
-        string
-            password used to authenticate transactions made through this object
-            may be 'none'
         """
-        return self.__password
+            
+        return self._get_raw_text(urljoin(self.url, path.lstrip("/")))
     
-    def get_text(self, sub_url=None):
-        """ gets the raw text data from the URL associated with this object
+    def _get_raw_text(self, url):
+        """retrieves the raw text output from a specified HTTP URL
         
         Parameter
         ---------
         url : string
-            optional sub-folder to append to the root API URL to use
-            when processing this request.
-            If not defined the root URL (as provided to the constructor)
-            will be used directly
-            
-        Return
-        ------
+            the full HTTP URL to be polled
+        
+        Returns
+        ---------
         string
-            the text loaded from this objects' URL
+            Text returned from the given URL
         """
-            
-        temp_url = self.__url
-        if sub_url != None:
-            temp_url = temp_url + sub_url
-            
-        if self.__user != None:
-            r = requests.get(temp_url, auth=(self.__user, self.__password))
-        else:
-            r = requests.get(temp_url)
+        r = requests.get(url, auth=GlobalParams().credentials)
         
         if r.status_code != 200:
             r.raise_for_status()
         
         return r.text
         
-    def get_data(self, sub_url=None):
-        """shorthand helper that converts the text data loaded from the objects' URL to Python data types
+    def get_data(self, path=None):
+        """Convenience method that converts the text data loaded from a Jenkins URL to Python data types
         
-        Parameter
-        ---------
-        sub_url : string
-            optional sub-folder to append to the root API URL to use
-            when processing this request.
-            If not defined the root URL (as provided to the constructor)
-            will be used directly
-
-        Return
-        ------
+        Parameters
+        ----------
+        path
+            optional extension path to append to the root
+            URL managed by this object when performing the
+            get operation
+            
+        Returns
+        ----------
         object
-            The results of converting the text data loaded from the objects' 
+            The results of converting the text data loaded from the Jenkins 
             URL into appropriate Python objects
         """
-        return eval(self.get_text(sub_url))
+        return eval(self.get_text(path))
     
-    def get_headers(self, sub_url=None):
-        """gets the HTTP header attributes from the URL managed by this object
+    def get_api_data(self):
+        """Convenience method that retrieves the Jenkins API specific data from the specified URL
         
-        Parameter
+        Returns
+        --------
+        object
+            The set of Jenkins attributes, converted to Python objects, associated
+            with the given URL.
+        """
+        temp_url = urljoin(self.url, "api/python")
+        txt = self._get_raw_text(temp_url)
+        return eval(txt)
+    
+    def get_headers(self, path=None):
+        """gets the HTTP header attributes from a Jenkins URL
+        
+        Parameters
+        ----------
+        path
+            optional extension path to append to the root
+            URL managed by this object when performing the
+            get operation
+            
+        Returns
         ---------
-        sub_url : string
-            optional sub-folder to append to the root API URL to use
-            when processing this request.
-            If not defined the root URL (as provided to the constructor)
-            will be used directly
-
-        Return
-        ------
         dictionary
             dictionary of HTTP header attributes with their associated values
         """
-        
-        temp_url = self.__url
-        if sub_url != None:
-            temp_url = temp_url + sub_url
             
-        if self.__user != None:
-            r = requests.get(temp_url, auth=(self.__user, self.__password))
-        else:
-            r = requests.get(temp_url)
+        r = requests.get(urljoin(self.url, path.lstrip("/")), auth=GlobalParams().credentials)
             
         if r.status_code != 200:
             r.raise_for_status()
             
         return r.headers
     
-    def post(self, sub_url=None, args=None):
-        """sends a post operation to the URL managed by this object
+    def post(self, path=None, args=None):
+        """sends data to or triggers an operation via a Jenkins URL
         
         Parameters
         ----------
-        sub_url : string
-            optional sub-folder to append to the root API URL to use
-            when processing this request.
-            If not defined the root URL (as provided to the constructor)
-            will be used directly
-
+        path
+            optional extension path to append to the root
+            URL managed by this object when performing the
+            post operation
+            
         args : dictionary
             optional set of data arguments to be sent with the post operation
             supported keys are as follows:
             
             * 'headers' - dictionary of HTTP header properties and their associated values
             * 'data' - dictionary of assorted / misc data properties and their values 
-        """
-        temp_url = self.__url
-            
-        if sub_url != None:
-            temp_url = temp_url + sub_url
-            
+        """            
         if args != None:
-            if self.__user != None:
-                r = requests.post(temp_url, auth=(self.__user, self.__password), **args)
-            else:
-                r = requests.post(temp_url, **args)
+            r = requests.post(urljoin(self.url, path.lstrip("/")), auth=GlobalParams().credentials, **args)
         else:
-            if self.__user != None:
-                r = requests.post(temp_url, auth=(self.__user, self.__password))
-            else:
-                r = requests.post(temp_url)
+            r = requests.post(urljoin(self.url, path.lstrip("/")), auth=GlobalParams().credentials)
 
         if r.status_code != 200:
             r.raise_for_status()
             
-    def post_url(self, full_url, args = None):
-        """ posts data to an absolute URL instead of the default URL provided to this object upon creation
+
+
+    @property
+    def url(self):
+        """Gets the root URL used for IO operations by this object
         
-        Parameters
-        ----------
-        full_url : string
-            the full HTTP address to post the data to 
-        args : dictionary
-            optional set of data arguments to be sent with the post operation
-            supported keys are as follows:
+        NOTE: This root URL will always have a trailing '/' character
+        to simplify other processes"""
+        return self.__base_url
             
-            * 'headers' - dictionary of HTTP header properties and their associated values
-            * 'data' - dictionary of assorted / misc data properties and their values 
-        """
-        if args != None:
-            r = requests.post(full_url, **args)
-        else:
-            r = requests.post(full_url)
-        
-        if r.status_code != 200:
-            r.raise_for_status()
+#import urllib.parse 
+if __name__ == "__main__":
+    pass

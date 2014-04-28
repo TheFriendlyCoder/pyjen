@@ -4,25 +4,27 @@ from pyjen.utils.data_requester import data_requester
 from pyjen.utils.common import get_root_url
 
 class job(object):
-    def __init__ (self, url, user=None, password=None):
+    """Interface to all primitives associated with a Jenkins job"""
+    
+    def __init__ (self, url, http_io_class=data_requester):
         """Constructor
         
         Parameters
         ----------
         url : string
-            root URL of the job being managed by this object
-            Example: 'http://jenkins/jobs/job1'
-        user : string
-            optional user name to authenticate to Jenkins dashboard
-        password : string
-            password for Jenkins login credentials 
-            if a user name is provided this parameter must be defined as well
+            URL of the job to be managed. This may be a full URL, starting with
+            the root Jenkins URL, or a partial URL relative to the Jenkins root
+            
+            Examples: 
+                * 'http://jenkins/jobs/job1'
+                * 'jobs/job2'
+                
+        http_io_class : Python class object
+            class capable of handling HTTP IO requests between
+            this class and the Jenkins REST API
+            If not explicitly defined a standard IO class will be used 
         """
-        if (user != None):
-            assert (password != None)
-
-        self.__url = url
-        self.__requester = data_requester(url, user, password)
+        self.__requester = http_io_class(url)
         
         
     def get_name(self):
@@ -32,9 +34,8 @@ class job(object):
         -------
         string
             The name of the job
-        """        
-        data = self.__requester.get_data('/api/python')
-        
+        """
+        data = self.__requester.get_api_data()      
         return data['name']
     
     def get_url(self):
@@ -45,31 +46,9 @@ class job(object):
         string
             URL of the main web page for the job
         """
-        return self.__url
+        return self.__requester.url
     
-    def get_authenticated_user(self):
-        """Gets the user name portion of the credentials used to access this view
-        
-        See also: get_authenticated_password
-        
-        Return
-        ------
-        string
-            the user name used to authenticate transactions with this view
-        """
-        return self.__requester.get_user()
     
-    def get_authenticated_password(self):
-        """Gets the password portion of the credentials used to access this view
-        
-        See also: get_authenticated_user
-        
-        Return
-        ------
-        string
-            the password used to authenticate transactions with this view
-        """
-        return self.__requester.get_password()
     
     def get_recent_builds(self):
         """Gets a list of the most recent builds for this job
@@ -79,7 +58,7 @@ class job(object):
         synonymous with the short list provided on the main info
         page for the job on the dashboard.
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         builds = data['builds']
         
@@ -111,7 +90,7 @@ class job(object):
             the keys in the dictionary are the names of the jobs that
             were found in the dependency search
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         jobs = data['downstreamProjects']
         
@@ -148,7 +127,7 @@ class job(object):
             the keys in the dictionary are the names of the jobs that
             were found in the dependency search
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         jobs = data['upstreamProjects']
         
@@ -174,7 +153,7 @@ class job(object):
             last build which completed with a status of 'success'
             If there are no such builds in the build history, this method returns None
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         lgb = data['lastSuccessfulBuild']
         
@@ -195,7 +174,7 @@ class job(object):
             most recent build of this job.
             If there are no such builds in the build history, this method returns None
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         last_build = data['lastBuild']
         
@@ -215,7 +194,7 @@ class job(object):
             Most recent build with a status of 'failed'
             If there are no such builds in the build history, this method returns None
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         bld = data['lastFailedBuild']
         
@@ -235,7 +214,7 @@ class job(object):
             Most recent build with a status of 'stable'
             If there are no such builds in the build history, this method returns None
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
 
         bld = data['lastCompletedBuild']
         
@@ -255,7 +234,7 @@ class job(object):
             Most recent build with a status of 'unstable'
             If there are no such builds in the build history, this method returns None
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
 
         bld = data['lastUnsuccessfulBuild']
         
@@ -330,7 +309,7 @@ class job(object):
         boolean
             true if the job is disabled, otherwise false
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         return (data['color'] == "disabled")
         
@@ -444,7 +423,7 @@ class job(object):
             returns a reference to the newly created job resulting
             from the clone operation
         """
-        
+        #TODO: Need to relocate this method to the Jenkins class
         params = {'name': new_job_name,
                   'mode': 'copy',
                   'from': self.get_name()}
@@ -468,10 +447,8 @@ class job(object):
         new_job.disable()
         
         return new_job 
-        
+
 if __name__ == "__main__":
-    j = job("http://localhost:8080/job/test_job/")
-    j.clone('new_job_name')
-    #print j2.get_config_xml()
-    #j.clone_job("ksp_generated_subjob")
-    #print j.get_name()
+    j = job("http://enterprise:8080/job/delme1")
+    print (j.get_scm())
+    pass
