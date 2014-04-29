@@ -89,14 +89,30 @@ class UserParameters(object):
         -----------
         username
             name of user to be authenticated as
+            If set to an empty string or None, credentials
+            will be configured for anonymous access
         password
             Jenkins password for the specified users
         """
+        if username == None or username == "":
+            self.__username = ""
+            self.__password = ""
+            self.__anonymous = True
+        else:    
+            self.__username = username
+            self.__password = password
+            self.__anonymous = False
             
-        self.__username = username
-        self.__password = password
-        self.__anonymous = False
+    def set_jenkins_url(self, new_url):
+        """Changes the Jenkins root URL
         
+        Parameters
+        --------------
+        new_url: string
+            url to a new Jenkins instance
+        """
+        
+        self.__jenkins_url = new_url
 
     
     @property

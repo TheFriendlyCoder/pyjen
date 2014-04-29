@@ -6,6 +6,7 @@ if sys.version_info.major < 3:
 else:
     from urllib.parse import urlparse
     
+#todo: deprecate this function since it should never be used. callers can use the global properties object now
 def get_root_url(source_url):
     """Helper function to parse out the root / server URL from an arbitrary URL
     

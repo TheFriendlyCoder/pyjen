@@ -14,34 +14,25 @@ class view(object):
     #Class names for all supported view types
     LIST_VIEW = 'hudson.model.ListView'
     
-    def __init__ (self, url, user=None, password=None, custom_data_requester=None):
+    def __init__ (self, url, http_io_class=data_requester):
         """constructor
         
         Parameters
         ----------
         url : string
-            root URL of the view being managed by this object
-            Example: 'http://jenkins/view/MyView/'
-        user : string
-            optional user name to authenticate with Jenkins
-        password : string
-            optional password for the specified user
-            if a user name is provided this parameter must be non-empty
-        custom_data_requester : object
-            object providing interface for querying and posting data
-            from / to an HTTP URL. Typically used for unit testing by
-            allowing mock IO objects to be injected into the class.
-            If not provided the default HTTP request object will be used
+            URL of the view to be managed. This may be a full URL, starting with
+            the root Jenkins URL, or a partial URL relative to the Jenkins root
+            
+            Examples: 
+                * 'http://jenkins/views/view1'
+                * 'views/view1'
+                
+        http_io_class : Python class object
+            class capable of handling HTTP IO requests between
+            this class and the Jenkins REST API
+            If not explicitly defined a standard IO class will be used 
         """
-        if (user != None):
-            assert (password != None)
-        
-        self.__url = url
-
-        if custom_data_requester == None:
-            self.__requester = data_requester(self.__url, user, password)
-        else:
-            self.__requester = custom_data_requester
+        self.__requester = http_io_class(url)
 
         
     def get_url(self):
@@ -53,31 +44,7 @@ class view(object):
             the root URL for the REST API that controls this view
         """
 
-        return self.__url
-    
-    def get_authenticated_user(self):
-        """Gets the user name portion of the credentials used to access this view
-        
-        See also: get_authenticated_password
-        
-        Return
-        ------
-        string
-            the user name used to authenticate transactions with this view
-        """
-        return self.__requester.get_user()
-    
-    def get_authenticated_password(self):
-        """Gets the password portion of the credentials used to access this view
-        
-        See also: get_authenticated_user
-        
-        Return
-        ------
-        string
-            the password used to authenticate transactions with this view
-        """
-        return self.__requester.get_password()
+        return self.__requester.url
     
     def get_name(self):
         """Gets the display name for this view
@@ -90,7 +57,7 @@ class view(object):
         string
             the name of the view
         """
-        data = self.__requester.get_data("/api/python")
+        data = self.__requester.get_api_data()
         return data['name']
         
     def get_jobs (self):
@@ -106,13 +73,13 @@ class view(object):
         list[pyjen.job]
             list of 0 or more jobs that are included in this view
         """
-        data = self.__requester.get_data("/api/python")
+        data = self.__requester.get_api_data()
         
         view_jobs = data['jobs']
 
         retval = []
         for j in view_jobs:        
-            retval.append(job(j['url'], self.__requester.get_user(), self.__requester.get_password()))
+            retval.append(job(j['url']))
             
         return retval
     

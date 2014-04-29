@@ -1,5 +1,5 @@
-from .utils.data_requester import data_requester
-from .changeset import changeset
+from pyjen.utils.data_requester import data_requester
+from pyjen.changeset import changeset
 from datetime import datetime
 
 class build(object):
@@ -10,34 +10,26 @@ class build(object):
     """
     
     
-    def __init__ (self, jenkins_url, user=None, password=None, custom_data_requester=None):
+    def __init__ (self, url, http_io_class=data_requester):
         """constructor
         
         Parameters
         ----------
-        jenkins_url : string
-            root URL of the node being managed by this object
-            Example: 'http://jenkins/job/job1/789'
-        user : string
-            optional user name to authenticate with Jenkins
-        password : string
-            optional password for the specified user
-            if a user name is provided this parameter must be non-empty
-        custom_data_requester : object
-            object providing interface for querying and posting data
-            from / to an HTTP URL. Typically used for unit testing by
-            allowing mock IO objects to be injected into the class.
-            If not provided the default HTTP request object will be used
+        url : string
+            URL of the build to be managed. This may be a full URL, starting with
+            the root Jenkins URL, or a partial URL relative to the Jenkins root
+            
+            Examples: 
+                * 'http://jenkins/jobs/job1/123'
+                * 'jobs/job2'
+                
+        http_io_class : Python class object
+            class capable of handling HTTP IO requests between
+            this class and the Jenkins REST API
+            If not explicitly defined a standard IO class will be used 
         """
-        if (user != None):
-            assert (password != None)
+        self.__requester = http_io_class(url)
         
-        self.__jenkins_url = jenkins_url
-        if custom_data_requester == None:
-            self.__requester = data_requester(self.__jenkins_url, user, password)
-        else:
-            self.__requester = custom_data_requester
-
     def get_url(self):
         """Returns the root URL for the REST API that manages this build
         
@@ -46,7 +38,7 @@ class build(object):
         string
             the root URL for the REST API that controls this build
         """
-        return self.__jenkins_url
+        return self.__requester.url
     
     def get_build_number(self):
         """Gets the numeric build number for this build
@@ -55,7 +47,7 @@ class build(object):
         sequential integer that is incremented with each build.
         """
         
-        data = self.__requester.get_data("/api/python")
+        data = self.__requester.get_api_data()
         
         return data['number']
     
@@ -68,7 +60,7 @@ class build(object):
             the date and time at which this build was executed
         """
         
-        data = self.__requester.get_data("/api/python")
+        data = self.__requester.get_api_data()
         
         time_in_seconds = data['timestamp'] * 0.001
         
@@ -82,7 +74,7 @@ class build(object):
         boolean
             true if the build is executing otherwise false
         """
-        data = self.__requester.get_data("/api/python")
+        data = self.__requester.get_api_data()
         
         return data['building']
     
@@ -99,7 +91,7 @@ class build(object):
             Changeset object representing the set of SCM changes
             associated with / included in this build
         """
-        data = self.__requester.get_data("/api/python")
+        data = self.__requester.get_api_data()
         
         return changeset(data['changeSet'])
 
@@ -108,5 +100,5 @@ class build(object):
         return self.__requester.get_text("/consoleText")
     
 if __name__ == "__main__":
-    j = build('http://localhost:8080/job/test_job/1')
+    j = build('http://localhost:8080/job/test_job_1/1/')
     print (j.get_console_output())

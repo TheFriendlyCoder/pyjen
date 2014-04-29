@@ -438,7 +438,7 @@ class job(object):
         self.__requester.post_url(dashboard_url + "/createItem", args)
         
         new_job_url = dashboard_url + "/job/" + new_job_name + "/"
-        new_job = job(new_job_url, self.__requester.get_user(), self.__requester.get_password())
+        new_job = job(new_job_url)
         
         # Sanity check - lets make sure the job actually exists by checking its name
         assert(new_job.get_name() == new_job_name)
@@ -449,6 +449,6 @@ class job(object):
         return new_job 
 
 if __name__ == "__main__":
-    j = job("http://enterprise:8080/job/delme1")
-    print (j.get_scm())
+    j = job("http://localhost:8080/job/test_job_1")
+    print (j.get_last_build().get_build_number())
     pass

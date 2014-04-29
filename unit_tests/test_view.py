@@ -1,15 +1,12 @@
 from pyjen.view import view
 import unittest
-
+from pyjen.user_params import GlobalParams
 
 class mock_view_with_jobs_data_requester:
-    __username = ""
-    __password = ""
-    def __init__ (self, user=None, password=None):
-        self.__username = user
-        self.__password = password
+    def __init__ (self, url):
+        pass
     
-    def get_data(self, sub_url=None):
+    def get_api_data(self):
         jobs = []
         r1 = {'url':'first/job'}
         r2 = {'url':'second/job'}
@@ -20,52 +17,25 @@ class mock_view_with_jobs_data_requester:
         retval['jobs'] = jobs
         return retval
     
-    def get_user(self):
-        return self.__username
-    
-    def get_password(self):
-        return self.__password
 
 class view_tests(unittest.TestCase):
+
+    def setUp(self):
+        """Configures global connection parameters for use by test suite"""
+        GlobalParams().set_jenkins_url("http://test_jenkins_url/")
+        
     def test_get_all_jobs(self):
-        mock_requester = mock_view_with_jobs_data_requester()
-        v = view('', custom_data_requester=mock_requester)
+        v = view('', mock_view_with_jobs_data_requester)
         jobs = v.get_jobs()
         self.assertIsNotNone(jobs, "get_jobs method should return a list of jobs")
         self.assertEqual(2, len(jobs), "there should be 2 jobs returned by the get_jobs method")
-        self.assertEqual('first/job', jobs[0].get_url(), "url of first job not set as expected")
-        self.assertEqual('second/job', jobs[1].get_url(), "url of second job not set as expected")
+        self.assertEqual('http://test_jenkins_url/first/job/', jobs[0].get_url(), "url of first job not set as expected")
+        self.assertEqual('http://test_jenkins_url/second/job/', jobs[1].get_url(), "url of second job not set as expected")
     
-    def test_get_all_jobs_with_authentication(self):
-        mock_requester = mock_view_with_jobs_data_requester('MyUser', 'MyPass')
-        v = view('', custom_data_requester=mock_requester)
-        jobs = v.get_jobs()
-        
-        for j in jobs:
-            self.assertEqual('MyUser', j.get_authenticated_user(), "Username of job object not inherited from the view")
-            self.assertEqual('MyPass', j.get_authenticated_password(), "Password of job object not inherited from the view")
-
     def test_get_url(self):
-        expected_view_url = 'http://localhost:8080/view/myview'
+        expected_view_url = 'http://test_jenkins_url/view/myview/'
         v = view(expected_view_url)
         self.assertEqual(expected_view_url, v.get_url(), "View URL not being reported correctly")
-        
-    def test_get_authenticated_credentials(self):
-        expected_user = "MyUsername"
-        expected_pass = "MyPass"
-        v = view('', expected_user, expected_pass)
-        self.assertEqual(expected_user, v.get_authenticated_user(), "Authenticated user name not being reported properly from view")
-        self.assertEqual(expected_pass, v.get_authenticated_password(), "Authenticated password not being reported properly from view")
-
-    def test_partial_credentials(self):
-        try:
-            # creating a connection to a view with just a username and no
-            # password should be flagged as an error
-            view('', 'MyUser')
-        except:
-            return
-
-        self.fail("Connecting to a view with a username and no password should be flagged as an error")
         
     def test_delete_view(self):
 #        mock_requester = post_validate_requester("/doDelete")

@@ -11,6 +11,9 @@ class file_based_requester(object):
     def get_data(self, sub_url=None):
         return eval(self.get_text(sub_url))
     
+    def get_api_data(self, sub_url=None):
+        return eval(self.get_text(sub_url))
+    
     def get_headers(self, sub_url=None):
         pass
     

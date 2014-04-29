@@ -4,6 +4,7 @@ from pyjen.node import node
 from pyjen.job import job
 from pyjen.utils.data_requester import data_requester
 
+
 class jenkins(object):
     """Python wrapper managing a Jenkins primary dashboard
     
@@ -20,47 +21,42 @@ class jenkins(object):
     
     Example: finding a job
     ----------------------
-    j = pyjen.jenkins('http://localhost:8080/', 'me', 'pwd')
+    j = pyjen.jenkins('http://localhost:8080')
     job= j.find_job('My Job')
     if job = None:
-        print 'no job by that name found'
+        print ('no job by that name found')
     else:
-        print 'job ' + job.get_name() + ' found at ' + job.get_url()
+        print ('job ' + job.get_name() + ' found at ' + job.get_url())
         
         
         
     Example: finding the build number of the last good build 
             of the first job on the default view
     ----------------------------------------------------------
-    j = pyjen.jenkins('http://localhost:8080/', 'me', 'pwd')
+    j = pyjen.jenkins('http://localhost:8080/')
     view = j.get_default_view()
     jobs = view.get_jobs()
     lgb = jobs[0].get_last_good_build()
-    print 'last good build of the first job in the default view is ' + lgb.get_build_number()
+    print ('last good build of the first job in the default view is ' + lgb.get_build_number())
     """
     
-    def __init__ (self, url, user=None, password=None):
+    def __init__ (self, url=None, http_io_class=data_requester):
         """constructor
         
         Parameter
         ---------
         url : string
-            Full web URL to the main Jenkins dashboard
-        user : string
-            optional user name to use when authenticating to Jenkins
-            if not defined unauthenticated access will be attempted
-        password : string
-            optional password for authenticating the given user
-            if a non empty user name is given this parameter must be provided
-            as well
+            URL of the job to be managed. If not specified, the URL
+            will be parsed from the global parameters file.
+            Example: "http://localhost:8080"
+            
+        http_io_class : Python class object
+            class capable of handling HTTP IO requests between
+            this class and the Jenkins REST API
+            If not explicitly defined a standard IO class will be used 
         """
-        if (user != None):
-            assert (password != None)
-
-        self.__url = url
-        
-        self.__requester = data_requester(self.__url, user, password)
-        
+        self.__requester = http_io_class(url)
+            
     def get_url(self):
         """Gets the URL of the Jenkins dashboard associated with this object
         
@@ -70,7 +66,7 @@ class jenkins(object):
             URL associated with this object
         """
 
-        return self.__url
+        return self.__requester.url
     
     def get_views(self):
         """Gets a list of all views defined on the Jenkins dashboard
@@ -80,13 +76,14 @@ class jenkins(object):
         list[pyjen.view]
             list of one or more views defined on this Jenkins instance.
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         raw_views = data['views']
         retval = []
         
         for v in raw_views:
-            if v['url'] == self.__url + "/":
+            #todo: rework this, and other methods here, to use the urljoin function
+            if v['url'] == self.get_url() + "/":
                 retval.append(view(v['url'] + "view/" + v['name']))
             else:
                 retval.append(view(v['url']))
@@ -104,7 +101,7 @@ class jenkins(object):
         pyjen.view
             object that manages the default Jenkins view
         """        
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         default_view = data['primaryView']
         return view(default_view['url'] + "view/" + default_view['name'])
@@ -117,15 +114,15 @@ class jenkins(object):
         list[pyjen.node]
             list of 0 or more node objects managed by this Jenkins master
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
                 
         nodes = data['computer']
         retval = []
         for n in nodes:
             if n['displayName'] == 'master':
-                retval.append(node(self.__url + '/computer/(master)'))
+                retval.append(node(self.get_url() + '/computer/(master)'))
             else:
-                retval.append(node(self.__url + '/computer/' + n['displayName']))
+                retval.append(node(self.get_url() + '/computer/' + n['displayName']))
                         
         return retval
     
@@ -169,7 +166,7 @@ class jenkins(object):
             If the Jenkins master is preparing to shutdown (ie: in quiet down state),
             return true, otherwise returns false.
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         return data['quietingDown']
       
@@ -188,7 +185,7 @@ class jenkins(object):
             to manage the job will be returned, otherwise an empty
             object is returned (ie: None)
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         tjobs = data['jobs']
     
         for tjob in tjobs:
@@ -212,7 +209,7 @@ class jenkins(object):
             to manage the view will be returned, otherwise an empty
             object is returned (ie: None)
         """
-        data = self.__requester.get_data('/api/python')
+        data = self.__requester.get_api_data()
         
         raw_views = data['views']
         
