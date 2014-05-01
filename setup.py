@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyjen',
-    version='0.0.1dev',
+    version='0.0.2dev',
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     license=open('LICENSE.txt').read(),
