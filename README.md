@@ -25,7 +25,7 @@ Quick start guide
 
 2. Install PyJen directly from PyPI using PIP: 
 
-# pip install pyjen
+    > pip install pyjen
 
 3. By default the PyJen API supports connecting to an unsecured locally hosted instance of Jenkins. To
 enable support for remote servers and authentication you will need to create a configuration file file
