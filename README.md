@@ -35,18 +35,18 @@ named '.pyjen' in your home folder:
     > notepad %userprofile%\.pyjen
     
     Linux:
-    # vi ~/.pyjen
+    > vi ~/.pyjen
 
 4. To enable remote connections add the following lines to your config file:
 
-    [jenkins_config]
-    url=http://MyServer/jenkins/
+    > [jenkins_config]
+    > url=http://MyServer/jenkins/
 
 5. To enable authenticated connections to this Jenkins instance add the following lines to the config file:
 
-    [credentials]
-    username=MyUser
-    password=MyPassword!
+    > [credentials]
+    > username=MyUser
+    > password=MyPassword!
 
 6. Import pyjen into your project and start scripting!
 
