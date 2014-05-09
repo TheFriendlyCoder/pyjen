@@ -71,3 +71,7 @@ case $1 in
 	exit 1
 	;;
 esac
+
+#Finally, make sure this projects folder is 
+#included on the pythonpath
+export PYTHONPATH=$PWD:$PYTHONPATH
