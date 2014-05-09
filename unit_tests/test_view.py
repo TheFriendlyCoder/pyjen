@@ -1,7 +1,7 @@
 from pyjen.view import view
 import unittest
 from pyjen.user_params import GlobalParams
-import mock_data_requester
+from . import mock_data_requester
 
 class view_tests(unittest.TestCase):
 

@@ -1,7 +1,7 @@
 from pyjen.build import build
 import unittest
-from mock_data_requester import file_based_requester
-import test_utils
+from .mock_data_requester import file_based_requester
+from . import test_utils
 from datetime import datetime
 
 class build_tests(unittest.TestCase):

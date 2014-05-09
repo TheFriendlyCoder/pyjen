@@ -1,7 +1,7 @@
 from pyjen.user_params import UserParameters
 from pyjen.exceptions import InvalidUserParamsError
 
-import test_utils
+from . import test_utils
 import unittest
 
 class UserParameters_tests(unittest.TestCase):

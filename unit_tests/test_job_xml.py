@@ -1,7 +1,7 @@
-from xml_test_base import xml_test_case
+from .xml_test_base import xml_test_case
 from pyjen.utils.job_xml import job_xml
 import unittest
-import test_utils
+from . import test_utils
 
 class job_xml_tests(xml_test_case):
     """Test cases for the job_xml class"""
