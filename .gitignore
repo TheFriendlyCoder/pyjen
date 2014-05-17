@@ -9,3 +9,5 @@
 /pyjen.egg-info
 /dist
 /build
+/py2
+/py3

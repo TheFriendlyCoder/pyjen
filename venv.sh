@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Linux configuration script that prepares the local build environment
+# to support all PyJen build and test operations
+#
+# Run without any command line parameters to get usage information
+
+
+
 # sets up build environment for a particular version of Python
 setup_env()
 {
@@ -14,7 +21,7 @@ setup_env()
 	
 	#make sure the env is configured correctly
 	source $local_path/bin/activate
-	pip install -U requests wheel docutils sphinx pylint pytest
+	pip install -U requests wheel sphinx pylint pytest
 	if [ $? -ne 0 ]; then
 		echo "Error installing dependency in virtualenv $local_path"
 		exit 1;
