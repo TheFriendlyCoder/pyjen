@@ -6,9 +6,7 @@ class changeset (object):
     def __init__(self, data):
         """constructor
         
-        Parameters
-        ----------
-        data : dictionary
+        :param dict data:
             Dictionary of data elements typically parsed from the "changeSet" node
             of a builds source data as provided by the Jenkins REST API. Should have
             at least the following keys (NOTE: Some addins provide extra properties
@@ -29,28 +27,27 @@ class changeset (object):
     def get_affected_items(self):
         """gets details of the changes associated with the parent build
 
-        Return
-        ------
-        list[dictionary]
+        :returns:
             list of the details of 0 or more changes in this set
             properties:
-            'author' - type: string 
+            'author' - :func:`str`
                 - name of the person who committed the change
-            'authorUrl' - type: string
+            'authorUrl' - :func:`str`
                 - url to the users profile information as managed by the Jenkins dashboard
-            'commitId' - type: string
+            'commitId' - :func:`str`
                 - unique identifier assigned by the SCM tool associated with this change
                 - NOTE: This attribute may or may not be numeric
-            'message' - type: string
+            'message' - type: :func:`str`
                 - commit log describing each change
-            'time' - type: datetime
+            'time' - type: :class:`datetime.datetime`
                 - time stamp of when the commit was made
-            'changes' - type: list[dictionary]
+            'changes' - type: :func:`list` of :func:`dictionary`
                 - list of 1 or more files or folders included in this changeset
                 - each element has two properties:
                     - 'editType' - string describing whether the edit was an addition, modification or removal
                     - 'file' - the path and file name that was modified
                             - paths are relative the root of the source repository for the associated SCM tool
+        :rtype: :func:`list` of :func:`dict` objects
         """
         retval = []
 
@@ -94,11 +91,10 @@ class changeset (object):
     def has_changes(self):
         """Checks whether or not there are any SCM changes
         
-        Return
-        ------
-            boolean
+        :returns:
                 True : changes have been found
                 False : there are no changes        
+        :rtype: :func:`bool`
         """
         if (self.__data['items']):
             return True
@@ -108,9 +104,7 @@ class changeset (object):
     def get_scm_type(self):
         """Gets the name of the SCM tool associated with this change
         
-        Return
-        ------
-        string
-            Name of the SCM tool associated with this change
+        :returns: Name of the SCM tool associated with this change
+        :rtype: :func:`str`
         """
         return self.__data['kind']

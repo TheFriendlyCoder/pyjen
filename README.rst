@@ -24,6 +24,10 @@ Comments, suggestions and bugs may be reported to the project maintainer_.
 
 .. _maintainer: mailto:kevin@thefriendlycoder.com
 
+Full API documentation can be found here_.
+
+.. _here: http://www.thefriendlycoder.com/PyJen
+
 =================
 Quick start guide
 =================

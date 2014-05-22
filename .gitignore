@@ -4,6 +4,7 @@
 *.war
 .jenkins
 /*.html
+/*.xml
 /.project
 /.pydevproject
 /pyjen.egg-info
@@ -11,3 +12,4 @@
 /build
 /py2
 /py3
+/logs

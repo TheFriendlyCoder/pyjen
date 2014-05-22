@@ -13,27 +13,26 @@ class UserParameters(object):
     def __init__ (self, config_file=None):
         """Constructor
         
-        Config File Format
-        ==================
-        Required sections
-        ------------------
-        [jenkins_config]
-        jenkins_url=http://jenkins_server_url
+        ::
         
-        Optional Sections
-        -------------------
-        [credentials]
-        username=MyUserName
-        password=MyPassword
-        
-        
+            Config File Format
+            ==================
+            Required sections
+            ------------------
+            [jenkins_config]
+            jenkins_url=http://jenkins_server_url
+            
+            Optional Sections
+            -------------------
+            [credentials]
+            username=MyUserName
+            password=MyPassword
+            
         For more details on the general format of the config file see these links:
-        * https://wiki.python.org/moin/ConfigParserExamples
-        * https://docs.python.org/2/library/configparser.html
+            https://wiki.python.org/moin/ConfigParserExamples
+            https://docs.python.org/2/library/configparser.html
         
-        Parameters
-        -------------
-        config_file
+        :param str config_file:
             optional configuration file containing definitions for all required attributes
             for the PyJen api
             If not defined, a set of default values will be generated
@@ -85,13 +84,11 @@ class UserParameters(object):
     def set_credentials (self, username, password):
         """Overloads default login credentials
         
-        Parameters
-        -----------
-        username
+        :param str username:
             name of user to be authenticated as
             If set to an empty string or None, credentials
             will be configured for anonymous access
-        password
+        :param str password:
             Jenkins password for the specified users
         """
         if username == None or username == "":
@@ -106,10 +103,7 @@ class UserParameters(object):
     def set_jenkins_url(self, new_url):
         """Changes the Jenkins root URL
         
-        Parameters
-        --------------
-        new_url: string
-            url to a new Jenkins instance
+        :param str new_url: url to a new Jenkins instance
         """
         
         self.__jenkins_url = new_url
@@ -117,21 +111,31 @@ class UserParameters(object):
     
     @property
     def jenkins_url(self):
-        """Gets the root URL for the current Jenkins instance"""
+        """Gets the root URL for the current Jenkins instance
+        
+        :returns: root URL for the current Jenkins instance
+        :rtype: :func:`str`
+        """
         return self.__jenkins_url
     
     @property
     def username(self):
         """Gets the name of the user to authenticate with on the Jenkins instance
         
-        May be empty if anonymous authenticate enabled. See anonymous_logon() for details.""" 
+        May be empty if anonymous authenticate enabled. See :py:func:`anonymous_logon` for details.
+    
+        :rtype: :func:`str`
+        """ 
         return self.__username
     
     @property
     def password(self):
         """Gets the password to authenticate the given user against the Jenkins instance
         
-        May be empty if anonymous authentication is enabled. See anonymous_logon() for details."""
+        May be empty if anonymous authentication is enabled. See :py:func:`anonymous_logon` for details.
+    
+        :rtype: :func:`str`
+        """
         return self.__password
     
     @property
@@ -141,12 +145,10 @@ class UserParameters(object):
         Most authenticated methods that take a user name and password as input
         require that those values be provided in a tuple, with the first element
         being the username and the second element the password. This method simply
-        wraps the individual credentials provided by the username() and password()
+        wraps the individual credentials provided by the :py:func:`username` and :py:func:`password`
         properties in a tuple.
         
-        Returns
-        -------
-        tuple
+        :returns:
             2-element tuple, containing the username and password for authenticated
             connections
             e.g. (username, password)
@@ -154,6 +156,7 @@ class UserParameters(object):
             NOTE: if this configuration does not support authentication 
             (e.g.: anonymous_logon == True) this method will simply
             return None.
+        :rtype: :func:`tuple`
         """
         if (self.anonymous_logon):
             return None
@@ -165,13 +168,13 @@ class UserParameters(object):
         """Checks to see whether anonymous authentication should be used when connecting to Jenkins
         
         NOTE:
-        If anonymous authentication is being used the values of the username() and
-        password() properties will be unreliable.
+        If anonymous authentication is being used the values of the :py:func:`username` and
+        :py:func:`password` properties will be unreliable.
         
-        Returns
-        -------
-        True if anonymous logon is to be used
-        False if authenticated logon should be used
+        :returns:
+            True if anonymous logon is to be used
+            False if authenticated logon should be used
+        :rtype: :func:`bool`
         """
         return self.__anonymous
     
@@ -180,7 +183,14 @@ class UserParameters(object):
 
 #---------------------------------- HELPER FUNCTIONS ------------------------------------
 def _FindDefaultConfigFile():
-    """Internal helper method used to search several predefined locations for a pyjen config file"""
+    """Internal helper method used to search several predefined locations for a pyjen config file
+    
+    :returns:
+        Path to the appropriate default configuration file, if found
+        Otherwise returns None
+    
+    :rtype: :func:`str`
+    """
     
     #static default file name to look for
     default_config_filename = ".pyjen"
@@ -201,7 +211,12 @@ def _FindDefaultConfigFile():
 
 _GlobalParams = None
 def GlobalParams():
-    """Singleton-like function exposing a global set of user parameters shareable across the entire PyJen API"""
+    """Singleton-like function exposing a global set of user parameters shareable across the entire PyJen API
+    
+    :returns: Object that manages user defined configuration parameters to PyJen API
+    
+    :rtype: :py:mod:`pyjen.user_params`
+    """
     global _GlobalParams
     if _GlobalParams == None:
         _GlobalParams = UserParameters(_FindDefaultConfigFile())

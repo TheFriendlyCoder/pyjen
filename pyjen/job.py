@@ -9,17 +9,14 @@ class job(object):
     def __init__ (self, url, http_io_class=data_requester):
         """Constructor
         
-        Parameters
-        ----------
-        url : string
-            URL of the job to be managed. This may be a full URL, starting with
+        :param str url: URL of the job to be managed. This may be a full URL, starting with
             the root Jenkins URL, or a partial URL relative to the Jenkins root
             
             Examples: 
                 * 'http://jenkins/jobs/job1'
                 * 'jobs/job2'
                 
-        http_io_class : Python class object
+        :param obj http_io_class:
             class capable of handling HTTP IO requests between
             this class and the Jenkins REST API
             If not explicitly defined a standard IO class will be used 
@@ -30,10 +27,8 @@ class job(object):
     def get_name(self):
         """Returns the name of the job managed by this object
         
-        Returns
-        -------
-        string
-            The name of the job
+        :returns: The name of the job
+        :rtype: :func:`str`
         """
         data = self.__requester.get_api_data()      
         return data['name']
@@ -41,10 +36,8 @@ class job(object):
     def get_url(self):
         """Gets the full URL for the main web page for this job
         
-        Return
-        ------
-        string
-            URL of the main web page for the job
+        :returns: URL of the main web page for the job
+        :rtype: :func:`str`
         """
         return self.__requester.url
     
@@ -57,6 +50,8 @@ class job(object):
         method only returns the latest 20 or 30 builds. This list is
         synonymous with the short list provided on the main info
         page for the job on the dashboard.
+        
+        :rtype: :func:`list` of :py:mod:`pyjen.build` objects
         """
         data = self.__requester.get_api_data()
         
@@ -71,9 +66,7 @@ class job(object):
     def get_downstream_jobs(self, recursive=False):
         """Gets the list of immediate downstream dependencies for this job
         
-        Parameters
-        ----------
-        recursive : boolean
+        :param bool recursive:
             Set to True to recursively scan all downstream jobs
             for their downstream dependencies and return the complete
             list of all dependencies
@@ -82,13 +75,11 @@ class job(object):
             dependencies - those directly triggered by this job.
             
             Defaults to False
-            
-        Returns
-        -------
-        dictionary{job_name, pyjen.job}
+        :returns: 
             A dictionary of 0 or more jobs which depend on this one
             the keys in the dictionary are the names of the jobs that
             were found in the dependency search
+        :rtype:  :class:`dict` with :func:`str` job names for keys, and :py:mod:`pyjen.job` objects for values
         """
         data = self.__requester.get_api_data()
         
@@ -108,9 +99,7 @@ class job(object):
     def get_upstream_jobs(self, recursive=False):
         """Gets the list of upstream dependencies for this job
         
-        Parameters
-        ----------
-        recursive : boolean
+        :param bool recursive:
             Set to True to recursively scan all upstream jobs
             for their upstream dependencies and return the complete
             list of all dependencies
@@ -120,12 +109,11 @@ class job(object):
             
             Defaults to False
             
-        Returns
-        -------
-        dictionary{job_name, pyjen.job}
+        :returns:
             A dictionary of 0 or more jobs that this job depends on
             the keys in the dictionary are the names of the jobs that
             were found in the dependency search
+        :rtype: :class:`dict` with :func:`str` job names for keys and :py:mod:`pyjen.job` objects for values
         """
         data = self.__requester.get_api_data()
         
@@ -146,12 +134,12 @@ class job(object):
         
         Synonymous with the "Last successful build" permalink on the jobs' main status page
         
-        Return
-        ------
-        pyjen.build
+        
+        :returns:
             object that provides information and control for the
             last build which completed with a status of 'success'
             If there are no such builds in the build history, this method returns None
+        :rtype: :py:mod:`pyjen.build`
         """
         data = self.__requester.get_api_data()
         
@@ -167,12 +155,11 @@ class job(object):
         
         Synonymous with the "Last Build" permalink on the jobs' main status page
         
-        Return
-        ------
-        pyjen.build
+        :returns:
             object that provides information and control for the
             most recent build of this job.
             If there are no such builds in the build history, this method returns None
+        :rtype: :py:mod:`pyjen.build`
         """
         data = self.__requester.get_api_data()
         
@@ -188,11 +175,10 @@ class job(object):
         
         Synonymous with the "Last failed build" permalink on the jobs' main status page
         
-        Returns
-        -------
-        pyjen.build
+        :returns:
             Most recent build with a status of 'failed'
             If there are no such builds in the build history, this method returns None
+        :rtype: :py:mod:`pyjen.build`
         """
         data = self.__requester.get_api_data()
         
@@ -208,11 +194,11 @@ class job(object):
         
         Synonymous with the "Last stable build" permalink on the jobs' main status page
         
-        Returns
-        -------
-        pyjen.build
+        
+        :returns:
             Most recent build with a status of 'stable'
             If there are no such builds in the build history, this method returns None
+        :rtype: :py:mod:`pyjen.build`
         """
         data = self.__requester.get_api_data()
 
@@ -228,11 +214,10 @@ class job(object):
         
         Synonymous with the "Last unsuccessful build" permalink on the jobs' main status page
         
-        Returns
-        -------
-        pyjen.build
+        :returns:
             Most recent build with a status of 'unstable'
             If there are no such builds in the build history, this method returns None
+        :rtype: :py:mod:`pyjen.build`
         """
         data = self.__requester.get_api_data()
 
@@ -246,17 +231,13 @@ class job(object):
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
         
-        Parameters
-        ----------
-        build_number : integer
+        :param int build_number:
             Numeric identifier of the build to retrieve
             Value is typically non-negative
-            
-        Return
-        ------
-        pyjen.build
+        :returns:
             Build object for the build with the given numeric identifier
             If such a build does not exist, returns None
+        :rtype: :py:mod:`pyjen.build`
         """
         try:
             data = self.__requester.get_data("/" + str(build_number)  + "/api/python")
@@ -282,7 +263,7 @@ class job(object):
         Sets the state of this job to disabled so as to prevent the 
         job from being triggered.
         
-        Use in conjunction with the enable() and is_disabled()
+        Use in conjunction with the :py:func:`enable` and :py:func:`is_disabled`
         methods to control the state of the job.
         """
         self.__requester.post("/disable")
@@ -297,17 +278,16 @@ class job(object):
         Enabling a job allows it to be triggered, either automatically
         via commit hooks / polls or manually through the dashboard.
         
-        Use in conjunction with the disable() and is_disabled() methods
+        Use in conjunction with the :py:func:`disable` and :py:func:`is_disabled` methods
         """
         self.__requester.post("/enable")
         
     def is_disabled(self):
         """Indicates whether this job is disabled or not
         
-        Returns
-        -------
-        boolean
+        :returns:
             true if the job is disabled, otherwise false
+        :rtype: :func:`bool`
         """
         data = self.__requester.get_api_data()
         
@@ -325,10 +305,9 @@ class job(object):
         callers are free to manipulate the raw job configuration
         as desired.
         
-        Returns
-        -------
-        string
+        :returns:
             the full XML tree describing this jobs configuration
+        :rtype: :func:`str`
         """
         return self.__requester.get_text('/config.xml')
     
@@ -339,9 +318,7 @@ class job(object):
         rare circumstances. All configuration changes should normally
         be handled using other methods provided on this class.
         
-        Parameters
-        ----------
-        new_xml : string
+        :param str new_xml:
             A complete XML tree compatible with the Jenkins API
         """
         headers = {'Content-Type': 'text/xml'}
@@ -357,10 +334,7 @@ class job(object):
         If this job is already using a custom workspace it
         will be updated to the new path provided.
         
-        Parameters
-        ----------
-        path : string
-            new custom workspace path
+        :param str path: new custom workspace path
         """
         xml = self.get_config_xml()
         
@@ -372,12 +346,10 @@ class job(object):
     def get_scm(self):
         """Gets the object that manages the source code management configuration for a job
         
-        Returns
-        -------
-        object
+        :returns:
             One of several possible plugin objects which exposes the relevant set
             of properties supported by a given source code management tool.
-            
+        :rtype: :py:class:`pyjen.plugins.pluginbase`    
         """
         xml = self.get_config_xml()
         jobxml = job_xml(xml)
@@ -387,16 +359,12 @@ class job(object):
         """ Returns a list of all of the builds for a job that 
             occurred between the specified start and end times
             
-            Parameters
-            ----------
-                startTime 
-                    datetime object representing the ceiling of the range
-                endTime
-                    datetime object representing the floor of the range
-            Returns
-            -------
-                List[build]
-                    a list of builds            
+            :param datetime startTime: 
+                    starting time index for range of builds to find
+            :param datetime endTime:
+                    ending time index for range of builds to find
+            :returns: a list of 0 or more builds
+            :rtype: :class:`list` of :py:mod:`pyjen.build` objects            
         """       
         builds = []                
         
@@ -410,18 +378,14 @@ class job(object):
     def clone(self, new_job_name):
         """Makes a copy of this job on the dashboard with a new name        
         
-        Parameters
-        ----------            
-        new_job_name : string
+        :param str new_job_name:
             the name of the newly created job whose settings will
             be an exact copy of this job. It is expected that this
             new job name be unique across the dashboard.
             
-        Returns
-        -------
-        pyjen.job
-            returns a reference to the newly created job resulting
+        :returns: a reference to the newly created job resulting
             from the clone operation
+        :rtype: :py:mod:`pyjen.job`
         """
         #TODO: Need to relocate this method to the Jenkins class
         params = {'name': new_job_name,

@@ -19,6 +19,8 @@ via simple Python commands.
 
 Comments, suggestions and bugs may be reported to the project [maintainer](mailto:kevin@thefriendlycoder.com).
 
+Full API documentation can be found [here](http://www.thefriendlycoder.com/PyJen)
+
 Quick start guide
 =================
 1. First, we recommend that you install the pip package manager as described [here](http://www.pip-installer.org/en/latest/installing.html).

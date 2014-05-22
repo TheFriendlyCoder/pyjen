@@ -10,14 +10,12 @@ class node(object):
     def __init__(self, url, user=None, password=None):
         """Constructor
         
-        Parameters
-        ----------
-        url : string
+        :param str url:
             root URL of the node being managed by this object
-            Example: 'http://jenkins/computer/mynode/'
-        user : string
+            **Example:** 'http://jenkins/computer/mynode/'
+        :param str user:
             optional user name to authenticate to Jenkins dashboard
-        password : string
+        :param str password:
             password for Jenkins login credentials 
             if a user name is provided this parameter must be defined as well
         """
@@ -28,16 +26,18 @@ class node(object):
         self.__requester = data_requester(url, user, password)
         
     def get_url(self):
-        """Returns the root URL of the REST API used to manage this node"""
+        """Returns the root URL of the REST API used to manage this node
+        
+        :returns: root URL of the REST API used to manage this node
+        :rtype: :func:`str`
+        """
         return self.__url
     
     def get_name(self):
         """Gets the display name of this node
         
-        Return
-        ------
-        string
-            the name of this node
+        :returns: the name of this node
+        :rtype: :func:`str`
         """        
         data = self.__requester.get('/api/python')
         
@@ -46,10 +46,8 @@ class node(object):
     def is_offline(self):
         """Checks to see whether this node is currently offline or not
         
-        Return
-        ------
-        boolean
-            true if this node is offline otherwise false
+        :returns: true if this node is offline otherwise false
+        :rtype: :func:`bool`
         """
         data = self.__requester.get('/api/python')
         
@@ -62,9 +60,7 @@ class node(object):
         be toggled to "online" when calling this method, and vice
         versa.
         
-        Parameter
-        ---------
-        message : text
+        :param str message:
             optional descriptive message to display on the dashboard explaining
             the reason for this operation.
         """
@@ -79,11 +75,10 @@ class node(object):
     def is_idle(self):
         """Checks to see whether any executors are in use on this node or not
         
-        Return
-        ------
-        boolean
+        :returns:
             returns true if there are no active builds on this node at the moment
             otherwise returns false
+        :rtype: :func:`bool`
         """
         data = self.__requester.get_data('/api/python')
         
@@ -92,18 +87,15 @@ class node(object):
     def wait_for_idle(self, max_timeout=None):
         """Blocks execution until this node enters an idle state
         
-        Parameters
-        ----------
-        max_timeout : integer
+        :param int max_timeout:
             The maximum amount of time, in seconds, to wait for
             an idle state. If this value is undefined, this method
             will block indefinitely.
                 
-        Returns
-        -------
-        boolean
+        :returns:
             true if the node has entered idle state before returning
             otherwise returns false
+        :rtype: :func:`bool`
         """
         if max_timeout != None:
             while not self.is_idle():

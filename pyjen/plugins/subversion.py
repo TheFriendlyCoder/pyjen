@@ -7,10 +7,7 @@ class subversion(pluginbase):
     def __init__(self, xml):
         """constructor
         
-        Parameters
-        ----------
-        xml : string
-            the XML text for the subtree of the SVN plugin
+        :param str xml: the XML text for the subtree of the SVN plugin
         """
         super(subversion, self).__init__(xml)
     
@@ -20,9 +17,7 @@ class subversion(pluginbase):
     def get_modules(self):
         """Gets the list of SVN repositories (aka: modules) being used by the target job
         
-        Returns
-        -------
-        list[dictionary]
+        :returns:
             set of 0 or repository configuration options exposed by this job. Each element
             will contain the following keys:
             
@@ -31,6 +26,7 @@ class subversion(pluginbase):
             * 'depth' - indicates the depth under which the SCM checkout operation should go
             * 'ignore_externals'- boolean indicating whether SVN externals are being monitored
                             by any SCM triggers associated with this job.
+        :rtype: :class:`list` of :func:`dict` objects
         """
         retval = []
         

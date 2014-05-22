@@ -4,17 +4,12 @@ from pyjen.plugins.pluginbase import pluginbase
 def find_plugin(xml):
     """Dynamically locates the class for a Jenkins plugin
     
-    Parameters
-    ----------
-    xml : string
-        the xml representation of the plugin configuration properties
+    :param str xml: the xml representation of the plugin configuration properties
         as found in the associated config.xml
-        
-    Returns
-    -------
-    object
+    :returns:
         An instance of the appropriate plugin, initialized with
         the properties provided in the given xml snippet
+    :rtype: :py:mod:`pyjen.plugins.pluginbase`
     """
     plugin = pluginbase(xml)
     

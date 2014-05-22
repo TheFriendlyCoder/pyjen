@@ -18,20 +18,15 @@ class pluginbase(object):
     def __init__(self, xml):
         """constructor
         
-        Parameters
-        ----------
-        xml : string
-            the XML sub-tree defining the properties of this plugin
+        :param str xml: the XML sub-tree defining the properties of this plugin
         """
         self.__root = ElementTree.fromstring(xml)
         
     def get_name(self):
         """Gets the name of the plugin
         
-        Returns
-        -------
-        string
-            the plugin name
+        :returns: the plugin name
+        :rtype: :func:`str`
         """
         attr = self.__root.attrib['plugin']
         parts = attr.split('@')
@@ -40,20 +35,16 @@ class pluginbase(object):
     def get_classname(self):
         """Gets the Java class name of the plugin
         
-        Returns
-        -------
-        string
-            the Java class name
+        :returns: the Java class name
+        :rtype: :func:`str`
         """
         return self.__root.attrib['classname']
         
     def get_version(self):
         """Gets the version of the plugin
         
-        Returns
-        -------
-        string
-            the plugin version
+        :returns: the plugin version
+        :rtype: :func:`str`
         """
         attr = self.__root.attrib['plugin']
         parts = attr.split('@')

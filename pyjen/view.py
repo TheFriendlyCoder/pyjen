@@ -17,9 +17,7 @@ class view(object):
     def __init__ (self, url, http_io_class=data_requester):
         """constructor
         
-        Parameters
-        ----------
-        url : string
+        :param str url:
             URL of the view to be managed. This may be a full URL, starting with
             the root Jenkins URL, or a partial URL relative to the Jenkins root
             
@@ -27,7 +25,7 @@ class view(object):
                 * 'http://jenkins/views/view1'
                 * 'views/view1'
                 
-        http_io_class : Python class object
+        :param obj http_io_class: 
             class capable of handling HTTP IO requests between
             this class and the Jenkins REST API
             If not explicitly defined a standard IO class will be used 
@@ -38,10 +36,8 @@ class view(object):
     def get_url(self):
         """Returns the root URL for the REST API that manages this view
         
-        Return
-        ------
-        string
-            the root URL for the REST API that controls this view
+        :returns: the root URL for the REST API that controls this view
+        :rtype: :func:`str`
         """
 
         return self.__requester.url
@@ -52,10 +48,8 @@ class view(object):
         This is the name as it appears in the tabed view
         of the main Jenkins dashboard
         
-        Return
-        ------
-        string
-            the name of the view
+        :returns: the name of the view
+        :rtype: :func:`str`
         """
         data = self.__requester.get_api_data()
         return data['name']
@@ -68,10 +62,8 @@ class view(object):
         that meet the requirements of the filter associated
         with this view.
         
-        Return
-        ------
-        list[pyjen.job]
-            list of 0 or more jobs that are included in this view
+        :returns: list of 0 or more jobs that are included in this view
+        :rtype:  :class:`list` of :py:mod:`pyjen.job` objects
         """
         data = self.__requester.get_api_data()
         
@@ -91,14 +83,13 @@ class view(object):
         of the view. Use with caution.
         
         This method can be used in conjunction with the 
-        pyjen.view.set_config_xml() method to dynamically
+        :py:func:`pyjen.view.set_config_xml` method to dynamically
         update arbitrary properties of this view.
         
-        Return
-        ------
-        string
+        :returns:
             returns the raw XML of the views configuration in
             a plain text string format
+        :rtype: :func:`str`
         """
         return self.__requester.get_text("/config.xml")
         
@@ -106,11 +97,9 @@ class view(object):
         """Updates the raw configuration of this view with a new set of properties
         
         This method should typically used in conjunction with
-        the pyjen.view.get_config_xml() method.
+        the :py:func:`pyjen.view.get_config_xml` method.
         
-        Parameter
-        ---------
-        new_xml : string
+        :param str new_xml:
             XML encoded text string to be used as a replacement for the
             current configuration being used by this view.
             
@@ -133,10 +122,8 @@ class view(object):
     def get_type(self):
         """Gets the Jenkins view-type descriptor for this view
         
-        Returns
-        -------
-        string
-            descriptive string of the Jenkins view type this view derives from
+        :returns: descriptive string of the Jenkins view type this view derives from
+        :rtype: :func:`str`
         """
         xml = self.get_config_xml()
         vxml = view_xml(xml)
@@ -165,9 +152,14 @@ class view(object):
     def clone_all_jobs(self, search_regex, replacement_string):
         """Helper method that does a batch clone on all jobs found in this view
         
-        Returns
-        -------
-        list of newly created jobs
+        :param str search_regex: pattern to match against all jobs
+            contained in this view, to be modified in order to generate
+            new job names for their cloned counterparts.
+        :param str replacement_string: character string to substitute in place
+            of the regex pattern when generating names for the new
+            cloned jobs.
+        :returns: list of newly created jobs
+        :rtype: :class:`list` of :py:mod:`pyjen.job` objects
         """
         my_jobs = self.get_jobs()
         retval = []

@@ -6,24 +6,21 @@ class build(object):
     """Class that encapsulates all jenkins related 'build' information
     
     Builds are executions of jobs and thus instances of this class are
-    typically generated from the pyjen.job class.
+    typically generated from the :py:mod:`pyjen.job` class.
     """
     
     
     def __init__ (self, url, http_io_class=data_requester):
         """constructor
         
-        Parameters
-        ----------
-        url : string
-            URL of the build to be managed. This may be a full URL, starting with
+        :param str url: URL of the build to be managed. This may be a full URL, starting with
             the root Jenkins URL, or a partial URL relative to the Jenkins root
             
             Examples: 
                 * 'http://jenkins/jobs/job1/123'
                 * 'jobs/job2'
                 
-        http_io_class : Python class object
+        :param http_io_class:
             class capable of handling HTTP IO requests between
             this class and the Jenkins REST API
             If not explicitly defined a standard IO class will be used 
@@ -33,18 +30,17 @@ class build(object):
     def get_url(self):
         """Returns the root URL for the REST API that manages this build
         
-        Return
-        ------
-        string
-            the root URL for the REST API that controls this build
+        :returns: the root URL for the REST API that controls this build
+        :rtype: :func:`str`
         """
         return self.__requester.url
     
     def get_build_number(self):
         """Gets the numeric build number for this build
         
-        This is the unique numeric identifier, typically a
-        sequential integer that is incremented with each build.
+        :returns: This is the unique numeric identifier, typically a
+            sequential integer that is incremented with each build.
+        :rtype: :func:`int`
         """
         
         data = self.__requester.get_api_data()
@@ -54,10 +50,9 @@ class build(object):
     def get_build_time(self):
         """Gets the time stamp of when this build was executed
         
-        Return
-        ------
-        datetime object
-            the date and time at which this build was executed
+        :returns: the date and time at which this build was executed
+        :rtype: :class:`datetime.datetime`
+            
         """
         
         data = self.__requester.get_api_data()
@@ -69,10 +64,8 @@ class build(object):
     def is_building(self):
         """Checks to see whether this build is currently executing
         
-        Return
-        ------
-        boolean
-            true if the build is executing otherwise false
+        :returns: true if the build is executing otherwise false
+        :rtype: :func:`bool`
         """
         data = self.__requester.get_api_data()
         
@@ -85,18 +78,19 @@ class build(object):
         changes associated with this build, as may be the case
         with a forced build for example.
         
-        Return
-        ------
-        pyjen.changeset
+        :returns: 
             Changeset object representing the set of SCM changes
             associated with / included in this build
+        :rtype: :py:mod:`pyjen.changeset`
         """
         data = self.__requester.get_api_data()
         
         return changeset(data['changeSet'])
 
     def get_console_output(self):
-        """Gets the raw console output for this build as plain text"""
+        """Gets the raw console output for this build as plain text
+        :rtype: :func:`str`
+        """
         return self.__requester.get_text("/consoleText")
     
 if __name__ == "__main__":
