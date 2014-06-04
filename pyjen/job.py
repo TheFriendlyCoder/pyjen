@@ -387,7 +387,8 @@ class job(object):
             from the clone operation
         :rtype: :py:mod:`pyjen.job`
         """
-        #TODO: Need to relocate this method to the Jenkins class
+        #TODO: need to link this class to Jenkins object so it can interact
+        #    with it here to perform the clone operation
         params = {'name': new_job_name,
                   'mode': 'copy',
                   'from': self.get_name()}
@@ -399,7 +400,8 @@ class job(object):
         args['headers'] = headers
         
         dashboard_url = get_root_url(self.get_url())
-        self.__requester.post_url(dashboard_url + "/createItem", args)
+        tmp_requester = data_requester(dashboard_url)
+        tmp_requester.post("createItem", args)
         
         new_job_url = dashboard_url + "/job/" + new_job_name + "/"
         new_job = job(new_job_url)
@@ -413,6 +415,6 @@ class job(object):
         return new_job 
 
 if __name__ == "__main__":
-    j = job("http://localhost:8080/job/test_job_1")
-    print (j.get_last_build().get_build_number())
-    pass
+    j = job("http://localhost:8080/job/trunk-first-job")
+    j2 = j.clone("delme")
+    
