@@ -6,17 +6,16 @@ class changeset (object):
     def __init__(self, data):
         """constructor
         
-        :param dict data:
+        :param dict data: 
             Dictionary of data elements typically parsed from the "changeSet" node
             of a builds source data as provided by the Jenkins REST API. Should have
             at least the following keys (NOTE: Some addins provide extra properties
-            not explicitly exposed by this class)
-            
+            not explicitly exposed by this class) 
             'kind' - string describing the SCM tool associated with this change
-                   - all changes reported by this object are expected to be stored
-                     in the same SCM tool
-                     
+            all changes reported by this object are expected to be stored
+            in the same SCM tool     
             'items' - list of 0 or more actual changesets included in the associated build
+        
         """
 
         assert('items' in data.keys())
@@ -28,26 +27,27 @@ class changeset (object):
         """gets details of the changes associated with the parent build
 
         :returns:
-            list of the details of 0 or more changes in this set
-            properties:
-            'author' - :func:`str`
-                - name of the person who committed the change
-            'authorUrl' - :func:`str`
-                - url to the users profile information as managed by the Jenkins dashboard
-            'commitId' - :func:`str`
-                - unique identifier assigned by the SCM tool associated with this change
-                - NOTE: This attribute may or may not be numeric
-            'message' - type: :func:`str`
-                - commit log describing each change
-            'time' - type: :class:`datetime.datetime`
-                - time stamp of when the commit was made
-            'changes' - type: :func:`list` of :func:`dictionary`
-                - list of 1 or more files or folders included in this changeset
-                - each element has two properties:
-                    - 'editType' - string describing whether the edit was an addition, modification or removal
-                    - 'file' - the path and file name that was modified
-                            - paths are relative the root of the source repository for the associated SCM tool
+        list of the details of 0 or more changes in this set properties:
+        'author' - :func:`str`
+            - name of the person who committed the change
+        'authorUrl' - :func:`str`
+            - url to the users profile information as managed by the Jenkins dashboard
+        'commitId' - :func:`str`
+            - unique identifier assigned by the SCM tool associated with this change
+            - NOTE: This attribute may or may not be numeric
+        'message' - type: :func:`str`
+            - commit log describing each change
+        'time' - type: :class:`datetime.datetime`
+            - time stamp of when the commit was made
+        'changes' - type: :func:`list` of :func:`dictionary`
+            - list of 1 or more files or folders included in this changeset
+            - each element has two properties:
+                - 'editType' - string describing whether the edit was an addition, modification or removal
+                - 'file' - the path and file name that was modified
+                        - paths are relative the root of the source repository for the associated SCM tool
+        
         :rtype: :func:`list` of :func:`dict` objects
+        
         """
         retval = []
 

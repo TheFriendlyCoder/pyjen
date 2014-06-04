@@ -4,10 +4,7 @@ class view_xml(object):
     def __init__ (self, xml):
         """Constructor
         
-        Parameters
-        ----------
-        xml : string
-            Raw XML character string extracted from a Jenkins job.
+        :param str xml: Raw XML character string extracted from a Jenkins job.
         """
         
         self.__root = ElementTree.fromstring(xml)
@@ -15,10 +12,8 @@ class view_xml(object):
     def get_type(self):
         """Returns the Jenkins type descriptor for this view
         
-        Return
-        ------
-        string
-            type descriptor of this view
+        :returns: type descriptor of this view
+        :rtype: :func:`str`
         """
         
         #The root element of the views configuration XML

@@ -29,15 +29,14 @@ class jenkins(object):
             print ('job ' + job.get_name() + ' found at ' + job.get_url())
         
         
-    **Example:** finding the build number of the last good build 
-            of the first job on the default view 
-    ::
+    **Example:** finding the build number of the last good build of the first job on the default view ::
     
         j = pyjen.jenkins('http://localhost:8080/')
         view = j.get_default_view()
         jobs = view.get_jobs()
         lgb = jobs[0].get_last_good_build()
         print ('last good build of the first job in the default view is ' + lgb.get_build_number())
+    
     """
     
     def __init__ (self, url=None, http_io_class=data_requester):
@@ -52,6 +51,7 @@ class jenkins(object):
             class capable of handling HTTP IO requests between
             this class and the Jenkins REST API
             If not explicitly defined a standard IO class will be used 
+        
         """
         self.__requester = http_io_class(url)
             

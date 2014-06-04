@@ -12,19 +12,15 @@ class data_requester (object):
     def __init__(self, url=None):
         """Constructor
         
-        Parameters
-        --------------
-        url : string
-            Optional source URL to use for all subsequent IO operations
-            performed on this object. May be partial path, relative to
-            the Jenkins root URL, or a full standalone URL.
-            
-            If not defined, all operations will be directed at the
-            root Jenkins URL.
-            
-            NOTE: As a convenience, full URLs with the same root path
-            as that provided by the GlobalParams object are acceptable
-            inputs.
+        :param str url: Optional source URL to use for all subsequent IO operations performed on this object. May be partial path, relative to the Jenkins root URL, or a full standalone URL.
+        
+        If not defined, all operations will be directed at the
+        root Jenkins URL.
+        
+        NOTE: As a convenience, full URLs with the same root path
+        as that provided by the GlobalParams object are acceptable
+        inputs.
+        
         """
         self.__base_url = GlobalParams().jenkins_url.rstrip("/") + "/"
         if (url == None):
@@ -48,17 +44,10 @@ class data_requester (object):
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
 
-        Parameters
-        ----------
-        path
-            optional extension path to append to the root
-            URL managed by this object when performing the
-            get operation
+        :param str path: optional extension path to append to the root URL managed by this object when performing the get operation
             
-        Returns
-        --------
-        string
-            the text loaded from this objects' URL
+        :returns: the text loaded from this objects' URL
+        :rtype: :func:`str`
         
         """
             
@@ -67,15 +56,9 @@ class data_requester (object):
     def _get_raw_text(self, url):
         """retrieves the raw text output from a specified HTTP URL
         
-        Parameter
-        ---------
-        url : string
-            the full HTTP URL to be polled
-        
-        Returns
-        ---------
-        string
-            Text returned from the given URL
+        :param str url: the full HTTP URL to be polled
+        :returns:  Text returned from the given URL
+        :rtype: :func:`str`
         """
         r = requests.get(url, auth=GlobalParams().credentials)
         
@@ -87,29 +70,25 @@ class data_requester (object):
     def get_data(self, path=None):
         """Convenience method that converts the text data loaded from a Jenkins URL to Python data types
         
-        Parameters
-        ----------
-        path
+        :param str path:
             optional extension path to append to the root
             URL managed by this object when performing the
             get operation
             
-        Returns
-        ----------
-        object
+        :returns:
             The results of converting the text data loaded from the Jenkins 
             URL into appropriate Python objects
+        :rtype: :class:`object`
         """
         return eval(self.get_text(path))
     
     def get_api_data(self):
         """Convenience method that retrieves the Jenkins API specific data from the specified URL
         
-        Returns
-        --------
-        object
+        :returns:
             The set of Jenkins attributes, converted to Python objects, associated
             with the given URL.
+        :rtype: :class:`object`
         """
         temp_url = urljoin(self.url, "api/python")
         txt = self._get_raw_text(temp_url)
@@ -118,17 +97,12 @@ class data_requester (object):
     def get_headers(self, path=None):
         """gets the HTTP header attributes from a Jenkins URL
         
-        Parameters
-        ----------
-        path
+        :param str path:
             optional extension path to append to the root
             URL managed by this object when performing the
             get operation
-            
-        Returns
-        ---------
-        dictionary
-            dictionary of HTTP header attributes with their associated values
+        :returns: dictionary of HTTP header attributes with their associated values
+        :rtype: :func:`dict`
         """
             
         r = requests.get(urljoin(self.url, path.lstrip("/")), auth=GlobalParams().credentials)
@@ -141,14 +115,12 @@ class data_requester (object):
     def post(self, path=None, args=None):
         """sends data to or triggers an operation via a Jenkins URL
         
-        Parameters
-        ----------
-        path
+        :param str path:
             optional extension path to append to the root
             URL managed by this object when performing the
             post operation
             
-        args : dictionary
+        :param dict args:
             optional set of data arguments to be sent with the post operation
             supported keys are as follows:
             
@@ -170,7 +142,11 @@ class data_requester (object):
         """Gets the root URL used for IO operations by this object
         
         NOTE: This root URL will always have a trailing '/' character
-        to simplify other processes"""
+        to simplify other processes
+        
+        :returns: root URL used for IO operations by this object
+        :rtype: :func:`str`
+        """
         return self.__base_url
             
 #import urllib.parse 

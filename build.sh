@@ -25,7 +25,7 @@ make_docs()
 	test $result -ne 0 && return $result
 
 	# for extra verification, lets generate a sample PyPI homepage
-	python setup.py --long-description | rst2html.py > pypi_homepage.html
+	python setup.py --long-description | rst2html.py > pypi_homepage.html 2>>"$log_folder/make_docs.log"
 }
 
 run_tests()

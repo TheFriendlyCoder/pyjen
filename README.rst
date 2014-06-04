@@ -7,33 +7,24 @@
 =============
 Overview
 =============
-Extensible, user and developer friendly Python interface to the Jenkins_ CI tool, wrapping
-the features exposed by the standard REST API_ using
+Extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping
+the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using
 Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of Python, and the
 latest trunk and LTS editions of Jenkins.
-
-.. _Jenkins: http://jenkins-ci.org/
-.. _API: https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/
 
 With an intuitive and well thought out interface, PyJen offers anyone familiar with the Python programming
 language an easy way to manage Jenkins dashboards from a simple command prompt. All core primitives of Jenkins,
 including views, jobs and builds are easily accessible and can be loaded, analyzed and even modified or created
 via simple Python commands.
 
-Comments, suggestions and bugs may be reported to the project maintainer_.
+Comments, suggestions and bugs may be reported to the project `maintainer <mailto:kevin@thefriendlycoder.com>`_
 
-.. _maintainer: mailto:kevin@thefriendlycoder.com
-
-Full API documentation can be found here_.
-
-.. _here: http://www.thefriendlycoder.com/PyJen
+Full API documentation can be found `here <http://www.thefriendlycoder.com/PyJen>`_.
 
 =================
 Quick start guide
 =================
-1. First, we recommend that you install the pip package manager as described here_.
-
-.. _here: http://www.pip-installer.org/en/latest/installing.html
+1. First, we recommend that you install the pip package manager as described `here <http://www.pip-installer.org/en/latest/installing.html>`_
 
 2. Install PyJen directly from PyPI using PIP: 
 

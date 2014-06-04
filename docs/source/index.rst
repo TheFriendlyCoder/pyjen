@@ -6,12 +6,8 @@
 Welcome to PyJen's documentation!
 =================================
 
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-
+.. include:: ../../README.rst
+    
 
 Indices and tables
 ==================

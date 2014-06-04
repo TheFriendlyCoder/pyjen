@@ -11,10 +11,7 @@ class job_xml(object):
     def __init__ (self, xml):
         """Constructor
         
-        Parameters
-        ----------
-        xml : string
-            Raw XML character string extracted from a Jenkins job.
+        :param str xml: Raw XML character string extracted from a Jenkins job.
         """
         
         self.__root = ElementTree.fromstring(xml)
@@ -27,10 +24,7 @@ class job_xml(object):
         If the job already has a custom workspace it will be replaced with the given path
         If not then a new custom workspace will be created with the given path
         
-        Parameters
-        ----------
-        path : string
-            path of the new or modified custom workspace
+        :param str path: path of the new or modified custom workspace
         """
         node = self.__root.find('customWorkspace')
         
@@ -53,12 +47,12 @@ class job_xml(object):
     def get_xml(self):
         """Extracts the processed XML for export to a Jenkins job
         
-        Returns
-        -------
-        string
+        :returns:
             Raw XML containing any and all customizations applied in
             previous operations against this object. This character
             string can be imported into Jenkins to configure a job.
+        
+        :rtype: :func:`str`
         """
         
         #TODO: handle the unicode encoding here correctly
@@ -72,11 +66,13 @@ class job_xml(object):
         an instance of the wrapper for that plugin pre-configured with
         the settings found in the relevant XML subtree.
         
-        :returns: :py:mod:`pyjen.plugins.pluginbase`
+        :returns: 
             One of any number of plugin objects responsible for providing
             extensions to the source code management portion of a job
-            
+        
             Examples: :py:mod:`pyjen.plugins.subversion`
+        
+        :rtype: :py:mod:`pyjen.plugins.pluginbase`
         """
         node = self.__root.find('scm')
         xml = ElementTree.tostring(node)
