@@ -162,13 +162,34 @@ class view(object):
         :rtype: :class:`list` of :py:mod:`pyjen.job` objects
         """
         my_jobs = self.get_jobs()
+        
+        # Create a mapping table for names of jobs
+        job_map = {}
+        for j in my_jobs:
+            orig_name = j.get_name()
+            job_map[orig_name] = orig_name.replace(search_regex, replacement_string)
+        
+        # Todo: make sure none of the jobs being generated exists on the dashboard
+        
+        # clone all jobs, and update internal references     
         retval = []
         for j in my_jobs:
             orig_name = j.get_name()
-            new_name = re.sub(search_regex, replacement_string, orig_name)
-            new_job = j.clone(new_name)
+            new_job = j.clone(job_map[orig_name])
+            
+            # update all internal references
+            xml = new_job.get_config_xml()
+            for k in job_map.keys():
+                xml = xml.replace(k, job_map[k])
+            new_job.set_config_xml(xml)
+        
             retval.append(new_job)
         return retval
     
 if __name__ == "__main__":
+    v = view("http://localhost:8080/view/trunk/")
+    #v.delete_all_jobs()
+    new_jobs = v.clone_all_jobs("trunk", "branch")
+    for j in new_jobs:
+        print ("created job "  + j.get_name())
     pass
