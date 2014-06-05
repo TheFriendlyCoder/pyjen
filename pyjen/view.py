@@ -75,6 +75,16 @@ class view(object):
             
         return retval
     
+    def job_count(self):
+        """Gets the number of jobs contained under this view
+        
+        :returns: number of jobs contained under this view
+        :rtype: :func:`int`
+        """
+        data = self.__requester.get_api_data()
+        
+        return len(data['jobs'])
+    
     def get_config_xml(self):
         """Gets the raw configuration data in XML format
         
@@ -168,9 +178,11 @@ class view(object):
         for j in my_jobs:
             orig_name = j.get_name()
             job_map[orig_name] = orig_name.replace(search_regex, replacement_string)
-        
+            #print (orig_name + "->" + job_map[orig_name])
+            
         # Todo: make sure none of the jobs being generated exists on the dashboard
-        
+        #return
+    
         # clone all jobs, and update internal references     
         retval = []
         for j in my_jobs:
@@ -187,9 +199,10 @@ class view(object):
         return retval
     
 if __name__ == "__main__":
-    v = view("http://localhost:8080/view/trunk/")
+    v = view("http://builds/user/kphillips/my-views/view/trunk-unified/?")
     #v.delete_all_jobs()
-    new_jobs = v.clone_all_jobs("trunk", "branch")
-    for j in new_jobs:
-        print ("created job "  + j.get_name())
-    pass
+    #new_jobs = v.clone_all_jobs("unified-trunk", "unified-4.2.x")
+    #for j in new_jobs:
+    #    print ("created job "  + j.get_name())
+    #pass
+    print (str(v.job_count()))
