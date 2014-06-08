@@ -3,7 +3,8 @@ from pyjen.view import view
 from pyjen.node import node
 from pyjen.job import job
 from pyjen.utils.data_requester import data_requester
-
+from pyjen.user_params import GlobalParams
+from pyjen.exceptions import InvalidJenkinsURLError
 
 class jenkins(object):
     """Python wrapper managing a Jenkins primary dashboard
@@ -39,30 +40,48 @@ class jenkins(object):
     
     """
     
-    def __init__ (self, url=None, http_io_class=data_requester):
+    def __init__ (self, data_io_controller):
         """constructor
         
-        :param str url:
-            URL of the job to be managed. If not specified, the URL
-            will be parsed from the global parameters file.
-            Example: "http://localhost:8080"
-            
-        :param obj http_io_class:
-            class capable of handling HTTP IO requests between
-            this class and the Jenkins REST API
-            If not explicitly defined a standard IO class will be used 
+        To instantiate an instance of this class using auto-generated
+        configuration parameters, see the :py:func:`easy_connect` method
         
+        :param obj data_io_controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API        
         """
-        self.__requester = http_io_class(url)
+        self.__data_io = data_io_controller
             
-    def get_url(self):
-        """Gets the URL of the Jenkins dashboard associated with this object
+    @staticmethod
+    def easy_connect(url, credentials=None):
+        """Factory method to simplify creating connections to Jenkins servers
         
-        :returns: URL associated with this object 
-        :rtype: :func:`str`
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid running Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+            If no credentials can be found elsewhere, anonymous access will be chosen
+        :returns: :py:mod:`pyjen.jenkins` object, pre-configured with the appropriate credentials
+            and connection parameters for the given URL.
+        :rtype: :py:mod:`pyjen.jenkins`
         """
+        if credentials != None:
+            username = credentials[0]
+            password = credentials[1]
+        else:
+            username = ""
+            password = ""
+        
+        http_io = data_requester(url, username, password)
+        retval = jenkins(http_io)
+        
+        # Sanity check: make sure the given IO object can successfully query the Jenkins version number
+        try:
+            version = retval.get_version() 
+        except:
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
 
-        return self.__requester.url
+        if version == None or version == "" or version == "Unknown":
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
+        return retval
     
     def get_views(self):
         """Gets a list of all views defined on the Jenkins dashboard
@@ -71,18 +90,22 @@ class jenkins(object):
         :rtype: :func:`list` of :py:mod:`pyjen.view` objects
             
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         raw_views = data['views']
         retval = []
-        
+
         for v in raw_views:
-            #todo: rework this, and other methods here, to use the urljoin function
-            if v['url'] == self.get_url() + "/":
-                retval.append(view(v['url'] + "view/" + v['name']))
-            else:
-                retval.append(view(v['url']))
-                        
+            # The default view will not have a valid view URL
+            # so we need to look for this and generate a corrected one
+            turl = v['url']
+            if turl.find('view') == -1:
+                turl += "view/" + v['name']
+                
+            new_io_obj = self.__data_io.clone(turl)
+            tview = view(new_io_obj)
+            retval.append(tview)
+            
         return retval
     
     def get_default_view(self):
@@ -94,10 +117,11 @@ class jenkins(object):
         :returns: object that manages the default Jenkins view
         :rtype: :py:mod:`pyjen.view`            
         """        
-        data = self.__requester.get_api_data()
-        
+        data = self.__data_io.get_api_data()
+
         default_view = data['primaryView']
-        return view(default_view['url'] + "view/" + default_view['name'])
+        new_io_obj = self.__data_io.clone(default_view['url'] + "view/" + default_view['name'])
+        return view(new_io_obj)
     
     def get_nodes(self):
         """gets the list of nodes (aka: agents) managed by this Jenkins master
@@ -125,7 +149,7 @@ class jenkins(object):
         :rtype: :func:`str`
             
         """
-        headers = self.__requester.get_headers('/api/python')
+        headers = self.__data_io.get_headers('/api/python')
         
         if not 'x-jenkins' in headers:
             return "Unknown"
@@ -139,14 +163,14 @@ class jenkins(object):
         
         You can cancel a previous requested shutdown using the :py:meth:`pyjen.jenkins.cancel_shutdown` method
         """
-        self.__requester.post('/quietDown')
+        self.__data_io.post('/quietDown')
         
     def cancel_shutdown(self):
         """Cancels a previous scheduled shutdown sequence
         
         Cancels a shutdown operation initiated by the :py:meth:`pyjen.jenkins.prepare_shutdown` method
         """
-        self.__requester.post('/cancelQuietDown')
+        self.__data_io.post('/cancelQuietDown')
     
     def is_shutting_down(self):
         """checks to see whether the Jenkins master is in the process of shutting down.
@@ -156,7 +180,7 @@ class jenkins(object):
         :rtype: :func:`bool`
             
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         return data['quietingDown']
       
@@ -169,7 +193,7 @@ class jenkins(object):
             object is returned (ie: None)
         :rtype: :py:mod:`pyjen.job`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         tjobs = data['jobs']
     
         for tjob in tjobs:
@@ -188,13 +212,18 @@ class jenkins(object):
             object is returned (ie: None)
         :rtype: :py:mod:`pyjen.view`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         raw_views = data['views']
         
         for v in raw_views:
             if v['name'] == view_name:
-                return view(v['url'])
+                turl = v['url']
+                if turl.find('view') == -1:
+                    turl += "view/" + v['name']
+                
+                new_io_obj = self.__data_io.clone(turl)
+                return view(new_io_obj)
                         
         return None
 
@@ -229,7 +258,7 @@ class jenkins(object):
         self.__requester.post('/createView', args)        
         
 if __name__ == '__main__':
-
-    j = jenkins("http://localhost:8080")
-    v = j.get_default_view()
-    print (v.get_name())
+    j = jenkins.easy_connect("http://builds", ("builder", "CodeRocks!"))
+    vs = j.get_views()
+    for v in vs:
+        print (v.get_name())

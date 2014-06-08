@@ -1,7 +1,7 @@
 from pyjen.utils.data_requester import data_requester
 from pyjen.job import job
 from pyjen.utils.view_xml import view_xml
-import re
+from pyjen.exceptions import InvalidJenkinsURLError
 
 class view(object):
     """Class that encapsulates all Jenkins related 'view' information
@@ -14,33 +14,50 @@ class view(object):
     #Class names for all supported view types
     LIST_VIEW = 'hudson.model.ListView'
     
-    def __init__ (self, url, http_io_class=data_requester):
+    def __init__ (self, data_io_controller):
         """constructor
         
-        :param str url:
-            URL of the view to be managed. This may be a full URL, starting with
-            the root Jenkins URL, or a partial URL relative to the Jenkins root
-            
-            Examples: 
-                * 'http://jenkins/views/view1'
-                * 'views/view1'
-                
-        :param obj http_io_class: 
-            class capable of handling HTTP IO requests between
-            this class and the Jenkins REST API
-            If not explicitly defined a standard IO class will be used 
-        """
-        self.__requester = http_io_class(url)
-
+        To instantiate an instance of this class using auto-generated
+        configuration parameters, see the :py:func:`easy_connect` method
         
-    def get_url(self):
-        """Returns the root URL for the REST API that manages this view
-        
-        :returns: the root URL for the REST API that controls this view
-        :rtype: :func:`str`
+        :param obj data_io_controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API        
         """
-
-        return self.__requester.url
+        self.__data_io = data_io_controller
+        
+    
+    @staticmethod
+    def easy_connect(url, credentials=None):
+        """Factory method to simplify creating connections to Jenkins servers
+        
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid view on a valid Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+            If no credentials can be found elsewhere, anonymous access will be chosen
+        :returns: :py:mod:`pyjen.view` object, pre-configured with the appropriate credentials
+            and connection parameters for the given URL.
+        :rtype: :py:mod:`pyjen.view`
+        """
+        if credentials != None:
+            username = credentials[0]
+            password = credentials[1]
+        else:
+            username = ""
+            password = ""
+        
+        http_io = data_requester(url, username, password)
+        retval = view(http_io)
+        
+        # Sanity check: make sure we can successfully parse the view's name from the IO controller to make sure
+        # we have a valid configuration
+        try:
+            name = retval.get_name()
+        except:
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. Please check configuration.", http_io) 
+        if name == None or name == "":
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. Please check configuration.", http_io) 
+    
+        return retval
     
     def get_name(self):
         """Gets the display name for this view
@@ -51,7 +68,7 @@ class view(object):
         :returns: the name of the view
         :rtype: :func:`str`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         return data['name']
         
     def get_jobs (self):
@@ -81,7 +98,7 @@ class view(object):
         :returns: number of jobs contained under this view
         :rtype: :func:`int`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         return len(data['jobs'])
     

@@ -1,14 +1,31 @@
 from pyjen.view import view
 import unittest
-from pyjen.user_params import GlobalParams
-from . import mock_data_requester
+from mock import MagicMock
 
 class view_tests(unittest.TestCase):
-
-    def setUp(self):
-        """Configures global connection parameters for use by test suite"""
-        GlobalParams().set_jenkins_url("http://test_jenkins_url/")
+    
+    def test_get_name(self):
+        expected_name = "MyView1"
         
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {'name':expected_name}
+        
+        v = view(mock_data_io)
+        actual_name = v.get_name()
+
+        self.assertEqual(expected_name, actual_name)
+        self.assertEqual(mock_data_io.get_api_data.call_count, 1, 
+                                "get_api_data method should have been called one time")
+    def test_job_count(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':'foo'},{'url':'bar'}]}
+        
+        v = view(mock_data_io)
+        expected_count = v.job_count()
+
+        self.assertEqual(expected_count, 2, "There should be 2 jobs in the mock view")
+        
+    """    
     def test_get_jobs(self):
         data = {}
         data['jobs'] = [{'url':'first/job'}, {'url':'second/job'} ]
@@ -49,6 +66,6 @@ class view_tests(unittest.TestCase):
 #        v = view('', custom_data_requester=mock_requester)
 #        v.delete()
         pass
-            
+            """
 if __name__ == "__main__":
     unittest.main()
