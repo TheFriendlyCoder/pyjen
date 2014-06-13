@@ -3,6 +3,7 @@
 *.bak
 *.war
 .jenkins
+.coverage
 /*.html
 /*.xml
 /.project
