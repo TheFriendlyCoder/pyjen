@@ -15,7 +15,7 @@ function setup_venv {
 	# Python dependencies to be installed
 	# just append new packages to this list to
 	# have them installed
-	dependencies=( "requests" "wheel" "sphinx" "pylint" "pytest" )
+	dependencies=( "requests" "wheel" "sphinx" "pylint" "pytest" "pytest-cov")
 
 	#check our input parameters
 	test $# -ne 2 && { echo "incorrent number of paramters";return 1; }
