@@ -32,7 +32,7 @@ run_tests()
 {
 	# runs automated tests
 	echo "Running tests"
-	py.test ./unit_tests/test*.py --verbose --junit-xml test_results.xml > "$log_folder/pytest.log" 2>&1
+	py.test --cov pyjen ./unit_tests/test*.py --verbose --junit-xml test_results.xml > "$log_folder/pytest.log" 2>&1
 }
 
 create_package()
@@ -53,36 +53,59 @@ code_analysis()
 publish()
 {
 	# Publishes built version to relevant sources, including
-	# PyPI and GiHub
+	# PyPI and GitHub
 	echo "Publishing release artifacts"
 
 	# Publish API docs to thefriendlycoder.com
 	ncftpput -R -v -m pyjentfc /PyJen ./docs/build/html/*
 }
-
-
-run_tests
-if [ $? -ne 0 ]; then
-	echo "Unit test failures detected"
-	exit 1
+if [ -z "$@" ]; then
+	echo "Usage"
+	exit 0
 fi
 
-code_analysis
-if [ $? -ne 0 ]; then
-	echo "code analysis detected problems"
-	exit 1
-fi
+for param in "$@"
+do
+	case "$param" in
+		test)
+			run_tests
+			if [ $? -ne 0 ]; then
+				echo "Unit test failures detected"
+				exit 1
+			fi
+		;;
 
-make_docs
-if [ $? -ne 0 ]; then
-	echo "Failed to generate API documentation"
-	exit 1
-fi
+		stat)
+			code_analysis
+			if [ $? -ne 0 ]; then
+				echo "code analysis detected problems"
+				exit 1
+			fi
+		;;
 
-create_package
-if [ $? -ne 0 ]; then
-	echo "Failed to create redistributable package"
-	exit 1
-fi
+		docs)
+			make_docs
+			if [ $? -ne 0 ]; then
+				echo "Failed to generate API documentation"
+				exit 1
+			fi
+		;;
 
-#publish
+		pack)
+			create_package
+			if [ $? -ne 0 ]; then
+				echo "Failed to create redistributable package"
+				exit 1
+			fi
+		;;
+
+		publish)
+			publish
+			if [ $? -ne 0 ]; then
+				echo "Failed to publish artifacts"
+				exit 1
+			fi
+		;;
+
+	esac
+done
