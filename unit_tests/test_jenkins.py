@@ -82,6 +82,7 @@ class jenkins_job_tests(unittest.TestCase):
         mock_jobs.append({'url':self.job2_url,'name':self.job2_name})
         self.mock_jenkins_data_io.get_api_data.return_value = {'jobs':mock_jobs}
         self.mock_jenkins_data_io.clone.side_effect = self.mock_clone
+        self.mock_jenkins_data_io.url.return_value = "http://localhost:8080"
         
         
     def mock_clone(self, url):
@@ -109,6 +110,25 @@ class jenkins_job_tests(unittest.TestCase):
         
         self.assertNotEqual(job, None, "find_job should have returned a valid job object")
         self.mock_jenkins_data_io.clone.assert_called_with(self.job2_url)        
+
+    def test_clone_job(self):
+        new_job_name = "ClonedJob"
+        mock_new_job_data_io = MagicMock()
+        mock_new_job_data_io.get_api_data.return_value = {"name":new_job_name}
+        
+        mock_jenkins_data_io = MagicMock()
+        mock_jenkins_data_io.clone.return_value = mock_new_job_data_io
+        
+        j = jenkins(mock_jenkins_data_io)
+        njob = j.clone_job("SomeJob", new_job_name)
+        
+        self.assertEqual(njob.get_name(), new_job_name)
+        mock_new_job_data_io.post.assert_called_once_with("/disable")
+        self.assertEqual(mock_jenkins_data_io.post.call_count, 1)
+        # NOTE: This post method should get called once, with the first parameter set to createItem
+        #    subsequent parameters contain more complex configuration data that is of little concern here
+        self.assertEqual(mock_jenkins_data_io.post.call_args[0][0], "createItem", 
+             "Our mock Jenkins instance should have posted a 'createItem' request to the Jenkins API as part of the clone operation.")
 
 class jenkins_view_tests(unittest.TestCase):
     """Unit tests for the view-related methods of the Jenkins class"""

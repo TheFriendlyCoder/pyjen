@@ -225,14 +225,15 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         :rtype: :py:mod:`pyjen.build`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         lgb = data['lastSuccessfulBuild']
         
         if lgb == None:
             return None
         
-        return build(lgb['url'])
+        temp_data_io = self.__data_io.clone(lgb['url'])
+        return build(temp_data_io)
         
     def get_last_build(self):
         """Returns a reference to the most recent build of this job
@@ -245,14 +246,15 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         :rtype: :py:mod:`pyjen.build`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         last_build = data['lastBuild']
         
         if last_build == None:
             return None
         
-        return build (last_build['url'])
+        temp_data_io = self.__data_io.clone(last_build['url'])
+        return build (temp_data_io)
     
     def get_last_failed_build(self):
         """Returns a reference to the most recent build of this job with a status of "failed"
@@ -264,14 +266,15 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         :rtype: :py:mod:`pyjen.build`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         bld = data['lastFailedBuild']
         
         if bld == None:
             return None
         
-        return build(bld['url'])
+        temp_data_io = self.__data_io.clone(bld['url'])
+        return build(temp_data_io)
                 
     def get_last_stable_build(self):
         """Returns a reference to the most recent build of this job with a status of "stable"
@@ -284,14 +287,15 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         :rtype: :py:mod:`pyjen.build`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
 
         bld = data['lastCompletedBuild']
         
         if bld == None:
             return None
         
-        return build(bld['url'])
+        temp_data_io = self.__data_io.clone(bld['url'])
+        return build(temp_data_io)
     
     def get_last_unsuccessful_build(self):
         """Returns a reference to the most recent build of this job with a status of "unstable"
@@ -303,14 +307,15 @@ class job(object):
             If there are no such builds in the build history, this method returns None
         :rtype: :py:mod:`pyjen.build`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
 
         bld = data['lastUnsuccessfulBuild']
         
         if bld == None:
             return None
         
-        return build(bld['url'])    
+        temp_data_io = self.__data_io.clone(bld['url'])
+        return build(temp_data_io)    
         
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
@@ -323,13 +328,16 @@ class job(object):
             If such a build does not exist, returns None
         :rtype: :py:mod:`pyjen.build`
         """
+        temp_data_io = self.__data_io.clone(self.__data_io.url + "/" + str(build_number))
+
+        # Lets try loading data from the given URL to see if it is valid. 
+        # If it's not valid we'll assume a build with the given number doesn't exist 
         try:
-            data = self.__requester.get_data("/" + str(build_number)  + "/api/python")
+            temp_data_io.get_api_data()
         except AssertionError:
-            #TODO: Find a more elegant way to detect whether the build exists or not
             return None
         
-        return build(data['url'])
+        return build(temp_data_io)
     
     def get_builds_in_time_range(self, startTime, endTime):
         """ Returns a list of all of the builds for a job that 
@@ -342,6 +350,11 @@ class job(object):
             :returns: a list of 0 or more builds
             :rtype: :class:`list` of :py:mod:`pyjen.build` objects            
         """       
+        if startTime > endTime:
+            tmp = endTime
+            endTime = startTime
+            startTime = tmp
+            
         builds = []                
         
         for run in self.get_recent_builds():            
@@ -362,7 +375,7 @@ class job(object):
             the full XML tree describing this jobs configuration
         :rtype: :func:`str`
         """
-        return self.__requester.get_text('/config.xml')
+        return self.__data_io.get_text('/config.xml')
     
     def set_config_xml(self, new_xml):
         """Allows a caller to manually override the entire job configuration
@@ -379,7 +392,7 @@ class job(object):
         args['data'] = new_xml
         args['headers'] = headers
         
-        self.__requester.post("/config.xml", args)
+        self.__data_io.post("/config.xml", args)
         
     def set_custom_workspace(self, path):
         """Defines a new custom workspace for the job
@@ -407,47 +420,6 @@ class job(object):
         xml = self.get_config_xml()
         jobxml = job_xml(xml)
         return jobxml.get_scm()
-
-    
-        
-    def clone(self, new_job_name):
-        """Makes a copy of this job on the dashboard with a new name        
-        
-        :param str new_job_name:
-            the name of the newly created job whose settings will
-            be an exact copy of this job. It is expected that this
-            new job name be unique across the dashboard.
-            
-        :returns: a reference to the newly created job resulting
-            from the clone operation
-        :rtype: :py:mod:`pyjen.job`
-        """
-        #TODO: need to link this class to Jenkins object so it can interact
-        #    with it here to perform the clone operation
-        params = {'name': new_job_name,
-                  'mode': 'copy',
-                  'from': self.get_name()}
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
-        args = {}
-        args['params'] = params
-        args['data'] = ''
-        args['headers'] = headers
-        
-        dashboard_url = get_root_url(self.get_url())
-        tmp_requester = data_requester(dashboard_url)
-        tmp_requester.post("createItem", args)
-        
-        new_job_url = dashboard_url + "/job/" + new_job_name + "/"
-        new_job = job(new_job_url)
-        
-        # Sanity check - lets make sure the job actually exists by checking its name
-        assert(new_job.get_name() == new_job_name)
-        
-        #as a precaution, lets disable the newly created job so it doesn't automatically start running
-        new_job.disable()
-        
-        return new_job 
 
 if __name__ == "__main__":
     pass

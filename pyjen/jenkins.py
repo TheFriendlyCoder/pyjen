@@ -268,6 +268,44 @@ class jenkins(object):
         retval = self.find_view(view_name)
         assert(retval != None)
         return retval       
+    
+    def clone_job(self, source_job_name, new_job_name):
+        """Makes a copy of this job on the dashboard with a new name        
+        
+        :param str source_job_name: The name of the existing Jenkins job
+            which is to have it's configuration cloned to create a new job.
+            A job of this name must exist on this Jenkins instance. 
+        :param str new_job_name:
+            the name of the newly created job whose settings will
+            be an exact copy of the source job. There must be no existing
+            jobs on the Jenkins dashboard with this same name.
+            
+        :returns: a reference to the newly created job resulting
+            from the clone operation
+        :rtype: :py:mod:`pyjen.job`
+        """
+        params = {'name': new_job_name,
+                  'mode': 'copy',
+                  'from': source_job_name}
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    
+        args = {}
+        args['params'] = params
+        args['data'] = ''
+        args['headers'] = headers
+        
+        self.__data_io.post("createItem", args)
+        
+        temp_data_io = self.__data_io.clone(self.__data_io.url + "/job/" + new_job_name)
+        new_job = job(temp_data_io)
+        
+        # Sanity check - lets make sure the job actually exists by checking its name
+        assert(new_job.get_name() == new_job_name)
+        
+        #as a precaution, lets disable the newly created job so it doesn't automatically start running
+        new_job.disable()
+        
+        return new_job 
         
 if __name__ == '__main__':
     pass
