@@ -18,7 +18,10 @@ class view_tests(unittest.TestCase):
                                 "get_api_data method should have been called one time")
     def test_job_count(self):
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':'foo'},{'url':'bar'}]}
+        jobs = []
+        jobs.append({'url':'foo'})
+        jobs.append({'url':'bar'})
+        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':jobs}
         
         v = view(mock_data_io)
         expected_count = v.job_count()

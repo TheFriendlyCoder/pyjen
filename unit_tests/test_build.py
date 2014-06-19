@@ -1,66 +1,67 @@
 from pyjen.build import build
 import unittest
-from .mock_data_requester import file_based_requester
-from . import test_utils
-from datetime import datetime
+from mock import MagicMock
+import pytest
 
 class build_tests(unittest.TestCase):
-    def test_get_build_time(self):
-        bld = build(test_utils.get_sample_data_file("build_with_svn_changeset.txt"), file_based_requester)
-        
-        #Build date: 12:03:17am Nov. 30, 2013
-        self.assertEqual(datetime.fromtimestamp(1385784197.000), bld.get_build_time())
-        
-    def test_is_not_building(self):
-        bld = build(test_utils.get_sample_data_file("build_with_svn_changeset.txt"), file_based_requester)
-        
-        self.assertFalse(bld.is_building(), "Sample build project should not be building")
         
     def test_get_build_number(self):
-        bld = build(test_utils.get_sample_data_file("build_with_svn_changeset.txt"), file_based_requester)
-        self.assertEqual(169, bld.get_build_number())
+        expected_build_number = 3
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"number":expected_build_number}
+        b = build(mock_data_io)
         
+        self.assertEqual(b.get_build_number(), expected_build_number)
+        
+    def test_is_building(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"building":True}
+        
+        b = build(mock_data_io)
+        self.assertTrue(b.is_building(), "Build should indicate that it is currently running")
+        
+    def test_is_not_building(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"building":False}
+        
+        b = build(mock_data_io)
+        self.assertFalse(b.is_building(), "Build should indicate that it is not currently running")
+        
+    def test_get_console_output(self):
+        expected_console_output = "Some sample console output"
+        mock_data_io = MagicMock()
+        mock_data_io.get_text.return_value = expected_console_output
+        
+        b = build(mock_data_io)
+        
+        self.assertEqual(b.get_console_output(), expected_console_output)
+        mock_data_io.get_text.assert_called_once_with("/consoleText")
 
-
-class changeset_tests(unittest.TestCase):
-    def test_get_changeset_svn(self):
-        bld = build(test_utils.get_sample_data_file("build_with_svn_changeset.txt"), file_based_requester)
+    def test_get_build_time(self):
+        mock_data_io = MagicMock()
+        #Build date: 12:03:17am Nov. 30, 2013
+        mock_data_io.get_api_data.return_value = {"timestamp":1385784197000}
         
-        change = bld.get_changeset()
+        b = build(mock_data_io)
+        build_time = b.get_build_time()
         
-        self.assertEqual("svn", change.get_scm_type())
-        items = change.get_affected_items()
+        self.assertEqual(build_time.day, 30)
+        self.assertEqual(build_time.month, 11)
+        self.assertEqual(build_time.year, 2013)
         
-        self.assertEqual(2, len(items))
+        self.assertEqual(build_time.hour, 0)
+        self.assertEqual(build_time.minute, 3)
+        self.assertEqual(build_time.second, 17)
         
-        item1 = items[0]
-        self.assertEqual('Jane Doe', item1['author'])
-        self.assertEqual('http://jenkins/user/janedoe', item1['authorUrl'])
-        self.assertEqual('987654', item1['commitId'])
-        self.assertEqual('some other commit\\with some details', item1['message'])
-        self.assertEqual(datetime.fromtimestamp(1385758513.358), item1['time'])
-        self.assertEqual(1, len(item1['changes']))
-        self.assertEqual('edit', item1['changes'][0]['editType'])
-        self.assertEqual('/another/path/to/file.pdf', item1['changes'][0]['file'])
+    def test_get_changeset(self):
+        expected_scm_type = "svn"
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"changeSet":{"kind":expected_scm_type,"items":[]}}
         
-        item2 = items[1]
-        self.assertEqual('John Doe', item2['author'])
-        self.assertEqual('http://jenkins/user/johndoe', item2['authorUrl'])
-        self.assertEqual('123456', item2['commitId'])
-        self.assertEqual('changed one thing\\then another', item2['message'])
-        self.assertEqual(datetime.fromtimestamp(1385755849.290), item2['time'])
-        self.assertEqual(2, len(item2['changes']))
-        self.assertEqual('edit', item2['changes'][0]['editType'])
-        self.assertEqual('/path/to/file1.txt', item2['changes'][0]['file'])
-        self.assertEqual('add', item2['changes'][1]['editType'])
-        self.assertEqual('/path/to/another/file2.pdf', item2['changes'][1]['file'])
-                
-    def test_get_scm_type(self):
-        bld = build(test_utils.get_sample_data_file("build_with_svn_changeset.txt"), file_based_requester)
+        b = build(mock_data_io)
+        cs = b.get_changeset()
         
-        change = bld.get_changeset()
-        
-        self.assertEqual("svn", change.get_scm_type())
+        self.assertEqual(cs.get_scm_type(), "svn")
         
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main()

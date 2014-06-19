@@ -18,6 +18,16 @@ class data_requester (object):
         self.__url = url.rstrip("/\\") + "/"
         self.__credentials = (username, password)
         
+    @property
+    def url(self):
+        """Gets the URL used by all IO operations on this object"""
+        return self.__url
+    
+    @property
+    def credentials(self):
+        """Gets the authentication credentials used for all IO operations on this object"""
+        return self.__credentials
+    
     def clone(self, new_url=None):
         """create a copy of this connection object
         

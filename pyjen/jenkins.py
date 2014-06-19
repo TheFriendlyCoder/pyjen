@@ -3,7 +3,6 @@ from pyjen.view import view
 from pyjen.node import node
 from pyjen.job import job
 from pyjen.utils.data_requester import data_requester
-from pyjen.user_params import GlobalParams
 from pyjen.exceptions import InvalidJenkinsURLError
 
 class jenkins(object):
@@ -22,7 +21,7 @@ class jenkins(object):
     
     **Example:** finding a job ::
     
-        j = pyjen.jenkins('http://localhost:8080')
+        j = pyjen.jenkins.easy_connect('http://localhost:8080')
         job= j.find_job('My Job')
         if job = None:
             print ('no job by that name found')
@@ -32,7 +31,7 @@ class jenkins(object):
         
     **Example:** finding the build number of the last good build of the first job on the default view ::
     
-        j = pyjen.jenkins('http://localhost:8080/')
+        j = pyjen.jenkins.easy_connect('http://localhost:8080/')
         view = j.get_default_view()
         jobs = view.get_jobs()
         lgb = jobs[0].get_last_good_build()
@@ -58,7 +57,7 @@ class jenkins(object):
         
         :param str url: Full URL of the Jenkins instance to connect to. Must be a valid running Jenkins instance.
         :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
-            If no credentials can be found elsewhere, anonymous access will be chosen
+            If omitted, anonymous access will be chosen
         :returns: :py:mod:`pyjen.jenkins` object, pre-configured with the appropriate credentials
             and connection parameters for the given URL.
         :rtype: :py:mod:`pyjen.jenkins`
@@ -72,7 +71,7 @@ class jenkins(object):
         
         http_io = data_requester(url, username, password)
         retval = jenkins(http_io)
-        
+
         # Sanity check: make sure the given IO object can successfully query the Jenkins version number
         try:
             version = retval.get_version() 
@@ -82,66 +81,7 @@ class jenkins(object):
         if version == None or version == "" or version == "Unknown":
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
         return retval
-    
-    def get_views(self):
-        """Gets a list of all views defined on the Jenkins dashboard
-        
-        :returns: list of one or more views defined on this Jenkins instance. 
-        :rtype: :func:`list` of :py:mod:`pyjen.view` objects
-            
-        """
-        data = self.__data_io.get_api_data()
-        
-        raw_views = data['views']
-        retval = []
 
-        for v in raw_views:
-            # The default view will not have a valid view URL
-            # so we need to look for this and generate a corrected one
-            turl = v['url']
-            if turl.find('view') == -1:
-                turl += "view/" + v['name']
-                
-            new_io_obj = self.__data_io.clone(turl)
-            tview = view(new_io_obj)
-            retval.append(tview)
-            
-        return retval
-    
-    def get_default_view(self):
-        """returns a reference to the primary / default Jenkins view
-        
-        The default view is the one displayed when navigating to
-        the main URL. Typically this will be the "All" view.
-        
-        :returns: object that manages the default Jenkins view
-        :rtype: :py:mod:`pyjen.view`            
-        """        
-        data = self.__data_io.get_api_data()
-
-        default_view = data['primaryView']
-        new_io_obj = self.__data_io.clone(default_view['url'] + "view/" + default_view['name'])
-        return view(new_io_obj)
-    
-    def get_nodes(self):
-        """gets the list of nodes (aka: agents) managed by this Jenkins master
-        
-        :returns: list of 0 or more node objects managed by this Jenkins master 
-        :rtype: :func:`list` of :py:mod:`pyjen.node` objects
-            
-        """
-        data = self.__requester.get_api_data()
-                
-        nodes = data['computer']
-        retval = []
-        for n in nodes:
-            if n['displayName'] == 'master':
-                retval.append(node(self.get_url() + '/computer/(master)'))
-            else:
-                retval.append(node(self.get_url() + '/computer/' + n['displayName']))
-                        
-        return retval
-    
     def get_version(self):
         """Gets the version of Jenkins pointed to by this object
         
@@ -183,6 +123,31 @@ class jenkins(object):
         data = self.__data_io.get_api_data()
         
         return data['quietingDown']
+    
+    
+    def get_nodes(self):
+        """gets the list of nodes (aka: agents) managed by this Jenkins master
+        
+        :returns: list of 0 or more node objects managed by this Jenkins master 
+        :rtype: :func:`list` of :py:mod:`pyjen.node` objects
+            
+        """
+        tmp_data_io = self.__data_io.clone(self.__data_io.url + "/computer")
+        data = tmp_data_io.get_api_data()
+                
+        nodes = data['computer']
+        retval = []
+        for n in nodes:
+            if n['displayName'] == 'master':
+                node_url = self.__data_io.url + '/computer/(master)'
+            else:
+                node_url = self.__data_io.url + '/computer/' + n['displayName']
+            
+            node_data_io = self.__data_io.clone(node_url)
+            retval.append(node(node_data_io))
+                        
+        return retval
+    
       
     def find_job(self, job_name):
         """Searches all jobs managed by this Jenkins instance for a specific job
@@ -198,10 +163,51 @@ class jenkins(object):
     
         for tjob in tjobs:
             if tjob['name'] == job_name:
-                return job(tjob['url'])
+                new_io_obj = self.__data_io.clone(tjob['url'])
+                return job(new_io_obj)
         
         return None
     
+    def get_default_view(self):
+        """returns a reference to the primary / default Jenkins view
+        
+        The default view is the one displayed when navigating to
+        the main URL. Typically this will be the "All" view.
+        
+        :returns: object that manages the default Jenkins view
+        :rtype: :py:mod:`pyjen.view`            
+        """        
+        data = self.__data_io.get_api_data()
+
+        default_view = data['primaryView']
+        new_io_obj = self.__data_io.clone(default_view['url'] + "view/" + default_view['name'])
+        return view(new_io_obj)
+
+    def get_views(self):
+        """Gets a list of all views defined on the Jenkins dashboard
+        
+        :returns: list of one or more views defined on this Jenkins instance. 
+        :rtype: :func:`list` of :py:mod:`pyjen.view` objects
+            
+        """
+        data = self.__data_io.get_api_data()
+        
+        raw_views = data['views']
+        retval = []
+
+        for v in raw_views:
+            # The default view will not have a valid view URL
+            # so we need to look for this and generate a corrected one
+            turl = v['url']
+            if turl.find('view') == -1:
+                turl += "view/" + v['name']
+                
+            new_io_obj = self.__data_io.clone(turl)
+            tview = view(new_io_obj)
+            retval.append(tview)
+            
+        return retval    
+
     def find_view(self, view_name):
         """Searches all views managed by this Jenkins instance for a specific view
         
@@ -238,6 +244,8 @@ class jenkins(object):
             by this Jenkins instance. See attributes of the :py:mod:`pyjen.view`
             class for compatible options.
             Defaults to a list view type
+        :returns: An object to manage the newly created view
+        :rtype: :py:mod:`pyjen.view`
         """
         #TODO: consider rethinking this method. Perhaps it'd be better
         #      suited to the view class. Alternatively, maybe we just
@@ -255,10 +263,11 @@ class jenkins(object):
         args['data'] = data
         args['headers'] = headers
 
-        self.__requester.post('/createView', args)        
+        self.__data_io.post('/createView', args)
+        
+        retval = self.find_view(view_name)
+        assert(retval != None)
+        return retval       
         
 if __name__ == '__main__':
-    j = jenkins.easy_connect("http://builds", ("builder", "CodeRocks!"))
-    vs = j.get_views()
-    for v in vs:
-        print (v.get_name())
+    pass

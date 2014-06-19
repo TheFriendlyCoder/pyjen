@@ -1,6 +1,7 @@
 from pyjen.utils.data_requester import data_requester
 from pyjen.changeset import changeset
 from datetime import datetime
+from pyjen.exceptions import InvalidJenkinsURLError
 
 class build(object):
     """Class that encapsulates all jenkins related 'build' information
@@ -10,7 +11,7 @@ class build(object):
     """
     
     
-    def __init__ (self, url, http_io_class=data_requester):
+    def __init__ (self, data_io_controller):
         """constructor
         
         :param str url: URL of the build to be managed. This may be a full URL, starting with
@@ -25,16 +26,40 @@ class build(object):
             this class and the Jenkins REST API
             If not explicitly defined a standard IO class will be used 
         """
-        self.__requester = http_io_class(url)
+        self.__data_io = data_io_controller
         
-    def get_url(self):
-        """Returns the root URL for the REST API that manages this build
+    @staticmethod
+    def easy_connect(url, credentials=None):
+        """Factory method to simplify creating connections to Jenkins servers
         
-        :returns: the root URL for the REST API that controls this build
-        :rtype: :func:`str`
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid job on a valid Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+            If no credentials can be found elsewhere, anonymous access will be chosen
+        :returns: :py:mod:`pyjen.job` object, pre-configured with the appropriate credentials
+            and connection parameters for the given URL.
+        :rtype: :py:mod:`pyjen.job`
         """
-        return self.__requester.url
+        if credentials != None:
+            username = credentials[0]
+            password = credentials[1]
+        else:
+            username = ""
+            password = ""
+        
+        http_io = data_requester(url, username, password)
+        retval = build(http_io)
+        
+        # Sanity check: make sure we can successfully parse the view's name from the IO controller to make sure
+        # we have a valid configuration
+        try:
+            number = retval.get_build_number()
+        except:
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Build. Please check configuration.", http_io) 
+        if number == None or number <= 0:
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Build. Please check configuration.", http_io) 
     
+        return retval
+        
     def get_build_number(self):
         """Gets the numeric build number for this build
         
@@ -43,7 +68,7 @@ class build(object):
         :rtype: :func:`int`
         """
         
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         return data['number']
     
@@ -55,7 +80,7 @@ class build(object):
             
         """
         
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         time_in_seconds = data['timestamp'] * 0.001
         
@@ -67,7 +92,7 @@ class build(object):
         :returns: true if the build is executing otherwise false
         :rtype: :func:`bool`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         return data['building']
     
@@ -83,7 +108,7 @@ class build(object):
             associated with / included in this build
         :rtype: :py:mod:`pyjen.changeset`
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         return changeset(data['changeSet'])
 
@@ -91,8 +116,7 @@ class build(object):
         """Gets the raw console output for this build as plain text
         :rtype: :func:`str`
         """
-        return self.__requester.get_text("/consoleText")
+        return self.__data_io.get_text("/consoleText")
     
 if __name__ == "__main__":
-    j = build('http://localhost:8080/job/test_job_1/1/')
-    print (j.get_console_output())
+    pass

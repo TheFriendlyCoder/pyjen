@@ -1,37 +1,60 @@
 import time
-import urllib
+import sys
+if sys.version_info.major < 3:
+    from urllib import quote as url_quote
+else:
+    from urllib.parse import quote as url_quote
+    
 from pyjen.utils.data_requester import data_requester
+from pyjen.exceptions import InvalidJenkinsURLError
 
 class node(object):
     """Wrapper around a Jenkins build agent (aka: node) configuration
     
     Use this class to manipulate agents managed by a Jenkins master"""
     
-    def __init__(self, url, user=None, password=None):
-        """Constructor
+    def __init__ (self, data_io_controller):
+        """constructor
         
-        :param str url:
-            root URL of the node being managed by this object
-            **Example:** 'http://jenkins/computer/mynode/'
-        :param str user:
-            optional user name to authenticate to Jenkins dashboard
-        :param str password:
-            password for Jenkins login credentials 
-            if a user name is provided this parameter must be defined as well
+        To instantiate an instance of this class using auto-generated
+        configuration parameters, see the :py:func:`easy_connect` method
+        
+        :param obj data_io_controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API        
         """
-        if (user != None):
-            assert (password != None)
+        self.__data_io = data_io_controller
+            
+    @staticmethod
+    def easy_connect(url, credentials=None):
+        """Factory method to simplify creating connections to Jenkins servers
+        
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid running Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+            If omitted, anonymous access will be chosen
+        :returns: :py:mod:`pyjen.node` object, pre-configured with the appropriate credentials
+            and connection parameters for the given URL.
+        :rtype: :py:mod:`pyjen.node`
+        """
+        if credentials != None:
+            username = credentials[0]
+            password = credentials[1]
+        else:
+            username = ""
+            password = ""
+        
+        http_io = data_requester(url, username, password)
+        retval = node(http_io)
 
-        self.__url = url
-        self.__requester = data_requester(url, user, password)
-        
-    def get_url(self):
-        """Returns the root URL of the REST API used to manage this node
-        
-        :returns: root URL of the REST API used to manage this node
-        :rtype: :func:`str`
-        """
-        return self.__url
+        # Sanity check: make sure the given IO object can successfully query the node machine name
+        try:
+            name = retval.get_name() 
+        except:
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Node. Please check configuration.", http_io)
+
+        if name == None or name == "":
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Node. Please check configuration.", http_io)
+        return retval
     
     def get_name(self):
         """Gets the display name of this node
@@ -39,7 +62,7 @@ class node(object):
         :returns: the name of this node
         :rtype: :func:`str`
         """        
-        data = self.__requester.get('/api/python')
+        data = self.__data_io.get_api_data()
         
         return data['displayName']
     
@@ -49,7 +72,7 @@ class node(object):
         :returns: true if this node is offline otherwise false
         :rtype: :func:`bool`
         """
-        data = self.__requester.get('/api/python')
+        data = self.__data_io.get_api_data()
         
         return data['offline']
     
@@ -66,11 +89,11 @@ class node(object):
         """
         #TODO: See if I can rework this to use args properties
         if message != None:
-            post_cmd = "/toggleOffline?offlineMessage=" + urllib.quote(message)
+            post_cmd = "/toggleOffline?offlineMessage=" + url_quote(message)
         else:
             post_cmd = "/toggleOffline"
             
-        self.__requester.post(post_cmd)
+        self.__data_io.post(post_cmd)
         
     def is_idle(self):
         """Checks to see whether any executors are in use on this node or not
@@ -80,8 +103,8 @@ class node(object):
             otherwise returns false
         :rtype: :func:`bool`
         """
-        data = self.__requester.get_data('/api/python')
-        
+        data = self.__data_io.get_api_data()
+        print ("in is_idle: " + str(data['idle']))
         return data['idle']
     
     def wait_for_idle(self, max_timeout=None):
@@ -97,15 +120,20 @@ class node(object):
             otherwise returns false
         :rtype: :func:`bool`
         """
-        if max_timeout != None:
+        sleep_duration = 1
+        
+        if max_timeout == None:
             while not self.is_idle():
-                time.sleep(5)
+                time.sleep(sleep_duration)
         else:
             total_wait_time = 0
             while not self.is_idle():
-                time.sleep(5)
-                total_wait_time += 5
+                time.sleep(sleep_duration)
+                total_wait_time += sleep_duration
                 if total_wait_time >= max_timeout:
                     break
             
         return self.is_idle()
+    
+if __name__ == "__main__":
+    pass
