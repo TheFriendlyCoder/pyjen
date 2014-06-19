@@ -33,6 +33,9 @@ run_tests()
 	# runs automated tests
 	echo "Running tests"
 	py.test --cov pyjen ./unit_tests/test*.py --verbose --junit-xml test_results.xml > "$log_folder/pytest.log" 2>&1
+	result=$?
+	test $result -ne 0 && echo "Tests completed with errors" || echo "Tests completed successfully"
+	return $result
 }
 
 create_package()
@@ -60,7 +63,14 @@ publish()
 	ncftpput -R -v -m pyjentfc /PyJen ./docs/build/html/*
 }
 if [ -z "$@" ]; then
-	echo "Usage"
+	echo "Usage: $0 <option>"
+	echo
+	echo "Where <option> is one of the following:"
+	echo "     test"
+	echo "     stat"
+	echo "     docs"
+	echo "     pack"
+	echo "     publish"
 	exit 0
 fi
 
@@ -69,10 +79,6 @@ do
 	case "$param" in
 		test)
 			run_tests
-			if [ $? -ne 0 ]; then
-				echo "Unit test failures detected"
-				exit 1
-			fi
 		;;
 
 		stat)
