@@ -32,7 +32,7 @@ function setup_venv {
 	#activate our virtualenv version
 	source $local_path/bin/activate
 	test $? -ne 0 && { echo "error activating Python virtualenv: $?"; return 2; }
-	
+	#return	
 	#make sure we have the latest versions of all dependencies
 	i=1
 	num_dependencies=${#dependencies[@]}
@@ -125,6 +125,8 @@ function main {
 	#Finally, make sure this projects folder is 
 	#included on the pythonpath
 	export PYTHONPATH=$PWD:$PYTHONPATH
+
+	echo "Configuration complete. Run 'deactivate' to restore shell environment."
 }
 
 
