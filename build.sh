@@ -32,7 +32,7 @@ run_tests()
 {
 	# runs automated tests
 	echo "Running tests"
-	py.test --cov pyjen ./unit_tests/test*.py --verbose --junit-xml test_results.xml > "$log_folder/pytest.log" 2>&1
+	py.test --cov-report term-missing --cov pyjen -s ./unit_tests/test*.py --verbose --junit-xml test_results.xml > "$log_folder/pytest.log" 2>&1
 	result=$?
 	test $result -ne 0 && echo "Tests completed with errors" || echo "Tests completed successfully"
 	return $result
