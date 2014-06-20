@@ -54,9 +54,8 @@ class job_xml(object):
         
         :rtype: :func:`str`
         """
-        
-        #TODO: handle the unicode encoding here correctly
-        return ElementTree.tostring(self.__root, "UTF-8")
+        retval = ElementTree.tostring(self.__root, "UTF-8")
+        return retval.decode("utf-8")
     
     def get_scm(self):
         """Retrieves the appropriate plugin for the SCM portion of a job

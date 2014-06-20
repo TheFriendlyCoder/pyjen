@@ -82,13 +82,14 @@ class view(object):
         :returns: list of 0 or more jobs that are included in this view
         :rtype:  :class:`list` of :py:mod:`pyjen.job` objects
         """
-        data = self.__requester.get_api_data()
+        data = self.__data_io.get_api_data()
         
         view_jobs = data['jobs']
 
         retval = []
-        for j in view_jobs:        
-            retval.append(job(j['url']))
+        for j in view_jobs:  
+            temp_data_io = self.__data_io.clone(j['url'])      
+            retval.append(job(temp_data_io))
             
         return retval
     
@@ -118,7 +119,7 @@ class view(object):
             a plain text string format
         :rtype: :func:`str`
         """
-        return self.__requester.get_text("/config.xml")
+        return self.__data_io.get_text("/config.xml")
         
     def set_config_xml(self, new_xml):
         """Updates the raw configuration of this view with a new set of properties
@@ -140,11 +141,11 @@ class view(object):
         args['data'] = new_xml
         args['headers'] = headers
         
-        self.__requester.post("/config.xml", **args)
+        self.__data_io.post("/config.xml", args)
         
     def delete(self):
         """Deletes this view from the dashboard"""
-        self.__requester.post("/doDelete")
+        self.__data_io.post("/doDelete")
         
     def get_type(self):
         """Gets the Jenkins view-type descriptor for this view
@@ -167,7 +168,6 @@ class view(object):
         """Helper method that allows caller to bulk-disable all jobs found in this view""" 
         my_jobs = self.get_jobs()
         for j in my_jobs:
-            print ("disabling " + j.get_name())
             j.disable()
             
     def enable_all_jobs(self):
@@ -175,51 +175,6 @@ class view(object):
         my_jobs = self.get_jobs()
         for j in my_jobs:
             j.enable()
-            
-    def clone_all_jobs(self, search_regex, replacement_string):
-        """Helper method that does a batch clone on all jobs found in this view
-        
-        :param str search_regex: pattern to match against all jobs
-            contained in this view, to be modified in order to generate
-            new job names for their cloned counterparts.
-        :param str replacement_string: character string to substitute in place
-            of the regex pattern when generating names for the new
-            cloned jobs.
-        :returns: list of newly created jobs
-        :rtype: :class:`list` of :py:mod:`pyjen.job` objects
-        """
-        my_jobs = self.get_jobs()
-        
-        # Create a mapping table for names of jobs
-        job_map = {}
-        for j in my_jobs:
-            orig_name = j.get_name()
-            job_map[orig_name] = orig_name.replace(search_regex, replacement_string)
-            #print (orig_name + "->" + job_map[orig_name])
-            
-        # Todo: make sure none of the jobs being generated exists on the dashboard
-        #return
-    
-        # clone all jobs, and update internal references     
-        retval = []
-        for j in my_jobs:
-            orig_name = j.get_name()
-            new_job = j.clone(job_map[orig_name])
-            
-            # update all internal references
-            xml = new_job.get_config_xml()
-            for k in job_map.keys():
-                xml = xml.replace(k, job_map[k])
-            new_job.set_config_xml(xml)
-        
-            retval.append(new_job)
-        return retval
     
 if __name__ == "__main__":
-    v = view("http://builds/user/kphillips/my-views/view/trunk-unified/?")
-    #v.delete_all_jobs()
-    #new_jobs = v.clone_all_jobs("unified-trunk", "unified-4.2.x")
-    #for j in new_jobs:
-    #    print ("created job "  + j.get_name())
-    #pass
-    print (str(v.job_count()))
+    pass

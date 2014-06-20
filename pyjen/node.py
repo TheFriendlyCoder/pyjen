@@ -104,7 +104,6 @@ class node(object):
         :rtype: :func:`bool`
         """
         data = self.__data_io.get_api_data()
-        print ("in is_idle: " + str(data['idle']))
         return data['idle']
     
     def wait_for_idle(self, max_timeout=None):

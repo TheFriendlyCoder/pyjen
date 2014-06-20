@@ -21,6 +21,17 @@ def export_config (jenkins_url, output_filename):
     print ("Export completed successfully")
     
 if __name__ == '__main__':
+    r = requests.get("http://localhost:8080/job/test_job_1/config.xml")
+    assert(r.status_code == 200)
+    as_text = r.text
+    as_byte = r.content
+    
+    print (type(as_text))
+    print (type(as_byte))
+    
+    print (as_text)
+    print (as_byte)
+    print (as_text.encoding)
     pass
     
     

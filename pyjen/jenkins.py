@@ -306,6 +306,45 @@ class jenkins(object):
         new_job.disable()
         
         return new_job 
+    
+    def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_name_substitution_string):
+        """Helper method that does a batch clone on all jobs found in this view
+    
+        :param str view_name: name of view containing jobs to clone
+        :param str source_job_name_regex: pattern to use as a substitution rule
+            when generating new names for cloned jobs. Substrings within the
+            existing job names that match this pattern will be replaced by
+            the given substitution string
+        :param str new_job_name_substitution_string: character string used to
+            generate new job names for the clones of the existing jobs. The substring
+            of an existing job that matches the given regex will be replaced by this
+            new string to create the new job name for it's cloned counterpart.
+        :returns: list of newly created jobs
+        :rtype: :class:`list` of :py:mod:`pyjen.job` objects
+        """
+        temp_view = self.find_view(view_name)
+        temp_jobs = temp_view.get_jobs()
         
+        # Create a mapping table for names of jobs
+        job_map = {}
+        for j in temp_jobs:
+            orig_name = j.get_name()
+            job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_name_substitution_string)
+            
+        # clone all jobs, and update internal references     
+        retval = []
+        for j in temp_jobs:
+            orig_name = j.get_name()
+            new_job = self.clone_job(orig_name, job_map[orig_name])
+            
+            # update all internal references
+            xml = new_job.get_config_xml()
+            for k in job_map.keys():
+                xml = xml.replace(k, job_map[k])
+            new_job.set_config_xml(xml)
+        
+            retval.append(new_job)
+            
+        return retval
 if __name__ == '__main__':
     pass

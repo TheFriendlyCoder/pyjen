@@ -1,7 +1,6 @@
 from pyjen.build import build
 from pyjen.utils.job_xml import job_xml
 from pyjen.utils.data_requester import data_requester
-from pyjen.utils.common import get_root_url
 from pyjen.exceptions import InvalidJenkinsURLError
 
 class job(object):

@@ -228,7 +228,14 @@ class jenkins_view_tests(unittest.TestCase):
         v = j.create_view(new_view_name)
         
         self.assertEqual(v.get_name(), new_view_name)
+    
+    def test_clone_all_jobs_in_view(self):
+        mock_data_io = MagicMock()
         
+        j = jenkins(mock_data_io)
+        j.clone_all_jobs_in_view(self.view2_name, "job1", "new_job")
+        
+        pass
 class jenkins_nodes_tests(unittest.TestCase):
     """Unit tests for the node-related methods of the Jenkins class"""
     
@@ -279,7 +286,7 @@ class jenkins_nodes_tests(unittest.TestCase):
         self.assertEqual(2, len(nodes), "Mock jenkins instance should expose 2 connected nodes.")
         self.assertEqual(self.master_node_name, nodes[0].get_name())
         self.assertEqual(self.second_node_name, nodes[1].get_name())
-
+    
 if __name__ == "__main__":
     pytest.main()
     
