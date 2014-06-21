@@ -1,5 +1,6 @@
 import unittest
 from pyjen.jenkins import jenkins
+from pyjen.exceptions import InvalidParameterError
 from mock import MagicMock
 import pytest
 
@@ -140,19 +141,25 @@ class jenkins_view_tests(unittest.TestCase):
         self.primary_view_url = jenkins_root_url + "view/" + self.primary_view_name
         self.view2_name = 'secondView'
         self.view2_url = 'http://localhost:8080/view/secondView'
+        
+        self.view2_job1_url = 'http://localhost:8080/job/j1'
+        self.view2_job1_name = 'j1'
+        mock_job1_dataio = MagicMock()
+        mock_job1_dataio.get_api_data.return_value = {"name":self.view2_job1_name}
             
         # io objects used by the two views managed by our mock Jenkins instance
         self.mock_primary_view_data_io = MagicMock()
         self.mock_primary_view_data_io.get_api_data.return_value = {'name':self.primary_view_name}
         self.mock_view2_data_io = MagicMock()
-        self.mock_view2_data_io.get_api_data.return_value = {'name':self.view2_name}
-        
+        self.mock_view2_data_io.get_api_data.return_value = {'name':self.view2_name, 'jobs':[{'url':self.view2_job1_url}]}
+        self.mock_view2_data_io.clone.side_effect = self.mock_clone
         # mock jenkins instance which exposes 2 views
         self.mock_jenkins_data_io = MagicMock()
         mock_views = []
         mock_views.append({'url':self.view2_url,'name':self.view2_name})
         mock_views.append({'url':jenkins_root_url,'name':self.primary_view_name})
         self.mock_jenkins_data_io.get_api_data.return_value = {'views':mock_views,'primaryView':mock_views[1]}
+        self.mock_jenkins_data_io.url = jenkins_root_url
         
         # construct mock 'clone' method such that views created by
         # these unit tests will behave correctly
@@ -160,6 +167,7 @@ class jenkins_view_tests(unittest.TestCase):
         self.clone_map = {}
         self.clone_map[self.primary_view_url] = self.mock_primary_view_data_io
         self.clone_map[self.view2_url] = self.mock_view2_data_io
+        self.clone_map[self.view2_job1_url] = mock_job1_dataio
 
         
     def mock_clone(self, url):
@@ -229,12 +237,21 @@ class jenkins_view_tests(unittest.TestCase):
         
         self.assertEqual(v.get_name(), new_view_name)
     
+    def test_clone_all_jobs_in_view_invalid_view(self):
+        j = jenkins(self.mock_jenkins_data_io)
+        self.assertRaises(InvalidParameterError, j.clone_all_jobs_in_view, "does_not_exist", "job1", "new_job")
+        
     def test_clone_all_jobs_in_view(self):
-        mock_data_io = MagicMock()
+        new_job_name = "new_job"
+        mock_new_job_data_io = MagicMock()
+        mock_new_job_data_io.get_api_data.return_value = {"name":new_job_name}
+        self.clone_map["http://localhost:8080/job/"+new_job_name] = mock_new_job_data_io
+
+        j = jenkins(self.mock_jenkins_data_io)
+        new_jobs = j.clone_all_jobs_in_view(self.view2_name, self.view2_job1_name, new_job_name)
         
-        j = jenkins(mock_data_io)
-        j.clone_all_jobs_in_view(self.view2_name, "job1", "new_job")
-        
+        self.assertEquals (len(new_jobs), 1)
+        self.assertEqual(new_jobs[0].get_name(), new_job_name)
         pass
 class jenkins_nodes_tests(unittest.TestCase):
     """Unit tests for the node-related methods of the Jenkins class"""

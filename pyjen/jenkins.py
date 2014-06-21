@@ -3,7 +3,7 @@ from pyjen.view import view
 from pyjen.node import node
 from pyjen.job import job
 from pyjen.utils.data_requester import data_requester
-from pyjen.exceptions import InvalidJenkinsURLError
+from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
 
 class jenkins(object):
     """Python wrapper managing a Jenkins primary dashboard
@@ -132,16 +132,16 @@ class jenkins(object):
         :rtype: :func:`list` of :py:mod:`pyjen.node` objects
             
         """
-        tmp_data_io = self.__data_io.clone(self.__data_io.url + "/computer")
+        tmp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/computer")
         data = tmp_data_io.get_api_data()
                 
         nodes = data['computer']
         retval = []
         for n in nodes:
             if n['displayName'] == 'master':
-                node_url = self.__data_io.url + '/computer/(master)'
+                node_url = self.__data_io.url.rstrip("/") + '/computer/(master)'
             else:
-                node_url = self.__data_io.url + '/computer/' + n['displayName']
+                node_url = self.__data_io.url.rstrip("/") + '/computer/' + n['displayName']
             
             node_data_io = self.__data_io.clone(node_url)
             retval.append(node(node_data_io))
@@ -180,7 +180,7 @@ class jenkins(object):
         data = self.__data_io.get_api_data()
 
         default_view = data['primaryView']
-        new_io_obj = self.__data_io.clone(default_view['url'] + "view/" + default_view['name'])
+        new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") + "/view/" + default_view['name'])
         return view(new_io_obj)
 
     def get_views(self):
@@ -200,7 +200,7 @@ class jenkins(object):
             # so we need to look for this and generate a corrected one
             turl = v['url']
             if turl.find('view') == -1:
-                turl += "view/" + v['name']
+                turl = turl.rstrip("/") + "/view/" + v['name']
                 
             new_io_obj = self.__data_io.clone(turl)
             tview = view(new_io_obj)
@@ -226,7 +226,7 @@ class jenkins(object):
             if v['name'] == view_name:
                 turl = v['url']
                 if turl.find('view') == -1:
-                    turl += "view/" + v['name']
+                    turl = turl.rstrip("/") + "/view/" + v['name']
                 
                 new_io_obj = self.__data_io.clone(turl)
                 return view(new_io_obj)
@@ -296,7 +296,7 @@ class jenkins(object):
         
         self.__data_io.post("createItem", args)
         
-        temp_data_io = self.__data_io.clone(self.__data_io.url + "/job/" + new_job_name)
+        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/job/" + new_job_name)
         new_job = job(temp_data_io)
         
         # Sanity check - lets make sure the job actually exists by checking its name
@@ -323,6 +323,8 @@ class jenkins(object):
         :rtype: :class:`list` of :py:mod:`pyjen.job` objects
         """
         temp_view = self.find_view(view_name)
+        if temp_view == None:
+            raise InvalidParameterError("View " + view_name + " not found on Jenkins instance.")
         temp_jobs = temp_view.get_jobs()
         
         # Create a mapping table for names of jobs

@@ -30,5 +30,16 @@ class InvalidJenkinsURLError (PyJenError):
     def __str__ (self):
         return "Error connecting to Jenkins API via " + self.__url + ": \n\t" + self.__msg
 
+class InvalidParameterError(PyJenError):
+    """Exception raised when the caller provides an invalid value as an input parameter to a PyJen method call"""
+    def __init__ (self, msg):
+        """Constructor
+        
+        :param str msg: Descriptive message associated with this exception
+        """
+        self.__msg = msg
+        
+    def __str__(self):
+        return self.__msg
 if __name__ == "__main__":
     pass
