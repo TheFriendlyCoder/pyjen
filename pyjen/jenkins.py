@@ -1,6 +1,6 @@
 import json
 from pyjen.view import view
-from pyjen.node import node
+from pyjen.node import Node
 from pyjen.job import job
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
@@ -128,8 +128,8 @@ class jenkins(object):
     def get_nodes(self):
         """gets the list of nodes (aka: agents) managed by this Jenkins master
         
-        :returns: list of 0 or more node objects managed by this Jenkins master 
-        :rtype: :func:`list` of :py:mod:`pyjen.node` objects
+        :returns: list of 0 or more Node objects managed by this Jenkins master 
+        :rtype: :func:`list` of :py:mod:`pyjen.Node` objects
             
         """
         tmp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/computer")
@@ -144,7 +144,7 @@ class jenkins(object):
                 node_url = self.__data_io.url.rstrip("/") + '/computer/' + n['displayName']
             
             node_data_io = self.__data_io.clone(node_url)
-            retval.append(node(node_data_io))
+            retval.append(Node(node_data_io))
                         
         return retval
     

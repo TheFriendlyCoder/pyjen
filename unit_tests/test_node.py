@@ -1,18 +1,18 @@
 import unittest
-from pyjen.node import node
+from pyjen.node import Node
 from mock import MagicMock
 import pytest
 import time
 
 class node_misc_tests(unittest.TestCase):
-    """Tests for remaining utility methods of the node class not tested by other cases"""
+    """Tests for remaining utility methods of the Node class not tested by other cases"""
     def test_get_name(self):
         expected_name = "node1"
         
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'displayName':expected_name}
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         actual_name = n.get_name()
 
         self.assertEqual(expected_name, actual_name)
@@ -22,14 +22,14 @@ class node_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'offline':True}
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         
-        self.assertTrue(n.is_offline(), "Node object should report the node as being offline")
+        self.assertTrue(n.is_offline(), "Node object should report the Node as being offline")
         
     def test_toggle_offline(self):
         mock_data_io = MagicMock()
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         n.toggle_offline()
         
         mock_data_io.post.assert_called_once_with("/toggleOffline")
@@ -37,7 +37,7 @@ class node_misc_tests(unittest.TestCase):
     def test_toggle_offline_with_message(self):
         mock_data_io = MagicMock()
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         offline_message = "Description"
         n.toggle_offline(offline_message)
         
@@ -46,7 +46,7 @@ class node_misc_tests(unittest.TestCase):
     def test_toggle_offline_with_message_with_spaces(self):
         mock_data_io = MagicMock()
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         offline_message = "Descriptive text goes here"
         n.toggle_offline(offline_message)
 
@@ -56,7 +56,7 @@ class node_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'idle':True}
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         
         self.assertTrue(n.is_idle(), "Node should have an idle state.")
         
@@ -72,7 +72,7 @@ class node_misc_tests(unittest.TestCase):
         
         mock_data_io.get_api_data.side_effect = mock_get_api_data
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         final_is_idle_value = n.wait_for_idle()
         
         self.assertTrue(final_is_idle_value)
@@ -82,7 +82,7 @@ class node_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'idle':False}
         
-        n = node(mock_data_io)
+        n = Node(mock_data_io)
         
         #TODO: Consider launching this method asynchronously 
         #somehow to prevent deadlocks if the wait method has bugs in it

@@ -26,12 +26,12 @@ class job_xml(object):
         
         :param str path: path of the new or modified custom workspace
         """
-        node = self.__root.find('customWorkspace')
+        Node = self.__root.find('customWorkspace')
         
-        if node == None:
-            node = ElementTree.SubElement(self.__root, 'customWorkspace')
+        if Node == None:
+            Node = ElementTree.SubElement(self.__root, 'customWorkspace')
 
-        node.text = path
+        Node.text = path
 
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
@@ -39,10 +39,10 @@ class job_xml(object):
         If the job is not currently using a custom workspace this method will do nothing
         """
     
-        node =  self.__root.find('customWorkspace')
+        Node =  self.__root.find('customWorkspace')
         
-        if node != None:
-            self.__root.remove(node)
+        if Node != None:
+            self.__root.remove(Node)
                         
     def get_xml(self):
         """Extracts the processed XML for export to a Jenkins job
@@ -73,8 +73,8 @@ class job_xml(object):
         
         :rtype: :py:mod:`pyjen.plugins.pluginbase`
         """
-        node = self.__root.find('scm')
-        xml = ElementTree.tostring(node)
+        Node = self.__root.find('scm')
+        xml = ElementTree.tostring(Node)
         
         return pluginapi.find_plugin(xml)
 

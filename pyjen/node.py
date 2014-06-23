@@ -10,8 +10,8 @@ else:
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 
-class node(object):
-    """Wrapper around a Jenkins build agent (aka: node) configuration
+class Node(object):
+    """Wrapper around a Jenkins build agent (aka: Node) configuration
 
     Use this class to manipulate agents managed by a Jenkins master"""
 
@@ -36,9 +36,9 @@ class node(object):
         :param tuple credentials: A 2-element tuple with the username and
             password for authenticating to the URL. If omitted, anonymous
             access will be chosen
-        :returns: :py:mod:`pyjen.node` object, pre-configured with the
+        :returns: :py:mod:`pyjen.Node` object, pre-configured with the
             appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.node`
+        :rtype: :py:mod:`pyjen.Node`
         """
         if credentials != None:
             username = credentials[0]
@@ -48,10 +48,10 @@ class node(object):
             password = ""
 
         http_io = data_requester(url, username, password)
-        retval = node(http_io)
+        retval = Node(http_io)
 
         # Sanity check: make sure the given IO object can successfully
-        #        query the node machine name
+        #        query the Node machine name
         try:
             name = retval.get_name()
         except:
@@ -64,9 +64,9 @@ class node(object):
         return retval
 
     def get_name(self):
-        """Gets the display name of this node
+        """Gets the display name of this Node
 
-        :returns: the name of this node
+        :returns: the name of this Node
         :rtype: :func:`str`
         """
         data = self.__data_io.get_api_data()
@@ -74,9 +74,9 @@ class node(object):
         return data['displayName']
 
     def is_offline(self):
-        """Checks to see whether this node is currently offline or not
+        """Checks to see whether this Node is currently offline or not
 
-        :returns: true if this node is offline otherwise false
+        :returns: true if this Node is offline otherwise false
         :rtype: :func:`bool`
         """
         data = self.__data_io.get_api_data()
@@ -84,9 +84,9 @@ class node(object):
         return data['offline']
 
     def toggle_offline(self, message=None):
-        """Toggles the online status of this node
+        """Toggles the online status of this Node
 
-        If the current state of this node is "offline" it will
+        If the current state of this Node is "offline" it will
         be toggled to "online" when calling this method, and vice
         versa.
 
@@ -103,10 +103,10 @@ class node(object):
         self.__data_io.post(post_cmd)
 
     def is_idle(self):
-        """Checks to see whether any executors are in use on this node or not
+        """Checks to see whether any executors are in use on this Node or not
 
         :returns:
-            returns true if there are no active builds on this node at the
+            returns true if there are no active builds on this Node at the
             moment otherwise returns false
         :rtype: :func:`bool`
         """
@@ -114,7 +114,7 @@ class node(object):
         return data['idle']
 
     def wait_for_idle(self, max_timeout=None):
-        """Blocks execution until this node enters an idle state
+        """Blocks execution until this Node enters an idle state
 
         :param int max_timeout:
             The maximum amount of time, in seconds, to wait for
@@ -122,7 +122,7 @@ class node(object):
             will block indefinitely.
 
         :returns:
-            true if the node has entered idle state before returning
+            true if the Node has entered idle state before returning
             otherwise returns false
         :rtype: :func:`bool`
         """

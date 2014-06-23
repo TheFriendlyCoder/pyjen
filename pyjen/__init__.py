@@ -5,11 +5,11 @@ scripting environment.
 """
 
 # first import all key Jenkins classes from package
-from .jenkins import jenkins
-from .build import build
-from .job import job
-from .node import node
-from .view import view
+from pyjen.jenkins import jenkins
+from pyjen.build import build
+from pyjen.job import job
+from pyjen.node import Node
+from pyjen.view import view
 
 #Then, lets expose these classes to the caller when they import *
-__all__ = ["jenkins", "view", "node", "build", "job"]
+__all__ = ["jenkins", "view", "Node", "build", "job"]
