@@ -50,7 +50,8 @@ code_analysis()
 {
 	# runs code analysis tools against project, such as PyLint
 	echo "Running code analysis tools"
-	#find -iname "*.py" | xargs pylint --rcfile=.pylint -f parseable > "$log_folder/pylint.log" 2>&1
+	find ./pyjen -name "*.py" | xargs pylint --rcfile=.pylint -f parseable > "$log_folder/pylint.log" 2>&1
+
 }
 
 publish()
@@ -111,6 +112,11 @@ do
 				echo "Failed to publish artifacts"
 				exit 1
 			fi
+		;;
+
+		*)
+			echo "Unknown command line parameters. Run script with no params to see available options"
+			exit 1
 		;;
 
 	esac
