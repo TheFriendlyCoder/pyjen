@@ -77,6 +77,7 @@ show_usage()
 	echo "     docs"
 	echo "     pack"
 	echo "     publish"
+	echo "     all"
 }
 
 process_params()
