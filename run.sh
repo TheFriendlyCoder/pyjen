@@ -50,8 +50,10 @@ code_analysis()
 {
 	# runs code analysis tools against project, such as PyLint
 	echo "Running code analysis tools"
-	find ./pyjen -name "*.py" | xargs pylint --rcfile=.pylint -f parseable > "$log_folder/pylint.log" 2>&1
-
+	find ./pyjen -name "*.py" | xargs pylint --rcfile=.pylint -f parseable > "$log_folder/stats.log" 2>&1
+	radon cc -sa ./pyjen/*.py >> "$log_folder/stats.log" 2>&1
+	radon raw -s ./pyjen/*.py >> "$log_folder/stats.log" 2>&1
+	radon mi -s ./pyjen/*.py >> "$log_folder/stats.log" 2>&1
 }
 
 publish()
