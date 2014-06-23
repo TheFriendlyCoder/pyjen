@@ -65,7 +65,10 @@ publish()
 	# Publish API docs to thefriendlycoder.com
 	ncftpput -R -v -m pyjentfc /PyJen ./docs/build/html/*
 }
-if [ -z "$@" ]; then
+
+show_usage()
+{
+	# Shows supported command line options
 	echo "Usage: $0 <option>"
 	echo
 	echo "Where <option> is one of the following:"
@@ -74,52 +77,75 @@ if [ -z "$@" ]; then
 	echo "     docs"
 	echo "     pack"
 	echo "     publish"
+}
+
+process_params()
+{
+	# given one or more operations to execute as parameters,
+	# iteratively makes calls to the worker functions to
+    # perform the requested operation
+	for param in "$@"
+	do
+		case "$param" in
+			test)
+				run_tests
+			;;
+
+			stat)
+				code_analysis
+				if [ $? -ne 0 ]; then
+					echo "code analysis detected problems"
+					exit 1
+				fi
+			;;
+
+			docs)
+				make_docs
+				if [ $? -ne 0 ]; then
+					echo "Failed to generate API documentation"
+					exit 1
+				fi
+			;;
+
+			pack)
+				create_package
+				if [ $? -ne 0 ]; then
+					echo "Failed to create redistributable package"
+					exit 1
+				fi
+			;;
+
+			publish)
+				publish
+				if [ $? -ne 0 ]; then
+					echo "Failed to publish artifacts"
+					exit 1
+				fi
+			;;
+
+			*)
+				echo "Unknown command line parameter: $1"
+				show_usage
+				exit 1
+			;;
+
+		esac
+	done
+
+}
+
+
+
+# main code
+if [ -z "$@" ]; then
+	show_usage
 	exit 0
 fi
 
-for param in "$@"
-do
-	case "$param" in
-		test)
-			run_tests
-		;;
 
-		stat)
-			code_analysis
-			if [ $? -ne 0 ]; then
-				echo "code analysis detected problems"
-				exit 1
-			fi
-		;;
+if [ "$@" == "all" ];  then
+	process_params "test" "stat" "docs" "pack"
+else
+	process_params "$@"
+fi
 
-		docs)
-			make_docs
-			if [ $? -ne 0 ]; then
-				echo "Failed to generate API documentation"
-				exit 1
-			fi
-		;;
-
-		pack)
-			create_package
-			if [ $? -ne 0 ]; then
-				echo "Failed to create redistributable package"
-				exit 1
-			fi
-		;;
-
-		publish)
-			publish
-			if [ $? -ne 0 ]; then
-				echo "Failed to publish artifacts"
-				exit 1
-			fi
-		;;
-
-		*)
-			echo "Unknown command line parameters. Run script with no params to see available options"
-			exit 1
-		;;
-
-	esac
-done
