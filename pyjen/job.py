@@ -23,6 +23,28 @@ class job(object):
         """
         self.__requester = http_io_class(url)
         
+        data = self.__requester.get_api_data()      
+        self._name = data['name'] 
+        self._latestBuildNumber = int(data['builds'][0]['number'])
+        self._lastGoodBuildNumber = int(data['lastSuccessfulBuild']['number']) if (data['lastSuccessfulBuild']) else None
+        self._lastFailedBuildNumber = int(data['lastFailedBuild']['number']) if (data['lastFailedBuild']) else None
+        self._firstBuild = int(data['firstBuild']['number'])
+        
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def latestBuildNumber(self):
+        return self._latestBuildNumber
+    
+    @property
+    def lastGoodBuildNumber(self):
+        return self._lastGoodBuildNumber
+    
+    @property
+    def lastFailedBuildNumber(self):
+        return self._lastFailedBuildNumber
         
     def get_name(self):
         """Returns the name of the job managed by this object
@@ -41,7 +63,15 @@ class job(object):
         """
         return self.__requester.url
     
-    
+    def get_latest_build_number(self):
+        """gets the most recent build number
+        
+        :returns: most recent build number
+        :rtype: :func:`int`
+        """
+        
+        data = self.__requester.get_api_data()
+        return int(data['builds'][0]['number'])
     
     def get_recent_builds(self):
         """Gets a list of the most recent builds for this job
@@ -368,10 +398,10 @@ class job(object):
         """       
         builds = []                
         
-        for run in self.get_recent_builds():            
-            if (run.get_build_time() < startTime):
+        for run in self.get_recent_builds():    
+            if (run.buildTime < startTime):
                 break
-            elif (run.get_build_time() >= startTime and run.get_build_time() <= endTime):
+            elif (run.buildTime >= startTime and run.buildTime <= endTime):
                 builds.append(run)                               
         return builds
         

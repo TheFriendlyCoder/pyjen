@@ -25,7 +25,28 @@ class build(object):
             this class and the Jenkins REST API
             If not explicitly defined a standard IO class will be used 
         """
-        self.__requester = http_io_class(url)
+        self.__requester = http_io_class(url)        
+        data = self.__requester.get_api_data()      
+        self._buildNumber = data['number']
+        
+        time_in_seconds = data['timestamp'] * 0.001        
+        self._buildTime = datetime.fromtimestamp(time_in_seconds)
+                
+    @property
+    def buildNumber(self):
+        return self._buildNumber
+    
+    @property
+    def buildTime(self):
+        return self._buildTime   
+    
+    def get_url(self):
+        """Returns the root URL for the REST API that manages this build
+        
+        :returns: the root URL for the REST API that controls this build
+        :rtype: :func:`str`
+        """
+        return self.__requester.url
         
     def get_url(self):
         """Returns the root URL for the REST API that manages this build
@@ -47,6 +68,24 @@ class build(object):
         
         return data['number']
     
+    def get_culprits(self):
+        """gets a list of all the culprits from the build
+        
+        :returns
+        list of culprits        
+        'fullName' - :func: `str`
+            - Full name of the user
+        'absoluteUrl' - :func: `str`
+            - URL to the jenkins user page
+        """
+        
+        retval = {}
+        data = self.__requester.get_api_data()
+        for item in data['culprits']:
+            retval.update({item['fullName']:item['absoluteUrl']})
+            
+        return retval
+        
     def get_build_time(self):
         """Gets the time stamp of when this build was executed
         
