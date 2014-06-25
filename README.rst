@@ -43,7 +43,7 @@ Display a list of all jobs on the default view
 ::
 
     from pyjen import *
-    jk = jenkins("http://localhost:8080")
+    jk = jenkins.easy_connect("http://localhost:8080")
     vw = jk.get_default_view()
     jobs = vw.get_jobs()
 
@@ -57,7 +57,7 @@ Disable all jobs in a view named "My View"
 ::
 
     from pyjen import *
-    jk = jenkins("http://localhost:8080")
+    jk = jenkins.easy_connect("http://localhost:8080")
     vw = jk.find_view("My View")
     vw.disable_all_jobs()
     
@@ -68,7 +68,7 @@ Get all upstream dependencies of a job named "JobA"
 ::
 
     from pyjen import *
-    j = job("http://localhost:8080/job/JobA")
+    j = job.easy_connect("http://localhost:8080/job/JobA")
     upstream = j.get_upstream_jobs(True)
 
     for u in upstream:
@@ -80,5 +80,5 @@ Clone all jobs in a view who are named with a 'trunk' identifier for a new branc
 ::
 
     from pyjen import *
-    v = view("http://localhost:8080/views/trunk_builds")
+    v = view.easy_connect("http://localhost:8080/views/trunk_builds")
     v.clone_all_jobs(".*trunk.*", "branch")
