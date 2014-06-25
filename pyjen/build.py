@@ -14,17 +14,12 @@ class build(object):
     def __init__ (self, data_io_controller):
         """constructor
         
-        :param str url: URL of the build to be managed. This may be a full URL, starting with
-            the root Jenkins URL, or a partial URL relative to the Jenkins root
-            
-            Examples: 
-                * 'http://jenkins/jobs/job1/123'
-                * 'jobs/job2'
-                
-        :param http_io_class:
-            class capable of handling HTTP IO requests between
-            this class and the Jenkins REST API
-            If not explicitly defined a standard IO class will be used 
+        To instantiate an instance of this class using auto-generated
+        configuration parameters, see the :py:func:`easy_connect` method
+        
+        :param obj data_io_controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API        
         """
         self.__data_io = data_io_controller
         
