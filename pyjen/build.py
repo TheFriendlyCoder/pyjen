@@ -1,5 +1,6 @@
 from pyjen.utils.data_requester import data_requester
 from pyjen.changeset import changeset
+from pyjen.user import user
 from datetime import datetime
 from pyjen.exceptions import InvalidJenkinsURLError
 
@@ -109,9 +110,30 @@ class build(object):
 
     def get_console_output(self):
         """Gets the raw console output for this build as plain text
+        
+        :returns: Raw console output from this build, in plain text format
         :rtype: :func:`str`
         """
         return self.__data_io.get_text("/consoleText")
     
+    def get_culprits(self):
+        """Gets a list of potential breakers of a build
+        
+        :returns: List of 0 or more Jenkins users whom committed changes
+            included in this build.
+        :rtype: :func:`list` of :py:mod:`pyjen.user` objects
+        """
+        
+        data = self.__data_io.get_api_data()
+        print (data['culprits'])
+        retval = []
+        for culprit in data['culprits']:
+            print (culprit)
+            temp_data_io = self.__data_io.clone(culprit['absoluteUrl'])
+            temp_user = user(temp_data_io)
+            retval.append(temp_user)
+
+        return retval
+
 if __name__ == "__main__":
     pass

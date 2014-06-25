@@ -42,7 +42,7 @@ class user_tests(unittest.TestCase):
     def test_get_email(self):
         expected_email = "john.doe@foo.bar.com"
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"address":expected_email}
+        mock_data_io.get_api_data.return_value = {"property":[{"address":expected_email}]}
         
         u = user(mock_data_io)
         

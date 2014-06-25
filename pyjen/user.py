@@ -83,7 +83,11 @@ class user (object):
         :rtype: :func:`str`
         """
         data = self.__data_io.get_api_data()
-        return data['address']
+        for prop in data['property']:
+            if 'address' in prop:
+                return prop['address']
+        
+        return None
     
 if __name__ == "__main__":
     pass

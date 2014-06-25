@@ -62,6 +62,32 @@ class build_tests(unittest.TestCase):
         cs = b.get_changeset()
         
         self.assertEqual(cs.get_scm_type(), "svn")
+    
+    def test_get_culprits(self):
+        expected_name = "John Doe"
+        expected_url = "http://localhost:8080/user/jdoe"
+        mock_user_data_io = MagicMock()
+        mock_user_data_io.get_api_data.return_value = {"fullName":expected_name}
+        
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"culprits":[{"absoluteUrl":expected_url}]}
+        mock_data_io.clone.return_value = mock_user_data_io
+        
+        b = build(mock_data_io)
+        culprits = b.get_culprits()
+        
+        self.assertEqual(len(culprits), 1, "Mock build should have returns 1 breaker")
+        self.assertEqual(culprits[0].get_full_username(), expected_name)
+        mock_data_io.clone.assert_called_once_with(expected_url)
+        
+    def test_get_culprits_none(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"culprits":[]}
+        
+        b = build(mock_data_io)
+        culprits = b.get_culprits()
+        
+        self.assertEqual(len(culprits), 0, "Mock build should have no breakers")
         
 if __name__ == "__main__":
     pytest.main()
