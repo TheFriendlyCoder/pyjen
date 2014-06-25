@@ -32,34 +32,7 @@ Quick start guide
 
 # pip install pyjen
 
-3. By default the PyJen API supports connecting to an unsecured locally hosted instance of Jenkins. To
-enable support for remote servers and authentication you will need to create a configuration file file
-named '.pyjen' in your home folder:
-
-::
-
-	Windows:
-	> notepad %userprofile%\.pyjen
-	
-	Linux:
-	# vi ~/.pyjen
-
-4. To enable remote connections add the following lines to your config file:
-
-::
-
-	[jenkins_config]
-	url=http://MyServer/jenkins/
-
-5. To enable authenticated connections to this Jenkins instance add the following lines to the config file:
-
-::
-
-    [credentials]
-    username=MyUser
-    password=MyPassword!
-
-6. Import pyjen into your project and start scripting!
+3. import the pyjen module and start scripting! See below for some common examples.
 
 ================
 Examples
