@@ -19,7 +19,7 @@ via simple Python commands.
 
 Comments, suggestions and bugs may be reported to the project `maintainer <mailto:kevin@thefriendlycoder.com>`_
 
-Full API documentation can be found `here <http://www.thefriendlycoder.com/PyJen>`_.
+Full API documentation can be found at `TheFriendlyCoder.com <http://www.thefriendlycoder.com/PyJen>`_.
 
 =================
 Quick start guide
