@@ -1,3 +1,4 @@
+"""Primitives for interacting with the main Jenkins dashboard"""
 import json
 from pyjen.view import view
 from pyjen.node import Node
@@ -6,29 +7,30 @@ from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
 
 class jenkins(object):
-    """Python wrapper managing a Jenkins primary dashboard
-    
+    """Python wrapper managing the Jenkins primary dashboard
+
     Generally you should use this class as the primary entry
     point to the PyJen APIs. Finer grained control of each
     aspect of the Jenkins dashboard is then provided by the
     objects exposed by this class including:
-    
+
     * :py:mod:`pyjen.job` - abstraction for a Jenkins job, allowing manipulation
                     of job settings and controlling builds of those jobs
-    * :py:mod:`pyjen.build` - abstraction for an instance of a build of a particular job
-    * :py:mod:`pyjen.view` - abstraction for a view on the dashboard, allowing jobs to
-                be filtered based on different criteria like job name.
-    
+    * :py:mod:`pyjen.build` - abstraction for an instance of a build of a
+                    particular job
+    * :py:mod:`pyjen.view` - abstraction for a view on the dashboard, allowing
+                jobs to be filtered based on different criteria like job name.
+
     **Example:** finding a job ::
-    
+
         j = pyjen.jenkins.easy_connect('http://localhost:8080')
         job= j.find_job('My Job')
         if job = None:
             print ('no job by that name found')
         else:
             print ('job ' + job.get_name() + ' found at ' + job.get_url())
-        
-        
+
+
     **Example:** finding the build number of the last good build of the first job on the default view ::
     
         j = pyjen.jenkins.easy_connect('http://localhost:8080/')
@@ -247,10 +249,6 @@ class jenkins(object):
         :returns: An object to manage the newly created view
         :rtype: :py:mod:`pyjen.view`
         """
-        #TODO: consider rethinking this method. Perhaps it'd be better
-        #      suited to the view class. Alternatively, maybe we just
-        #      construct the view class externally then insert it
-        #      onto the dashboard here .... not sure.
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         data = {
             "name": view_name,
@@ -306,6 +304,7 @@ class jenkins(object):
         new_job.disable()
         
         return new_job 
+    
     
     def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_name_substitution_string):
         """Helper method that does a batch clone on all jobs found in this view

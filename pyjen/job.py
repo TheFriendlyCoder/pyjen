@@ -1,4 +1,4 @@
-from pyjen.build import build
+from pyjen.build import Build
 from pyjen.utils.job_xml import job_xml
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
@@ -193,7 +193,7 @@ class job(object):
         synonymous with the short list provided on the main info
         page for the job on the dashboard.
         
-        :rtype: :func:`list` of :py:mod:`pyjen.build` objects
+        :rtype: :func:`list` of :py:mod:`pyjen.Build` objects
         """
         data = self.__data_io.get_api_data()
         
@@ -202,7 +202,7 @@ class job(object):
         retval = []
         for b in builds:
             temp_data_io = self.__data_io.clone(b['url'])
-            temp_build = build(temp_data_io)
+            temp_build = Build(temp_data_io)
             retval.append(temp_build)
         
         return retval
@@ -217,7 +217,7 @@ class job(object):
             object that provides information and control for the
             last build which completed with a status of 'success'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.build`
+        :rtype: :py:mod:`pyjen.Build`
         """
         data = self.__data_io.get_api_data()
         
@@ -227,7 +227,7 @@ class job(object):
             return None
         
         temp_data_io = self.__data_io.clone(lgb['url'])
-        return build(temp_data_io)
+        return Build(temp_data_io)
         
     def get_last_build(self):
         """Returns a reference to the most recent build of this job
@@ -238,7 +238,7 @@ class job(object):
             object that provides information and control for the
             most recent build of this job.
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.build`
+        :rtype: :py:mod:`pyjen.Build`
         """
         data = self.__data_io.get_api_data()
         
@@ -248,7 +248,7 @@ class job(object):
             return None
         
         temp_data_io = self.__data_io.clone(last_build['url'])
-        return build (temp_data_io)
+        return Build (temp_data_io)
     
     def get_last_failed_build(self):
         """Returns a reference to the most recent build of this job with a status of "failed"
@@ -258,7 +258,7 @@ class job(object):
         :returns:
             Most recent build with a status of 'failed'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.build`
+        :rtype: :py:mod:`pyjen.Build`
         """
         data = self.__data_io.get_api_data()
         
@@ -268,7 +268,7 @@ class job(object):
             return None
         
         temp_data_io = self.__data_io.clone(bld['url'])
-        return build(temp_data_io)
+        return Build(temp_data_io)
                 
     def get_last_stable_build(self):
         """Returns a reference to the most recent build of this job with a status of "stable"
@@ -279,7 +279,7 @@ class job(object):
         :returns:
             Most recent build with a status of 'stable'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.build`
+        :rtype: :py:mod:`pyjen.Build`
         """
         data = self.__data_io.get_api_data()
 
@@ -289,7 +289,7 @@ class job(object):
             return None
         
         temp_data_io = self.__data_io.clone(bld['url'])
-        return build(temp_data_io)
+        return Build(temp_data_io)
     
     def get_last_unsuccessful_build(self):
         """Returns a reference to the most recent build of this job with a status of "unstable"
@@ -299,7 +299,7 @@ class job(object):
         :returns:
             Most recent build with a status of 'unstable'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.build`
+        :rtype: :py:mod:`pyjen.Build`
         """
         data = self.__data_io.get_api_data()
 
@@ -309,7 +309,7 @@ class job(object):
             return None
         
         temp_data_io = self.__data_io.clone(bld['url'])
-        return build(temp_data_io)    
+        return Build(temp_data_io)    
         
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
@@ -320,7 +320,7 @@ class job(object):
         :returns:
             Build object for the build with the given numeric identifier
             If such a build does not exist, returns None
-        :rtype: :py:mod:`pyjen.build`
+        :rtype: :py:mod:`pyjen.Build`
         """
         temp_data_io = self.__data_io.clone(self.__data_io.url + "/" + str(build_number))
 
@@ -331,7 +331,7 @@ class job(object):
         except AssertionError:
             return None
         
-        return build(temp_data_io)
+        return Build(temp_data_io)
     
     def get_builds_in_time_range(self, startTime, endTime):
         """ Returns a list of all of the builds for a job that 
@@ -342,7 +342,7 @@ class job(object):
             :param datetime endTime:
                     ending time index for range of builds to find
             :returns: a list of 0 or more builds
-            :rtype: :class:`list` of :py:mod:`pyjen.build` objects            
+            :rtype: :class:`list` of :py:mod:`pyjen.Build` objects            
         """       
         if startTime > endTime:
             tmp = endTime
