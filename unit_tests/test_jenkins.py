@@ -1,5 +1,5 @@
 import unittest
-from pyjen.jenkins import jenkins
+from pyjen.jenkins import Jenkins
 from pyjen.exceptions import InvalidParameterError
 from mock import MagicMock
 import pytest
@@ -12,7 +12,7 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_headers.return_value = {'x-jenkins':expected_version}
         
-        j = jenkins(mock_data_io)
+        j = Jenkins(mock_data_io)
 
         self.assertEqual(expected_version, j.version)
         self.assertEqual("call('/api/python')", str(mock_data_io.get_headers.call_args), 
@@ -26,7 +26,7 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_headers.return_value = {}
         
-        j = jenkins(mock_data_io)
+        j = Jenkins(mock_data_io)
 
         self.assertEqual(expected_version, j.version)
         self.assertEqual("call('/api/python')", str(mock_data_io.get_headers.call_args), 
@@ -37,7 +37,7 @@ class jenkins_misc_tests(unittest.TestCase):
     def test_prepare_shutdown(self):
         mock_data_io = MagicMock()
         
-        j = jenkins(mock_data_io)
+        j = Jenkins(mock_data_io)
         j.prepare_shutdown()
         
         self.assertEqual("call('/quietDown')", str(mock_data_io.post.call_args))
@@ -46,7 +46,7 @@ class jenkins_misc_tests(unittest.TestCase):
     def test_cancel_shutdown(self):
         mock_data_io = MagicMock()
         
-        j = jenkins(mock_data_io)
+        j = Jenkins(mock_data_io)
         j.cancel_shutdown()
         
         self.assertEqual("call('/cancelQuietDown')", str(mock_data_io.post.call_args))
@@ -56,7 +56,7 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"quietingDown":True}
         
-        j = jenkins(mock_data_io)
+        j = Jenkins(mock_data_io)
         self.assertTrue(j.is_shutting_down, "Object should be preparing for shutdown")
         
         
@@ -97,15 +97,15 @@ class jenkins_job_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'jobs':{}}
         
-        j = jenkins(mock_data_io)
+        j = Jenkins(mock_data_io)
         njob = j.find_job("MyJob")
         self.assertEqual(njob, None, "No jobs should be found by the search method")
         
     def test_find_job_success(self):
-        j = jenkins(self.mock_jenkins_data_io)
-        job = j.find_job(self.job2_name)
+        j = Jenkins(self.mock_jenkins_data_io)
+        Job = j.find_job(self.job2_name)
         
-        self.assertNotEqual(job, None, "find_job should have returned a valid job object")
+        self.assertNotEqual(Job, None, "find_job should have returned a valid job object")
         self.mock_jenkins_data_io.clone.assert_called_with(self.job2_url)        
 
     def test_clone_job(self):
@@ -116,7 +116,7 @@ class jenkins_job_tests(unittest.TestCase):
         mock_jenkins_data_io = MagicMock()
         mock_jenkins_data_io.clone.return_value = mock_new_job_data_io
         
-        j = jenkins(mock_jenkins_data_io)
+        j = Jenkins(mock_jenkins_data_io)
         njob = j.clone_job("SomeJob", new_job_name)
         
         self.assertEqual(njob.name, new_job_name)
@@ -175,7 +175,7 @@ class jenkins_view_tests(unittest.TestCase):
     
     def test_get_default_view(self):        
         # test logic
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         v = j.default_view
         actual_view_name = v.name
         
@@ -185,7 +185,7 @@ class jenkins_view_tests(unittest.TestCase):
     
     def test_get_multiple_views(self):
         # test logic
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         views = j.all_views
         
         # verification
@@ -195,7 +195,7 @@ class jenkins_view_tests(unittest.TestCase):
     
     def test_find_view(self):
         # test logic
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         view = j.find_view(self.view2_name)
         
         # verification
@@ -205,7 +205,7 @@ class jenkins_view_tests(unittest.TestCase):
         
     def test_find_view_primary_view(self):        
         # test logic
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         view = j.find_view(self.primary_view_name)
         
         # verification
@@ -215,7 +215,7 @@ class jenkins_view_tests(unittest.TestCase):
     
     def test_find_missing_view(self):
         # test logic
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         view = j.find_view("DoesNotExist")
     
         # verification
@@ -228,13 +228,13 @@ class jenkins_view_tests(unittest.TestCase):
         new_view_dataio.get_api_data.return_value = {'name':new_view_name}
         self.mock_jenkins_data_io.get_api_data.return_value['views'].append({'url':new_view_url,'name':new_view_name})
         self.clone_map[new_view_url] = new_view_dataio
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         v = j.create_view(new_view_name)
         
         self.assertEqual(v.name, new_view_name)
     
     def test_clone_all_jobs_in_view_invalid_view(self):
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         self.assertRaises(InvalidParameterError, j.clone_all_jobs_in_view, "does_not_exist", "job1", "new_job")
         
     def test_clone_all_jobs_in_view(self):
@@ -243,7 +243,7 @@ class jenkins_view_tests(unittest.TestCase):
         mock_new_job_data_io.get_api_data.return_value = {"name":new_job_name}
         self.clone_map["http://localhost:8080/job/"+new_job_name] = mock_new_job_data_io
 
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         new_jobs = j.clone_all_jobs_in_view(self.view2_name, self.view2_job1_name, new_job_name)
         
         self.assertEquals (len(new_jobs), 1)
@@ -292,7 +292,7 @@ class jenkins_nodes_tests(unittest.TestCase):
         self.fail("Unexpected URL parameter to dataio clone method: " + url)
     
     def test_get_multiple_nodes(self):
-        j = jenkins(self.mock_jenkins_data_io)
+        j = Jenkins(self.mock_jenkins_data_io)
         nodes = j.nodes
         
         self.assertNotEqual(nodes, None)

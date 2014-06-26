@@ -1,5 +1,5 @@
 from pyjen.utils.data_requester import data_requester
-from pyjen.job import job
+from pyjen.job import Job
 from pyjen.utils.view_xml import view_xml
 from pyjen.exceptions import InvalidJenkinsURLError
 
@@ -82,7 +82,7 @@ class view(object):
         with this view.
         
         :returns: list of 0 or more jobs that are included in this view
-        :rtype:  :class:`list` of :py:mod:`pyjen.job` objects
+        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
         """
         data = self.__data_io.get_api_data()
         
@@ -91,7 +91,7 @@ class view(object):
         retval = []
         for j in view_jobs:  
             temp_data_io = self.__data_io.clone(j['url'])      
-            retval.append(job(temp_data_io))
+            retval.append(Job(temp_data_io))
             
         return retval
     

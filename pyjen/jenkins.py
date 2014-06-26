@@ -2,11 +2,11 @@
 import json
 from pyjen.view import view
 from pyjen.node import Node
-from pyjen.job import job
+from pyjen.job import Job
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
 
-class jenkins(object):
+class Jenkins(object):
     """Python wrapper managing the Jenkins primary dashboard
 
     Generally you should use this class as the primary entry
@@ -14,7 +14,7 @@ class jenkins(object):
     aspect of the Jenkins dashboard is then provided by the
     objects exposed by this class including:
 
-    * :py:mod:`pyjen.job` - abstraction for a Jenkins job, allowing manipulation
+    * :py:mod:`pyjen.Job` - abstraction for a Jenkins job, allowing manipulation
                     of job settings and controlling builds of those jobs
     * :py:mod:`pyjen.build` - abstraction for an instance of a build of a
                     particular job
@@ -23,21 +23,24 @@ class jenkins(object):
 
     **Example:** finding a job ::
 
-        j = pyjen.jenkins.easy_connect('http://localhost:8080')
-        job= j.find_job('My Job')
-        if job = None:
+        j = pyjen.Jenkins.easy_connect('http://localhost:8080')
+        Job= j.find_job('My Job')
+        if Job = None:
             print ('no job by that name found')
         else:
-            print ('job ' + job.get_name() + ' found at ' + job.get_url())
+            print ('job ' + Job.get_name() + ' found at ' + Job.get_url())
 
 
-    **Example:** finding the build number of the last good build of the first job on the default view ::
+    **Example:** 
+        find the build number of the last good build 
+        of the first job on the default view ::
     
-        j = pyjen.jenkins.easy_connect('http://localhost:8080/')
+        j = pyjen.Jenkins.easy_connect('http://localhost:8080/')
         view = j.get_default_view()
         jobs = view.get_jobs()
         lgb = jobs[0].get_last_good_build()
-        print ('last good build of the first job in the default view is ' + lgb.get_build_number())
+        print ('last good build of the first job in the default view is ' +\
+                lgb.get_build_number())
     
     """
     
@@ -57,12 +60,14 @@ class jenkins(object):
     def easy_connect(url, credentials=None):
         """Factory method to simplify creating connections to Jenkins servers
         
-        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+        :param str url: Full URL of the Jenkins instance to connect to. Must be
+            a valid running Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and 
+            password for authenticating to the URL
             If omitted, anonymous access will be chosen
-        :returns: :py:mod:`pyjen.jenkins` object, pre-configured with the appropriate credentials
-            and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.jenkins`
+        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
+            appropriate credentials and connection parameters for the given URL.
+        :rtype: :py:mod:`pyjen.Jenkins`
         """
         if credentials != None:
             username = credentials[0]
@@ -72,16 +77,19 @@ class jenkins(object):
             password = ""
         
         http_io = data_requester(url, username, password)
-        retval = jenkins(http_io)
+        retval = Jenkins(http_io)
 
-        # Sanity check: make sure the given IO object can successfully query the Jenkins version number
+        # Sanity check: make sure the given IO object can 
+        #    successfully query the Jenkins version number
         try:
             version = retval.version 
         except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to \
+                PyJen.Jenkins. Please check configuration.", http_io)
 
         if version == None or version == "" or version == "Unknown":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to \
+                PyJen.Jenkins. Please check configuration.", http_io)
         return retval
 
     @property
@@ -103,8 +111,8 @@ class jenkins(object):
     def is_shutting_down(self):
         """checks to see whether the Jenkins master is in the process of shutting down.
         
-        :returns: If the Jenkins master is preparing to shutdown (ie: in quiet down state),
-            return true, otherwise returns false.
+        :returns: If the Jenkins master is preparing to shutdown 
+            (ie: in quiet down state), return true, otherwise returns false.
         :rtype: :func:`bool`
             
         """
@@ -125,11 +133,11 @@ class jenkins(object):
                 
         nodes = data['computer']
         retval = []
-        for n in nodes:
-            if n['displayName'] == 'master':
+        for cur_node in nodes:
+            if cur_node['displayName'] == 'master':
                 node_url = self.__data_io.url.rstrip("/") + '/computer/(master)'
             else:
-                node_url = self.__data_io.url.rstrip("/") + '/computer/' + n['displayName']
+                node_url = self.__data_io.url.rstrip("/") + '/computer/' + cur_node['displayName']
             
             node_data_io = self.__data_io.clone(node_url)
             retval.append(Node(node_data_io))
@@ -149,7 +157,8 @@ class jenkins(object):
         data = self.__data_io.get_api_data()
 
         default_view = data['primaryView']
-        new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") + "/view/" + default_view['name'])
+        new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") +\
+                                          "/view/" + default_view['name'])
         return view(new_io_obj)
     
     @property
@@ -165,12 +174,12 @@ class jenkins(object):
         raw_views = data['views']
         retval = []
 
-        for v in raw_views:
+        for cur_view in raw_views:
             # The default view will not have a valid view URL
             # so we need to look for this and generate a corrected one
-            turl = v['url']
+            turl = cur_view['url']
             if turl.find('view') == -1:
-                turl = turl.rstrip("/") + "/view/" + v['name']
+                turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
             new_io_obj = self.__data_io.clone(turl)
             tview = view(new_io_obj)
@@ -183,14 +192,16 @@ class jenkins(object):
         
         Analogous to the "Prepare for Shutdown" link on the Manage Jenkins configuration page
         
-        You can cancel a previous requested shutdown using the :py:meth:`pyjen.jenkins.cancel_shutdown` method
+        You can cancel a previous requested shutdown using the 
+        :py:meth:`pyjen.Jenkins.cancel_shutdown` method
         """
         self.__data_io.post('/quietDown')
         
     def cancel_shutdown(self):
         """Cancels a previous scheduled shutdown sequence
         
-        Cancels a shutdown operation initiated by the :py:meth:`pyjen.jenkins.prepare_shutdown` method
+        Cancels a shutdown operation initiated by the 
+        :py:meth:`pyjen.Jenkins.prepare_shutdown` method
         """
         self.__data_io.post('/cancelQuietDown')
     
@@ -202,7 +213,7 @@ class jenkins(object):
         :returns: If a job with the specified name can be found, and object
             to manage the job will be returned, otherwise an empty
             object is returned (ie: None)
-        :rtype: :py:mod:`pyjen.job`
+        :rtype: :py:mod:`pyjen.Job`
         """
         data = self.__data_io.get_api_data()
         tjobs = data['jobs']
@@ -210,7 +221,7 @@ class jenkins(object):
         for tjob in tjobs:
             if tjob['name'] == job_name:
                 new_io_obj = self.__data_io.clone(tjob['url'])
-                return job(new_io_obj)
+                return Job(new_io_obj)
         
         return None
     
@@ -228,11 +239,11 @@ class jenkins(object):
         
         raw_views = data['views']
         
-        for v in raw_views:
-            if v['name'] == view_name:
-                turl = v['url']
+        for cur_view in raw_views:
+            if cur_view['name'] == view_name:
+                turl = cur_view['url']
                 if turl.find('view') == -1:
-                    turl = turl.rstrip("/") + "/view/" + v['name']
+                    turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
                 new_io_obj = self.__data_io.clone(turl)
                 return view(new_io_obj)
@@ -268,7 +279,7 @@ class jenkins(object):
         self.__data_io.post('/createView', args)
         
         retval = self.find_view(view_name)
-        assert(retval != None)
+        assert retval != None
         return retval       
     
     def clone_job(self, source_job_name, new_job_name):
@@ -284,7 +295,7 @@ class jenkins(object):
             
         :returns: a reference to the newly created job resulting
             from the clone operation
-        :rtype: :py:mod:`pyjen.job`
+        :rtype: :py:mod:`pyjen.Job`
         """
         params = {'name': new_job_name,
                   'mode': 'copy',
@@ -298,19 +309,20 @@ class jenkins(object):
         
         self.__data_io.post("createItem", args)
         
-        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/job/" + new_job_name)
-        new_job = job(temp_data_io)
+        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") +\
+                                             "/job/" + new_job_name)
+        new_job = Job(temp_data_io)
         
-        # Sanity check - lets make sure the job actually exists by checking its name
-        assert(new_job.name == new_job_name)
+        # Sanity check - make sure the job actually exists by checking its name
+        assert new_job.name == new_job_name
         
-        #as a precaution, lets disable the newly created job so it doesn't automatically start running
+        #disable the newly created job so it doesn't accidentally start running
         new_job.disable()
         
         return new_job 
     
     
-    def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_name_substitution_string):
+    def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_substring):
         """Helper method that does a batch clone on all jobs found in this view
     
         :param str view_name: name of view containing jobs to clone
@@ -318,12 +330,12 @@ class jenkins(object):
             when generating new names for cloned jobs. Substrings within the
             existing job names that match this pattern will be replaced by
             the given substitution string
-        :param str new_job_name_substitution_string: character string used to
+        :param str new_job_substring: character string used to
             generate new job names for the clones of the existing jobs. The substring
             of an existing job that matches the given regex will be replaced by this
             new string to create the new job name for it's cloned counterpart.
         :returns: list of newly created jobs
-        :rtype: :class:`list` of :py:mod:`pyjen.job` objects
+        :rtype: :class:`list` of :py:mod:`pyjen.Job` objects
         """
         temp_view = self.find_view(view_name)
         if temp_view == None:
@@ -334,7 +346,7 @@ class jenkins(object):
         job_map = {}
         for j in temp_jobs:
             orig_name = j.name
-            job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_name_substitution_string)
+            job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_substring)
             
         # clone all jobs, and update internal references     
         retval = []

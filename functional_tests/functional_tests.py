@@ -1,6 +1,6 @@
 import unittest
 from functional_tests.test_utils import start_jenkins
-from pyjen.jenkins import jenkins
+from pyjen.jenkins import Jenkins
 from pyjen.view import view
 import os
 import shutil
@@ -33,7 +33,7 @@ class regression_tests(unittest.TestCase):
     
     def test_create_view(self):
         new_view_name = "test_view"
-        j = jenkins(self.__jenkins_url)
+        j = Jenkins(self.__jenkins_url)
         j.create_view(new_view_name, view.LIST_VIEW)
         v = j.find_view(new_view_name)
         
@@ -42,7 +42,7 @@ class regression_tests(unittest.TestCase):
         self.assertEqual(self.__jenkins_url + "/view/" + new_view_name + "/", v.get_url())
         
     def test_shutdown(self):
-        j = jenkins(self.__jenkins_url)
+        j = Jenkins(self.__jenkins_url)
 
         self.assertFalse(j.is_shutting_down())
         j.prepare_shutdown()

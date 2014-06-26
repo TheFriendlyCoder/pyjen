@@ -1,9 +1,10 @@
+"""Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
 from pyjen.utils.job_xml import job_xml
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 
-class job(object):
+class Job(object):
     """Interface to all primitives associated with a Jenkins job"""
     
     def __init__ (self, data_io_controller):
@@ -22,12 +23,14 @@ class job(object):
     def easy_connect(url, credentials=None):
         """Factory method to simplify creating connections to Jenkins servers
         
-        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid job on a valid Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid job on a 
+            valid Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for 
+            authenticating to the URL
             If no credentials can be found elsewhere, anonymous access will be chosen
-        :returns: :py:mod:`pyjen.job` object, pre-configured with the appropriate credentials
+        :returns: :py:mod:`pyjen.Job` object, pre-configured with the appropriate credentials
             and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.job`
+        :rtype: :py:mod:`pyjen.Job`
         """
         if credentials != None:
             username = credentials[0]
@@ -37,16 +40,18 @@ class job(object):
             password = ""
         
         http_io = data_requester(url, username, password)
-        retval = job(http_io)
+        retval = Job(http_io)
         
-        # Sanity check: make sure we can successfully parse the view's name from the IO controller to make sure
-        # we have a valid configuration
+        # Sanity check: make sure we can successfully parse the view's name from the IO controller
+        # to make sure we have a valid configuration
         try:
             name = retval.name
         except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Job. Please check configuration.", http_io) 
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Job. \
+                Please check configuration.", http_io) 
         if name == None or name == "":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Job. Please check configuration.", http_io) 
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Job. \
+                Please check configuration.", http_io) 
     
         return retval
         
@@ -70,7 +75,7 @@ class job(object):
         """
         data = self.__data_io.get_api_data()
         
-        return (data['color'] == "disabled")
+        return data['color'] == "disabled"
     
     @property
     def has_been_built(self):
@@ -82,7 +87,7 @@ class job(object):
         
         data = self.__data_io.get_api_data()
         
-        return (data['color'] != "notbuilt")
+        return data['color'] != "notbuilt"
     
     @property
     def recent_builds(self):
@@ -100,8 +105,8 @@ class job(object):
         builds = data['builds']
         
         retval = []
-        for b in builds:
-            temp_data_io = self.__data_io.clone(b['url'])
+        for cur_build in builds:
+            temp_data_io = self.__data_io.clone(cur_build['url'])
             temp_build = Build(temp_data_io)
             retval.append(temp_build)
         
@@ -235,7 +240,7 @@ class job(object):
         """Gets the list of jobs to be triggered after this job completes
         
         :returns: A list of 0 or more jobs which depend on this one
-        :rtype:  :class:`list` of :py:mod:`pyjen.job` objects
+        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
         """
         data = self.__data_io.get_api_data()
         
@@ -245,7 +250,7 @@ class job(object):
         
         for j in jobs:
             temp_data_io = self.__data_io.clone(j['url'])
-            temp_job = job(temp_data_io)
+            temp_job = Job(temp_data_io)
             retval.append(temp_job)
         
         return retval
@@ -258,7 +263,7 @@ class job(object):
         jobs, recursively for all downstream dependencies
         
         :returns: A list of 0 or more jobs which depend on this one
-        :rtype:  :class:`list` of :py:mod:`pyjen.job` objects
+        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
         """
         temp = self.downstream_jobs
         retval = temp
@@ -271,7 +276,7 @@ class job(object):
         """Gets the list of upstream dependencies for this job
         
         :returns: A list of 0 or more jobs that this job depends on
-        :rtype: :class:`list` of :py:mod:`pyjen.job` objects
+        :rtype: :class:`list` of :py:mod:`pyjen.Job` objects
         """
         data = self.__data_io.get_api_data()
         
@@ -281,7 +286,7 @@ class job(object):
                 
         for j in jobs:
             temp_data_io = self.__data_io.clone(j['url'])
-            temp_job = job(temp_data_io)
+            temp_job = Job(temp_data_io)
             retval.append(temp_job)
         
         return retval   
@@ -294,7 +299,7 @@ class job(object):
         jobs, recursively for all upstream dependencies
         
         :returns: A list of 0 or more jobs this job depend on
-        :rtype:  :class:`list` of :py:mod:`pyjen.job` objects
+        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
         """
         temp = self.upstream_jobs
         retval = temp
@@ -377,28 +382,28 @@ class job(object):
         
         return Build(temp_data_io)
     
-    def get_builds_in_time_range(self, startTime, endTime):
+    def get_builds_in_time_range(self, start_time, end_time):
         """ Returns a list of all of the builds for a job that 
             occurred between the specified start and end times
             
-            :param datetime startTime: 
+            :param datetime start_time: 
                     starting time index for range of builds to find
-            :param datetime endTime:
+            :param datetime end_time:
                     ending time index for range of builds to find
             :returns: a list of 0 or more builds
             :rtype: :class:`list` of :py:mod:`pyjen.Build` objects            
         """       
-        if startTime > endTime:
-            tmp = endTime
-            endTime = startTime
-            startTime = tmp
+        if start_time > end_time:
+            tmp = end_time
+            end_time = start_time
+            start_time = tmp
             
         builds = []                
         
         for run in self.recent_builds:            
-            if (run.build_time < startTime):
+            if run.build_time < start_time:
                 break
-            elif (run.build_time >= startTime and run.build_time <= endTime):
+            elif run.build_time >= start_time and run.build_time <= end_time:
                 builds.append(run)                               
         return builds
         
