@@ -53,7 +53,7 @@ class Build(object):
         # Sanity check: make sure we can successfully parse the view's name from
         # the IO controller to make sure we have a valid configuration
         try:
-            number = retval.get_build_number()
+            number = retval.build_number
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters \
                 provided to PyJen.Build. Please check configuration.", http_io)
@@ -63,7 +63,8 @@ class Build(object):
 
         return retval
 
-    def get_build_number(self):
+    @property
+    def build_number(self):
         """Gets the numeric build number for this build
 
         :returns: This is the unique numeric identifier, typically a
@@ -75,7 +76,8 @@ class Build(object):
 
         return data['number']
 
-    def get_build_time(self):
+    @property
+    def build_time(self):
         """Gets the time stamp of when this build was executed
 
         :returns: the date and time at which this build was executed
@@ -89,6 +91,7 @@ class Build(object):
 
         return datetime.fromtimestamp(time_in_seconds)
 
+    @property
     def is_building(self):
         """Checks to see whether this build is currently executing
 
@@ -99,23 +102,8 @@ class Build(object):
 
         return data['building']
 
-    def get_changeset(self):
-        """Gets changeset object associated with this build
-
-        NOTE: This changeset may be empty if there were no SCM
-        changes associated with this build, as may be the case
-        with a forced build for example.
-
-        :returns:
-            Changeset object representing the set of SCM changes
-            associated with / included in this build
-        :rtype: :py:mod:`pyjen.changeset`
-        """
-        data = self.__data_io.get_api_data()
-
-        return changeset(data['changeSet'])
-
-    def get_console_output(self):
+    @property
+    def console_output(self):
         """Gets the raw console output for this build as plain text
 
         :returns: Raw console output from this build, in plain text format
@@ -123,7 +111,8 @@ class Build(object):
         """
         return self.__data_io.get_text("/consoleText")
 
-    def get_culprits(self):
+    @property
+    def culprits(self):
         """Gets a list of potential breakers of a build
 
         :returns: List of 0 or more Jenkins users whom committed changes
@@ -141,6 +130,24 @@ class Build(object):
             retval.append(temp_user)
 
         return retval
+    
+    def get_changeset(self):
+        """Gets changeset object associated with this build
+
+        NOTE: This changeset may be empty if there were no SCM
+        changes associated with this build, as may be the case
+        with a forced build for example.
+
+        :returns:
+            Changeset object representing the set of SCM changes
+            associated with / included in this build
+        :rtype: :py:mod:`pyjen.changeset`
+        """
+        data = self.__data_io.get_api_data()
+
+        return changeset(data['changeSet'])
+
+    
 
 if __name__ == "__main__":
     pass

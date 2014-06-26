@@ -13,7 +13,7 @@ class job_misc_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'name':expected_name}
         
         j = job(mock_data_io)
-        actual_name = j.get_name()
+        actual_name = j.name
 
         self.assertEqual(expected_name, actual_name)
         self.assertEqual(mock_data_io.get_api_data.call_count, 1, 
@@ -48,14 +48,14 @@ class job_misc_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"color":"disabled"}
         
         j = job (mock_data_io)
-        self.assertTrue(j.is_disabled(), "Job should indicate that it is in a disabled state")
+        self.assertTrue(j.is_disabled, "Job should indicate that it is in a disabled state")
         
     def test_is_disabled_false(self):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"color":"blue"}
         
         j = job (mock_data_io)
-        self.assertFalse(j.is_disabled(), "Job should indicate that it is in an enabled state")
+        self.assertFalse(j.is_disabled, "Job should indicate that it is in an enabled state")
         
     def test_delete(self):
         mock_data_io = MagicMock()
@@ -70,14 +70,14 @@ class job_misc_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"color":"notbuilt"}
         
         j = job (mock_data_io)
-        self.assertFalse(j.has_been_built(), "Job should indicate that it has never been built")    
+        self.assertFalse(j.has_been_built, "Job should indicate that it has never been built")    
 
     def test_has_been_built_false(self):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"color":"blue"}
         
         j = job (mock_data_io)
-        self.assertTrue(j.has_been_built(), "Job should indicate that it has been built")
+        self.assertTrue(j.has_been_built, "Job should indicate that it has been built")
         
     def test_get_config_xml(self):
         expected_config_xml = "<Sample Config XML/>"
@@ -86,7 +86,7 @@ class job_misc_tests(unittest.TestCase):
 
         j = job (mock_data_io)
         
-        self.assertEqual(j.get_config_xml(), expected_config_xml)
+        self.assertEqual(j.config_xml, expected_config_xml)
         mock_data_io.get_text.assert_called_once_with('/config.xml')
         
     def test_set_config_xml(self):
@@ -109,7 +109,7 @@ class job_dependencies_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"downstreamProjects":[]}
         
         j = job (mock_data_io)
-        dependencies = j.get_downstream_jobs()
+        dependencies = j.downstream_jobs
         
         self.assertEqual(len(dependencies), 0, "Test job should not have any downstream dependencies")
     
@@ -124,10 +124,10 @@ class job_dependencies_tests(unittest.TestCase):
         mock_data_io.clone.return_value = mock_dependent_job_data_io
         
         j = job (mock_data_io)
-        dependencies = j.get_downstream_jobs()
+        dependencies = j.downstream_jobs
         
         self.assertEqual(len(dependencies), 1, "Test job should have one downstream dependency")
-        self.assertEqual(dependencies[0].get_name(), downstream_job_name)
+        self.assertEqual(dependencies[0].name, downstream_job_name)
         
     def test_multiple_downstream_jobs(self):
         
@@ -152,12 +152,12 @@ class job_dependencies_tests(unittest.TestCase):
         mock_data_io.clone = mock_clone
                 
         j = job (mock_data_io)
-        dependencies = j.get_downstream_jobs()
+        dependencies = j.downstream_jobs
         
         self.assertEqual(len(dependencies), 2, "Test job should have two downstream dependencies")
         names = []
-        names.append(dependencies[0].get_name())
-        names.append(dependencies[1].get_name())
+        names.append(dependencies[0].name)
+        names.append(dependencies[1].name)
         self.assertTrue(downstream_job_name1 in names, "Mock job #1 should be returned as a direct dependency")
         self.assertTrue(downstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
        
@@ -183,13 +183,13 @@ class job_dependencies_tests(unittest.TestCase):
                 
         # code under test 
         j = job (mock_data_io)
-        dependencies = j.get_downstream_jobs(recursive=True)
+        dependencies = j.all_downstream_jobs
         
         # validation
         self.assertEqual(len(dependencies), 2, "Test job should have two downstream dependencies")
         names = []
-        names.append(dependencies[0].get_name())
-        names.append(dependencies[1].get_name())
+        names.append(dependencies[0].name)
+        names.append(dependencies[1].name)
         self.assertTrue(downstream_job_name1 in names, "Mock job #1 should be returned as a transient dependency")
         self.assertTrue(downstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
 
@@ -199,7 +199,7 @@ class job_dependencies_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"upstreamProjects":[]}
         
         j = job (mock_data_io)
-        dependencies = j.get_upstream_jobs()
+        dependencies = j.upstream_jobs
         
         self.assertEqual(len(dependencies), 0, "Test job should not have any upstream dependencies")
     
@@ -214,10 +214,10 @@ class job_dependencies_tests(unittest.TestCase):
         mock_data_io.clone.return_value = mock_dependent_job_data_io
         
         j = job (mock_data_io)
-        dependencies = j.get_upstream_jobs()
+        dependencies = j.upstream_jobs
         
         self.assertEqual(len(dependencies), 1, "Test job should have one upstream dependency")
-        self.assertEqual(dependencies[0].get_name(), upstream_job_name)
+        self.assertEqual(dependencies[0].name, upstream_job_name)
         
     def test_multiple_upstream_jobs(self):
         
@@ -242,12 +242,12 @@ class job_dependencies_tests(unittest.TestCase):
         mock_data_io.clone = mock_clone
                 
         j = job (mock_data_io)
-        dependencies = j.get_upstream_jobs()
+        dependencies = j.upstream_jobs
         
         self.assertEqual(len(dependencies), 2, "Test job should have two upstream dependencies")
         names = []
-        names.append(dependencies[0].get_name())
-        names.append(dependencies[1].get_name())
+        names.append(dependencies[0].name)
+        names.append(dependencies[1].name)
         self.assertTrue(upstream_job_name1 in names, "Mock job #1 should be returned as a direct dependency")
         self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
        
@@ -273,13 +273,13 @@ class job_dependencies_tests(unittest.TestCase):
                 
         # code under test 
         j = job (mock_data_io)
-        dependencies = j.get_upstream_jobs(recursive=True)
+        dependencies = j.all_upstream_jobs
         
         # validation
         self.assertEqual(len(dependencies), 2, "Test job should have two upstream dependencies")
         names = []
-        names.append(dependencies[0].get_name())
-        names.append(dependencies[1].get_name())
+        names.append(dependencies[0].name)
+        names.append(dependencies[1].name)
         self.assertTrue(upstream_job_name1 in names, "Mock job #1 should be returned as a transient dependency")
         self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
         
@@ -291,7 +291,7 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"builds":[]}
  
         j = job (mock_data_io)
-        builds = j.get_recent_builds()
+        builds = j.recent_builds
         
         self.assertEqual(len(builds), 0, "Job object should not contain any valid builds")
         
@@ -305,10 +305,10 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.clone.return_value = mock_build1_data_io
         
         j = job (mock_data_io)
-        builds = j.get_recent_builds()
+        builds = j.recent_builds
         
         self.assertEqual(len(builds), 1, "Job should have returned a single build")
-        self.assertEqual(builds[0].get_build_number(), expected_build_number)
+        self.assertEqual(builds[0].build_number, expected_build_number)
         
     def test_get_last_good_build_none(self):
         mock_data_io = MagicMock()
@@ -316,7 +316,7 @@ class job_build_methods_tests(unittest.TestCase):
         
         j = job(mock_data_io)
 
-        self.assertEqual(j.get_last_good_build(), None)
+        self.assertEqual(j.last_good_build, None)
         
     def test_get_last_good_build(self):
         expected_build_number = 123
@@ -328,9 +328,9 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.clone.return_value = build_mock_data_io
         
         j = job(mock_data_io)
-        b = j.get_last_good_build()
+        b = j.last_good_build
         
-        self.assertEqual(b.get_build_number(), expected_build_number)
+        self.assertEqual(b.build_number, expected_build_number)
         
     def test_get_last_build_none(self):
         mock_data_io = MagicMock()
@@ -338,7 +338,7 @@ class job_build_methods_tests(unittest.TestCase):
         
         j = job(mock_data_io)
 
-        self.assertEqual(j.get_last_build(), None)
+        self.assertEqual(j.last_build, None)
         
     def test_get_last_build(self):
         expected_build_number = 123
@@ -350,9 +350,9 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.clone.return_value = build_mock_data_io
         
         j = job(mock_data_io)
-        b = j.get_last_build()
+        b = j.last_build
         
-        self.assertEqual(b.get_build_number(), expected_build_number)
+        self.assertEqual(b.build_number, expected_build_number)
 
     def test_get_last_failed_build_none(self):
         mock_data_io = MagicMock()
@@ -360,7 +360,7 @@ class job_build_methods_tests(unittest.TestCase):
         
         j = job(mock_data_io)
 
-        self.assertEqual(j.get_last_failed_build(), None)
+        self.assertEqual(j.last_failed_build, None)
         
     def test_get_last_failed_build(self):
         expected_build_number = 123
@@ -372,9 +372,9 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.clone.return_value = build_mock_data_io
         
         j = job(mock_data_io)
-        b = j.get_last_failed_build()
+        b = j.last_failed_build
         
-        self.assertEqual(b.get_build_number(), expected_build_number)
+        self.assertEqual(b.build_number, expected_build_number)
     
     def test_get_last_stable_build_none(self):
         mock_data_io = MagicMock()
@@ -382,7 +382,7 @@ class job_build_methods_tests(unittest.TestCase):
         
         j = job(mock_data_io)
 
-        self.assertEqual(j.get_last_stable_build(), None)
+        self.assertEqual(j.last_stable_build, None)
         
     def test_get_last_stable_build(self):
         expected_build_number = 123
@@ -394,9 +394,9 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.clone.return_value = build_mock_data_io
         
         j = job(mock_data_io)
-        b = j.get_last_stable_build()
+        b = j.last_stable_build
         
-        self.assertEqual(b.get_build_number(), expected_build_number)    
+        self.assertEqual(b.build_number, expected_build_number)    
         
     def test_get_last_unsuccessful_build_none(self):
         mock_data_io = MagicMock()
@@ -404,7 +404,7 @@ class job_build_methods_tests(unittest.TestCase):
         
         j = job(mock_data_io)
 
-        self.assertEqual(j.get_last_unsuccessful_build(), None)
+        self.assertEqual(j.last_unsuccessful_build, None)
         
     def test_get_last_unsuccessful_build(self):
         expected_build_number = 123
@@ -416,9 +416,9 @@ class job_build_methods_tests(unittest.TestCase):
         mock_data_io.clone.return_value = build_mock_data_io
         
         j = job(mock_data_io)
-        b = j.get_last_unsuccessful_build()
+        b = j.last_unsuccessful_build
         
-        self.assertEqual(b.get_build_number(), expected_build_number)   
+        self.assertEqual(b.build_number, expected_build_number)   
         
     def test_get_build_by_number(self):
         expected_build_number = 123
@@ -431,7 +431,7 @@ class job_build_methods_tests(unittest.TestCase):
         j = job(mock_data_io)
         b = j.get_build_by_number(expected_build_number)
         
-        self.assertEqual(b.get_build_number(), expected_build_number)
+        self.assertEqual(b.build_number, expected_build_number)
         
     def test_get_build_by_number_non_existent(self):
         expected_build_number = 123
@@ -497,7 +497,7 @@ class job_build_methods_tests(unittest.TestCase):
         builds = j.get_builds_in_time_range(start_time, end_time)
         
         self.assertEqual(len(builds), 1, "One job should have been successfully detected for the given time interval")    
-        self.assertEqual(builds[0].get_build_number(), expected_build_number)
+        self.assertEqual(builds[0].build_number, expected_build_number)
         
     def test_get_builds_in_time_range_inverted_parameters(self):
         expected_build_number = 123
@@ -517,7 +517,7 @@ class job_build_methods_tests(unittest.TestCase):
         builds = j.get_builds_in_time_range(end_time, start_time)
         
         self.assertEqual(len(builds), 1, "One job should have been successfully detected for the given time interval")    
-        self.assertEqual(builds[0].get_build_number(), expected_build_number)
+        self.assertEqual(builds[0].build_number, expected_build_number)
         
     def test_get_builds_in_time_range_lower_bound(self):
         start_time = datetime(2013, 1, 21, 12, 0, 0)
@@ -538,7 +538,7 @@ class job_build_methods_tests(unittest.TestCase):
         builds = j.get_builds_in_time_range(start_time, end_time)
         
         self.assertEqual(len(builds), 1, "One job should have been successfully detected for the given time interval")    
-        self.assertEqual(builds[0].get_build_number(), expected_build_number)
+        self.assertEqual(builds[0].build_number, expected_build_number)
         
     def test_get_builds_in_time_range_upper_bound(self):
         start_time = datetime(2013, 1, 21, 12, 0, 0)
@@ -558,7 +558,7 @@ class job_build_methods_tests(unittest.TestCase):
         builds = j.get_builds_in_time_range(start_time, end_time)
         
         self.assertEqual(len(builds), 1, "One job should have been successfully detected for the given time interval")    
-        self.assertEqual(builds[0].get_build_number(), expected_build_number)
+        self.assertEqual(builds[0].build_number, expected_build_number)
         
     
 if __name__ == "__main__":

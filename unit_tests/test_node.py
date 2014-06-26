@@ -13,7 +13,7 @@ class node_misc_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'displayName':expected_name}
         
         n = Node(mock_data_io)
-        actual_name = n.get_name()
+        actual_name = n.name
 
         self.assertEqual(expected_name, actual_name)
         self.assertEqual(mock_data_io.get_api_data.call_count, 1, 
@@ -24,7 +24,7 @@ class node_misc_tests(unittest.TestCase):
         
         n = Node(mock_data_io)
         
-        self.assertTrue(n.is_offline(), "Node object should report the Node as being offline")
+        self.assertTrue(n.is_offline, "Node object should report the Node as being offline")
         
     def test_toggle_offline(self):
         mock_data_io = MagicMock()
@@ -58,7 +58,7 @@ class node_misc_tests(unittest.TestCase):
         
         n = Node(mock_data_io)
         
-        self.assertTrue(n.is_idle(), "Node should have an idle state.")
+        self.assertTrue(n.is_idle, "Node should have an idle state.")
         
     def test_wait_for_idle(self):
         mock_data_io = MagicMock()

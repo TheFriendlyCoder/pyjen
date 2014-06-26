@@ -53,7 +53,7 @@ class Node(object):
         # Sanity check: make sure the given IO object can successfully
         #        query the Node machine name
         try:
-            name = retval.get_name()
+            name = retval.name
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters \
                 provided to PyJen.Node. Please check configuration.", http_io)
@@ -63,7 +63,8 @@ class Node(object):
                 provided to PyJen.Node. Please check configuration.", http_io)
         return retval
 
-    def get_name(self):
+    @property
+    def name(self):
         """Gets the display name of this Node
 
         :returns: the name of this Node
@@ -73,6 +74,7 @@ class Node(object):
 
         return data['displayName']
 
+    @property
     def is_offline(self):
         """Checks to see whether this Node is currently offline or not
 
@@ -83,6 +85,18 @@ class Node(object):
 
         return data['offline']
 
+    @property
+    def is_idle(self):
+        """Checks to see whether any executors are in use on this Node or not
+
+        :returns:
+            returns true if there are no active builds on this Node at the
+            moment otherwise returns false
+        :rtype: :func:`bool`
+        """
+        data = self.__data_io.get_api_data()
+        return data['idle']
+    
     def toggle_offline(self, message=None):
         """Toggles the online status of this Node
 
@@ -102,17 +116,6 @@ class Node(object):
 
         self.__data_io.post(post_cmd)
 
-    def is_idle(self):
-        """Checks to see whether any executors are in use on this Node or not
-
-        :returns:
-            returns true if there are no active builds on this Node at the
-            moment otherwise returns false
-        :rtype: :func:`bool`
-        """
-        data = self.__data_io.get_api_data()
-        return data['idle']
-
     def wait_for_idle(self, max_timeout=None):
         """Blocks execution until this Node enters an idle state
 
@@ -129,17 +132,17 @@ class Node(object):
         sleep_duration = 1
 
         if max_timeout == None:
-            while not self.is_idle():
+            while not self.is_idle:
                 time.sleep(sleep_duration)
         else:
             total_wait_time = 0
-            while not self.is_idle():
+            while not self.is_idle:
                 time.sleep(sleep_duration)
                 total_wait_time += sleep_duration
                 if total_wait_time >= max_timeout:
                     break
 
-        return self.is_idle()
+        return self.is_idle
 
 if __name__ == "__main__":
     pass

@@ -12,7 +12,7 @@ class view_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'name':expected_name}
         
         v = view(mock_data_io)
-        actual_name = v.get_name()
+        actual_name = v.name
 
         self.assertEqual(expected_name, actual_name)
         self.assertEqual(mock_data_io.get_api_data.call_count, 1, 
@@ -25,7 +25,7 @@ class view_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':jobs}
         
         v = view(mock_data_io)
-        expected_count = v.job_count()
+        expected_count = v.job_count
 
         self.assertEqual(expected_count, 2, "There should be 2 jobs in the mock view")
         
@@ -48,18 +48,18 @@ class view_tests(unittest.TestCase):
         mock_data_io.clone.side_effect = mock_clone
             
         v = view(mock_data_io)
-        jobs = v.get_jobs()
+        jobs = v.jobs
         
         self.assertEqual(len(jobs), 2, "view should have 2 jobs contained within it")
-        self.assertEqual(jobs[0].get_name(), job1_name)
-        self.assertEqual(jobs[1].get_name(), job2_name)
+        self.assertEqual(jobs[0].name, job1_name)
+        self.assertEqual(jobs[1].name, job2_name)
         
     def test_get_jobs_no_jobs(self):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[]}
             
         v = view(mock_data_io)
-        jobs = v.get_jobs()
+        jobs = v.jobs
         
         self.assertEqual(len(jobs), 0, "view should not have any jobs contained within it")
         
@@ -69,7 +69,7 @@ class view_tests(unittest.TestCase):
         mock_data_io.get_text.return_value = expected_xml
         
         v = view(mock_data_io)
-        actual_xml = v.get_config_xml()
+        actual_xml = v.config_xml
         
         self.assertEqual(actual_xml, expected_xml)
         mock_data_io.get_text.assert_called_once_with("/config.xml")

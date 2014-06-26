@@ -51,7 +51,7 @@ class view(object):
         # Sanity check: make sure we can successfully parse the view's name from the IO controller to make sure
         # we have a valid configuration
         try:
-            name = retval.get_name()
+            name = retval.name
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. Please check configuration.", http_io) 
         if name == None or name == "":
@@ -59,7 +59,8 @@ class view(object):
     
         return retval
     
-    def get_name(self):
+    @property
+    def name(self):
         """Gets the display name for this view
         
         This is the name as it appears in the tabed view
@@ -71,7 +72,8 @@ class view(object):
         data = self.__data_io.get_api_data()
         return data['name']
         
-    def get_jobs (self):
+    @property
+    def jobs (self):
         """Gets a list of jobs associated with this view
         
         Views are simply filters to help organize jobs on the
@@ -93,6 +95,7 @@ class view(object):
             
         return retval
     
+    @property
     def job_count(self):
         """Gets the number of jobs contained under this view
         
@@ -103,7 +106,8 @@ class view(object):
         
         return len(data['jobs'])
     
-    def get_config_xml(self):
+    @property
+    def config_xml(self):
         """Gets the raw configuration data in XML format
         
         This is an advanced function which allows the caller
@@ -121,6 +125,17 @@ class view(object):
         """
         return self.__data_io.get_text("/config.xml")
         
+    @property
+    def type(self):
+        """Gets the Jenkins view-type descriptor for this view
+        
+        :returns: descriptive string of the Jenkins view type this view derives from
+        :rtype: :func:`str`
+        """
+        xml = self.config_xml
+        vxml = view_xml(xml)
+        return vxml.get_type() 
+    
     def set_config_xml(self, new_xml):
         """Updates the raw configuration of this view with a new set of properties
         
@@ -146,33 +161,23 @@ class view(object):
     def delete(self):
         """Deletes this view from the dashboard"""
         self.__data_io.post("/doDelete")
-        
-    def get_type(self):
-        """Gets the Jenkins view-type descriptor for this view
-        
-        :returns: descriptive string of the Jenkins view type this view derives from
-        :rtype: :func:`str`
-        """
-        xml = self.get_config_xml()
-        vxml = view_xml(xml)
-        return vxml.get_type() 
     
     def delete_all_jobs(self):
         """Helper method that allows callers to do bulk deletes of all jobs found in this view"""
         
-        my_jobs = self.get_jobs()
+        my_jobs = self.jobs
         for j in my_jobs:
             j.delete()
             
     def disable_all_jobs(self):
         """Helper method that allows caller to bulk-disable all jobs found in this view""" 
-        my_jobs = self.get_jobs()
+        my_jobs = self.jobs
         for j in my_jobs:
             j.disable()
             
     def enable_all_jobs(self):
         """Helper method that allows caller to bulk-enable all jobs found in this view"""
-        my_jobs = self.get_jobs()
+        my_jobs = self.jobs
         for j in my_jobs:
             j.enable()
     

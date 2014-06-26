@@ -11,21 +11,21 @@ class build_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"number":expected_build_number}
         b = Build(mock_data_io)
         
-        self.assertEqual(b.get_build_number(), expected_build_number)
+        self.assertEqual(b.build_number, expected_build_number)
         
     def test_is_building(self):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"building":True}
         
         b = Build(mock_data_io)
-        self.assertTrue(b.is_building(), "Build should indicate that it is currently running")
+        self.assertTrue(b.is_building, "Build should indicate that it is currently running")
         
     def test_is_not_building(self):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"building":False}
         
         b = Build(mock_data_io)
-        self.assertFalse(b.is_building(), "Build should indicate that it is not currently running")
+        self.assertFalse(b.is_building, "Build should indicate that it is not currently running")
         
     def test_get_console_output(self):
         expected_console_output = "Some sample console output"
@@ -34,7 +34,7 @@ class build_tests(unittest.TestCase):
         
         b = Build(mock_data_io)
         
-        self.assertEqual(b.get_console_output(), expected_console_output)
+        self.assertEqual(b.console_output, expected_console_output)
         mock_data_io.get_text.assert_called_once_with("/consoleText")
 
     def test_get_build_time(self):
@@ -43,7 +43,7 @@ class build_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"timestamp":1385784197000}
         
         b = Build(mock_data_io)
-        build_time = b.get_build_time()
+        build_time = b.build_time
         
         self.assertEqual(build_time.day, 30)
         self.assertEqual(build_time.month, 11)
@@ -74,10 +74,10 @@ class build_tests(unittest.TestCase):
         mock_data_io.clone.return_value = mock_user_data_io
         
         b = Build(mock_data_io)
-        culprits = b.get_culprits()
+        culprits = b.culprits
         
         self.assertEqual(len(culprits), 1, "Mock build should have returns 1 breaker")
-        self.assertEqual(culprits[0].get_full_username(), expected_name)
+        self.assertEqual(culprits[0].full_name, expected_name)
         mock_data_io.clone.assert_called_once_with(expected_url)
         
     def test_get_culprits_none(self):
@@ -85,7 +85,7 @@ class build_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"culprits":[]}
         
         b = Build(mock_data_io)
-        culprits = b.get_culprits()
+        culprits = b.culprits
         
         self.assertEqual(len(culprits), 0, "Mock build should have no breakers")
         

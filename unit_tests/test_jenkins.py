@@ -13,9 +13,8 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io.get_headers.return_value = {'x-jenkins':expected_version}
         
         j = jenkins(mock_data_io)
-        actual_version = j.get_version()
 
-        self.assertEqual(expected_version, actual_version)
+        self.assertEqual(expected_version, j.version)
         self.assertEqual("call('/api/python')", str(mock_data_io.get_headers.call_args), 
                          "get_version method should have attempted to load HTTP header info from the api/python URL")
         self.assertEqual(mock_data_io.get_headers.call_count, 1, 
@@ -28,9 +27,8 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io.get_headers.return_value = {}
         
         j = jenkins(mock_data_io)
-        actual_version = j.get_version()
 
-        self.assertEqual(expected_version, actual_version)
+        self.assertEqual(expected_version, j.version)
         self.assertEqual("call('/api/python')", str(mock_data_io.get_headers.call_args), 
                          "get_version method should have attempted to load HTTP header info from the api/python URL")
         self.assertEqual(mock_data_io.get_headers.call_count, 1, 
@@ -59,7 +57,7 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"quietingDown":True}
         
         j = jenkins(mock_data_io)
-        self.assertTrue(j.is_shutting_down(), "Object should be preparing for shutdown")
+        self.assertTrue(j.is_shutting_down, "Object should be preparing for shutdown")
         
         
 class jenkins_job_tests(unittest.TestCase):
@@ -95,8 +93,6 @@ class jenkins_job_tests(unittest.TestCase):
                 
         self.fail("Unexpected URL parameter to dataio clone method: " + url)
 
-    
-    """Unit tests for the job-related methods of the Jenkins class"""
     def test_find_job_no_jobs(self):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'jobs':{}}
@@ -123,7 +119,7 @@ class jenkins_job_tests(unittest.TestCase):
         j = jenkins(mock_jenkins_data_io)
         njob = j.clone_job("SomeJob", new_job_name)
         
-        self.assertEqual(njob.get_name(), new_job_name)
+        self.assertEqual(njob.name, new_job_name)
         mock_new_job_data_io.post.assert_called_once_with("/disable")
         self.assertEqual(mock_jenkins_data_io.post.call_count, 1)
         # NOTE: This post method should get called once, with the first parameter set to createItem
@@ -180,8 +176,8 @@ class jenkins_view_tests(unittest.TestCase):
     def test_get_default_view(self):        
         # test logic
         j = jenkins(self.mock_jenkins_data_io)
-        v = j.get_default_view()
-        actual_view_name = v.get_name()
+        v = j.default_view
+        actual_view_name = v.name
         
         # verification
         self.assertEqual(actual_view_name, self.primary_view_name)
@@ -190,12 +186,12 @@ class jenkins_view_tests(unittest.TestCase):
     def test_get_multiple_views(self):
         # test logic
         j = jenkins(self.mock_jenkins_data_io)
-        views = j.get_views()
+        views = j.all_views
         
         # verification
         self.assertEqual(len(views), 2)
-        self.assertEqual(views[0].get_name(), self.view2_name)
-        self.assertEqual(views[1].get_name(), self.primary_view_name)
+        self.assertEqual(views[0].name, self.view2_name)
+        self.assertEqual(views[1].name, self.primary_view_name)
     
     def test_find_view(self):
         # test logic
@@ -204,7 +200,7 @@ class jenkins_view_tests(unittest.TestCase):
         
         # verification
         self.assertNotEqual(view, None, "code should return a valid pyjen.view object")
-        self.assertEqual(view.get_name(), self.view2_name, "incorrect view returned by jenkins object")
+        self.assertEqual(view.name, self.view2_name, "incorrect view returned by jenkins object")
         self.mock_jenkins_data_io.clone.assert_called_once_with(self.view2_url)
         
     def test_find_view_primary_view(self):        
@@ -214,7 +210,7 @@ class jenkins_view_tests(unittest.TestCase):
         
         # verification
         self.assertNotEqual(view, None, "code should return a valid pyjen.view object")
-        self.assertEqual(view.get_name(), self.primary_view_name, "incorrect view returned by jenkins object")
+        self.assertEqual(view.name, self.primary_view_name, "incorrect view returned by jenkins object")
         self.mock_jenkins_data_io.clone.assert_called_once_with(self.primary_view_url)
     
     def test_find_missing_view(self):
@@ -235,7 +231,7 @@ class jenkins_view_tests(unittest.TestCase):
         j = jenkins(self.mock_jenkins_data_io)
         v = j.create_view(new_view_name)
         
-        self.assertEqual(v.get_name(), new_view_name)
+        self.assertEqual(v.name, new_view_name)
     
     def test_clone_all_jobs_in_view_invalid_view(self):
         j = jenkins(self.mock_jenkins_data_io)
@@ -251,8 +247,8 @@ class jenkins_view_tests(unittest.TestCase):
         new_jobs = j.clone_all_jobs_in_view(self.view2_name, self.view2_job1_name, new_job_name)
         
         self.assertEquals (len(new_jobs), 1)
-        self.assertEqual(new_jobs[0].get_name(), new_job_name)
-        pass
+        self.assertEqual(new_jobs[0].name, new_job_name)
+
 class jenkins_nodes_tests(unittest.TestCase):
     """Unit tests for the node-related methods of the Jenkins class"""
     
@@ -297,12 +293,12 @@ class jenkins_nodes_tests(unittest.TestCase):
     
     def test_get_multiple_nodes(self):
         j = jenkins(self.mock_jenkins_data_io)
-        nodes = j.get_nodes()
+        nodes = j.nodes
         
         self.assertNotEqual(nodes, None)
         self.assertEqual(2, len(nodes), "Mock jenkins instance should expose 2 connected nodes.")
-        self.assertEqual(self.master_node_name, nodes[0].get_name())
-        self.assertEqual(self.second_node_name, nodes[1].get_name())
+        self.assertEqual(self.master_node_name, nodes[0].name)
+        self.assertEqual(self.second_node_name, nodes[1].name)
     
 if __name__ == "__main__":
     pytest.main()

@@ -76,7 +76,7 @@ class jenkins(object):
 
         # Sanity check: make sure the given IO object can successfully query the Jenkins version number
         try:
-            version = retval.get_version() 
+            version = retval.version 
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
 
@@ -84,7 +84,8 @@ class jenkins(object):
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Jenkins. Please check configuration.", http_io)
         return retval
 
-    def get_version(self):
+    @property
+    def version(self):
         """Gets the version of Jenkins pointed to by this object
         
         :return: Version number of the currently running Jenkins instance
@@ -98,22 +99,7 @@ class jenkins(object):
         else:
             return headers['x-jenkins']
         
-    def prepare_shutdown(self):
-        """Sends a shutdown signal to the Jenkins master preventing new builds from executing
-        
-        Analogous to the "Prepare for Shutdown" link on the Manage Jenkins configuration page
-        
-        You can cancel a previous requested shutdown using the :py:meth:`pyjen.jenkins.cancel_shutdown` method
-        """
-        self.__data_io.post('/quietDown')
-        
-    def cancel_shutdown(self):
-        """Cancels a previous scheduled shutdown sequence
-        
-        Cancels a shutdown operation initiated by the :py:meth:`pyjen.jenkins.prepare_shutdown` method
-        """
-        self.__data_io.post('/cancelQuietDown')
-    
+    @property
     def is_shutting_down(self):
         """checks to see whether the Jenkins master is in the process of shutting down.
         
@@ -126,8 +112,8 @@ class jenkins(object):
         
         return data['quietingDown']
     
-    
-    def get_nodes(self):
+    @property
+    def nodes(self):
         """gets the list of nodes (aka: agents) managed by this Jenkins master
         
         :returns: list of 0 or more Node objects managed by this Jenkins master 
@@ -150,27 +136,8 @@ class jenkins(object):
                         
         return retval
     
-      
-    def find_job(self, job_name):
-        """Searches all jobs managed by this Jenkins instance for a specific job
-        
-        :param str job_name: the name of the job to search for
-        :returns: If a job with the specified name can be found, and object
-            to manage the job will be returned, otherwise an empty
-            object is returned (ie: None)
-        :rtype: :py:mod:`pyjen.job`
-        """
-        data = self.__data_io.get_api_data()
-        tjobs = data['jobs']
-    
-        for tjob in tjobs:
-            if tjob['name'] == job_name:
-                new_io_obj = self.__data_io.clone(tjob['url'])
-                return job(new_io_obj)
-        
-        return None
-    
-    def get_default_view(self):
+    @property
+    def default_view(self):
         """returns a reference to the primary / default Jenkins view
         
         The default view is the one displayed when navigating to
@@ -184,8 +151,9 @@ class jenkins(object):
         default_view = data['primaryView']
         new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") + "/view/" + default_view['name'])
         return view(new_io_obj)
-
-    def get_views(self):
+    
+    @property
+    def all_views(self):
         """Gets a list of all views defined on the Jenkins dashboard
         
         :returns: list of one or more views defined on this Jenkins instance. 
@@ -208,8 +176,44 @@ class jenkins(object):
             tview = view(new_io_obj)
             retval.append(tview)
             
-        return retval    
-
+        return retval   
+    
+    def prepare_shutdown(self):
+        """Sends a shutdown signal to the Jenkins master preventing new builds from executing
+        
+        Analogous to the "Prepare for Shutdown" link on the Manage Jenkins configuration page
+        
+        You can cancel a previous requested shutdown using the :py:meth:`pyjen.jenkins.cancel_shutdown` method
+        """
+        self.__data_io.post('/quietDown')
+        
+    def cancel_shutdown(self):
+        """Cancels a previous scheduled shutdown sequence
+        
+        Cancels a shutdown operation initiated by the :py:meth:`pyjen.jenkins.prepare_shutdown` method
+        """
+        self.__data_io.post('/cancelQuietDown')
+    
+      
+    def find_job(self, job_name):
+        """Searches all jobs managed by this Jenkins instance for a specific job
+        
+        :param str job_name: the name of the job to search for
+        :returns: If a job with the specified name can be found, and object
+            to manage the job will be returned, otherwise an empty
+            object is returned (ie: None)
+        :rtype: :py:mod:`pyjen.job`
+        """
+        data = self.__data_io.get_api_data()
+        tjobs = data['jobs']
+    
+        for tjob in tjobs:
+            if tjob['name'] == job_name:
+                new_io_obj = self.__data_io.clone(tjob['url'])
+                return job(new_io_obj)
+        
+        return None
+    
     def find_view(self, view_name):
         """Searches all views managed by this Jenkins instance for a specific view
         
@@ -298,7 +302,7 @@ class jenkins(object):
         new_job = job(temp_data_io)
         
         # Sanity check - lets make sure the job actually exists by checking its name
-        assert(new_job.get_name() == new_job_name)
+        assert(new_job.name == new_job_name)
         
         #as a precaution, lets disable the newly created job so it doesn't automatically start running
         new_job.disable()
@@ -324,22 +328,22 @@ class jenkins(object):
         temp_view = self.find_view(view_name)
         if temp_view == None:
             raise InvalidParameterError("View " + view_name + " not found on Jenkins instance.")
-        temp_jobs = temp_view.get_jobs()
+        temp_jobs = temp_view.jobs
         
         # Create a mapping table for names of jobs
         job_map = {}
         for j in temp_jobs:
-            orig_name = j.get_name()
+            orig_name = j.name
             job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_name_substitution_string)
             
         # clone all jobs, and update internal references     
         retval = []
         for j in temp_jobs:
-            orig_name = j.get_name()
+            orig_name = j.name
             new_job = self.clone_job(orig_name, job_map[orig_name])
             
             # update all internal references
-            xml = new_job.get_config_xml()
+            xml = new_job.config_xml
             for k in job_map.keys():
                 xml = xml.replace(k, job_map[k])
             new_job.set_config_xml(xml)
@@ -347,5 +351,6 @@ class jenkins(object):
             retval.append(new_job)
             
         return retval
+    
 if __name__ == '__main__':
     pass

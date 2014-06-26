@@ -11,7 +11,7 @@ class user_tests(unittest.TestCase):
         
         u = user(mock_data_io)
         
-        self.assertEqual(u.get_user_id(), expected_id)
+        self.assertEqual(u.user_id, expected_id)
     
     def test_get_full_username(self):
         expected_name = "John Doe"
@@ -20,7 +20,7 @@ class user_tests(unittest.TestCase):
         
         u = user(mock_data_io)
         
-        self.assertEqual(u.get_full_username(), expected_name)
+        self.assertEqual(u.full_name, expected_name)
         
     def test_get_description(self):
         expected_desc = "This user has some sort of role"
@@ -29,7 +29,7 @@ class user_tests(unittest.TestCase):
         
         u = user(mock_data_io)
         
-        self.assertEqual(u.get_description(), expected_desc)
+        self.assertEqual(u.description, expected_desc)
         
     def test_get_no_description(self):
         mock_data_io = MagicMock()
@@ -37,7 +37,7 @@ class user_tests(unittest.TestCase):
         
         u = user(mock_data_io)
         
-        self.assertEqual(u.get_description(), None)
+        self.assertEqual(u.description, None)
             
     def test_get_email(self):
         expected_email = "john.doe@foo.bar.com"
@@ -46,7 +46,7 @@ class user_tests(unittest.TestCase):
         
         u = user(mock_data_io)
         
-        self.assertEqual(u.get_email(), expected_email)
+        self.assertEqual(u.email, expected_email)
     
 if __name__ == "__main__":
     pytest.main()

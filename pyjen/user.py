@@ -40,7 +40,7 @@ class user (object):
         # Sanity check: make sure we can successfully parse the users ID from the IO controller to make sure
         # we have a valid configuration
         try:
-            user_id = retval.get_id()
+            user_id = retval.user_id
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. Please check configuration.", http_io) 
         if user_id == None or user_id == "":
@@ -48,7 +48,8 @@ class user (object):
     
         return retval
     
-    def get_user_id(self):
+    @property
+    def user_id(self):
         """Gets the unique identifier for this user
         
         :returns: unique identifier for this user
@@ -57,7 +58,8 @@ class user (object):
         data = self.__data_io.get_api_data()
         return data['id']
     
-    def get_full_username(self):
+    @property
+    def full_name(self):
         """Gets the users full name, typically first and last names separated by a space
         
         :returns: this users' full name
@@ -66,7 +68,8 @@ class user (object):
         data = self.__data_io.get_api_data()
         return data['fullName']
     
-    def get_description(self):
+    @property
+    def description(self):
         """Gets some descriptive text associated with the user
         
         :returns: some descriptive text explaining something about this user. 
@@ -76,7 +79,8 @@ class user (object):
         data = self.__data_io.get_api_data()
         return data['description']
     
-    def get_email(self):
+    @property
+    def email(self):
         """Gets this users' email address as reported by Jenkins
         
         :returns: email address of this user 
