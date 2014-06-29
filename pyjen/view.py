@@ -4,7 +4,7 @@ from pyjen.job import Job
 from pyjen.utils.view_xml import view_xml
 from pyjen.exceptions import InvalidJenkinsURLError
 
-class view(object):
+class View(object):
     """Class that encapsulates all Jenkins related 'view' information
     
     Views are essentially just filters used to sort through jobs
@@ -37,9 +37,9 @@ class view(object):
         :param tuple credentials: A 2-element tuple with the username and password for 
             authenticating to the URL
             If no credentials can be found elsewhere, anonymous access will be chosen
-        :returns: :py:mod:`pyjen.view` object, pre-configured with the appropriate credentials
+        :returns: :py:mod:`pyjen.View` object, pre-configured with the appropriate credentials
             and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.view`
+        :rtype: :py:mod:`pyjen.View`
         """
         if credentials != None:
             username = credentials[0]
@@ -49,7 +49,7 @@ class view(object):
             password = None
         
         http_io = data_requester(url, username, password)
-        retval = view(http_io)
+        retval = View(http_io)
         
         # Sanity check: make sure we can successfully parse the view's name from the IO controller
         # to make sure we have a valid configuration
@@ -120,7 +120,7 @@ class view(object):
         of the view. Use with caution.
         
         This method can be used in conjunction with the 
-        :py:func:`pyjen.view.set_config_xml` method to dynamically
+        :py:func:`pyjen.View.set_config_xml` method to dynamically
         update arbitrary properties of this view.
         
         :returns:
@@ -145,7 +145,7 @@ class view(object):
         """Updates the raw configuration of this view with a new set of properties
         
         This method should typically used in conjunction with
-        the :py:func:`pyjen.view.get_config_xml` method.
+        the :py:func:`pyjen.View.get_config_xml` method.
         
         :param str new_xml:
             XML encoded text string to be used as a replacement for the
@@ -154,8 +154,6 @@ class view(object):
             NOTE: It is assumed that this input text meets the schema
             requirements for a Jenkins view.
         """
-        #TODO: Find a link to the schema for views and put it here
-        #      in the comments
         headers = {'Content-Type': 'text/xml'}
         args = {}
         args['data'] = new_xml

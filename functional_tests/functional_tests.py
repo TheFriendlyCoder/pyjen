@@ -1,7 +1,7 @@
 import unittest
 from functional_tests.test_utils import start_jenkins
 from pyjen.jenkins import Jenkins
-from pyjen.view import view
+from pyjen.view import View
 import os
 import shutil
 
@@ -34,7 +34,7 @@ class regression_tests(unittest.TestCase):
     def test_create_view(self):
         new_view_name = "test_view"
         j = Jenkins(self.__jenkins_url)
-        j.create_view(new_view_name, view.LIST_VIEW)
+        j.create_view(new_view_name, View.LIST_VIEW)
         v = j.find_view(new_view_name)
         
         self.assertTrue(v != None)

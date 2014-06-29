@@ -9,7 +9,7 @@ from pyjen.jenkins import Jenkins
 from pyjen.build import Build
 from pyjen.job import Job
 from pyjen.node import Node
-from pyjen.view import view
+from pyjen.view import View
 
 #Then, lets expose these classes to the caller when they import *
-__all__ = ["Jenkins", "view", "Node", "Build", "Job"]
+__all__ = ["Jenkins", "View", "Node", "Build", "Job"]

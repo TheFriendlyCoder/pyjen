@@ -121,10 +121,8 @@ class Build(object):
         """
 
         data = self.__data_io.get_api_data()
-        print (data['culprits'])
         retval = []
         for culprit in data['culprits']:
-            print (culprit)
             temp_data_io = self.__data_io.clone(culprit['absoluteUrl'])
             temp_user = user(temp_data_io)
             retval.append(temp_user)

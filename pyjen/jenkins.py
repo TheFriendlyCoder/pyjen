@@ -1,6 +1,6 @@
 """Primitives for interacting with the main Jenkins dashboard"""
 import json
-from pyjen.view import view
+from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
 from pyjen.utils.data_requester import data_requester
@@ -18,7 +18,7 @@ class Jenkins(object):
                     of job settings and controlling builds of those jobs
     * :py:mod:`pyjen.build` - abstraction for an instance of a build of a
                     particular job
-    * :py:mod:`pyjen.view` - abstraction for a view on the dashboard, allowing
+    * :py:mod:`pyjen.View` - abstraction for a view on the dashboard, allowing
                 jobs to be filtered based on different criteria like job name.
 
     **Example:** finding a job ::
@@ -36,8 +36,8 @@ class Jenkins(object):
         of the first job on the default view ::
     
         j = pyjen.Jenkins.easy_connect('http://localhost:8080/')
-        view = j.get_default_view()
-        jobs = view.get_jobs()
+        View = j.get_default_view()
+        jobs = View.get_jobs()
         lgb = jobs[0].get_last_good_build()
         print ('last good build of the first job in the default view is ' +\
                 lgb.get_build_number())
@@ -152,21 +152,21 @@ class Jenkins(object):
         the main URL. Typically this will be the "All" view.
         
         :returns: object that manages the default Jenkins view
-        :rtype: :py:mod:`pyjen.view`            
+        :rtype: :py:mod:`pyjen.View`            
         """        
         data = self.__data_io.get_api_data()
 
         default_view = data['primaryView']
         new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") +\
                                           "/view/" + default_view['name'])
-        return view(new_io_obj)
+        return View(new_io_obj)
     
     @property
     def all_views(self):
         """Gets a list of all views defined on the Jenkins dashboard
         
         :returns: list of one or more views defined on this Jenkins instance. 
-        :rtype: :func:`list` of :py:mod:`pyjen.view` objects
+        :rtype: :func:`list` of :py:mod:`pyjen.View` objects
             
         """
         data = self.__data_io.get_api_data()
@@ -182,7 +182,7 @@ class Jenkins(object):
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
             new_io_obj = self.__data_io.clone(turl)
-            tview = view(new_io_obj)
+            tview = View(new_io_obj)
             retval.append(tview)
             
         return retval   
@@ -233,7 +233,7 @@ class Jenkins(object):
         :returns: If a view with the specified name can be found, an object
             to manage the view will be returned, otherwise an empty
             object is returned (ie: None)
-        :rtype: :py:mod:`pyjen.view`
+        :rtype: :py:mod:`pyjen.View`
         """
         data = self.__data_io.get_api_data()
         
@@ -246,11 +246,11 @@ class Jenkins(object):
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
                 new_io_obj = self.__data_io.clone(turl)
-                return view(new_io_obj)
+                return View(new_io_obj)
                         
         return None
 
-    def create_view(self, view_name, view_type = view.LIST_VIEW):
+    def create_view(self, view_name, view_type = View.LIST_VIEW):
         """Creates a new view on the Jenkins dashboard
         
         :param str view_name: the name for this new view
@@ -258,11 +258,11 @@ class Jenkins(object):
             currently managed by the Jenkins instance
         :param str view_type: type of view to create
             must match one or more of the available view types supported
-            by this Jenkins instance. See attributes of the :py:mod:`pyjen.view`
+            by this Jenkins instance. See attributes of the :py:mod:`pyjen.View`
             class for compatible options.
             Defaults to a list view type
         :returns: An object to manage the newly created view
-        :rtype: :py:mod:`pyjen.view`
+        :rtype: :py:mod:`pyjen.View`
         """
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         data = {

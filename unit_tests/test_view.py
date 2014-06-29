@@ -1,4 +1,4 @@
-from pyjen.view import view
+from pyjen.view import View
 import unittest
 import pytest
 from mock import MagicMock
@@ -11,7 +11,7 @@ class view_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'name':expected_name}
         
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         actual_name = v.name
 
         self.assertEqual(expected_name, actual_name)
@@ -24,7 +24,7 @@ class view_tests(unittest.TestCase):
         jobs.append({'url':'bar'})
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':jobs}
         
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         expected_count = v.job_count
 
         self.assertEqual(expected_count, 2, "There should be 2 jobs in the mock view")
@@ -47,7 +47,7 @@ class view_tests(unittest.TestCase):
             self.fail("Unknown source URL provided to clone method: " + new_url)
         mock_data_io.clone.side_effect = mock_clone
             
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         jobs = v.jobs
         
         self.assertEqual(len(jobs), 2, "view should have 2 jobs contained within it")
@@ -58,7 +58,7 @@ class view_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[]}
             
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         jobs = v.jobs
         
         self.assertEqual(len(jobs), 0, "view should not have any jobs contained within it")
@@ -68,7 +68,7 @@ class view_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_text.return_value = expected_xml
         
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         actual_xml = v.config_xml
         
         self.assertEqual(actual_xml, expected_xml)
@@ -77,7 +77,7 @@ class view_tests(unittest.TestCase):
     def test_delete_view(self):
         mock_data_io = MagicMock()
         
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         v.delete()
         
         mock_data_io.post.assert_called_once_with("/doDelete")
@@ -86,7 +86,7 @@ class view_tests(unittest.TestCase):
         expected_config_xml = "<Sample Config XML/>"
         mock_data_io = MagicMock()
         
-        v = view (mock_data_io)
+        v = View (mock_data_io)
         v.set_config_xml(expected_config_xml)
         
         self.assertEqual(mock_data_io.post.call_count, 1)
@@ -105,7 +105,7 @@ class view_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url}]}
         mock_data_io.clone.return_value = mock_job1_dataio
             
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         v.delete_all_jobs()
         
         mock_job1_dataio.post.assert_called_once_with("/doDelete")
@@ -120,7 +120,7 @@ class view_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url}]}
         mock_data_io.clone.return_value = mock_job1_dataio
             
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         v.disable_all_jobs()
         
         mock_job1_dataio.post.assert_called_once_with("/disable")
@@ -135,7 +135,7 @@ class view_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url}]}
         mock_data_io.clone.return_value = mock_job1_dataio
             
-        v = view(mock_data_io)
+        v = View(mock_data_io)
         v.enable_all_jobs()
         
         mock_job1_dataio.post.assert_called_once_with("/enable")

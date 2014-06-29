@@ -196,30 +196,30 @@ class jenkins_view_tests(unittest.TestCase):
     def test_find_view(self):
         # test logic
         j = Jenkins(self.mock_jenkins_data_io)
-        view = j.find_view(self.view2_name)
+        View = j.find_view(self.view2_name)
         
         # verification
-        self.assertNotEqual(view, None, "code should return a valid pyjen.view object")
-        self.assertEqual(view.name, self.view2_name, "incorrect view returned by jenkins object")
+        self.assertNotEqual(View, None, "code should return a valid pyjen.view object")
+        self.assertEqual(View.name, self.view2_name, "incorrect view returned by jenkins object")
         self.mock_jenkins_data_io.clone.assert_called_once_with(self.view2_url)
         
     def test_find_view_primary_view(self):        
         # test logic
         j = Jenkins(self.mock_jenkins_data_io)
-        view = j.find_view(self.primary_view_name)
+        View = j.find_view(self.primary_view_name)
         
         # verification
-        self.assertNotEqual(view, None, "code should return a valid pyjen.view object")
-        self.assertEqual(view.name, self.primary_view_name, "incorrect view returned by jenkins object")
+        self.assertNotEqual(View, None, "code should return a valid pyjen.view object")
+        self.assertEqual(View.name, self.primary_view_name, "incorrect view returned by jenkins object")
         self.mock_jenkins_data_io.clone.assert_called_once_with(self.primary_view_url)
     
     def test_find_missing_view(self):
         # test logic
         j = Jenkins(self.mock_jenkins_data_io)
-        view = j.find_view("DoesNotExist")
+        View = j.find_view("DoesNotExist")
     
         # verification
-        self.assertEqual(view, None, "No valid view should have been found.")
+        self.assertEqual(View, None, "No valid view should have been found.")
         
     def test_create_view(self):
         new_view_url = "http://localhost:8080/view/MyView"
