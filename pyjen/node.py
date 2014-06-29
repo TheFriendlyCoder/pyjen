@@ -1,5 +1,4 @@
 """Declarations for the abstraction of a Jenkins build agent"""
-
 import time
 import sys
 if sys.version_info.major < 3:
@@ -44,8 +43,8 @@ class Node(object):
             username = credentials[0]
             password = credentials[1]
         else:
-            username = ""
-            password = ""
+            username = None
+            password = None
 
         http_io = data_requester(url, username, password)
         retval = Node(http_io)

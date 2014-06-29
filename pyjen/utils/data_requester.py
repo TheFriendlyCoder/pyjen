@@ -1,22 +1,31 @@
+"""Primitives for handling direct IO with the Jenkins REST API"""
 import requests
 import sys
 if sys.version_info.major < 3:
-    from urlparse import urljoin, urlparse
+    from urlparse import urljoin
 else:
-    from urllib.parse import urljoin, urlparse
+    from urllib.parse import urljoin
 
 class data_requester (object):
     """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
         
-    def __init__(self, url, username, password):
+    def __init__(self, jenkins_url, username, password):
         """Constructor
         
-        :param str url: HTTP URL to use for all subsequent IO operations performed on this object.
-         
+        :param str jenkins_url: 
+            HTTP URL to use for all subsequent IO operations performed on this object.
+        :param str username:
+            Jenkins user name to use for authentication. May be set to None for anonymous access.
+        :param str password:
+            Password for the given Jenkins user, to use for authentication. May be set to None
+            for anonymous access.
         """
 
-        self.__url = url.rstrip("/\\") + "/"
-        self.__credentials = (username, password)
+        self.__url = jenkins_url.rstrip("/\\") + "/"
+        if not username or not password:
+            self.__credentials = None
+        else:
+            self.__credentials = (username, password)
         
     @property
     def url(self):
@@ -47,7 +56,8 @@ class data_requester (object):
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
 
-        :param str path: optional extension path to append to the root URL managed by this object when performing the get operation
+        :param str path: optional extension path to append to the root URL managed by this object 
+            when performing the get operation
             
         :returns: the text loaded from this objects' URL
         :rtype: :func:`str`
@@ -66,24 +76,22 @@ class data_requester (object):
         :returns:  Text returned from the given URL
         :rtype: :func:`str`
         """
-        r = requests.get(url, auth=self.__credentials)
+        req = requests.get(url, auth=self.__credentials)
         
-        if r.status_code != 200:
-            r.raise_for_status()
+        if req.status_code != 200:
+            req.raise_for_status()
         
-        return r.text
+        return req.text
         
     def get_data(self, path=None):
-        """Convenience method that converts the text data loaded from a Jenkins URL to Python data types
+        """Convenience method to convert text data loaded from a Jenkins URL to Python data types
         
         :param str path:
-            optional extension path to append to the root
-            URL managed by this object when performing the
-            get operation
-            
+            optional extension path to append to the root URL managed by this object when performing
+            the get operation
         :returns:
-            The results of converting the text data loaded from the Jenkins 
-            URL into appropriate Python objects
+            The results of converting the text data loaded from the Jenkins URL into appropriate 
+            Python objects
         :rtype: :class:`object`
         """
         return eval(self.get_text(path))
@@ -117,12 +125,12 @@ class data_requester (object):
         if path != None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))    
         
-        r = requests.get(temp_path, auth=self.__credentials)
+        req = requests.get(temp_path, auth=self.__credentials)
             
-        if r.status_code != 200:
-            r.raise_for_status()
+        if req.status_code != 200:
+            req.raise_for_status()
             
-        return r.headers
+        return req.headers
     
     def post(self, path=None, args=None):
         """sends data to or triggers an operation via a Jenkins URL
@@ -144,15 +152,12 @@ class data_requester (object):
             temp_path = urljoin(temp_path, path.lstrip("/\\"))
               
         if args != None:
-            r = requests.post(temp_path, auth=self.__credentials, **args)
+            req = requests.post(temp_path, auth=self.__credentials, **args)
         else:
-            r = requests.post(temp_path, auth=self.__credentials)
+            req = requests.post(temp_path, auth=self.__credentials)
 
-        if r.status_code != 200:
-            r.raise_for_status()
+        if req.status_code != 200:
+            req.raise_for_status()
             
 if __name__ == "__main__":
-    url = "http://localhost:8080/"
-    io = data_requester(url, "", "")
-    print (io.get_api_data())
     pass

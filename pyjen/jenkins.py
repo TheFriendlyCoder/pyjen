@@ -73,8 +73,8 @@ class Jenkins(object):
             username = credentials[0]
             password = credentials[1]
         else:
-            username = ""
-            password = ""
+            username = None
+            password = None
         
         http_io = data_requester(url, username, password)
         retval = Jenkins(http_io)

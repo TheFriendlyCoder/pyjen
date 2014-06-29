@@ -1,3 +1,4 @@
+"""Primitives for interacting with Jenkins views"""
 from pyjen.utils.data_requester import data_requester
 from pyjen.job import Job
 from pyjen.utils.view_xml import view_xml
@@ -31,8 +32,10 @@ class view(object):
     def easy_connect(url, credentials=None):
         """Factory method to simplify creating connections to Jenkins servers
         
-        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid view on a valid Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid view on a 
+            valid Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for 
+            authenticating to the URL
             If no credentials can be found elsewhere, anonymous access will be chosen
         :returns: :py:mod:`pyjen.view` object, pre-configured with the appropriate credentials
             and connection parameters for the given URL.
@@ -42,20 +45,22 @@ class view(object):
             username = credentials[0]
             password = credentials[1]
         else:
-            username = ""
-            password = ""
+            username = None
+            password = None
         
         http_io = data_requester(url, username, password)
         retval = view(http_io)
         
-        # Sanity check: make sure we can successfully parse the view's name from the IO controller to make sure
-        # we have a valid configuration
+        # Sanity check: make sure we can successfully parse the view's name from the IO controller
+        # to make sure we have a valid configuration
         try:
             name = retval.name
         except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. Please check configuration.", http_io) 
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
+                Please check configuration.", http_io) 
         if name == None or name == "":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. Please check configuration.", http_io) 
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
+                Please check configuration.", http_io) 
     
         return retval
     
