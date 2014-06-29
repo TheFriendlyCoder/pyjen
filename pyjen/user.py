@@ -1,7 +1,8 @@
+"""Primitives for interacting with Jenkins jobs"""
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 
-class user (object):
+class User (object):
     """Interface to all primitives associated with a Jenkins user"""
     
     def __init__ (self, data_io_controller):
@@ -20,12 +21,14 @@ class user (object):
     def easy_connect(url, credentials=None):
         """Factory method to simplify creating connections to Jenkins servers
         
-        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid job on a valid Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and password for authenticating to the URL
+        :param str url: Full URL of the Jenkins instance to connect to. Must be a valid job on a 
+            valid Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and password for 
+            authenticating to the URL
             If no credentials can be found elsewhere, anonymous access will be chosen
-        :returns: :py:mod:`pyjen.user` object, pre-configured with the appropriate credentials
+        :returns: :py:mod:`pyjen.User` object, pre-configured with the appropriate credentials
             and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.user`
+        :rtype: :py:mod:`pyjen.User`
         """
         if credentials != None:
             username = credentials[0]
@@ -35,16 +38,18 @@ class user (object):
             password = None
         
         http_io = data_requester(url, username, password)
-        retval = user(http_io)
+        retval = User(http_io)
         
-        # Sanity check: make sure we can successfully parse the users ID from the IO controller to make sure
-        # we have a valid configuration
+        # Sanity check: make sure we can successfully parse the users ID from the IO controller 
+        # to make sure we have a valid configuration
         try:
             user_id = retval.user_id
         except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. Please check configuration.", http_io) 
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. \
+                Please check configuration.", http_io) 
         if user_id == None or user_id == "":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. Please check configuration.", http_io) 
+            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. \
+                Please check configuration.", http_io) 
     
         return retval
     

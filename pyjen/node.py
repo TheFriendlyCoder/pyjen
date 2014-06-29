@@ -5,7 +5,7 @@ if sys.version_info.major < 3:
     from urllib import quote as url_quote
 else:
     from urllib.parse import quote as url_quote
-
+    
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 
@@ -107,7 +107,6 @@ class Node(object):
             optional descriptive message to display on the dashboard explaining
             the reason for this operation.
         """
-        #todo: see if i can rework this to use args properties
         if message != None:
             post_cmd = "/toggleOffline?offlineMessage=" + url_quote(message)
         else:

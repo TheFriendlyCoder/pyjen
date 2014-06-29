@@ -1,4 +1,4 @@
-from pyjen.user import user
+from pyjen.user import User
 import unittest
 from mock import MagicMock
 import pytest
@@ -9,7 +9,7 @@ class user_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"id":expected_id}
         
-        u = user(mock_data_io)
+        u = User(mock_data_io)
         
         self.assertEqual(u.user_id, expected_id)
     
@@ -18,7 +18,7 @@ class user_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"fullName":expected_name}
         
-        u = user(mock_data_io)
+        u = User(mock_data_io)
         
         self.assertEqual(u.full_name, expected_name)
         
@@ -27,7 +27,7 @@ class user_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"description":expected_desc}
         
-        u = user(mock_data_io)
+        u = User(mock_data_io)
         
         self.assertEqual(u.description, expected_desc)
         
@@ -35,7 +35,7 @@ class user_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"description":None}
         
-        u = user(mock_data_io)
+        u = User(mock_data_io)
         
         self.assertEqual(u.description, None)
             
@@ -44,7 +44,7 @@ class user_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"property":[{"address":expected_email}]}
         
-        u = user(mock_data_io)
+        u = User(mock_data_io)
         
         self.assertEqual(u.email, expected_email)
     

@@ -2,7 +2,7 @@
 
 from pyjen.utils.data_requester import data_requester
 from pyjen.changeset import changeset
-from pyjen.user import user
+from pyjen.user import User
 from datetime import datetime
 from pyjen.exceptions import InvalidJenkinsURLError
 
@@ -117,14 +117,14 @@ class Build(object):
 
         :returns: List of 0 or more Jenkins users whom committed changes
             included in this build.
-        :rtype: :func:`list` of :py:mod:`pyjen.user` objects
+        :rtype: :func:`list` of :py:mod:`pyjen.User` objects
         """
 
         data = self.__data_io.get_api_data()
         retval = []
         for culprit in data['culprits']:
             temp_data_io = self.__data_io.clone(culprit['absoluteUrl'])
-            temp_user = user(temp_data_io)
+            temp_user = User(temp_data_io)
             retval.append(temp_user)
 
         return retval
