@@ -24,6 +24,11 @@ class JenkinsConfigParser(configparser.ConfigParser):
             username=other_username
             password=other_password
             
+            #Anonymous access can be defined like this
+            [http://some_jenkins_url]
+            username=
+            password=
+            
         For more details on the general format of the config file see these links:
             https://wiki.python.org/moin/ConfigParserExamples
             https://docs.python.org/2/library/configparser.html
