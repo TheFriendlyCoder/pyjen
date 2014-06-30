@@ -7,19 +7,16 @@ class PyJenError (Exception):
 
 class InvalidUserParamsError (PyJenError):
     """Exception caused by invalid parameters in the user configuration file"""
-    def __init__(self, msg, file):
+    def __init__(self, msg):
         """constructor
 
         :param str msg: Descriptive message associated with this exception
-        :param str file: Config file being parsed that causd the exception
         """
         super(InvalidUserParamsError, self).__init__()
         self.__msg = msg
-        self.__file = file
 
     def __str__(self):
-        return "Error processing log file: " + self.__file + "\n\t" + \
-                self.__msg
+        return "Error parsing config file: " + self.__msg
 
 class InvalidJenkinsURLError (PyJenError):
     """Exception raised when attempting to connect to a URL that doesn't point
