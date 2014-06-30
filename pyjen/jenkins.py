@@ -4,6 +4,7 @@ from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
 from pyjen.utils.data_requester import data_requester
+from pyjen.user_params import JenkinsConfigParser
 from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
 
 class Jenkins(object):
@@ -64,17 +65,26 @@ class Jenkins(object):
             a valid running Jenkins instance.
         :param tuple credentials: A 2-element tuple with the username and 
             password for authenticating to the URL
-            If omitted, anonymous access will be chosen
+            If omitted, credentials will be loaded from any pyjen config files found on the system
+            If no credentials can be found, anonymous access will be used
         :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
             appropriate credentials and connection parameters for the given URL.
         :rtype: :py:mod:`pyjen.Jenkins`
         """
-        if credentials != None:
+        # Default to anonymous access
+        username = None
+        password = None
+
+        # If not explicit credentials provided, load credentials from any config files
+        if not credentials:
+            config = JenkinsConfigParser()
+            config.read(JenkinsConfigParser.get_default_configfiles())
+            credentials = config.get_credentials(url)
+            
+        # If explicit credentials have been found, use them rather than use anonymous access 
+        if credentials:
             username = credentials[0]
             password = credentials[1]
-        else:
-            username = None
-            password = None
         
         http_io = data_requester(url, username, password)
         retval = Jenkins(http_io)

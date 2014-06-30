@@ -8,6 +8,7 @@ else:
     
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
+from pyjen.user_params import JenkinsConfigParser
 
 class Node(object):
     """Wrapper around a Jenkins build agent (aka: Node) configuration
@@ -29,22 +30,32 @@ class Node(object):
     @staticmethod
     def easy_connect(url, credentials=None):
         """Factory method to simplify creating connections to Jenkins servers
-
-        :param str url: Full URL of the Jenkins instance to connect to.
-            Must be a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and
-            password for authenticating to the URL. If omitted, anonymous
-            access will be chosen
-        :returns: :py:mod:`pyjen.Node` object, pre-configured with the
+        
+        :param str url: Full URL of the Jenkins instance to connect to. Must be
+            a valid running Jenkins instance.
+        :param tuple credentials: A 2-element tuple with the username and 
+            password for authenticating to the URL
+            If omitted, credentials will be loaded from any pyjen config files found on the system
+            If no credentials can be found, anonymous access will be used
+        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
             appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Node`
+        :rtype: :py:mod:`pyjen.Jenkins`
         """
-        if credentials != None:
+        # Default to anonymous access
+        username = None
+        password = None
+
+        # If not explicit credentials provided, load credentials from any config files
+        if not credentials:
+            config = JenkinsConfigParser()
+            config.read(JenkinsConfigParser.get_default_configfiles())
+            credentials = config.get_credentials(url)
+            
+        # If explicit credentials have been found, use them rather than use anonymous access 
+        if credentials:
             username = credentials[0]
             password = credentials[1]
-        else:
-            username = None
-            password = None
+        
 
         http_io = data_requester(url, username, password)
         retval = Node(http_io)

@@ -99,3 +99,4 @@ class JenkisConfigParser_tests(unittest.TestCase):
     
 if __name__ == "__main__":
     pytest.main()
+    
