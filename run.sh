@@ -66,7 +66,7 @@ publish()
 	ncftpput -R -v -m pyjentfc /PyJen ./docs/build/html/*
 
 	# Publish package to PyPi
-	python setup.py sdist upload	
+	python setup.py bdist_wheel upload	
 }
 
 show_usage()
