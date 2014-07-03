@@ -7,6 +7,10 @@
 =============
 Overview
 =============
+.. image:: https://pypip.in/download/pyjen/badge.png
+    :target: https://pypi.python.org/pypi//pyjen/
+    :alt: Downloads
+    
 .. image:: https://pypip.in/license/pyjen/badge.png
     :target: https://pypi.python.org/pypi/pyjen/
     :alt: License
