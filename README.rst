@@ -7,6 +7,18 @@
 =============
 Overview
 =============
+.. image:: https://pypip.in/license/pyjen/badge.png
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: License
+    
+.. image:: https://pypip.in/wheel/pyjen/badge.png
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Wheel Status
+    
+.. image:: https://pypip.in/version/pyjen/badge.png
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Latest Version
+    
 Extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping
 the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using
 Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of Python, and the
