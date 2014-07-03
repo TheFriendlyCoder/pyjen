@@ -44,6 +44,12 @@ create_package()
 	echo "Generating packages"
 	python setup.py bdist_wheel > "$log_folder/package.log" 2>&1
 	rm -rf ./build > /dev/null
+	
+	# test resulting packages
+	echo "Testing packages..."
+	pushd functional_tests > /dev/null
+	./package_tests.sh
+	popd > /dev/null
 }
 
 code_analysis()
