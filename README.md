@@ -7,6 +7,7 @@ http://daringfireball.net/projects/markdown/syntax
 
 Overview
 ============
+[![Latest Version](https://pypip.in/version/pyjen/badge.png)](https://pypi.python.org/pypi/pyjen/)
 Extensible, user and developer friendly Python interface to the [Jenkins CI](http://jenkins-ci.org/) tool, wrapping
 the features exposed by the standard [REST API](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API) in a 
 Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of Python, and the
