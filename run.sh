@@ -34,8 +34,27 @@ run_tests()
 	echo "Running tests"
 	py.test --cov-report term-missing --cov pyjen -s ./unit_tests/test*.py --verbose --junit-xml test_results.xml > "$log_folder/pytest.log" 2>&1
 	result=$?
+	if [ $result -ne 0 ]; then
+		echo "Tests completed with errors" 
+		return $result
+	fi
+	pushd functional_tests > /dev/null
+	./package_tests.sh
+	result=$?
+	popd > /dev/null
 	test $result -ne 0 && echo "Tests completed with errors" || echo "Tests completed successfully"
 	return $result
+}
+
+run_functional_tests()
+{	
+	# runs automated tests
+	echo "Running functional tests"
+	py.test --cov-report term-missing --cov pyjen -s ./functional_tests/*tests.py --verbose --junit-xml test_results.xml > "$log_folder/func_pytest.log" 2>&1
+	result=$?
+	test $result -ne 0 && echo "Tests completed with errors" || echo "Tests completed successfully"
+	return $result
+
 }
 
 create_package()
@@ -82,6 +101,7 @@ show_usage()
 	echo
 	echo "Where <option> is one of the following:"
 	echo "     test"
+	echo "     func_test"
 	echo "     stat"
 	echo "     docs"
 	echo "     pack"
@@ -99,6 +119,10 @@ process_params()
 		case "$param" in
 			test)
 				run_tests
+			;;
+
+			func_test)
+				run_functional_tests
 			;;
 
 			stat)
