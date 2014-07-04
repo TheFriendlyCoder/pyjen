@@ -12,10 +12,12 @@ class empty_jenkins_regression_tests(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         print ("Preparing Jenkins Instance...")
-        self._jenkins_home = os.path.abspath("./empty_jenkins_home")
+        test_dir = os.path.dirname(os.path.realpath(__file__))
+
+        self._jenkins_home = os.path.abspath(os.path.join(test_dir, "empty_jenkins_home"))
         os.makedirs(self._jenkins_home)
         
-        self._jenkins_process = start_jenkins("./jenkins/jenkins_lts.war", self._jenkins_home)
+        self._jenkins_process = start_jenkins(os.path.join(test_dir, "jenkins", "jenkins_lts.war"), self._jenkins_home)
         
         self._jenkins_url = "http://localhost:8080"
          
