@@ -51,8 +51,11 @@ class data_requester (object):
         else:
             clone_url = self.__url
 
-        return data_requester (clone_url, self.__credentials[0], self.__credentials[1])
-    
+        if self.__credentials:
+            return data_requester (clone_url, self.__credentials[0], self.__credentials[1])
+        else:
+            return data_requester (clone_url, None, None)
+        
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
 
