@@ -31,7 +31,7 @@ class empty_jenkins_regression_tests(unittest.TestCase):
             shutil.rmtree(self._jenkins_home)
     
     def test_create_view(self):
-        new_view_name = "test_view"
+        new_view_name = "test_create_view"
         j = Jenkins.easy_connect(self._jenkins_url, None)
         j.create_view(new_view_name, View.LIST_VIEW)
         v = j.find_view(new_view_name)
@@ -50,5 +50,12 @@ class empty_jenkins_regression_tests(unittest.TestCase):
         j.cancel_shutdown()
         self.assertFalse(j.is_shutting_down)
 
+    def test_default_view(self):
+        j = Jenkins.easy_connect(self._jenkins_url, None)
+        
+        v = j.default_view
+        self.assertTrue(v != None)
+        self.assertEqual("All", v.name)
+        
 if __name__ == "__main__":
     pytest.main()
