@@ -311,10 +311,15 @@ class Job(object):
         :returns: A list of 0 or more jobs this job depend on
         :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
         """
-        temp = self.upstream_jobs
-        retval = temp
-        for j in temp:
-            retval.extend(j.all_upstream_jobs)
+        data = self.__data_io.get_api_data()
+        jobs = data['upstreamProjects']
+        retval = []
+                
+        for j in jobs:          
+            temp_data_io = self.__data_io.clone(j['url'])
+            temp_job = Job(temp_data_io)
+            retval.append(temp_job)
+            retval.extend(temp_job.all_upstream_jobs)
 
         return retval
     
