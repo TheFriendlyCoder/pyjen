@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyjen',
-    version='0.0.7dev',
+    version='0.0.8dev',
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     packages=['pyjen', 'pyjen.utils', 'pyjen.plugins'],
