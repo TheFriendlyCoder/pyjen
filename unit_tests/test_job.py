@@ -257,32 +257,40 @@ class job_dependencies_tests(unittest.TestCase):
         upstream_job_name1 = "j1"
         upstream_job_url1 = "http://localhost:8080/job/" + upstream_job_name1
         mock_job1_data_io = MagicMock()
-        mock_job1_data_io.get_api_data.return_value = {"name":upstream_job_name1, "upstreamProjects":[]}
+        mock_job1_data_io.get_api_data.return_value = {"name": upstream_job_name1, "upstreamProjects": []}
 
         # job j1 triggers job j2
         upstream_job_name2 = "j2"
         upstream_job_url2 = "http://localhost:8080/job/" + upstream_job_name2 
         mock_job2_data_io = MagicMock()
-        mock_job2_data_io.get_api_data.return_value = {"name":upstream_job_name2,"upstreamProjects":[{"url":upstream_job_url1}]}
+        mock_job2_data_io.get_api_data.return_value = {"name": upstream_job_name2, "upstreamProjects": [{"url": upstream_job_url1}]}
         mock_job2_data_io.clone.return_value = mock_job1_data_io
-        
+
+        # job j3 triggers job j2
+        upstream_job_name3 = "j3"
+        upstream_job_url3 = "http://localhost:8080/job/" + upstream_job_name3
+        mock_job3_data_io = MagicMock()
+        mock_job3_data_io.get_api_data.return_value = {"name": upstream_job_name3, "upstreamProjects": [{"url": upstream_job_url2}]}
+        mock_job3_data_io.clone.return_value = mock_job2_data_io
+
         # job j2 triggers our main job
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"upstreamProjects":[{"url":upstream_job_url2}]}
-        mock_data_io.clone.return_value = mock_job2_data_io
+        mock_data_io.get_api_data.return_value = {"upstreamProjects": [{"url": upstream_job_url3}]}
+        mock_data_io.clone.return_value = mock_job3_data_io
                 
         # code under test 
-        j = Job (mock_data_io)
+        j = Job(mock_data_io)
         dependencies = j.all_upstream_jobs
         
         # validation
-        self.assertEqual(len(dependencies), 2, "Test job should have two upstream dependencies")
+        self.assertEqual(len(dependencies), 3, "Test job should have three upstream dependencies")
         names = []
         names.append(dependencies[0].name)
         names.append(dependencies[1].name)
+        names.append(dependencies[2].name)
         self.assertTrue(upstream_job_name1 in names, "Mock job #1 should be returned as a transient dependency")
-        self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
-        
+        self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a transient dependency")
+        self.assertTrue(upstream_job_name3 in names, "Mock job #3 should be returned as a direct dependency")
 
 class job_build_methods_tests(unittest.TestCase):
     """Tests for build related methods exposed by the 'Job' API"""
