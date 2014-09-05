@@ -175,24 +175,32 @@ class job_dependencies_tests(unittest.TestCase):
         mock_job2_data_io = MagicMock()
         mock_job2_data_io.get_api_data.return_value = {"name":downstream_job_name2,"downstreamProjects":[{"url":downstream_job_url1}]}
         mock_job2_data_io.clone.return_value = mock_job1_data_io
+
+        # job j3 triggers job j2
+        downstream_job_name3 = "j3"
+        downstream_job_url3 = "http://localhost:8080/job/" + downstream_job_name3
+        mock_job3_data_io = MagicMock()
+        mock_job3_data_io.get_api_data.return_value = {"name": downstream_job_name3, "downstreamProjects": [{"url": downstream_job_url2}]}
+        mock_job3_data_io.clone.return_value = mock_job2_data_io
         
-        # our main job triggers job j2
+        # our main job triggers job j3
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"downstreamProjects":[{"url":downstream_job_url2}]}
-        mock_data_io.clone.return_value = mock_job2_data_io
+        mock_data_io.get_api_data.return_value = {"downstreamProjects": [{"url": downstream_job_url3}]}
+        mock_data_io.clone.return_value = mock_job3_data_io
                 
         # code under test 
-        j = Job (mock_data_io)
+        j = Job(mock_data_io)
         dependencies = j.all_downstream_jobs
         
         # validation
-        self.assertEqual(len(dependencies), 2, "Test job should have two downstream dependencies")
+        self.assertEqual(len(dependencies), 3, "Test job should have three downstream dependencies")
         names = []
         names.append(dependencies[0].name)
         names.append(dependencies[1].name)
+        names.append(dependencies[2].name)
         self.assertTrue(downstream_job_name1 in names, "Mock job #1 should be returned as a transient dependency")
-        self.assertTrue(downstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
-
+        self.assertTrue(downstream_job_name2 in names, "Mock job #2 should be returned as a transient dependency")
+        self.assertTrue(downstream_job_name3 in names, "Mock job #3 should be returned as a direct dependency")
 
     def test_no_upstream_jobs (self):
         mock_data_io = MagicMock()
