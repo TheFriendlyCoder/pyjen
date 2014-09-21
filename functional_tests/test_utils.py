@@ -127,16 +127,12 @@ def _progress_hook(block_number, block_size, total_size):
 
 import shutil
 if __name__ == "__main__":
-    #path = os.path.join(os.getcwd())
-    #get_jenkins_wars(path)
+    path = os.path.join(os.getcwd())
+    get_jenkins_wars(path)
     
     home = os.path.join(os.getcwd(), "empty home")
-    #if os.path.exists(home):
-    #    shutil.rmtree(home)
-    #os.makedirs(home)
     print ("starting jenkins")
     p = start_jenkins("jenkins_lts.war", home)
     p.terminate()
     print ("Done")
-    #safe_shutdown(p)
     
