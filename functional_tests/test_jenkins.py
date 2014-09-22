@@ -1,6 +1,6 @@
 import unittest
 import pytest
-from test_utils import start_jenkins, get_jenkins_wars, safe_shutdown, safe_delete
+from .test_utils import start_jenkins, get_jenkins_wars, safe_delete
 from pyjen.jenkins import Jenkins
 from pyjen.view import View
 import os
@@ -16,7 +16,7 @@ class empty_jenkins_regression_tests(unittest.TestCase):
     def setUpClass(self):
         
         print ("Preparing Jenkins Instance...")
-        path = os.path.join(os.getcwd(), "jenkins")
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jenkins")
         get_jenkins_wars(path)
         
         test_dir = os.path.dirname(os.path.realpath(__file__))
