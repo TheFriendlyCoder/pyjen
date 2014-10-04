@@ -1,31 +1,22 @@
-import unittest
 import pytest
-from .test_utils import start_jenkins, get_jenkins_wars, safe_delete
+from functional_tests.test_utils import start_jenkins, get_jenkins_war, safe_delete
 from pyjen.jenkins import Jenkins
 from pyjen.view import View
 import os
-import shutil
-import stat
+from testtools import TestCase
+import tempfile
 
-
-    
-class empty_jenkins_regression_tests(unittest.TestCase):
-    """Tests that require a clean, unfettered Jenkins instance"""
-    
+class lts_tests(TestCase):
     @classmethod
     def setUpClass(self):
-        
-        print ("Preparing Jenkins Instance...")
+        #todo - setup temp folder for home older
+        #print ("Preparing Jenkins Instance...")
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jenkins")
-        get_jenkins_wars(path)
+        war_file = get_jenkins_war(path, "lts")
         
-        test_dir = os.path.dirname(os.path.realpath(__file__))
-
-        self._jenkins_home = os.path.abspath(os.path.join(test_dir, "empty_jenkins_home"))
-        if not os.path.exists(self._jenkins_home):
-            os.makedirs(self._jenkins_home)
+        self._jenkins_home = tempfile.mkdtemp(prefix="pyjen_test")
         
-        self._jenkins_process = start_jenkins(os.path.join(path, "jenkins_lts.war"), self._jenkins_home)
+        self._jenkins_process = start_jenkins(war_file, self._jenkins_home)
         
         self._jenkins_url = "http://localhost:8080"
          
@@ -64,6 +55,31 @@ class empty_jenkins_regression_tests(unittest.TestCase):
         v = j.default_view
         self.assertTrue(v != None)
         self.assertEqual("All", v.name)
+
+
+class latest_tests(lts_tests):
+    @classmethod
+    def setUpClass(self):
+        #todo - setup temp folder for home older
+        #print ("Preparing Jenkins Instance...")
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jenkins")
+        war_file = get_jenkins_war(path, "latest")
+        
+        self._jenkins_home = tempfile.mkdtemp(prefix="pyjen_test")
+        
+        self._jenkins_process = start_jenkins(war_file, self._jenkins_home)
+        
+        self._jenkins_url = "http://localhost:8080"
+         
+    @classmethod
+    def tearDownClass(self):
+        if self._jenkins_process != None:
+            self._jenkins_process.terminate()
+            self._jenkins_process.wait()
+            
+        #clean up working folder
+        safe_delete(self._jenkins_home)
         
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
+    

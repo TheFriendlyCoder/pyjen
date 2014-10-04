@@ -1,12 +1,15 @@
 """Helper functions used by the pyjen functional tests"""
 import subprocess
-import shlex
+import shutil
 import os
-import locale
 import urllib.request as urllib
 import math
 import sys
 import stat
+
+lts_url = "http://mirrors.jenkins-ci.org/war-stable/latest/jenkins.war"
+latest_url = "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
+
 def start_jenkins(war_file, home_folder):
     """Attempts to launch an isolated instance of Jenkins for testing purposes
     
@@ -40,7 +43,7 @@ def start_jenkins(war_file, home_folder):
     args.append("-jar")
     args.append(war_file)
 
-    print ("Starting Jenkins on port 8080...")
+    #print ("Starting Jenkins on port 8080...")
     #Now launch Jenkins in a secondary, non-blocking process
     jenkins_process = subprocess.Popen( args , stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
@@ -59,7 +62,7 @@ def start_jenkins(war_file, home_folder):
     if not jenkins_running:
         raise RuntimeError("Failed to launch Jenkins instance: " + war_file + "\n" + tmp)
     
-    print ("done startup")
+    #print ("done startup")
     return jenkins_process
 
 
@@ -75,32 +78,32 @@ def safe_delete (path):
     
     shutil.rmtree(path)
     
-def get_jenkins_wars (output_path):
+def get_jenkins_war (output_path, edition):
     """Downloads the latest and LTS versions of the Jenkins WAR file
     
     if any .war files already exist in the target folder they will not
     be overwitten
     
     :param str output_path: path to the folder to download the war files to
+    :param str edition: specifies which version of Jenkins to find. Valid values are 'lts' and 'latest'
+    :return: path to the downloaded war file
+    :rtype: `func`:str
     """
-    lts_url = "http://mirrors.jenkins-ci.org/war-stable/latest/jenkins.war"
-    lts_output_file = os.path.join(output_path, "jenkins_lts.war")
-    latest_url = "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
-    latest_output_file = os.path.join(output_path, "jenkins_latest.war")
     
-    if os.path.exists(lts_output_file):
-        print ("Jenkins LTS file already exists. Skipping download.")
+    assert edition == "lts" or edition == "latest"
+    if edition == "lts":
+        src_url = lts_url
+        output_file = os.path.join(output_path, "jenkins_lts.war")
     else:
-        print ("Downloading Jenkins LTS: ", end="")
-        urllib.urlretrieve(lts_url, lts_output_file, _progress_hook)
-        print ("")
+        src_url = latest_url
+        output_file = os.path.join(output_path, "jenkins_latest.war")
+    
+    if not os.path.exists(output_file):
+        #print ("Downloading Jenkins LTS: ", end="")
+        urllib.urlretrieve(src_url, output_file, _progress_hook)
+        #print ("")
         
-    if os.path.exists(latest_output_file):
-        print ("Jenkins latest file already exists. Skipping download.")
-    else:
-        print ("Downloading Jenkins latest: ", end="")
-        urllib.urlretrieve(latest_url, latest_output_file, _progress_hook)
-        print("")
+    return output_file
     
 def _progress_hook(block_number, block_size, total_size):
     """Callback used by `func`:get_jenkins_wars to report the download progress
@@ -110,7 +113,7 @@ def _progress_hook(block_number, block_size, total_size):
     """
     if block_number == 0:
         _progress_hook.counter = 0
-        print ("10..", end="")
+        #print ("10..", end="")
         sys.stdout.flush()
     total_blocks = math.ceil(total_size / block_size)
     
@@ -121,18 +124,17 @@ def _progress_hook(block_number, block_size, total_size):
         msg = str(10-increment)
         if increment != 10:
             msg += ".."
-        print (msg, end="")
+        #print (msg, end="")
         sys.stdout.flush()
     _progress_hook.counter = increment
 
-import shutil
 if __name__ == "__main__":
     path = os.path.join(os.getcwd())
-    get_jenkins_wars(path)
+    war_file = get_jenkins_war(path, "lts")
     
     home = os.path.join(os.getcwd(), "empty home")
     print ("starting jenkins")
-    p = start_jenkins("jenkins_lts.war", home)
+    p = start_jenkins(war_file, home)
     p.terminate()
     print ("Done")
     
