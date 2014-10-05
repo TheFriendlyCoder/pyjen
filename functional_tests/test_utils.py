@@ -18,9 +18,7 @@ def start_jenkins(war_file, home_folder):
     
     :param str war_file: path to the Jenkins war file to be launched
     :param str home_folder: path to the folder to be used as the Jenkins home folder
-    :returns:
-        reference to the subprocess object used to launch Jenkins in a parallel
-        process so as to not block the subsequent test execution.
+    :return: 2-tuple reference to the subprocess object used to launch Jenkins and the URL of the test dashboard
         
         when this instance of Jenkins is no longer needed simply call the
         terminate() method on the returned object to close the app.
@@ -42,8 +40,9 @@ def start_jenkins(war_file, home_folder):
     args.append('-DJENKINS_HOME=' + home_folder)
     args.append("-jar")
     args.append(war_file)
+    JENKINS_PORT=1234
+    args.append("--httpPort={0}".format(JENKINS_PORT))
 
-    #print ("Starting Jenkins on port 8080...")
     #Now launch Jenkins in a secondary, non-blocking process
     jenkins_process = subprocess.Popen( args , stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
@@ -62,12 +61,15 @@ def start_jenkins(war_file, home_folder):
     if not jenkins_running:
         raise RuntimeError("Failed to launch Jenkins instance: " + war_file + "\n" + tmp)
     
-    #print ("done startup")
-    return jenkins_process
+    return (jenkins_process, "http://localhost:{0}".format(JENKINS_PORT))
 
 
     
 def safe_delete (path):
+    """Recursively deletes the contents of a given folder, even when files are read only
+    
+    :param str path: root folder to be deleted
+    """
     if not os.path.exists(path):
         return
     
@@ -99,9 +101,7 @@ def get_jenkins_war (output_path, edition):
         output_file = os.path.join(output_path, "jenkins_latest.war")
     
     if not os.path.exists(output_file):
-        #print ("Downloading Jenkins LTS: ", end="")
         urllib.urlretrieve(src_url, output_file, _progress_hook)
-        #print ("")
         
     return output_file
     
@@ -129,12 +129,12 @@ def _progress_hook(block_number, block_size, total_size):
     _progress_hook.counter = increment
 
 if __name__ == "__main__":
-    path = os.path.join(os.getcwd())
-    war_file = get_jenkins_war(path, "lts")
+    #path = os.path.join(os.getcwd())
+    #war_file = get_jenkins_war(path, "lts")
     
-    home = os.path.join(os.getcwd(), "empty home")
-    print ("starting jenkins")
-    p = start_jenkins(war_file, home)
-    p.terminate()
-    print ("Done")
-    
+    #home = os.path.join(os.getcwd(), "empty home")
+    #print ("starting jenkins")
+    #p = start_jenkins(war_file, home)
+    #p.terminate()
+    #print ("Done")
+    pass
