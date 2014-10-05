@@ -138,7 +138,18 @@ class Build(object):
             retval.append(temp_user)
 
         return retval
-    
+
+    @property
+    def result(self):
+        """Gets the final status of this build
+        
+        :return: the status of this build. Typically "SUCCESS" or "FAILURE" but may also be "UNSTABLE"
+        :rtype: `func`:str
+        """
+        data = self.__data_io.get_api_data()
+
+        return data['result']
+
     def get_changeset(self):
         """Gets changeset object associated with this build
 
