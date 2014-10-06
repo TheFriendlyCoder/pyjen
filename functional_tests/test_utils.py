@@ -2,12 +2,17 @@
 import subprocess
 import shutil
 import os
-import urllib.request as urllib
+
 import math
 import sys
 import stat
 import time
 
+if sys.version_info[0] < 3:
+    import urllib
+else:
+    import urllib.request as urllib
+    
 lts_url = "http://mirrors.jenkins-ci.org/war-stable/latest/jenkins.war"
 latest_url = "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
 
