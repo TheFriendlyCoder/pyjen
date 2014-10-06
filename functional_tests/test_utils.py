@@ -68,7 +68,7 @@ def start_jenkins(war_file, home_folder):
         raise RuntimeError("Failed to launch Jenkins instance: " + war_file + "\n" + tmp)
     
     # Give the Jenkins process a couple of seconds to finish startup just to be safe
-    time.sleep(5)
+    time.sleep(10)
     return (jenkins_process, "http://localhost:{0}".format(JENKINS_PORT))
 
 
