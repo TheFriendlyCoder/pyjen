@@ -72,7 +72,27 @@ class Build(object):
                 provided to PyJen.Build. Please check configuration.", http_io)
 
         return retval
-
+    
+    def __eq__(self, obj):
+        """Overrides the default equality operation"""
+        if isinstance(obj, build):
+            data = self.__data_io.get_api_data()
+            build_url = data['url']
+            obj_data = obj.__data.io.get_api_data()
+            obj_build_url = obj_data["url"]
+            return build_url == obj_build_url
+        raise RuntimeError("Objects do not match")
+    
+    def __ne__(self, obj):
+        """Overrides the defualt not equal operation"""
+        if isinstance(obj, build):
+            data = self.__data_io.get_api_data()
+            build_url = data['url']
+            obj_data = obj.__data.io.get_api_data()
+            obj_build_url = obj_data["url"]
+            return build_url != obj_build_url
+        raise RuntimeError("Objects do not match")
+        
     @property
     def build_number(self):
         """Gets the numeric build number for this build
