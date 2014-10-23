@@ -45,7 +45,7 @@ class lts_tests(TestCase):
     @classmethod
     def tearDownClass(self):
         if self._jenkins_process != None:
-            self._jenkins_process.terminate()
+            self._jenkins_process.kill()
             self._jenkins_process.wait()
             
         #clean up working folder
