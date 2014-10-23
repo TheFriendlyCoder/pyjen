@@ -8,6 +8,8 @@ import sys
 import stat
 import time
 
+import random
+
 if sys.version_info[0] < 3:
     import urllib
 else:
@@ -46,7 +48,7 @@ def start_jenkins(war_file, home_folder):
     args.append('-DJENKINS_HOME=' + home_folder)
     args.append("-jar")
     args.append(war_file)
-    JENKINS_PORT=1234
+    JENKINS_PORT=random.randrange(1000,1100)
     args.append("--httpPort={0}".format(JENKINS_PORT))
 
     #Now launch Jenkins in a secondary, non-blocking process
