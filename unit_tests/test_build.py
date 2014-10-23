@@ -89,5 +89,23 @@ class build_tests(unittest.TestCase):
         
         self.assertEqual(len(culprits), 0, "Mock build should have no breakers")
         
+    def test_build_equality(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"url":"www.someBuild.com"}
+        first_build = Build(mock_data_io)
+        second_build = Build(mock_data_io)
+        self.assertEqual(second_build, first_build, "Build objects do not match when they should")
+        
+    def test_build_inequality(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"url":"www.someBuild.com"}
+        first_build = Build(mock_data_io)
+        
+        mock_data_io2 = MagicMock()
+        mock_data_io2.get_api_data.return_value = {"url":"www.someOtherBuild.com"}
+        second_build = Build(mock_data_io2)
+        self.assertNotEqual(second_build, first_build, "Build objects match when they should not")
+        
+        
 if __name__ == "__main__":
     pytest.main()

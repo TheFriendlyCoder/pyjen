@@ -75,20 +75,20 @@ class Build(object):
     
     def __eq__(self, obj):
         """Overrides the default equality operation"""
-        if isinstance(obj, build):
+        if isinstance(obj, Build):
             data = self.__data_io.get_api_data()
             build_url = data['url']
-            obj_data = obj.__data.io.get_api_data()
+            obj_data = obj.__data_io.get_api_data()
             obj_build_url = obj_data["url"]
             return build_url == obj_build_url
         raise RuntimeError("Objects do not match")
     
     def __ne__(self, obj):
         """Overrides the defualt not equal operation"""
-        if isinstance(obj, build):
+        if isinstance(obj, Build):
             data = self.__data_io.get_api_data()
             build_url = data['url']
-            obj_data = obj.__data.io.get_api_data()
+            obj_data = obj.__data_io.get_api_data()
             obj_build_url = obj_data["url"]
             return build_url != obj_build_url
         raise RuntimeError("Objects do not match")
@@ -104,7 +104,8 @@ class Build(object):
 
         data = self.__data_io.get_api_data()
 
-        return data['number']
+        return data['number']    
+    
 
     @property
     def build_time(self):
@@ -178,4 +179,9 @@ class Build(object):
     
 
 if __name__ == "__main__":
+    build_url="http://builds.caris.priv/job/unified-trunk-bdb-apps-build-32/"
+    first = Build.easy_connect(build_url)
+    second = Build.easy_connect(build_url)
+    print(first == second)
+    
     pass
