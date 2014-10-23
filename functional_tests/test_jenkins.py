@@ -62,7 +62,7 @@ class lts_tests(TestCase):
         
         self.assertEqual(v.name, new_view_name)
         
-    def test_shutdown(self):
+    """def test_shutdown(self):
         j = Jenkins.easy_connect(self._jenkins_url, None)
 
         self.assertFalse(j.is_shutting_down)
@@ -152,7 +152,7 @@ class lts_tests(TestCase):
             self.assertTrue(build.build_number in expected_numbers)
             self.assertTrue(build.result in expected_results)
             expected_numbers.remove(build.build_number)
-            expected_results.remove(build.result)
+            expected_results.remove(build.result)"""
 
 class latest_tests(lts_tests):
     """Repetition of all LTS functional tests in the latest Jenkins version"""
