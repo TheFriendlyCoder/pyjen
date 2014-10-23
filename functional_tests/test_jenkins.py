@@ -31,7 +31,7 @@ class lts_tests(TestCase):
     """Functional tests applied to the LTS edition of Jenkins"""
     @classmethod
     def get_edition(self):
-        return "lts"
+        return "latest"
     
     @classmethod
     def setUpClass(self):
@@ -154,12 +154,13 @@ class lts_tests(TestCase):
             expected_numbers.remove(build.build_number)
             expected_results.remove(build.result)"""
 
-class latest_tests(lts_tests):
-    """Repetition of all LTS functional tests in the latest Jenkins version"""
+"""class latest_tests(lts_tests):
+    Repetition of all LTS functional tests in the latest Jenkins version
     @classmethod
     def get_edition(self):
         return "latest"
-        
+    """
+    
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
     
