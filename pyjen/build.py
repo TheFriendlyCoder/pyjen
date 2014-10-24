@@ -179,9 +179,4 @@ class Build(object):
     
 
 if __name__ == "__main__":
-    build_url="http://builds.caris.priv/job/unified-trunk-bdb-apps-build-32/"
-    first = Build.easy_connect(build_url)
-    second = Build.easy_connect(build_url)
-    print(first == second)
-    
     pass
