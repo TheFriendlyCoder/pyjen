@@ -31,6 +31,7 @@ def start_jenkins(war_file, home_folder):
         when this instance of Jenkins is no longer needed simply call the
         terminate() method on the returned object to close the app.
     """ 
+    print("starting jenkins...")
     #see if we have a JAVA_HOME env var set
     java_home = os.getenv('JAVA_HOME')
 
@@ -71,6 +72,7 @@ def start_jenkins(war_file, home_folder):
     
     # Give the Jenkins process a couple of seconds to finish startup just to be safe
     time.sleep(10)
+    print ("Jenkins started...")
     return (jenkins_process, "http://localhost:{0}".format(JENKINS_PORT))
 
 
@@ -101,7 +103,7 @@ def get_jenkins_war (output_path, edition):
     :return: path to the downloaded war file
     :rtype: `func`:str
     """
-    
+    print ("Getting Jenkins war")
     assert edition == "lts" or edition == "latest"
     if edition == "lts":
         src_url = lts_url
