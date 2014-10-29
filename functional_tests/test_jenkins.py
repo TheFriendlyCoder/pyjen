@@ -47,7 +47,8 @@ class lts_tests(TestCase):
         if self._jenkins_process != None:
             print("killing jenkins")
             self._jenkins_process.terminate()
-            self._jenkins_process.wait()
+            (sout, serr) = self._jenkins_process.communicate()
+            print ("done killing: " + str(sout) + " - " + str(serr))
             
         #clean up working folder
         safe_delete(os.path.abspath(os.path.join(self._jenkins_home, "..")))
