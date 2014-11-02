@@ -16,7 +16,7 @@ class View(object):
     #Class names for all supported view types
     LIST_VIEW = 'hudson.model.ListView'
     
-    def __init__ (self, data_io_controller):
+    def __init__ (self, data_io_controller, jenkins_master):
         """constructor
         
         To instantiate an instance of this class using auto-generated
@@ -27,7 +27,7 @@ class View(object):
             object to the Jenkins REST API        
         """
         self.__data_io = data_io_controller
-        
+        self._master = jenkins_master
     
     @staticmethod
     def easy_connect(url, credentials=None):
@@ -60,7 +60,7 @@ class View(object):
         
         
         http_io = data_requester(url, username, password)
-        retval = View(http_io)
+        retval = View(http_io, None)
         
         # Sanity check: make sure we can successfully parse the view's name from the IO controller
         # to make sure we have a valid configuration
@@ -106,8 +106,8 @@ class View(object):
 
         retval = []
         for j in view_jobs:  
-            temp_data_io = self.__data_io.clone(j['url'])      
-            retval.append(Job(temp_data_io))
+            temp_data_io = self.__data_io.clone(j['url'])
+            retval.append(Job.create(temp_data_io, self._master))
             
         return retval
     
@@ -195,5 +195,5 @@ class View(object):
         for j in my_jobs:
             j.enable()
     
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass

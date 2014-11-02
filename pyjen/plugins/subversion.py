@@ -11,8 +11,8 @@ class subversion(pluginbase):
         """
         super(subversion, self).__init__(xml)
     
-        assert (self._pluginbase__root.tag == "scm")
-        assert (self._pluginbase__root.attrib['class'] == "hudson.scm.SubversionSCM")
+        assert (self._root.tag == "scm")
+        assert (self._root.attrib['class'] == "hudson.scm.SubversionSCM")
         
     def get_modules(self):
         """Gets the list of SVN repositories (aka: modules) being used by the target job
@@ -30,7 +30,7 @@ class subversion(pluginbase):
         """
         retval = []
         
-        locations_node = self._pluginbase__root.find("locations")
+        locations_node = self._root.find("locations")
         for loc in locations_node:
             val = {}
             tmp = loc.find('remote')
@@ -52,7 +52,3 @@ class subversion(pluginbase):
             retval.append(val)
             
         return retval
-        
-        
-        
-    

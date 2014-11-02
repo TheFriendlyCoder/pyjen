@@ -169,7 +169,7 @@ class Jenkins(object):
         default_view = data['primaryView']
         new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") +\
                                           "/view/" + default_view['name'])
-        return View(new_io_obj)
+        return View(new_io_obj, self)
     
     @property
     def all_views(self):
@@ -192,7 +192,7 @@ class Jenkins(object):
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
             new_io_obj = self.__data_io.clone(turl)
-            tview = View(new_io_obj)
+            tview = View(new_io_obj, self)
             retval.append(tview)
             
         return retval   
@@ -231,7 +231,7 @@ class Jenkins(object):
         for tjob in tjobs:
             if tjob['name'] == job_name:
                 new_io_obj = self.__data_io.clone(tjob['url'])
-                return Job(new_io_obj)
+                return Job.create(new_io_obj, self)
         
         return None
     
@@ -256,7 +256,7 @@ class Jenkins(object):
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
                 new_io_obj = self.__data_io.clone(turl)
-                return View(new_io_obj)
+                return View(new_io_obj, self)
                         
         return None
 
@@ -291,8 +291,45 @@ class Jenkins(object):
         retval = self.find_view(view_name)
         assert retval != None
         return retval       
-    
-    def clone_job(self, source_job_name, new_job_name):
+
+    def create_job(self, job_name, job_type):
+        """Creates a new job on this Jenkins instance
+
+        :param str job_name: The name for the job to be created.
+            expected to be universally unique on this instance of Jenkins
+        :param str job_type: descriptive type for the base configuration of this new job
+            for a list of currently supported job types see :meth:`Jenkins.job_types`
+        """
+        params = {'name': job_name}
+        headers = {'Content-Type': 'text/xml'}
+
+        args = {}
+        args['params'] = params
+        args['headers'] = headers
+        args['data'] = Job.template_config_xml(job_type)
+
+        self.__data_io.post("createItem", args)
+
+        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/job/" + job_name)
+        new_job = Job.create(temp_data_io, self)
+
+        # Sanity check - make sure the job actually exists by checking its name
+        assert new_job.name == job_name
+
+        #disable the newly created job so it doesn't accidentally start running
+        new_job.disable()
+
+        return new_job
+
+    @property
+    def job_types(self):
+        """Returns a list of Jenkins job types currently supported by this instance of PyJen
+
+        Elements from this list may be used when creating new jobs on this Jenkins instance
+        """
+        return Job.supported_types()
+
+    def _clone_job(self, source_job_name, new_job_name):
         """Makes a copy of this job on the dashboard with a new name        
         
         :param str source_job_name: The name of the existing Jenkins job
@@ -319,9 +356,8 @@ class Jenkins(object):
         
         self.__data_io.post("createItem", args)
         
-        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") +\
-                                             "/job/" + new_job_name)
-        new_job = Job(temp_data_io)
+        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/job/" + new_job_name)
+        new_job = Job.create(temp_data_io, self)
         
         # Sanity check - make sure the job actually exists by checking its name
         assert new_job.name == new_job_name
@@ -329,8 +365,7 @@ class Jenkins(object):
         #disable the newly created job so it doesn't accidentally start running
         new_job.disable()
         
-        return new_job 
-    
+        return new_job
     
     def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_substring):
         """Helper method that does a batch clone on all jobs found in this view
@@ -362,7 +397,7 @@ class Jenkins(object):
         retval = []
         for j in temp_jobs:
             orig_name = j.name
-            new_job = self.clone_job(orig_name, job_map[orig_name])
+            new_job = self._clone_job(orig_name, job_map[orig_name])
             
             # update all internal references
             xml = new_job.config_xml
@@ -374,5 +409,5 @@ class Jenkins(object):
             
         return retval
     
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pass

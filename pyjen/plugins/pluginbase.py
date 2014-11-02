@@ -9,18 +9,12 @@ class pluginbase(object):
     However, there are a few common properties exposed by all plugins
     which are exposed by this base class.
     """
-    
-    #Root element of the XML tree for this plugin
-    #TIP: This member is accessible from derived classes using the following syntax:
-    #           self._pluginbase__root
-    __root = None
-    
     def __init__(self, xml):
         """constructor
         
         :param str xml: the XML sub-tree defining the properties of this plugin
         """
-        self.__root = ElementTree.fromstring(xml)
+        self._root = ElementTree.fromstring(xml)
         
     def get_name(self):
         """Gets the name of the plugin
@@ -28,7 +22,7 @@ class pluginbase(object):
         :returns: the plugin name
         :rtype: :func:`str`
         """
-        attr = self.__root.attrib['plugin']
+        attr = self._root.attrib['plugin']
         parts = attr.split('@')
         return parts[0]
         
@@ -38,7 +32,7 @@ class pluginbase(object):
         :returns: the Java class name
         :rtype: :func:`str`
         """
-        return self.__root.attrib['classname']
+        return self._root.attrib['classname']
         
     def get_version(self):
         """Gets the version of the plugin
@@ -46,6 +40,6 @@ class pluginbase(object):
         :returns: the plugin version
         :rtype: :func:`str`
         """
-        attr = self.__root.attrib['plugin']
+        attr = self._root.attrib['plugin']
         parts = attr.split('@')
         return parts[1]

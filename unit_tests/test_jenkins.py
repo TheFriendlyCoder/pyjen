@@ -58,7 +58,12 @@ class jenkins_misc_tests(unittest.TestCase):
         
         j = Jenkins(mock_data_io)
         self.assertTrue(j.is_shutting_down, "Object should be preparing for shutdown")
-        
+
+    def test_job_types(self):
+        mock_data_io = MagicMock()
+        j = Jenkins(mock_data_io)
+        actual = j.job_types
+        self.assertIn("freestyle", actual)
         
 class jenkins_job_tests(unittest.TestCase):
     def setUp(self):
@@ -71,8 +76,10 @@ class jenkins_job_tests(unittest.TestCase):
         # io objects used by the two views managed by our mock Jenkins instance
         self.job1_mock_data_io = MagicMock()
         self.job1_mock_data_io.get_api_data.return_value = {'name':self.job1_name}
+        self.job1_mock_data_io.get_text.return_value = "<project></project>"
         self.job2_mock_data_io = MagicMock()
         self.job2_mock_data_io.get_api_data.return_value = {'name':self.job2_name}
+        self.job2_mock_data_io.get_text.return_value = "<project></project>"
         
         # mock jenkins instance which exposes 2 views
         self.mock_jenkins_data_io = MagicMock()
@@ -103,29 +110,24 @@ class jenkins_job_tests(unittest.TestCase):
         
     def test_find_job_success(self):
         j = Jenkins(self.mock_jenkins_data_io)
-        Job = j.find_job(self.job2_name)
+        job = j.find_job(self.job2_name)
         
-        self.assertNotEqual(Job, None, "find_job should have returned a valid job object")
-        self.mock_jenkins_data_io.clone.assert_called_with(self.job2_url)        
+        self.assertNotEqual(job, None, "find_job should have returned a valid job object")
+        self.mock_jenkins_data_io.clone.assert_called_with(self.job2_url)
 
-    def test_clone_job(self):
-        new_job_name = "ClonedJob"
-        mock_new_job_data_io = MagicMock()
-        mock_new_job_data_io.get_api_data.return_value = {"name":new_job_name}
-        
-        mock_jenkins_data_io = MagicMock()
-        mock_jenkins_data_io.clone.return_value = mock_new_job_data_io
-        
-        j = Jenkins(mock_jenkins_data_io)
-        njob = j.clone_job("SomeJob", new_job_name)
-        
-        self.assertEqual(njob.name, new_job_name)
-        mock_new_job_data_io.post.assert_called_once_with("/disable")
-        self.assertEqual(mock_jenkins_data_io.post.call_count, 1)
-        # NOTE: This post method should get called once, with the first parameter set to createItem
-        #    subsequent parameters contain more complex configuration data that is of little concern here
-        self.assertEqual(mock_jenkins_data_io.post.call_args[0][0], "createItem", 
-             "Our mock Jenkins instance should have posted a 'createItem' request to the Jenkins API as part of the clone operation.")
+    def test_create_job(self):
+        expected_name = "TestJob"
+        jenkins_data_io = MagicMock()
+
+        job_data_io = MagicMock()
+        job_data_io.get_text.return_value = "<project></project>"
+        job_data_io.get_api_data.return_value = {"name": expected_name}
+        jenkins_data_io.clone.return_value = job_data_io
+
+        j = Jenkins(jenkins_data_io)
+        job = j.create_job(expected_name, "freestyle")
+
+        self.assertEqual(job.name, expected_name)
 
 class jenkins_view_tests(unittest.TestCase):
     """Unit tests for the view-related methods of the Jenkins class"""
@@ -142,13 +144,16 @@ class jenkins_view_tests(unittest.TestCase):
         self.view2_job1_name = 'j1'
         mock_job1_dataio = MagicMock()
         mock_job1_dataio.get_api_data.return_value = {"name":self.view2_job1_name}
-            
+        mock_job1_dataio.get_text.return_value = "<project></project>"
+
         # io objects used by the two views managed by our mock Jenkins instance
         self.mock_primary_view_data_io = MagicMock()
         self.mock_primary_view_data_io.get_api_data.return_value = {'name':self.primary_view_name}
         self.mock_view2_data_io = MagicMock()
         self.mock_view2_data_io.get_api_data.return_value = {'name':self.view2_name, 'jobs':[{'url':self.view2_job1_url}]}
         self.mock_view2_data_io.clone.side_effect = self.mock_clone
+        self.mock_view2_data_io.get_text.return_value = "<project></project>"
+
         # mock jenkins instance which exposes 2 views
         self.mock_jenkins_data_io = MagicMock()
         mock_views = []
@@ -241,6 +246,7 @@ class jenkins_view_tests(unittest.TestCase):
         new_job_name = "new_job"
         mock_new_job_data_io = MagicMock()
         mock_new_job_data_io.get_api_data.return_value = {"name":new_job_name}
+        mock_new_job_data_io.get_text.return_value = "<project></project>"
         self.clone_map["http://localhost:8080/job/"+new_job_name] = mock_new_job_data_io
 
         j = Jenkins(self.mock_jenkins_data_io)
