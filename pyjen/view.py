@@ -7,12 +7,33 @@ import xml.etree.ElementTree as ElementTree
 import pyjen.utils.pluginapi as pluginapi
 
 class View(object):
+    """ 'Abstract' base class used by all view classes, providing functionality common to them all"""
     def __init__(self, data_io_controller, jenkins_master):
+        """Constructor
+
+        :param obj data_io_controller: IO interface which manages interaction with the live Jenkins view
+        :param obj jenkins_master: Instance of the :py:mod:`pyjen.Jenkins` class this view belongs to
+        """
         self._controller = data_io_controller
         self._master = jenkins_master
 
     @staticmethod
     def create(controller, jenkins_master):
+        """Factory method used to instantiate the appropriate view type for a given configuration
+
+        :param obj controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
+            with the connection parameters for the view to be processed.
+        :param obj jenkins_master: Instance of the :py:mod:`pyjen.Jenkins` class this view belongs to
+        :return: An instance of the appropriate derived type for the given view
+        :rtype: :py:mod:`pyjen.View`
+        """
+
+        # NOTE: We need to import the classes to instantiate from inside this function
+        #       to prevent circular dependencies between these and the current class
+        from pyjen.listview import ListView
+        from pyjen.allview import AllView
+        from pyjen.myview import MyView
+
         config = controller.get_text('/config.xml')
         root = ElementTree.fromstring(config)
 
@@ -29,6 +50,14 @@ class View(object):
 
     @staticmethod
     def supported_types():
+        """Returns a list of all view types supported by this instance of PyJen
+
+        These view types can be used in such methods as :py:meth:`pyjen.Jenkins.create_view`, which take as input
+        a view type classifier
+
+        :return: list of all view types supported by this instance of PyJen, including those supported by plugins
+        :rtype: :func:`str`
+        """
         retval = []
 
         # built in types
@@ -214,202 +243,5 @@ class View(object):
         v.set_config_xml (self.config_xml)
         return v
 
-class AllView(View):
-    def __init__(self, data_io_controller, jenkins_master):
-        super(AllView, self).__init__(data_io_controller, jenkins_master)
-
-    @staticmethod
-    def easy_connect(url, credentials=None):
-        """Factory method to simplify creating connections to Jenkins servers
-
-        :param str url: Full URL of the Jenkins instance to connect to. Must be
-            a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and
-            password for authenticating to the URL
-            If omitted, credentials will be loaded from any pyjen config files found on the system
-            If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
-        """
-        # Default to anonymous access
-        username = None
-        password = None
-
-        # If not explicit credentials provided, load credentials from any config files
-        if not credentials:
-            config = JenkinsConfigParser()
-            config.read(JenkinsConfigParser.get_default_configfiles())
-            credentials = config.get_credentials(url)
-
-        # If explicit credentials have been found, use them rather than use anonymous access
-        if credentials:
-            username = credentials[0]
-            password = credentials[1]
-
-
-        http_io = data_requester(url, username, password)
-        retval = AllView(http_io, None)
-
-        # Sanity check: make sure we can successfully parse the view's name from the IO controller
-        # to make sure we have a valid configuration
-        try:
-            name = retval.name
-        except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
-                Please check configuration.", http_io)
-        if name == None or name == "":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
-                Please check configuration.", http_io)
-
-        return retval
-
-    @property
-    def type(self):
-        """Gets the Jenkins view-type descriptor for this view
-
-        :returns: descriptive string of the Jenkins view type for this view
-        :rtype: :func:`str`
-        """
-        return "hudson.model.AllView"
-
-class MyView(View):
-    def __init__(self, data_io_controller, jenkins_master):
-        super(MyView, self).__init__(data_io_controller, jenkins_master)
-
-    @staticmethod
-    def easy_connect(url, credentials=None):
-        """Factory method to simplify creating connections to Jenkins servers
-
-        :param str url: Full URL of the Jenkins instance to connect to. Must be
-            a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and
-            password for authenticating to the URL
-            If omitted, credentials will be loaded from any pyjen config files found on the system
-            If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
-        """
-        # Default to anonymous access
-        username = None
-        password = None
-
-        # If not explicit credentials provided, load credentials from any config files
-        if not credentials:
-            config = JenkinsConfigParser()
-            config.read(JenkinsConfigParser.get_default_configfiles())
-            credentials = config.get_credentials(url)
-
-        # If explicit credentials have been found, use them rather than use anonymous access
-        if credentials:
-            username = credentials[0]
-            password = credentials[1]
-
-
-        http_io = data_requester(url, username, password)
-        retval = MyView(http_io, None)
-
-        # Sanity check: make sure we can successfully parse the view's name from the IO controller
-        # to make sure we have a valid configuration
-        try:
-            name = retval.name
-        except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
-                Please check configuration.", http_io)
-        if name == None or name == "":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
-                Please check configuration.", http_io)
-
-        return retval
-
-    @property
-    def type(self):
-        """Gets the Jenkins view-type descriptor for this view
-
-        :returns: descriptive string of the Jenkins view type for this view
-        :rtype: :func:`str`
-        """
-        return "hudson.model.MyView"
-
-class ListView(View):
-    """Class that encapsulates all Jenkins related 'view' information
-    
-    Views are essentially just filters used to sort through jobs
-    on the dashboard. Every job must be a member of one or more
-    views.
-    """
-    
-    def __init__ (self, data_io_controller, jenkins_master):
-        """constructor
-        
-        To instantiate an instance of this class using auto-generated
-        configuration parameters, see the :py:func:`easy_connect` method
-        
-        :param obj data_io_controller:
-            class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API        
-        """
-        super(ListView, self).__init__(data_io_controller, jenkins_master)
-    
-    @staticmethod
-    def easy_connect(url, credentials=None):
-        """Factory method to simplify creating connections to Jenkins servers
-        
-        :param str url: Full URL of the Jenkins instance to connect to. Must be
-            a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and 
-            password for authenticating to the URL
-            If omitted, credentials will be loaded from any pyjen config files found on the system
-            If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
-        """
-        # Default to anonymous access
-        username = None
-        password = None
-
-        # If not explicit credentials provided, load credentials from any config files
-        if not credentials:
-            config = JenkinsConfigParser()
-            config.read(JenkinsConfigParser.get_default_configfiles())
-            credentials = config.get_credentials(url)
-            
-        # If explicit credentials have been found, use them rather than use anonymous access 
-        if credentials:
-            username = credentials[0]
-            password = credentials[1]
-        
-        
-        http_io = data_requester(url, username, password)
-        retval = ListView(http_io, None)
-        
-        # Sanity check: make sure we can successfully parse the view's name from the IO controller
-        # to make sure we have a valid configuration
-        try:
-            name = retval.name
-        except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
-                Please check configuration.", http_io) 
-        if name == None or name == "":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
-                Please check configuration.", http_io) 
-    
-        return retval
-        
-
-        
-    @property
-    def type(self):
-        """Gets the Jenkins view-type descriptor for this view
-        
-        :returns: descriptive string of the Jenkins view type for this view
-        :rtype: :func:`str`
-        """
-        return "hudson.model.ListView"
-    
-
-    
 if __name__ == "__main__":  # pragma: no cover
     pass
