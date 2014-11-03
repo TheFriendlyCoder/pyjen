@@ -172,9 +172,12 @@ class Jenkins(object):
         return View.create(new_io_obj, self)
     
     @property
-    def all_views(self):
-        """Gets a list of all views defined on the Jenkins dashboard
-        
+    def views(self):
+        """Gets a list of all views directly managed by the Jenkins dashboard
+
+        To retrieve all views managed by this Jenkins instance, including recursing into
+        views that support sub-views, see the :py:meth:`pyjen.View.all_views` property
+
         :returns: list of one or more views defined on this Jenkins instance. 
         :rtype: :func:`list` of :py:mod:`pyjen.View` objects
             
@@ -195,7 +198,19 @@ class Jenkins(object):
             tview = View.create(new_io_obj, self)
             retval.append(tview)
             
-        return retval   
+        return retval
+
+    @property
+    def all_views(self):
+        temp = self.views
+
+        retval = []
+        for cur_view in temp:
+            if cur_view.contains_views:
+                retval.extend(cur_view.all_views)
+
+        retval.extend(temp)
+        return retval
     
     def prepare_shutdown(self):
         """Sends a shutdown signal to the Jenkins master preventing new builds from executing
@@ -248,16 +263,50 @@ class Jenkins(object):
         data = self.__data_io.get_api_data()
         
         raw_views = data['views']
-        
+
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
                 turl = cur_view['url']
                 if turl.find('view') == -1:
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
-                
+
                 new_io_obj = self.__data_io.clone(turl)
                 return View.create(new_io_obj, self)
+
+        for cur_view in raw_views:
+            turl = cur_view['url']
+            if turl.find('view') == -1:
+                turl = turl.rstrip("/") + "/view/" + cur_view['name']
+
+            new_io_obj = self.__data_io.clone(turl)
+            v = View.create(new_io_obj, self)
+            if v.contains_views:
+                res = self._find_view_helper(v, view_name)
+                if res is not None:
+                    return res
                         
+        return None
+
+    @staticmethod
+    def _find_view_helper(self, view, view_name):
+        """Helper function, used by find_view method, to recursively search for views within sub-views
+
+        :param obj view: :py:mod:`pyjen.View` object which supports nested views
+        :param str view_name: the name of the view to locate
+        :return: Reference to the view being searched, or None if not found
+        :rtype: :py:mod:`pyjen.View`
+        """
+        sub_views = view.views
+        for cur_view in sub_views:
+            if cur_view.name == view_name:
+                return cur_view
+
+        for cur_view in sub_views:
+            if cur_view.contains_views:
+                res = self._find_view_helper(cur_view, view_name)
+                if res is not None:
+                    return res
+
         return None
 
     def create_view(self, view_name, view_type):

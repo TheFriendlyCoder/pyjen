@@ -25,5 +25,22 @@ class nested_view(View):
         return retval
 
     @property
+    def all_views(self):
+        temp = self.views
+
+        retval = []
+        for cur_view in temp:
+            if cur_view.contains_views:
+                retval.extend(cur_view.all_views)
+
+        retval.extend(temp)
+        return retval
+
+
+    @property
     def type(self):
         return "nested-view"
+
+    @property
+    def contains_views(self):
+        return True

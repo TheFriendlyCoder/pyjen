@@ -55,6 +55,13 @@ class View(object):
         return data['name']
 
     @property
+    def contains_views(self):
+        """Indicates whether this view type supports sub-views
+        :rtype: :func:`bool`
+        """
+        return False
+
+    @property
     def jobs (self):
         """Gets a list of jobs associated with this view
 
