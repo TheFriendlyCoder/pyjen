@@ -196,7 +196,23 @@ class View(object):
 
     @property
     def type(self):
+        """Retrieves the Jenkins view data type from this class instance
+
+        To be implemented in all derived classes
+        :rtype: :func:`str`
+        """
         raise NotYetImplementedError()
+
+    def clone(self, new_view_name):
+        """Make a copy of this view with the specified name
+
+        :param str new_view_name: name of the newly cloned view
+        :return: reference to the PyJen View object that manages the new, cloned view
+        :rtype: :py:mod:`pyjen.View`
+        """
+        v = self._master.create_view(new_view_name, self.type)
+        v.set_config_xml (self.config_xml)
+        return v
 
 class AllView(View):
     def __init__(self, data_io_controller, jenkins_master):
