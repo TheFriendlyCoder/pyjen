@@ -2,17 +2,44 @@ from datetime import datetime
 from pyjen.user import User
 
 class ChangeSetItem(object):
+    """Encapsulation of all info related to a single change in a changeset
+
+    See also :py:mod:`pyjen.Changeset`
+    """
+
     def __init__ (self, data, controller):
+        """Constructor"""
         self._data = data
         self._controller = controller
 
     @property
     def author(self):
+        """Person who committed this change to the associated SCM
+        :rtype: :py:mod:`pyjen.User`
+        """
         temp_data_io = self._controller.clone(self._data['author']['absoluteUrl'])
         return User(temp_data_io)
+
     @property
     def message(self):
+        """SCM commit message associated with this change
+        :rtype: :func:`str`
+        """
         return self._data['msg']
+
+    def __str__(self):
+        outStr = "Author: {0}\nMessage: {1}\nRevision: {2}\n".format(
+            self._data['author'],
+            self._data['msg'],
+            self._data['commitId']
+        )
+        outStr += "\nTouched Files:\n"
+        for path in self._data['changes']:
+            outStr += path['file'] + "\n"
+
+        return outStr
+
+
 
 
 class changeset (object):
@@ -43,27 +70,8 @@ class changeset (object):
     def affected_items(self):
         """gets details of the changes associated with the parent build
 
-        :returns:
-        list of the details of 0 or more changes in this set properties:
-        'author' - :func:`str`
-            - name of the person who committed the change
-        'authorUrl' - :func:`str`
-            - url to the users profile information as managed by the Jenkins dashboard
-        'commitId' - :func:`str`
-            - unique identifier assigned by the SCM tool associated with this change
-            - NOTE: This attribute may or may not be numeric
-        'message' - type: :func:`str`
-            - commit log describing each change
-        'time' - type: :class:`datetime.datetime`
-            - time stamp of when the commit was made
-        'changes' - type: :func:`list` of :func:`dictionary`
-            - list of 1 or more files or folders included in this changeset
-            - each element has two properties:
-                - 'editType' - string describing whether the edit was an addition, modification or removal
-                - 'file' - the path and file name that was modified
-                        - paths are relative the root of the source repository for the associated SCM tool
-        
-        :rtype: :func:`list` of :func:`dict` objects
+        :returns: list of items detailing each change associated with this changeset
+        :rtype: :func:`list` of :py:mod:`pyjen.ChangeSetItem` objects
         
         """
         retval = []
@@ -75,20 +83,12 @@ class changeset (object):
     
     def __str__(self):    
         outStr = ""    
-        changes = self.get_affected_items()
-        if (changes):
+        changes = self.affected_items
+        if len(changes) > 0:
             for change in changes:
-                outStr += "Author: %s\n"% change['author']
-                outStr += "Message: %s\n"% change['message']
-                outStr += "Revision: %s\n"% change['commitId']
-            
-                outStr += "\nTouched Files:\n"
-                for path in change['changes']:
-                    outStr += path['file']
-                    outStr += "\n"
-                outStr += "\n"
+                outStr += str(change)
         else:
-            outStr = "No Changes\n"                       
+            outStr = "No Changes\n"
         return outStr
     
     def has_changes(self):
