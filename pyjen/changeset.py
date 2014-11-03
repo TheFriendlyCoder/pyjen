@@ -1,9 +1,24 @@
 from datetime import datetime
+from pyjen.user import User
+
+class ChangeSetItem(object):
+    def __init__ (self, data, controller):
+        self._data = data
+        self._controller = controller
+
+    @property
+    def author(self):
+        temp_data_io = self._controller.clone(self._data['author']['absoluteUrl'])
+        return User(temp_data_io)
+    @property
+    def message(self):
+        return self._data['msg']
+
 
 class changeset (object):
     """class that manages the interpretation of the "changeSet" properties of a Jenkins build"""
 
-    def __init__(self, data):
+    def __init__(self, data, controller):
         """constructor
         
         :param dict data: 
@@ -22,8 +37,10 @@ class changeset (object):
         assert('kind' in data.keys())
     
         self.__data = data
+        self._controller = controller
 
-    def get_affected_items(self):
+    @property
+    def affected_items(self):
         """gets details of the changes associated with the parent build
 
         :returns:
@@ -52,22 +69,8 @@ class changeset (object):
         retval = []
 
         for item in self.__data['items']:
-            #TODO: Add some asserts() here to validate certain assumptions in my script
-            #      like the fact that commitID and ID are always the same. Similarly,
-            #      author->fullName should be identical to the user attribute. Also,
-            #      affectedPaths == paths['file'].
-            #
-            #      The reason being, if these assumptions prove invalid in production they
-            #      will throw an error right away giving us something to look at and
-            #      investigate.
-            tmp = {}
-            tmp['author'] = item['author']['fullName']
-            tmp['authorUrl'] = item['author']['absoluteUrl']
-            tmp['commitId'] = item['commitId']
-            tmp['message'] = item['msg']
-            tmp['time'] = datetime.fromtimestamp(item['timestamp'] * 0.001)
-            tmp['changes'] = item['paths']
-            retval.append(tmp)
+            retval.append(ChangeSetItem(item, self._controller))
+
         return retval
     
     def __str__(self):    

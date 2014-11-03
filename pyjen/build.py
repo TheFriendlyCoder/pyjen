@@ -143,24 +143,7 @@ class Build(object):
         return self.__data_io.get_text("/consoleText")
 
     @property
-    def culprits(self):
-        """Gets a list of potential breakers of a build
-
-        :returns: List of 0 or more Jenkins users whom committed changes
-            included in this build.
-        :rtype: :func:`list` of :py:mod:`pyjen.User` objects
-        """
-
-        data = self.__data_io.get_api_data()
-        retval = []
-        for culprit in data['culprits']:
-            temp_data_io = self.__data_io.clone(culprit['absoluteUrl'])
-            temp_user = User(temp_data_io)
-            retval.append(temp_user)
-
-        return retval
-    
-    def get_changeset(self):
+    def changeset(self):
         """Gets changeset object associated with this build
 
         NOTE: This changeset may be empty if there were no SCM
@@ -174,9 +157,9 @@ class Build(object):
         """
         data = self.__data_io.get_api_data()
 
-        return changeset(data['changeSet'])
+        return changeset(data['changeSet'], self.__data_io)
 
     
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass
