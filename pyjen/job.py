@@ -4,15 +4,31 @@ import xml.etree.ElementTree as ElementTree
 import pyjen.utils.pluginapi as pluginapi
 
 class Job(object):
-    """Interface to all primitives associated with a Jenkins job"""
+    """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
+
     def __init__(self, controller, jenkins_master):
-        """Constructor"""
+        """Constructor
+
+        :param obj controller: IO interface which manages interaction with the live Jenkins job
+        :param obj jenkins_master: Instance of the :py:mod:`pyjen.Jenkins` class this job belongs to
+        """
         self._controller = controller
         self._master = jenkins_master
 
     @staticmethod
     def create(controller, jenkins_master):
+        """Factory method used to instantiate the appropriate job type for a given configuration
+
+        :param obj controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
+            with the connection parameters for the job to be processed.
+        :param obj jenkins_master: Instance of the :py:mod:`pyjen.Jenkins` class this job belongs to
+        :return: An instance of the appropriate derived type for the given job
+        :rtype: :py:mod:`pyjen.Job`
+        """
+        # NOTE: We have to import the dependent classes from within this method
+        #       to prevent circular dependencies
         from pyjen.freestylejob import FreestyleJob
+
         config = controller.get_text('/config.xml')
         root = ElementTree.fromstring(config)
 
@@ -23,13 +39,31 @@ class Job(object):
 
     @staticmethod
     def template_config_xml(job_type):
+        """Generates a generic configuration file for use when creating a new job on the live Jenkins instance
+
+        :param str job_type: the type descriptor of the job being created
+            For valid values see the :py:meth:`pyjen.Job.supported_types` method
+        :return: XML configuration data for the specified job type
+        :rtype: :func:`str`
+        """
+        # NOTE: We have to import the dependent classes from within this method
+        #       to prevent circular dependencies
         from pyjen.freestylejob import FreestyleJob
+
         if job_type.lower() == "freestyle":
             return FreestyleJob.template_config_xml()
         return pluginapi.find_job_plugin_by_name(job_type).template_config_xml()
 
     @staticmethod
     def supported_types():
+        """Returns a list of all job types supported by this instance of PyJen
+
+        These job types can be used in such methods as :py:meth:`pyjen.Jenkins.create_job`, which take as input
+        a job type classifier
+
+        :return: list of all job types supported by this instance of PyJen, including those supported by plugins
+        :rtype: :func:`str`
+        """
         retval = []
 
         # built in types

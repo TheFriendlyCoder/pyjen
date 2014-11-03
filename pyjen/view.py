@@ -4,8 +4,10 @@ from pyjen.exceptions import NotYetImplementedError
 import xml.etree.ElementTree as ElementTree
 import pyjen.utils.pluginapi as pluginapi
 
+
 class View(object):
     """ 'Abstract' base class used by all view classes, providing functionality common to them all"""
+
     def __init__(self, data_io_controller, jenkins_master):
         """Constructor
 
