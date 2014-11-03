@@ -1,8 +1,6 @@
 """Primitives for interacting with Jenkins views"""
-from pyjen.utils.data_requester import data_requester
 from pyjen.job import Job
-from pyjen.exceptions import InvalidJenkinsURLError, NotYetImplementedError
-from pyjen.user_params import JenkinsConfigParser
+from pyjen.exceptions import NotYetImplementedError
 import xml.etree.ElementTree as ElementTree
 import pyjen.utils.pluginapi as pluginapi
 
