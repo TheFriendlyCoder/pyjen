@@ -89,5 +89,5 @@ class JenkinsConfigParser(configparser.ConfigParser):
         
         return retval
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass

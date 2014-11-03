@@ -72,5 +72,5 @@ class NotYetImplementedError(PyJenError):
         """constructor"""
         super(NotYetImplementedError, self).__init__()
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass
