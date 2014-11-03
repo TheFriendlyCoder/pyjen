@@ -52,5 +52,12 @@ class InvalidParameterError(PyJenError):
     def __str__(self):
         return self.__msg
 
+class NotYetImplementedError(PyJenError):
+    """Exception thrown from methods that are not yet implemented"""
+
+    def __init__(self):
+        """contstructor"""
+        pass
+
 if __name__ == "__main__":
     pass

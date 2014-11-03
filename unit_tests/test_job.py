@@ -135,6 +135,7 @@ class job_misc_tests(unittest.TestCase):
         actual = Job.supported_types()
 
         self.assertIn("freestyle", actual)
+        self.assertGreater(len(actual), 1)
 
 class job_dependencies_tests(unittest.TestCase):
     """Unit tests related to upstream and downstream dependency methods"""

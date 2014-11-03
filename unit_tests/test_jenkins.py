@@ -149,10 +149,12 @@ class jenkins_view_tests(unittest.TestCase):
         # io objects used by the two views managed by our mock Jenkins instance
         self.mock_primary_view_data_io = MagicMock()
         self.mock_primary_view_data_io.get_api_data.return_value = {'name':self.primary_view_name}
+        # TODO: double check to make sure this is the corrrect view type
+        self.mock_primary_view_data_io.get_text.return_value = "<hudson.model.ListView/>"
         self.mock_view2_data_io = MagicMock()
         self.mock_view2_data_io.get_api_data.return_value = {'name':self.view2_name, 'jobs':[{'url':self.view2_job1_url}]}
         self.mock_view2_data_io.clone.side_effect = self.mock_clone
-        self.mock_view2_data_io.get_text.return_value = "<project></project>"
+        self.mock_view2_data_io.get_text.return_value = "<hudson.model.ListView/>"
 
         # mock jenkins instance which exposes 2 views
         self.mock_jenkins_data_io = MagicMock()
@@ -231,29 +233,13 @@ class jenkins_view_tests(unittest.TestCase):
         new_view_name = "MyView"
         new_view_dataio = MagicMock()
         new_view_dataio.get_api_data.return_value = {'name':new_view_name}
+        new_view_dataio.get_text.return_value = "<hudson.model.ListView/>"
         self.mock_jenkins_data_io.get_api_data.return_value['views'].append({'url':new_view_url,'name':new_view_name})
         self.clone_map[new_view_url] = new_view_dataio
         j = Jenkins(self.mock_jenkins_data_io)
-        v = j.create_view(new_view_name)
+        v = j.create_view(new_view_name, "ListView")
         
         self.assertEqual(v.name, new_view_name)
-    
-    def test_clone_all_jobs_in_view_invalid_view(self):
-        j = Jenkins(self.mock_jenkins_data_io)
-        self.assertRaises(InvalidParameterError, j.clone_all_jobs_in_view, "does_not_exist", "job1", "new_job")
-        
-    def test_clone_all_jobs_in_view(self):
-        new_job_name = "new_job"
-        mock_new_job_data_io = MagicMock()
-        mock_new_job_data_io.get_api_data.return_value = {"name":new_job_name}
-        mock_new_job_data_io.get_text.return_value = "<project></project>"
-        self.clone_map["http://localhost:8080/job/"+new_job_name] = mock_new_job_data_io
-
-        j = Jenkins(self.mock_jenkins_data_io)
-        new_jobs = j.clone_all_jobs_in_view(self.view2_name, self.view2_job1_name, new_job_name)
-        
-        self.assertEquals (len(new_jobs), 1)
-        self.assertEqual(new_jobs[0].name, new_job_name)
 
 class jenkins_nodes_tests(unittest.TestCase):
     """Unit tests for the node-related methods of the Jenkins class"""

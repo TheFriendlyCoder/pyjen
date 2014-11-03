@@ -17,6 +17,16 @@ class view_tests(unittest.TestCase):
         self.assertEqual(expected_name, actual_name)
         self.assertEqual(mock_data_io.get_api_data.call_count, 1, 
                                 "get_api_data method should have been called one time")
+
+    def test_supported_types(self):
+        actual_types = View.supported_types()
+
+        self.assertIn("hudson.model.ListView", actual_types)
+        self.assertIn("hudson.model.AllView", actual_types)
+        self.assertIn("hudson.model.MyView", actual_types)
+
+        self.assertGreater(len(actual_types), 3)
+
     def test_job_count(self):
         mock_data_io = MagicMock()
         jobs = []
@@ -144,6 +154,32 @@ class view_tests(unittest.TestCase):
         v.enable_all_jobs()
         
         mock_job1_dataio.post.assert_called_once_with("/enable")
-        
+
+    def test_clone_all_jobs(self):
+        new_job_name = "new_job"
+        orig_job_name = "original_job"
+
+
+
+        mock_job_controller = MagicMock()
+        mock_job_controller.get_text.return_value = "<project></project>"
+        mock_job_controller.get_api_data.return_value = {"name":orig_job_name}
+
+        mock_view_controller = MagicMock()
+        mock_view_controller.get_api_data.return_value = {"jobs":[{"url":"http://fake/job/original_job"}]}
+        mock_view_controller.clone.return_value = mock_job_controller
+
+        mock_new_job = MagicMock()
+        mock_new_job.name = new_job_name
+
+        mock_jenkins = MagicMock()
+        mock_jenkins._clone_job.return_value = mock_new_job
+
+        v = View(mock_view_controller, mock_jenkins)
+        new_jobs = v.clone_all_jobs(orig_job_name, new_job_name)
+
+        self.assertEqual(len(new_jobs), 1)
+        self.assertEqual(new_jobs[0].name, new_job_name)
+        mock_jenkins._clone_job.assert_called_once_with(orig_job_name, new_job_name)
 if __name__ == "__main__":
     pytest.main()

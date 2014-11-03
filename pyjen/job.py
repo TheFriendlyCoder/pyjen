@@ -32,8 +32,13 @@ class Job(object):
     @staticmethod
     def supported_types():
         retval = []
+
+        # built in types
         retval.append("freestyle")
+
+        # types supported by plugins
         retval.extend(pluginapi.list_job_plugins())
+
         return retval
 
     @property

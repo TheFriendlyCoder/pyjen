@@ -169,7 +169,7 @@ class Jenkins(object):
         default_view = data['primaryView']
         new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") +\
                                           "/view/" + default_view['name'])
-        return View(new_io_obj, self)
+        return View.create(new_io_obj, self)
     
     @property
     def all_views(self):
@@ -192,7 +192,7 @@ class Jenkins(object):
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
             new_io_obj = self.__data_io.clone(turl)
-            tview = View(new_io_obj, self)
+            tview = View.create(new_io_obj, self)
             retval.append(tview)
             
         return retval   
@@ -256,11 +256,11 @@ class Jenkins(object):
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
                 new_io_obj = self.__data_io.clone(turl)
-                return View(new_io_obj, self)
+                return View.create(new_io_obj, self)
                         
         return None
 
-    def create_view(self, view_name, view_type = View.LIST_VIEW):
+    def create_view(self, view_name, view_type):
         """Creates a new view on the Jenkins dashboard
         
         :param str view_name: the name for this new view
@@ -325,9 +325,19 @@ class Jenkins(object):
     def job_types(self):
         """Returns a list of Jenkins job types currently supported by this instance of PyJen
 
-        Elements from this list may be used when creating new jobs on this Jenkins instance
+        Elements from this list may be used when creating new jobs on this Jenkins instance,
+        so long as the accompanying job type is supported by the live Jenkins server
         """
         return Job.supported_types()
+
+    @property
+    def view_types(self):
+        """Returns a list of Jenkins view types currently supported by this instance of PyJen
+
+        Elements from this list may be used when creating new views on this Jenkins instance,
+        so long as the accompanying view type is supported by the live Jenkins server
+        """
+        return View.supported_types()
 
     def _clone_job(self, source_job_name, new_job_name):
         """Makes a copy of this job on the dashboard with a new name        
@@ -366,48 +376,6 @@ class Jenkins(object):
         new_job.disable()
         
         return new_job
-    
-    def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_substring):
-        """Helper method that does a batch clone on all jobs found in this view
-    
-        :param str view_name: name of view containing jobs to clone
-        :param str source_job_name_regex: pattern to use as a substitution rule
-            when generating new names for cloned jobs. Substrings within the
-            existing job names that match this pattern will be replaced by
-            the given substitution string
-        :param str new_job_substring: character string used to
-            generate new job names for the clones of the existing jobs. The substring
-            of an existing job that matches the given regex will be replaced by this
-            new string to create the new job name for it's cloned counterpart.
-        :returns: list of newly created jobs
-        :rtype: :class:`list` of :py:mod:`pyjen.Job` objects
-        """
-        temp_view = self.find_view(view_name)
-        if temp_view == None:
-            raise InvalidParameterError("View " + view_name + " not found on Jenkins instance.")
-        temp_jobs = temp_view.jobs
-        
-        # Create a mapping table for names of jobs
-        job_map = {}
-        for j in temp_jobs:
-            orig_name = j.name
-            job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_substring)
-            
-        # clone all jobs, and update internal references     
-        retval = []
-        for j in temp_jobs:
-            orig_name = j.name
-            new_job = self._clone_job(orig_name, job_map[orig_name])
-            
-            # update all internal references
-            xml = new_job.config_xml
-            for k in job_map.keys():
-                xml = xml.replace(k, job_map[k])
-            new_job.set_config_xml(xml)
-        
-            retval.append(new_job)
-            
-        return retval
     
 if __name__ == '__main__':  # pragma: no cover
     pass
