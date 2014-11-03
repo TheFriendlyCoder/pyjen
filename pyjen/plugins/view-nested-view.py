@@ -10,6 +10,20 @@ class nested_view(View):
         """
         super(nested_view, self).__init__(controller, jenkins_master)
 
-    def sub_views(self):
-        #TODO: To be implemented
-        return []
+    @property
+    def views(self):
+        data = self._controller.get_api_data()
+
+        raw_views = data['views']
+        retval = []
+
+        for cur_view in raw_views:
+            new_io_obj = self._controller.clone(cur_view['url'])
+            tview = View.create(new_io_obj, self)
+            retval.append(tview)
+
+        return retval
+
+    @property
+    def type(self):
+        return "nested-view"
