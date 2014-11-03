@@ -55,7 +55,7 @@ class Jenkins(object):
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API        
         """
-        self.__data_io = data_io_controller
+        self._controller = data_io_controller
             
     @staticmethod
     def easy_connect(url, credentials=None):
@@ -110,7 +110,7 @@ class Jenkins(object):
         :rtype: :func:`str`
             
         """
-        headers = self.__data_io.get_headers('/api/python')
+        headers = self._controller.get_headers('/api/python')
         
         if not 'x-jenkins' in headers:
             return "Unknown"
@@ -126,7 +126,7 @@ class Jenkins(object):
         :rtype: :func:`bool`
             
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         
         return data['quietingDown']
     
@@ -138,18 +138,18 @@ class Jenkins(object):
         :rtype: :func:`list` of :py:mod:`pyjen.Node` objects
             
         """
-        tmp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/computer")
+        tmp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/computer")
         data = tmp_data_io.get_api_data()
                 
         nodes = data['computer']
         retval = []
         for cur_node in nodes:
             if cur_node['displayName'] == 'master':
-                node_url = self.__data_io.url.rstrip("/") + '/computer/(master)'
+                node_url = self._controller.url.rstrip("/") + '/computer/(master)'
             else:
-                node_url = self.__data_io.url.rstrip("/") + '/computer/' + cur_node['displayName']
+                node_url = self._controller.url.rstrip("/") + '/computer/' + cur_node['displayName']
             
-            node_data_io = self.__data_io.clone(node_url)
+            node_data_io = self._controller.clone(node_url)
             retval.append(Node(node_data_io))
                         
         return retval
@@ -164,10 +164,10 @@ class Jenkins(object):
         :returns: object that manages the default Jenkins view
         :rtype: :py:mod:`pyjen.View`            
         """        
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
 
         default_view = data['primaryView']
-        new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") +\
+        new_io_obj = self._controller.clone(default_view['url'].rstrip("/") +\
                                           "/view/" + default_view['name'])
         return View.create(new_io_obj, self)
     
@@ -182,7 +182,7 @@ class Jenkins(object):
         :rtype: :func:`list` of :py:mod:`pyjen.View` objects
             
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         
         raw_views = data['views']
         retval = []
@@ -194,7 +194,7 @@ class Jenkins(object):
             if turl.find('view') == -1:
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
-            new_io_obj = self.__data_io.clone(turl)
+            new_io_obj = self._controller.clone(turl)
             tview = View.create(new_io_obj, self)
             retval.append(tview)
             
@@ -220,7 +220,7 @@ class Jenkins(object):
         You can cancel a previous requested shutdown using the 
         :py:meth:`pyjen.Jenkins.cancel_shutdown` method
         """
-        self.__data_io.post('/quietDown')
+        self._controller.post('/quietDown')
         
     def cancel_shutdown(self):
         """Cancels a previous scheduled shutdown sequence
@@ -228,7 +228,7 @@ class Jenkins(object):
         Cancels a shutdown operation initiated by the 
         :py:meth:`pyjen.Jenkins.prepare_shutdown` method
         """
-        self.__data_io.post('/cancelQuietDown')
+        self._controller.post('/cancelQuietDown')
     
       
     def find_job(self, job_name):
@@ -240,12 +240,12 @@ class Jenkins(object):
             object is returned (ie: None)
         :rtype: :py:mod:`pyjen.Job`
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         tjobs = data['jobs']
     
         for tjob in tjobs:
             if tjob['name'] == job_name:
-                new_io_obj = self.__data_io.clone(tjob['url'])
+                new_io_obj = self._controller.clone(tjob['url'])
                 return Job.create(new_io_obj, self)
         
         return None
@@ -260,7 +260,7 @@ class Jenkins(object):
             object is returned (ie: None)
         :rtype: :py:mod:`pyjen.View`
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         
         raw_views = data['views']
 
@@ -270,7 +270,7 @@ class Jenkins(object):
                 if turl.find('view') == -1:
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
 
-                new_io_obj = self.__data_io.clone(turl)
+                new_io_obj = self._controller.clone(turl)
                 return View.create(new_io_obj, self)
 
         for cur_view in raw_views:
@@ -278,7 +278,7 @@ class Jenkins(object):
             if turl.find('view') == -1:
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
 
-            new_io_obj = self.__data_io.clone(turl)
+            new_io_obj = self._controller.clone(turl)
             v = View.create(new_io_obj, self)
             if v.contains_views:
                 res = self._find_view_helper(v, view_name)
@@ -335,7 +335,7 @@ class Jenkins(object):
         args['data'] = data
         args['headers'] = headers
 
-        self.__data_io.post('/createView', args)
+        self._controller.post('/createView', args)
         
         retval = self.find_view(view_name)
         assert retval != None
@@ -357,9 +357,9 @@ class Jenkins(object):
         args['headers'] = headers
         args['data'] = Job.template_config_xml(job_type)
 
-        self.__data_io.post("createItem", args)
+        self._controller.post("createItem", args)
 
-        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/job/" + job_name)
+        temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + job_name)
         new_job = Job.create(temp_data_io, self)
 
         # Sanity check - make sure the job actually exists by checking its name
@@ -413,9 +413,9 @@ class Jenkins(object):
         args['data'] = ''
         args['headers'] = headers
         
-        self.__data_io.post("createItem", args)
+        self._controller.post("createItem", args)
         
-        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/job/" + new_job_name)
+        temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + new_job_name)
         new_job = Job.create(temp_data_io, self)
         
         # Sanity check - make sure the job actually exists by checking its name
@@ -425,6 +425,30 @@ class Jenkins(object):
         new_job.disable()
         
         return new_job
-    
+
+    def get_view(self, url):
+        """Generates a View object based on an absolute URL
+
+        This method, although a bit more cumbersome, has better performance than :py:meth:`find_view`
+
+        :param str url: absolute URL of the view to load
+        :return: an instance of the appropriate pyjen.View class for the given view
+        :rtype: :py:mod:`pyjen.View`
+        """
+        new_io_obj = self._controller.clone(url)
+        return View.create(new_io_obj, self)
+
+    def get_job(self, url):
+        """Generates a Job object based on an absolute URL
+
+        This method, although a bit more cumbersome, has better performance than :py:meth:`find_job`
+
+        :param str url: absolute URL of the job to load
+        :return: an instance of the appropriate pyjen.View class for the given view
+        :rtype: :py:mod:`pyjen.View`
+        """
+        new_io_obj = self._controller.clone(url)
+        return Job.create(new_io_obj, self)
+
 if __name__ == '__main__':  # pragma: no cover
     pass
