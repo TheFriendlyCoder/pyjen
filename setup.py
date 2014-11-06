@@ -1,9 +1,9 @@
 from setuptools import setup
+import pyjen
 
 setup(
-    name='pyjen',
-    version='0.0.9dev',
-    author='Kevin S. Phillips',
+    name='pyjen',?
+    version=pyjen.VERSION,    author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     packages=['pyjen', 'pyjen.utils', 'pyjen.plugins'],
     description='Python wrapper for the Jenkins CI REST API',

@@ -1,7 +1,5 @@
 #!/bin/bash
-
 # Linux configuration script that prepares the local build environment
-# to support all PyJen build and test operations
 #
 # Run without any command line parameters to get usage information
 
@@ -12,10 +10,6 @@
 #	$2 - local folder, typically relative to the current path
 #		to configure the virtualenv environment
 function setup_venv {
-	# Python dependencies to be installed
-	# just append new packages to this list to
-	# have them installed
-	dependencies=( "requests" "wheel" "sphinx" "pylint" "pytest" "pytest-cov" "mock")
 
 	#check our input parameters
 	test $# -ne 2 && { echo "incorrent number of paramters";return 1; }
@@ -32,19 +26,6 @@ function setup_venv {
 	#activate our virtualenv version
 	source $local_path/bin/activate
 	test $? -ne 0 && { echo "error activating Python virtualenv: $?"; return 2; }
-	#return	
-	#make sure we have the latest versions of all dependencies
-	i=1
-	num_dependencies=${#dependencies[@]}
-	for dep in "${dependencies[@]}"
-	do
-		echo "Installing dependency $i of $num_dependencies: $dep"
-		pip install -U $dep > /dev/null
-		
-		test $? -ne 0 && { echo "Error installing dependency in virtualenv $local_path"; return 3; }
-		
-		i=$((i+1))
-	done
 }
 
 

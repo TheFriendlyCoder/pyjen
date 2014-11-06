@@ -11,5 +11,7 @@ from pyjen.job import Job
 from pyjen.node import Node
 from pyjen.view import View
 
+VERSION="0.0.8dev"
+
 #Then, lets expose these classes to the caller when they import *
 __all__ = ["Jenkins", "View", "Node", "Build", "Job"]
