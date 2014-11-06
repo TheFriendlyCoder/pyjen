@@ -240,7 +240,6 @@ def _make_docs():
     """Generates the online documentation for the project"""
     modlog.info("Generating API documentation...")
 
-    # TODO: Find a way to organize our files to avoid having to do so much initialization work
     # Purge any previous build artifacts
     doc_dir = os.path.join(os.getcwd(), "docs")
     build_dir = os.path.join(doc_dir, "build")
@@ -248,13 +247,6 @@ def _make_docs():
         shutil.rmtree(build_dir)
 
     src_dir = os.path.join(doc_dir, "source")
-    if os.path.exists(src_dir):
-        shutil.rmtree(src_dir)
-
-    # setup our source folder
-    os.makedirs(src_dir)
-    shutil.copy(os.path.join(doc_dir, "conf.py"), src_dir)
-    shutil.copy(os.path.join(doc_dir, "index.rst"), src_dir)
 
     # First generate the documentation build scripts
     cur_dir = os.getcwd()
