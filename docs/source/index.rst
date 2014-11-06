@@ -7,7 +7,8 @@ Welcome to PyJen's documentation!
 =================================
 
 .. include:: ../../README.rst
-    
+
+.. include:: contrib_guide.rst
 
 Indices and tables
 ==================
