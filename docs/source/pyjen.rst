@@ -12,6 +12,14 @@ Subpackages
 Submodules
 ----------
 
+pyjen.allview module
+--------------------
+
+.. automodule:: pyjen.allview
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyjen.build module
 ------------------
 
@@ -28,10 +36,26 @@ pyjen.changeset module
     :undoc-members:
     :show-inheritance:
 
+pyjen.changesetitem module
+--------------------------
+
+.. automodule:: pyjen.changesetitem
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pyjen.exceptions module
 -----------------------
 
 .. automodule:: pyjen.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyjen.freestylejob module
+-------------------------
+
+.. automodule:: pyjen.freestylejob
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,6 +72,22 @@ pyjen.job module
 ----------------
 
 .. automodule:: pyjen.job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyjen.listview module
+---------------------
+
+.. automodule:: pyjen.listview
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyjen.myview module
+-------------------
+
+.. automodule:: pyjen.myview
     :members:
     :undoc-members:
     :show-inheritance:

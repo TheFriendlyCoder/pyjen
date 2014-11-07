@@ -248,17 +248,13 @@ def _make_docs():
     if os.path.exists(build_dir):
         shutil.rmtree(build_dir)
 
-    src_dir = os.path.join(doc_dir, "source")
-
     # First generate the documentation build scripts
-    cur_dir = os.getcwd()
-    os.chdir(src_dir)
-    # TODO: Ensure sphinx-apidoc will update rst files in place
-    result = subprocess.check_output(["sphinx-apidoc", "-o", ".", "../../pyjen"],
+    result = subprocess.check_output(["sphinx-apidoc", "-o", "./docs/source", "pyjen"],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
     modlog.debug(result)
 
     # Then generate the actual content
+    cur_dir = os.getcwd()
     os.chdir(doc_dir)
     result = subprocess.check_output(["make.bat", "html"], stderr=subprocess.STDOUT, universal_newlines=True)
     modlog.debug(result)

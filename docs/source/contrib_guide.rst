@@ -1,4 +1,4 @@
 Contributors Guide
 ==================
 
-This guide explains how developers can quickly and easily contribute their time and expertise to the PyJen project
+Here is where tips on how to build the project will go
