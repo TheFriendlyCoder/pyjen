@@ -24,7 +24,7 @@ via simple Python commands.
 
 Comments, suggestions and bugs may be reported to the project [maintainer](mailto:kevin@thefriendlycoder.com).
 
-Full API documentation can be found at [TheFriendlyCoder.com](http://www.thefriendlycoder.com/PyJen)
+Full API documentation can be found at [ReadTheDocs.org](http://pyjen.readthedocs.org/en/latest/)
 
 Quick start guide
 =================
