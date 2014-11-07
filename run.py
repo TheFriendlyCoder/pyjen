@@ -14,7 +14,9 @@ REQUIREMENTS = ['requests', 'wheel', 'sphinx', 'pytest', 'pytest-cov', 'mock', '
 log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
 
 # Set a global logger for use by this script
-modlog = logging.getLogger('pyjen').addHandler(logging.NullHandler())
+modlog = logging.getLogger('pyjen')
+modlog.addHandler(logging.NullHandler())
+
 
 def _prepare_env():
     """Adds all PyJen dependencies to the Python runtime environment used to call this script
@@ -89,6 +91,7 @@ def _show_version():
     import pyjen
     modlog.info("PyJen Version " + pyjen.VERSION)
 
+
 def _make_package():
     """Creates the redistributable package for the PyJen project"""
     import re
@@ -106,6 +109,7 @@ def _make_package():
 
     # delete intermediate folders
     shutil.rmtree("build")
+    shutil.rmtree("pyjen.egg-info")
 
     #sanity check: make sure wheel file exists
     package_contents = os.listdir("dist")
@@ -138,10 +142,8 @@ def _publish():
                                      stderr=subprocess.STDOUT, universal_newlines=True)
     modlog.debug(result)
 
-    # todo: publish documentation
-    # 	ncftpput -R -v -m pyjentfc /PyJen ./docs/build/html/*
-
     # todo: after the publish completes, auto-update the version number
+    # todo: lay tag on release
     modlog.info("release published successfully")
 
 
@@ -251,6 +253,7 @@ def _make_docs():
     # First generate the documentation build scripts
     cur_dir = os.getcwd()
     os.chdir(src_dir)
+    # TODO: Ensure sphinx-apidoc will update rst files in place
     result = subprocess.check_output(["sphinx-apidoc", "-o", ".", "../../pyjen"],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
     modlog.debug(result)
