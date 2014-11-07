@@ -11,10 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: pyjen.jenkins
-
-.. autoclass:: Jenkins
-    :members:
+.. include:: ../../README.rst
 
 Indices and tables
 ==================
