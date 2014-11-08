@@ -25,8 +25,6 @@ Welcome to PyJen's documentation!
 Overview
 =============
 
-:ref:`genindex`
-
 PyJen is an extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of CPython, and the latest trunk and LTS editions of Jenkins.
 
 With an intuitive and well thought out interface, PyJen offers anyone familiar with the Python programming language an easy way to manage Jenkins dashboards from a simple command prompt. All core primitives of Jenkins, including views, jobs and builds are easily accessible and can be loaded, analyzed and even modified or created via simple Python commands.
