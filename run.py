@@ -28,7 +28,7 @@ def _prepare_env():
     except ImportError:
         pip_url = "http://pip.readthedocs.org/en/latest/installing.html"
         modlog.error("PIP package not installed. See this website for details on how to install it: " + pip_url)
-        return
+        exit(1)
 
     #Using pip, see what packages are currently installed
     installed_packages = pip.get_installed_distributions()
@@ -81,7 +81,7 @@ def _prepare_env():
         pip.main(initial_args=pip_args)
     except:
         modlog.info("Error installing packages. See {0} for details.".format(pip_error_log))
-        return
+        exit(1)
 
     modlog.info("dependencies installed successfully")
 
@@ -242,6 +242,12 @@ def _make_docs():
     """Generates the online documentation for the project"""
     modlog.info("Generating API documentation...")
 
+    import sys
+    if (3, 0) <= sys.version_info[:2] < (3, 3):
+        p_ver = ".".join(list(map(str, sys.version_info[:3])))
+        modlog.info("Sphinx documentation tool does not support Python v{0}".format(p_ver))
+        exit(1)
+
     # Purge any previous build artifacts
     doc_dir = os.path.join(os.getcwd(), "docs")
     build_dir = os.path.join(doc_dir, "build")
@@ -249,8 +255,14 @@ def _make_docs():
         shutil.rmtree(build_dir)
 
     # First generate the documentation build scripts
-    result = subprocess.check_output(["sphinx-apidoc", "-o", "./docs/source", "pyjen"],
+    #       -f  force overwrite of output files
+    #       -e  separate each module to its own page
+    try:
+        result = subprocess.check_output(["sphinx-apidoc", "-f", "-e", "-o", "./docs/source", "pyjen"],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
+    except:
+        modlog.error("Failed to generate API docs")
+        exit(1)
     modlog.debug(result)
 
     # Then generate the actual content
