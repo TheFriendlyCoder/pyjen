@@ -4,54 +4,14 @@ pyjen.plugins package
 Submodules
 ----------
 
-pyjen.plugins.job-maven-plugin module
--------------------------------------
+.. toctree::
 
-.. automodule:: pyjen.plugins.job-maven-plugin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyjen.plugins.pluginbase module
--------------------------------
-
-.. automodule:: pyjen.plugins.pluginbase
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyjen.plugins.subversion module
--------------------------------
-
-.. automodule:: pyjen.plugins.subversion
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyjen.plugins.view-nested-view module
--------------------------------------
-
-.. automodule:: pyjen.plugins.view-nested-view
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyjen.plugins.view-sectioned-view module
-----------------------------------------
-
-.. automodule:: pyjen.plugins.view-sectioned-view
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyjen.plugins.view-status-view module
--------------------------------------
-
-.. automodule:: pyjen.plugins.view-status-view
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   pyjen.plugins.job-maven-plugin
+   pyjen.plugins.pluginbase
+   pyjen.plugins.subversion
+   pyjen.plugins.view-nested-view
+   pyjen.plugins.view-sectioned-view
+   pyjen.plugins.view-status-view
 
 Module contents
 ---------------
