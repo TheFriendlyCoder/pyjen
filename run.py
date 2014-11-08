@@ -249,6 +249,8 @@ def _make_docs():
         exit(1)
 
     # Purge any previous build artifacts
+    # TODO: Rework this to call 'make clean' from the command line
+    # TODO: Test this function on Linux
     doc_dir = os.path.join(os.getcwd(), "docs")
     build_dir = os.path.join(doc_dir, "build")
     if os.path.exists(build_dir):
