@@ -10,7 +10,7 @@ for loader, module_name, is_pkg in pkgutil.walk_packages(os.path.join(os.path.cu
 
 setup(
     name='pyjen',
-    version=pyjen.VERSION,
+    version=pyjen.__version__,
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     packages=pyjen_packages,

@@ -88,8 +88,8 @@ def _prepare_env():
 
 def _show_version():
     """Shows the PyJen version number"""
-    import pyjen
-    modlog.info("PyJen Version " + pyjen.VERSION)
+    from pyjen import __version__
+    modlog.info("PyJen Version " + __version__)
 
 
 def _make_package():
