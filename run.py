@@ -270,7 +270,7 @@ def _make_docs():
     # Then generate the actual content
     cur_dir = os.getcwd()
     os.chdir(doc_dir)
-    result = subprocess.check_output(["make.bat", "html"], stderr=subprocess.STDOUT, universal_newlines=True)
+    result = subprocess.check_output(["make", "html"], stderr=subprocess.STDOUT, universal_newlines=True)
     modlog.debug(result)
     os.chdir(cur_dir)
 
