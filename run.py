@@ -17,6 +17,36 @@ log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
 modlog = logging.getLogger('pyjen')
 modlog.addHandler(logging.NullHandler())
 
+def _version_string_to_tuple(version):
+    """Helper function that converts a version number from string format to a tuple
+
+    :return: tuple of version numbers
+    :rtype: :func:`tuple`
+    """
+    return tuple([int(i) for i in version.split(".")])
+
+def _version_tuple_to_string(version):
+    """Helper function that converts a version number from a tuple to string format
+
+    :return: string representation of a version tuple
+    :rtype: :func:`str`
+    """
+    return ".".join(list(map(str, version)))
+
+def _get_package_version(package_name):
+    """Helper function that returns the version number for a given Python package
+
+    :param str package_name: the name of the package to query
+    :return: The version of the given package as a tuple
+    :rtype: :func:`tuple`
+    """
+    import pip
+    installed_packages = pip.get_installed_distributions()
+    for i in installed_packages:
+        if i.key.lower() == package_name.lower():
+            return _version_string_to_tuple(i.version)
+
+    raise RuntimeError("Missing required package " + package_name)
 
 def _prepare_env():
     """Adds all PyJen dependencies to the Python runtime environment used to call this script
@@ -240,21 +270,27 @@ def _run_tests(RunFuncTests):
 
 def _make_docs():
     """Generates the online documentation for the project"""
+    # TODO: See if we can rework this function to avoid using the batch file (ie: call sphinx directly)
+
     modlog.info("Generating API documentation...")
 
     import sys
     if (3, 0) <= sys.version_info[:2] < (3, 3):
-        p_ver = ".".join(list(map(str, sys.version_info[:3])))
+        p_ver = _version_tuple_to_string(sys.version_info[:3])
         modlog.info("Sphinx documentation tool does not support Python v{0}".format(p_ver))
         exit(1)
 
     # Purge any previous build artifacts
     # TODO: Rework this to call 'make clean' from the command line
-    # TODO: Test this function on Linux
     doc_dir = os.path.join(os.getcwd(), "docs")
     build_dir = os.path.join(doc_dir, "build")
     if os.path.exists(build_dir):
         shutil.rmtree(build_dir)
+
+    if _get_package_version("Sphinx") < (1, 2, 3):
+        modlog.error("Unsupported Sphinx version detected: " + _get_package_version("Sphinx"))
+        modlog.error("Please run the --prep_env operation to property configure your environment.")
+        exit(1)
 
     # First generate the documentation build scripts
     #       -f  force overwrite of output files
