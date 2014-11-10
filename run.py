@@ -8,7 +8,7 @@ import shutil
 import sys
 
 # List of packages needed when building sources for pyjen
-REQUIREMENTS = ['requests', 'wheel', 'sphinx', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
+REQUIREMENTS = ['requests>=2.0.1', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
 
 # Folder where log files will be stored
 log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
@@ -23,7 +23,8 @@ def _version_string_to_tuple(version):
     :return: tuple of version numbers
     :rtype: :func:`tuple`
     """
-    return tuple([int(i) for i in version.split(".")])
+    return tuple(version.split("."))
+    pass
 
 def _version_tuple_to_string(version):
     """Helper function that converts a version number from a tuple to string format
@@ -48,6 +49,48 @@ def _get_package_version(package_name):
 
     raise RuntimeError("Missing required package " + package_name)
 
+def _split_requirement(package_requirement):
+    """Helper function to extract the package name and required version from a package string
+
+    :param str package_requirement: package requirement string, typically including a name and optional
+        required version number, of the form 'package_name >= 1.2.3'
+    :return: The name of the required package and its supported version number
+    :rtype: :class:`tuple`
+    """
+    import re
+    temp = re.split("<|>|=", package_requirement)
+    package_name = temp[0]
+    if len(temp) > 1:
+        package_version = _version_string_to_tuple(temp[-1])
+    else:
+        package_version = ()
+
+    return package_name, package_version
+
+def _find_missing_packages():
+    """Helper function that generates a list of packages that need to be installed
+
+    :return: list of 0 or more packages that need to be installed
+    :rtype: :class:`list`
+    """
+    import pip
+
+    #Using pip, see what packages are currently installed
+    installed_packages = pip.get_installed_distributions()
+    required_packages = REQUIREMENTS
+
+    #Now, remove any currently installed packages from our list of dependencies
+    for ip in installed_packages:
+        for rp in required_packages:
+            (name, version) = _split_requirement(rp)
+            if ip.key == name:
+                if _version_string_to_tuple(ip.version) >= version:
+                    required_packages.remove(rp)
+        if len(required_packages) == 0:
+            return []
+
+    return required_packages
+
 def _prepare_env():
     """Adds all PyJen dependencies to the Python runtime environment used to call this script
 
@@ -60,15 +103,8 @@ def _prepare_env():
         modlog.error("PIP package not installed. See this website for details on how to install it: " + pip_url)
         exit(1)
 
-    #Using pip, see what packages are currently installed
-    installed_packages = pip.get_installed_distributions()
-    required_packages = REQUIREMENTS
+    required_packages = _find_missing_packages()
 
-    #Now, remove any currently installed packages from our list of dependencies
-    for i in installed_packages:
-        if i.key in required_packages:
-            required_packages.remove(i.key)
-    
     if len(required_packages) == 0:
         modlog.info("All required dependencies already installed")
         return
@@ -280,17 +316,17 @@ def _make_docs():
         modlog.info("Sphinx documentation tool does not support Python v{0}".format(p_ver))
         exit(1)
 
+    if _get_package_version("Sphinx") < (1, 2, 3):
+        modlog.error("Unsupported Sphinx version detected: " + _get_package_version("Sphinx"))
+        modlog.error("Please run the --prep_env operation to property configure your environment.")
+        exit(1)
+
     # Purge any previous build artifacts
     # TODO: Rework this to call 'make clean' from the command line
     doc_dir = os.path.join(os.getcwd(), "docs")
     build_dir = os.path.join(doc_dir, "build")
     if os.path.exists(build_dir):
         shutil.rmtree(build_dir)
-
-    if _get_package_version("Sphinx") < (1, 2, 3):
-        modlog.error("Unsupported Sphinx version detected: " + _get_package_version("Sphinx"))
-        modlog.error("Please run the --prep_env operation to property configure your environment.")
-        exit(1)
 
     # First generate the documentation build scripts
     #       -f  force overwrite of output files
