@@ -169,8 +169,13 @@ def _make_package():
     # create new package
     modlog.info("creating package...")
 
-    result = subprocess.check_output(["python", "setup.py", "bdist_wheel"],
+    try:
+        result = subprocess.check_output(["python", "setup.py", "bdist_wheel"],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
+    except subprocess.CalledProcessError as err:
+        modlog.error("Failed to generate wheel file ({0})".format(err.returncode))
+        modlog.error(err.output)
+        exit(1)
     modlog.debug(result)
 
     # delete intermediate folders
@@ -204,8 +209,13 @@ def _publish():
     """Publishes a PyJen release to PyPi"""
     modlog.info("publishing release...")
 
-    result = subprocess.check_output(["python", "setup.py", "bdist_wheel", "upload"],
+    try:
+        result = subprocess.check_output(["python", "setup.py", "bdist_wheel", "upload"],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
+    except subprocess.CalledProcessError as err:
+        modlog.error("Failed to publish new PyJen release ({0})".format(err.returncode))
+        modlog.error(err.output)
+        exit(1)
     modlog.debug(result)
 
     # todo: after the publish completes, auto-update the version number
@@ -235,8 +245,13 @@ def _code_analysis():
     modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
 
     # generate cyclomatic complexities for source files in XML format for integration with external tools
-    result = subprocess.check_output(["radon", "cc", "-sa", "--xml", pyjen_path],
+    try:
+        result = subprocess.check_output(["radon", "cc", "-sa", "--xml", pyjen_path],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
+    except subprocess.CalledProcessError as err:
+        modlog.error("Failed to calculate cyclomatic complexity ({0})".format(err.returncode))
+        modlog.error(err.output)
+        exit(1)
     complexity_log_filename = os.path.join(log_folder, "radon_complexity.xml")
     with open(complexity_log_filename, "w") as complexity_log_file:
         complexity_log_file.write(result)
@@ -248,8 +263,13 @@ def _code_analysis():
             for cur_file in files:
                 if os.path.splitext(cur_file)[1] == ".py":
                     cur_file_full_path = os.path.join(folder, cur_file)
-                    result = subprocess.check_output(["radon", "cc", "-sa", cur_file_full_path],
+                    try:
+                        result = subprocess.check_output(["radon", "cc", "-sa", cur_file_full_path],
                                                      stderr=subprocess.STDOUT, universal_newlines=True)
+                    except subprocess.CalledProcessError as err:
+                        modlog.error("Failed to calculate cyclomatic complexity ({0})".format(err.returncode))
+                        modlog.error(err.output)
+                        exit(1)
                     modlog.debug(result)
                     stats_log.write(result)
 
@@ -259,8 +279,13 @@ def _code_analysis():
             for cur_file in files:
                 if os.path.splitext(cur_file)[1] == ".py":
                     cur_file_full_path = os.path.join(folder, cur_file)
-                    result = subprocess.check_output(["radon", "raw", "-s", cur_file_full_path],
+                    try:
+                        result = subprocess.check_output(["radon", "raw", "-s", cur_file_full_path],
                                                      stderr=subprocess.STDOUT, universal_newlines=True)
+                    except subprocess.CalledProcessError as err:
+                        modlog.error("Failed to calculate raw code statistics ({0})".format(err.returncode))
+                        modlog.error(err.output)
+                        exit(1)
                     modlog.debug(result)
                     stats_log.write(result)
 
@@ -270,8 +295,13 @@ def _code_analysis():
             for cur_file in files:
                 if os.path.splitext(cur_file)[1] == ".py":
                     cur_file_full_path = os.path.join(folder, cur_file)
-                    result = subprocess.check_output(["radon", "mi", "-s", cur_file_full_path],
+                    try:
+                        result = subprocess.check_output(["radon", "mi", "-s", cur_file_full_path],
                                                      stderr=subprocess.STDOUT, universal_newlines=True)
+                    except subprocess.CalledProcessError as err:
+                        modlog.error("Failed to calculate maintainability index ({0})".format(err.returncode))
+                        modlog.error(err.output)
+                        exit(1)
                     modlog.debug(result)
                     stats_log.write(result)
 
@@ -334,8 +364,9 @@ def _make_docs():
     try:
         result = subprocess.check_output(["sphinx-apidoc", "-f", "-e", "-o", "./docs/source", "pyjen"],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
-    except:
-        modlog.error("Failed to generate API docs")
+    except subprocess.CalledProcessError as err:
+        modlog.error("Failed to generate API docs ({0})".format(err.returncode))
+        modlog.error(err.output)
         exit(1)
     modlog.debug(result)
 
@@ -347,14 +378,24 @@ def _make_docs():
     else:
         params = ["make"]
     params.append("html")
-    result = subprocess.check_output(params, stderr=subprocess.STDOUT, universal_newlines=True)
+    try:
+        result = subprocess.check_output(params, stderr=subprocess.STDOUT, universal_newlines=True)
+    except subprocess.CalledProcessError as err:
+        modlog.error("Failed to generate documentation ({0})".format(err.returncode))
+        modlog.error(err.output)
+        exit(1)
     modlog.debug(result)
     os.chdir(cur_dir)
 
     # for extra verification, lets generate a sample PyPI homepage as well
     from docutils.core import publish_string
-    homepage_content = subprocess.check_output(["python", "setup.py", "--long-description"],
+    try:
+        homepage_content = subprocess.check_output(["python", "setup.py", "--long-description"],
                                                stderr=subprocess.STDOUT, universal_newlines=True)
+    except subprocess.CalledProcessError as err:
+        modlog.error("Failed to generate sample PyPi homepage ({0})".format(err.returncode))
+        modlog.error(err.output)
+        exit(1)
     homepage_html = publish_string(homepage_content, writer_name='html')
     with open("pypi_homepage.html", "w") as outfile:
         outfile.write(homepage_html.decode("utf-8"))
