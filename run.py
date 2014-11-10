@@ -23,7 +23,7 @@ def _version_string_to_tuple(version):
     :return: tuple of version numbers
     :rtype: :func:`tuple`
     """
-    return tuple(version.split("."))
+    return tuple([int(i) for i in version.split(".")])
     pass
 
 def _version_tuple_to_string(version):
