@@ -239,7 +239,7 @@ def _code_analysis():
 
     # next we generate a pylint report in 'parseable' format, for use on build automation
     params = "pyjen --rcfile=.pylint -f parseable --reports=y"
-    with open(os.path.join(log_folder, "pylint.txt"), "w") as std:
+    with open(os.path.join(os.getcwd(), "pylint.txt"), "w") as std:
         with open(os.path.join(log_folder, "pylint_xml_err.log"), "w") as err:
             lint.py_run(params, stdout=std, stderr=err)
     modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
