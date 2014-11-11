@@ -237,7 +237,7 @@ def _code_analysis():
         with open(os.path.join(log_folder, "pylint_html_err.log"), "w") as err:
             lint.py_run(params, stdout=std, stderr=err)
 
-     modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
+    modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
 
     # next we generate a pylint report in 'parseable' format, for use on build automation
     # NOTE: For some reason epylint ignores the msg-template paramter so we need to run command line tools here
