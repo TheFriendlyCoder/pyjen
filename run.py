@@ -232,13 +232,13 @@ def _code_analysis():
     pyjen_path = os.path.join(os.getcwd(), "pyjen")
 
     # now we generate a pylint report in HTML format
-    params = "pyjen --rcfile=.pylint -f html"
+    params = 'pyjen --rcfile=.pylint -f html --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
     with open(os.path.join(log_folder, "pylint.html"), "w") as std:
         with open(os.path.join(log_folder, "pylint_html_err.log"), "w") as err:
             lint.py_run(params, stdout=std, stderr=err)
 
     # next we generate a pylint report in 'parseable' format, for use on build automation
-    params = "pyjen --rcfile=.pylint -f parseable --reports=y"
+    params = 'pyjen --rcfile=.pylint -f parseable --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
     with open(os.path.join(os.getcwd(), "pylint.txt"), "w") as std:
         with open(os.path.join(log_folder, "pylint_xml_err.log"), "w") as err:
             lint.py_run(params, stdout=std, stderr=err)
