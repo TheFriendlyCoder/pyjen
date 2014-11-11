@@ -119,7 +119,7 @@ result=$?
 
 # here we terminate the sub-shell used to launch this script
 # with the appropriate error code
-test "$0" == "${BASH_SOURCE[0]}" && exit $result
+#test "$0" == "${BASH_SOURCE[0]}" && exit $result
 
 # if we make it here we know we are running under a
 # 'source'd script that is running in the current
