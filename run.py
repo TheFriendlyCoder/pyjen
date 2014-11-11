@@ -241,7 +241,7 @@ def _code_analysis():
 
     # next we generate a pylint report in 'parseable' format, for use on build automation
     # NOTE: For some reason epylint ignores the msg-template paramter so we need to run command line tools here
-    params = 'pylint pyjen --rcfile=.pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
+    params = ['pylint', 'pyjen', '--rcfile=.pylint', '--msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"']
     pylint_output_file = os.path.join(log_folder, "pylint.txt")
     try:
         result = subprocess.check_output(params, stderr=subprocess.STDOUT, universal_newlines=True)
