@@ -5,7 +5,7 @@
 @if defined VIRTUAL_ENV call deactivate
 
 :: Make sure pip is installed
-@call:get_pip_param
+@python -m pip --version > nul 2>&1
 @if errorlevel 1 goto missing_pip
 
 :: Make sure the virtualenv package is installed
@@ -13,7 +13,7 @@
 @if errorlevel 1 goto venv_install_failed
 
 :: create and activate our virtualenv
-@if not exist py%~1 virtualenv -p %~1 .\py%~1 > .\logs\venv.log 2>&1
+@if not exist py%~1 python -m virtualenv -p %~1 .\py%~1 > .\logs\venv.log 2>&1
 @if errorlevel 1 goto venv_failed
 @call .\py%~1\scripts\activate.bat >> .\logs\venv.log 2>&1
 @echo Python virtual environment successfully configured. Run 'deactivate' to restore environment.
@@ -21,33 +21,14 @@
 
 
 :: --------------------- FUNCTIONS
-:: Figures out the appropriate command line interface for pip
-:: Returns the command line in the pip_cmd environment variable
-:: sets the default return code to non-zero on error
-:get_pip_param
-	@where pip > nul 2>&1
-	@if not errorlevel 1 @(
-		set pip_cmd=pip
-		goto :eof
-	)
-
-	@python -m pip --version > nul 2>&1
-	@if not errorlevel 1 @(
-		set pip_cmd=python -m pip
-		goto :eof
-	)
-
-	@exit /b 1
-
-
 :: Confirms that the virtualenv package is installed
 :install_venv
-	@for /F "delims===" %%i in ('%pip_cmd% freeze -l') do @(
+	@for /F "delims===" %%i in ('python -m pip freeze -l') do @(
 		if "%%i" == "virtualenv" goto :eof
 	)
 
 	@echo installing venv
-	@pip install virtualenv
+	@python -m pip install virtualenv
 	@exit /b
 
 
