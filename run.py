@@ -238,7 +238,7 @@ def _code_analysis():
             lint.py_run(params, stdout=std, stderr=err)
 
     # next we generate a pylint report in 'parseable' format, for use on build automation
-    params = "pyjen --rcfile=.pylint -f parseable"
+    params = "pyjen --rcfile=.pylint -f parseable --reports=y"
     with open(os.path.join(log_folder, "pylint.txt"), "w") as std:
         with open(os.path.join(log_folder, "pylint_xml_err.log"), "w") as err:
             lint.py_run(params, stdout=std, stderr=err)
@@ -333,7 +333,6 @@ def _run_tests(RunFuncTests):
 
     modlog.info("finished running tests")
 
-
 def _make_docs():
     """Generates the online documentation for the project"""
     # TODO: See if we can rework this function to avoid using the batch file (ie: call sphinx directly)
@@ -363,7 +362,7 @@ def _make_docs():
     #       -e  separate each module to its own page
     try:
         result = subprocess.check_output(["sphinx-apidoc", "-f", "-e", "-o", "./docs/source", "pyjen"],
-                                     stderr=subprocess.STDOUT, universal_newlines=True)
+                                         stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as err:
         modlog.error("Failed to generate API docs ({0})".format(err.returncode))
         modlog.error(err.output)
