@@ -17,7 +17,7 @@
 @if errorlevel 1 goto venv_failed
 @call .\py%~1\scripts\activate.bat >> .\logs\venv.log 2>&1
 @echo Python virtual environment successfully configured. Run 'deactivate' to restore environment.
-@goto :eof
+@exit /b 0
 
 
 :: --------------------- FUNCTIONS
