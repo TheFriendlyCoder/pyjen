@@ -232,17 +232,25 @@ def _code_analysis():
     pyjen_path = os.path.join(os.getcwd(), "pyjen")
 
     # now we generate a pylint report in HTML format
-    params = 'pyjen --rcfile=.pylint -f html --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
+    params = 'pyjen --rcfile=.pylint -f html'
     with open(os.path.join(log_folder, "pylint.html"), "w") as std:
         with open(os.path.join(log_folder, "pylint_html_err.log"), "w") as err:
             lint.py_run(params, stdout=std, stderr=err)
 
     # next we generate a pylint report in 'parseable' format, for use on build automation
-    params = 'pyjen --rcfile=.pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
-    with open(os.path.join(os.getcwd(), "pylint.txt"), "w") as std:
-        with open(os.path.join(log_folder, "pylint_xml_err.log"), "w") as err:
-            lint.py_run(params, stdout=std, stderr=err)
+    params = 'pylint pyjen --rcfile=.pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"'
+    pylint_output_file = os.path.join(os.getcwd(), "pylint.txt")
+    #with open(pylint_output_file, "w") as std:
+    #    with open(os.path.join(log_folder, "pylint_xml_err.log"), "w") as err:
+    #        lint.py_run(params, stdout=std, stderr=err)
+    try:
+        result = subprocess.check_output(params, stderr=subprocess.STDOUT, universal_newlines=True)
+    except subprocess.CalledProcessError as err:
+        result = err.output
+
     modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
+    with open(pylint_output_file, "w") as std:
+        std.write(result)
 
     # generate cyclomatic complexities for source files in XML format for integration with external tools
     try:
