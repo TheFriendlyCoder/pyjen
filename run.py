@@ -229,29 +229,23 @@ def _code_analysis():
 
     # PyLint code analysis
     from pylint import epylint as lint
-    pyjen_path = os.path.join(os.getcwd(), "pyjen")
 
     # now we generate a pylint report in HTML format
-    params = 'pyjen --rcfile=.pylint -f html'
+    params = 'pyjen -f html'
     with open(os.path.join(log_folder, "pylint.html"), "w") as std:
         with open(os.path.join(log_folder, "pylint_html_err.log"), "w") as err:
-            lint.py_run(params, stdout=std, stderr=err)
+            lint.py_run(params, stdout=std, stderr=err, script="pylint")
+
+    # next we generate a pylint report in 'parseable' format, for use on build automation
+    params = 'pyjen'
+    with open(os.path.join(log_folder, "pylint.txt"), "w") as std:
+        with open(os.path.join(log_folder, "pylint_plain_err.log"), "w") as err:
+            lint.py_run(params, stdout=std, stderr=err, script="pylint")
 
     modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
 
-    # next we generate a pylint report in 'parseable' format, for use on build automation
-    # NOTE: For some reason epylint ignores the msg-template paramter so we need to run command line tools here
-    params = ['pylint', 'pyjen', '--rcfile=.pylint', '--msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"']
-    pylint_output_file = os.path.join(log_folder, "pylint.txt")
-    try:
-        result = subprocess.check_output(params, stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as err:
-        result = err.output
-
-    with open(pylint_output_file, "w") as std:
-        std.write(result)
-
     # generate cyclomatic complexities for source files in XML format for integration with external tools
+    pyjen_path = os.path.join(os.getcwd(), "pyjen")
     try:
         result = subprocess.check_output(["radon", "cc", "-sa", "--xml", pyjen_path],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
