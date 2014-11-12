@@ -72,7 +72,27 @@ class Build(object):
                 provided to PyJen.Build. Please check configuration.", http_io)
 
         return retval
-
+    
+    def __eq__(self, obj):
+        """Overrides the default equality operation"""
+        if isinstance(obj, Build):
+            data = self.__data_io.get_api_data()
+            build_url = data['url']
+            obj_data = obj.__data_io.get_api_data()
+            obj_build_url = obj_data["url"]
+            return build_url == obj_build_url
+        raise RuntimeError("Objects do not match")
+    
+    def __ne__(self, obj):
+        """Overrides the defualt not equal operation"""
+        if isinstance(obj, Build):
+            data = self.__data_io.get_api_data()
+            build_url = data['url']
+            obj_data = obj.__data_io.get_api_data()
+            obj_build_url = obj_data["url"]
+            return build_url != obj_build_url
+        raise RuntimeError("Objects do not match")
+        
     @property
     def build_number(self):
         """Gets the numeric build number for this build
@@ -84,7 +104,8 @@ class Build(object):
 
         data = self.__data_io.get_api_data()
 
-        return data['number']
+        return data['number']    
+    
 
     @property
     def build_time(self):
@@ -122,35 +143,7 @@ class Build(object):
         return self.__data_io.get_text("/consoleText")
 
     @property
-    def culprits(self):
-        """Gets a list of potential breakers of a build
-
-        :returns: List of 0 or more Jenkins users whom committed changes
-            included in this build.
-        :rtype: :func:`list` of :py:mod:`pyjen.User` objects
-        """
-
-        data = self.__data_io.get_api_data()
-        retval = []
-        for culprit in data['culprits']:
-            temp_data_io = self.__data_io.clone(culprit['absoluteUrl'])
-            temp_user = User(temp_data_io)
-            retval.append(temp_user)
-
-        return retval
-
-    @property
-    def result(self):
-        """Gets the final status of this build
-        
-        :return: the status of this build. Typically "SUCCESS" or "FAILURE" but may also be "UNSTABLE"
-        :rtype: `func`:str
-        """
-        data = self.__data_io.get_api_data()
-
-        return data['result']
-
-    def get_changeset(self):
+    def changeset(self):
         """Gets changeset object associated with this build
 
         NOTE: This changeset may be empty if there were no SCM
@@ -164,9 +157,9 @@ class Build(object):
         """
         data = self.__data_io.get_api_data()
 
-        return changeset(data['changeSet'])
+        return changeset(data['changeSet'], self.__data_io)
 
     
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass

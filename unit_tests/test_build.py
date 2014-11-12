@@ -67,41 +67,43 @@ class build_tests(unittest.TestCase):
         self.assertEqual(build_time.minute, 3)
         self.assertEqual(build_time.second, 17)
         
-    def test_get_changeset(self):
+    def test_get_changeset_svn_type(self):
         expected_scm_type = "svn"
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"changeSet":{"kind":expected_scm_type,"items":[]}}
         
         b = Build(mock_data_io)
-        cs = b.get_changeset()
+        cs = b.changeset
         
         self.assertEqual(cs.get_scm_type(), "svn")
-    
-    def test_get_culprits(self):
-        expected_name = "John Doe"
-        expected_url = "http://localhost:8080/user/jdoe"
-        mock_user_data_io = MagicMock()
-        mock_user_data_io.get_api_data.return_value = {"fullName":expected_name}
-        
+
+    def test_get_changeset(self):
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"culprits":[{"absoluteUrl":expected_url}]}
-        mock_data_io.clone.return_value = mock_user_data_io
-        
+        mock_data_io.get_api_data.return_value = {"changeSet":{"kind":"svn","items":[]}}
+
         b = Build(mock_data_io)
-        culprits = b.culprits
-        
-        self.assertEqual(len(culprits), 1, "Mock build should have returns 1 breaker")
-        self.assertEqual(culprits[0].full_name, expected_name)
-        mock_data_io.clone.assert_called_once_with(expected_url)
-        
-    def test_get_culprits_none(self):
+        cs = b.changeset
+
+        self.assertIsNotNone(cs.affected_items)
+        self.assertEqual(len(cs.affected_items), 0)
+
+    def test_build_equality(self):
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"culprits":[]}
+        mock_data_io.get_api_data.return_value = {"url":"www.someBuild.com"}
+        first_build = Build(mock_data_io)
+        second_build = Build(mock_data_io)
+        self.assertEqual(second_build, first_build, "Build objects do not match when they should")
         
-        b = Build(mock_data_io)
-        culprits = b.culprits
+    def test_build_inequality(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"url":"www.someBuild.com"}
+        first_build = Build(mock_data_io)
         
-        self.assertEqual(len(culprits), 0, "Mock build should have no breakers")
+        mock_data_io2 = MagicMock()
+        mock_data_io2.get_api_data.return_value = {"url":"www.someOtherBuild.com"}
+        second_build = Build(mock_data_io2)
+        self.assertNotEqual(second_build, first_build, "Build objects match when they should not")
+        
         
 if __name__ == "__main__":
     pytest.main()

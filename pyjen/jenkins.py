@@ -55,7 +55,7 @@ class Jenkins(object):
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API        
         """
-        self.__data_io = data_io_controller
+        self._controller = data_io_controller
             
     @staticmethod
     def easy_connect(url, credentials=None):
@@ -110,7 +110,7 @@ class Jenkins(object):
         :rtype: :func:`str`
             
         """
-        headers = self.__data_io.get_headers('/api/python')
+        headers = self._controller.get_headers('/api/python')
         
         if not 'x-jenkins' in headers:
             return "Unknown"
@@ -126,7 +126,7 @@ class Jenkins(object):
         :rtype: :func:`bool`
             
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         
         return data['quietingDown']
     
@@ -138,18 +138,18 @@ class Jenkins(object):
         :rtype: :func:`list` of :py:mod:`pyjen.Node` objects
             
         """
-        tmp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") + "/computer")
+        tmp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/computer")
         data = tmp_data_io.get_api_data()
                 
         nodes = data['computer']
         retval = []
         for cur_node in nodes:
             if cur_node['displayName'] == 'master':
-                node_url = self.__data_io.url.rstrip("/") + '/computer/(master)'
+                node_url = self._controller.url.rstrip("/") + '/computer/(master)'
             else:
-                node_url = self.__data_io.url.rstrip("/") + '/computer/' + cur_node['displayName']
+                node_url = self._controller.url.rstrip("/") + '/computer/' + cur_node['displayName']
             
-            node_data_io = self.__data_io.clone(node_url)
+            node_data_io = self._controller.clone(node_url)
             retval.append(Node(node_data_io))
                         
         return retval
@@ -164,22 +164,25 @@ class Jenkins(object):
         :returns: object that manages the default Jenkins view
         :rtype: :py:mod:`pyjen.View`            
         """        
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
 
         default_view = data['primaryView']
-        new_io_obj = self.__data_io.clone(default_view['url'].rstrip("/") +\
+        new_io_obj = self._controller.clone(default_view['url'].rstrip("/") +\
                                           "/view/" + default_view['name'])
-        return View(new_io_obj)
+        return View.create(new_io_obj, self)
     
     @property
-    def all_views(self):
-        """Gets a list of all views defined on the Jenkins dashboard
-        
+    def views(self):
+        """Gets a list of all views directly managed by the Jenkins dashboard
+
+        To retrieve all views managed by this Jenkins instance, including recursing into
+        views that support sub-views, see the :py:meth:`pyjen.View.all_views` property
+
         :returns: list of one or more views defined on this Jenkins instance. 
         :rtype: :func:`list` of :py:mod:`pyjen.View` objects
             
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         
         raw_views = data['views']
         retval = []
@@ -191,11 +194,23 @@ class Jenkins(object):
             if turl.find('view') == -1:
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
                 
-            new_io_obj = self.__data_io.clone(turl)
-            tview = View(new_io_obj)
+            new_io_obj = self._controller.clone(turl)
+            tview = View.create(new_io_obj, self)
             retval.append(tview)
             
-        return retval   
+        return retval
+
+    @property
+    def all_views(self):
+        temp = self.views
+
+        retval = []
+        for cur_view in temp:
+            if cur_view.contains_views:
+                retval.extend(cur_view.all_views)
+
+        retval.extend(temp)
+        return retval
     
     def prepare_shutdown(self):
         """Sends a shutdown signal to the Jenkins master preventing new builds from executing
@@ -205,7 +220,7 @@ class Jenkins(object):
         You can cancel a previous requested shutdown using the 
         :py:meth:`pyjen.Jenkins.cancel_shutdown` method
         """
-        self.__data_io.post('/quietDown')
+        self._controller.post('/quietDown')
         
     def cancel_shutdown(self):
         """Cancels a previous scheduled shutdown sequence
@@ -213,7 +228,7 @@ class Jenkins(object):
         Cancels a shutdown operation initiated by the 
         :py:meth:`pyjen.Jenkins.prepare_shutdown` method
         """
-        self.__data_io.post('/cancelQuietDown')
+        self._controller.post('/cancelQuietDown')
     
       
     def find_job(self, job_name):
@@ -225,13 +240,13 @@ class Jenkins(object):
             object is returned (ie: None)
         :rtype: :py:mod:`pyjen.Job`
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         tjobs = data['jobs']
     
         for tjob in tjobs:
             if tjob['name'] == job_name:
-                new_io_obj = self.__data_io.clone(tjob['url'])
-                return Job(new_io_obj)
+                new_io_obj = self._controller.clone(tjob['url'])
+                return Job.create(new_io_obj, self)
         
         return None
     
@@ -245,22 +260,56 @@ class Jenkins(object):
             object is returned (ie: None)
         :rtype: :py:mod:`pyjen.View`
         """
-        data = self.__data_io.get_api_data()
+        data = self._controller.get_api_data()
         
         raw_views = data['views']
-        
+
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
                 turl = cur_view['url']
                 if turl.find('view') == -1:
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
-                
-                new_io_obj = self.__data_io.clone(turl)
-                return View(new_io_obj)
+
+                new_io_obj = self._controller.clone(turl)
+                return View.create(new_io_obj, self)
+
+        for cur_view in raw_views:
+            turl = cur_view['url']
+            if turl.find('view') == -1:
+                turl = turl.rstrip("/") + "/view/" + cur_view['name']
+
+            new_io_obj = self._controller.clone(turl)
+            v = View.create(new_io_obj, self)
+            if v.contains_views:
+                res = self._find_view_helper(v, view_name)
+                if res is not None:
+                    return res
                         
         return None
 
-    def create_view(self, view_name, view_type = View.LIST_VIEW):
+    @staticmethod
+    def _find_view_helper(self, view, view_name):
+        """Helper function, used by find_view method, to recursively search for views within sub-views
+
+        :param obj view: :py:mod:`pyjen.View` object which supports nested views
+        :param str view_name: the name of the view to locate
+        :return: Reference to the view being searched, or None if not found
+        :rtype: :py:mod:`pyjen.View`
+        """
+        sub_views = view.views
+        for cur_view in sub_views:
+            if cur_view.name == view_name:
+                return cur_view
+
+        for cur_view in sub_views:
+            if cur_view.contains_views:
+                res = self._find_view_helper(cur_view, view_name)
+                if res is not None:
+                    return res
+
+        return None
+
+    def create_view(self, view_name, view_type):
         """Creates a new view on the Jenkins dashboard
         
         :param str view_name: the name for this new view
@@ -286,13 +335,60 @@ class Jenkins(object):
         args['data'] = data
         args['headers'] = headers
 
-        self.__data_io.post('/createView', args)
+        self._controller.post('/createView', args)
         
         retval = self.find_view(view_name)
         assert retval != None
         return retval       
-    
-    def clone_job(self, source_job_name, new_job_name):
+
+    def create_job(self, job_name, job_type):
+        """Creates a new job on this Jenkins instance
+
+        :param str job_name: The name for the job to be created.
+            expected to be universally unique on this instance of Jenkins
+        :param str job_type: descriptive type for the base configuration of this new job
+            for a list of currently supported job types see :meth:`Jenkins.job_types`
+        """
+        params = {'name': job_name}
+        headers = {'Content-Type': 'text/xml'}
+
+        args = {}
+        args['params'] = params
+        args['headers'] = headers
+        args['data'] = Job.template_config_xml(job_type)
+
+        self._controller.post("createItem", args)
+
+        temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + job_name)
+        new_job = Job.create(temp_data_io, self)
+
+        # Sanity check - make sure the job actually exists by checking its name
+        assert new_job.name == job_name
+
+        #disable the newly created job so it doesn't accidentally start running
+        new_job.disable()
+
+        return new_job
+
+    @property
+    def job_types(self):
+        """Returns a list of Jenkins job types currently supported by this instance of PyJen
+
+        Elements from this list may be used when creating new jobs on this Jenkins instance,
+        so long as the accompanying job type is supported by the live Jenkins server
+        """
+        return Job.supported_types()
+
+    @property
+    def view_types(self):
+        """Returns a list of Jenkins view types currently supported by this instance of PyJen
+
+        Elements from this list may be used when creating new views on this Jenkins instance,
+        so long as the accompanying view type is supported by the live Jenkins server
+        """
+        return View.supported_types()
+
+    def _clone_job(self, source_job_name, new_job_name):
         """Makes a copy of this job on the dashboard with a new name        
         
         :param str source_job_name: The name of the existing Jenkins job
@@ -317,11 +413,10 @@ class Jenkins(object):
         args['data'] = ''
         args['headers'] = headers
         
-        self.__data_io.post("createItem", args)
+        self._controller.post("createItem", args)
         
-        temp_data_io = self.__data_io.clone(self.__data_io.url.rstrip("/") +\
-                                             "/job/" + new_job_name)
-        new_job = Job(temp_data_io)
+        temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + new_job_name)
+        new_job = Job.create(temp_data_io, self)
         
         # Sanity check - make sure the job actually exists by checking its name
         assert new_job.name == new_job_name
@@ -329,50 +424,31 @@ class Jenkins(object):
         #disable the newly created job so it doesn't accidentally start running
         new_job.disable()
         
-        return new_job 
-    
-    
-    def clone_all_jobs_in_view(self, view_name, source_job_name_regex, new_job_substring):
-        """Helper method that does a batch clone on all jobs found in this view
-    
-        :param str view_name: name of view containing jobs to clone
-        :param str source_job_name_regex: pattern to use as a substitution rule
-            when generating new names for cloned jobs. Substrings within the
-            existing job names that match this pattern will be replaced by
-            the given substitution string
-        :param str new_job_substring: character string used to
-            generate new job names for the clones of the existing jobs. The substring
-            of an existing job that matches the given regex will be replaced by this
-            new string to create the new job name for it's cloned counterpart.
-        :returns: list of newly created jobs
-        :rtype: :class:`list` of :py:mod:`pyjen.Job` objects
+        return new_job
+
+    def get_view(self, url):
+        """Generates a View object based on an absolute URL
+
+        This method, although a bit more cumbersome, has better performance than :py:meth:`find_view`
+
+        :param str url: absolute URL of the view to load
+        :return: an instance of the appropriate pyjen.View class for the given view
+        :rtype: :py:mod:`pyjen.View`
         """
-        temp_view = self.find_view(view_name)
-        if temp_view == None:
-            raise InvalidParameterError("View " + view_name + " not found on Jenkins instance.")
-        temp_jobs = temp_view.jobs
-        
-        # Create a mapping table for names of jobs
-        job_map = {}
-        for j in temp_jobs:
-            orig_name = j.name
-            job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_substring)
-            
-        # clone all jobs, and update internal references     
-        retval = []
-        for j in temp_jobs:
-            orig_name = j.name
-            new_job = self.clone_job(orig_name, job_map[orig_name])
-            
-            # update all internal references
-            xml = new_job.config_xml
-            for k in job_map.keys():
-                xml = xml.replace(k, job_map[k])
-            new_job.set_config_xml(xml)
-        
-            retval.append(new_job)
-            
-        return retval
-    
-if __name__ == '__main__':
+        new_io_obj = self._controller.clone(url)
+        return View.create(new_io_obj, self)
+
+    def get_job(self, url):
+        """Generates a Job object based on an absolute URL
+
+        This method, although a bit more cumbersome, has better performance than :py:meth:`find_job`
+
+        :param str url: absolute URL of the job to load
+        :return: an instance of the appropriate pyjen.View class for the given view
+        :rtype: :py:mod:`pyjen.View`
+        """
+        new_io_obj = self._controller.clone(url)
+        return Job.create(new_io_obj, self)
+
+if __name__ == '__main__':  # pragma: no cover
     pass

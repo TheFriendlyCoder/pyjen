@@ -153,5 +153,5 @@ class Node(object):
 
         return self.is_idle
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass
