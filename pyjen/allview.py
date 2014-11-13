@@ -7,7 +7,7 @@ from pyjen.exceptions import InvalidJenkinsURLError
 class AllView(View):
     """Interface to a view which displays all jobs managed by this Jenkins instance
 
-    Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
+    Instances of this class are typically instantiated directly or indirectly through :py:meth:`~pyjen.view.View.create`
     """
     def __init__(self, data_io_controller, jenkins_master):
         """Constructor"""

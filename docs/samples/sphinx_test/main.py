@@ -7,7 +7,9 @@
 """
 * strings: :class:`str`
 * floats: :class:`float`
+* ints: :class:`int`
 * lists: :class:`list`
+* tuples: :func:`tuple`
 """
 
 class MyClass (object):
@@ -48,9 +50,9 @@ class MyClass2():
     def MyMethod(self, obj):
         """Some method
 
-        Makes use of :meth:`.SomeOtherMethod`
+        Makes use of local method :meth:`.SomeOtherMethod`
 
-        Could have also said uses :meth:`MyClass2.SomeOtherMethod`
+        Could have also used full class notation :meth:`MyClass2.SomeOtherMethod`
 
         :param obj: first parameter should be of type 'MyClassDerived'
         :type obj: :class:`MyClassDerived`
