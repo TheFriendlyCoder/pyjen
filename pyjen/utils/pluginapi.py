@@ -14,11 +14,11 @@ def find_plugin(xml):
     """
     plugin = pluginbase(xml)
     
-    full_plugin_name = "pyjen.plugins." + plugin.get_name()
+    full_plugin_name = "pyjen.plugins." + plugin.get_module_name()
     
     plugin_module = importlib.import_module(full_plugin_name)
 
-    plugin_class = getattr(plugin_module, plugin.get_name())
+    plugin_class = getattr(plugin_module, plugin.get_module_name())
     
     return plugin_class(xml)
 
@@ -32,7 +32,7 @@ def find_job_plugin(xml):
     """
     plugin = pluginbase(xml)
 
-    return find_job_plugin_by_name(plugin.get_name())
+    return find_job_plugin_by_name(plugin.get_module_name())
 
 def find_job_plugin_by_name(plugin_name):
     """locates the class for a Jenkins plugin in the PyJen plugin repo by name
@@ -50,7 +50,7 @@ def find_job_plugin_by_name(plugin_name):
 def find_view_plugin(xml):
     plugin = pluginbase(xml)
 
-    return find_view_plugin_by_name(plugin.get_name())
+    return find_view_plugin_by_name(plugin.get_module_name())
 
 def find_view_plugin_by_name(plugin_name):
     """locates the class for a Jenkins plugin in the PyJen plugin repo by name

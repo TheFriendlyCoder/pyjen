@@ -16,7 +16,7 @@ class pluginbase(object):
         """
         self._root = ElementTree.fromstring(xml)
         
-    def get_name(self):
+    def get_module_name(self):
         """Gets the name of the plugin
         
         :returns: the plugin name
@@ -26,13 +26,20 @@ class pluginbase(object):
         parts = attr.split('@')
         return parts[0]
         
-    def get_classname(self):
+    def get_class_name(self):
         """Gets the Java class name of the plugin
         
         :returns: the Java class name
         :rtype: :func:`str`
         """
-        return self._root.attrib['classname']
+
+        if self._root.has_attrib('classname'):
+            temp = self._root.attrib['classname']
+        else:
+            temp = self._root.tag
+
+        return temp.split(".")[-1]
+
         
     def get_version(self):
         """Gets the version of the plugin
@@ -43,3 +50,8 @@ class pluginbase(object):
         attr = self._root.attrib['plugin']
         parts = attr.split('@')
         return parts[1]
+
+
+
+if __name__ == "__main__": # pragma: no cover
+    pass
