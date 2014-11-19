@@ -1,5 +1,5 @@
 import pytest
-from functional_tests.test_utils import start_jenkins, get_jenkins_war, safe_delete
+from functional_tests.test_utils import jenkins_process, safe_delete
 from pyjen.jenkins import Jenkins
 from pyjen.view import View
 from pyjen.job import Job
@@ -35,21 +35,19 @@ class lts_tests(TestCase):
     
     @classmethod
     def setUpClass(self):
-        jenkins_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jenkins")
-        war_file = get_jenkins_war(jenkins_path, self.get_edition())
-        
         self._jenkins_home = setup_workspace("jenkins_job_view")
-        
-        (self._jenkins_process, self._jenkins_url) = start_jenkins(war_file, self._jenkins_home)
+        self._jenkins = jenkins_process(self.get_edition())
+        self._jenkins.start(self._jenkins_home)
+        self._jenkins_url = self._jenkins.url
         
     @classmethod
     def tearDownClass(self):
-        if self._jenkins_process != None:
-            print("killing jenkins")
-            self._jenkins_process.terminate()
-            (sout, serr) = self._jenkins_process.communicate()
-            print ("done killing: " + str(sout) + " - " + str(serr))
-            
+        print("killing jenkins")
+        self._jenkins.terminate()
+        # todo: see if this call should be moved into terminate()
+        #(sout, serr) = self._jenkins_process.communicate()
+        #print ("done killing: " + str(sout) + " - " + str(serr))
+
         #clean up working folder
         safe_delete(os.path.abspath(os.path.join(self._jenkins_home, "..")))
 
