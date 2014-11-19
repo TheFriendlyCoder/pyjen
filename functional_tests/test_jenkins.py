@@ -57,7 +57,7 @@ class lts_tests(TestCase):
     def test_create_view(self):
         new_view_name = "test_create_view"
         j = Jenkins.easy_connect(self._jenkins_url, None)
-        j.create_view(new_view_name, View.LIST_VIEW)
+        j.create_view(new_view_name, "hudson.model.ListView")
         v = j.find_view(new_view_name)
         
         self.assertTrue(v != None)
@@ -164,4 +164,3 @@ class latest_tests(lts_tests):
     
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
-    
