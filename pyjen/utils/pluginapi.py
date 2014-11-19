@@ -90,8 +90,15 @@ def list_view_plugins():
 
     retval = []
     for file in plugin_files:
-        if os.path.isfile(os.path.join(path_to_plugins, file)):
-            retval.append(os.path.splitext(file)[0].replace("view-", ""))
+        if file != "__init__.py" and os.path.isfile(os.path.join(path_to_plugins, file)):
+            full_plugin_name = "pyjen.plugins.view."+os.path.splitext(file)[0]
+            plugin_module = importlib.import_module(full_plugin_name)
+            plugin_name = os.path.splitext(file)[0]
+            plugin_name = plugin_name.replace("view-", "")
+            plugin_name = plugin_name.replace("-", "_")
+            plugin_class = getattr(plugin_module, plugin_name)
+
+            retval.append(plugin_class.type)
 
     return retval
 

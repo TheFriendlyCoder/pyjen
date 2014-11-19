@@ -60,12 +60,5 @@ class MyView(View):
 
         return retval
 
-    @property
-    def type(self):
-        """Gets the Jenkins view-type descriptor for this view
-
-        :returns: descriptive string of the Jenkins view type for this view
-        :rtype: :func:`str`
-        """
-        return "hudson.model.MyView"
+    type = "hudson.model.MyView"
 

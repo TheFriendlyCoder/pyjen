@@ -10,6 +10,4 @@ class sectioned_view(View):
         """
         super(sectioned_view, self).__init__(controller, jenkins_master)
 
-    @property
-    def type(self):
-        return "hudson.plugins.sectioned_view.SectionedView"
+    type = "hudson.plugins.sectioned_view.SectionedView"

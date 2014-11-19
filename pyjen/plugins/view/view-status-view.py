@@ -10,6 +10,4 @@ class status_view(View):
         """
         super(status_view, self).__init__(controller, jenkins_master)
 
-    @property
-    def type(self):
-        return "hudson.plugins.status_view.StatusView"
+    type = "hudson.plugins.status_view.StatusView"
