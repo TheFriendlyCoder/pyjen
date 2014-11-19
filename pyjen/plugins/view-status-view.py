@@ -12,4 +12,4 @@ class status_view(View):
 
     @property
     def type(self):
-        return "status-view"
+        return "hudson.plugins.status__view.StatusView"

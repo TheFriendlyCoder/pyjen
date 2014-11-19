@@ -41,7 +41,7 @@ class nested_view(View):
 
     @property
     def type(self):
-        return "nested-view"
+        return "hudson.plugins.nested__view.NestedView"
 
     @property
     def contains_views(self):
