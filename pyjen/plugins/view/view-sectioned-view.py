@@ -12,4 +12,4 @@ class sectioned_view(View):
 
     @property
     def type(self):
-        return "hudson.plugins.sectioned__view.SectionedView"
+        return "hudson.plugins.sectioned_view.SectionedView"
