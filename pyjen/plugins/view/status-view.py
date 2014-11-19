@@ -11,3 +11,7 @@ class status_view(View):
         super(status_view, self).__init__(controller, jenkins_master)
 
     type = "hudson.plugins.status_view.StatusView"
+
+
+if __name__ == "__main__":
+    pass
