@@ -59,7 +59,7 @@ def find_view_plugin_by_name(plugin_name):
     :returns: Instance of the class that manages the given plugin
     :rtype: :py:mod:`pyjen.plugins.pluginbase`
     """
-    full_plugin_name = "pyjen.plugins.view-" + plugin_name
+    full_plugin_name = "pyjen.plugins.view.view-" + plugin_name
 
     plugin_module = importlib.import_module(full_plugin_name)
 
@@ -85,12 +85,12 @@ def list_view_plugins():
     :returns: a list of plugin names currently supported by the PyJen library
     :rtype: :func:`list`
     """
-    path_to_plugins = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
+    path_to_plugins = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins", "view"))
     plugin_files = os.listdir(path_to_plugins)
 
     retval = []
     for file in plugin_files:
-        if os.path.isfile(os.path.join(path_to_plugins, file)) and file.startswith("view-"):
+        if os.path.isfile(os.path.join(path_to_plugins, file)):
             retval.append(os.path.splitext(file)[0].replace("view-", ""))
 
     return retval
