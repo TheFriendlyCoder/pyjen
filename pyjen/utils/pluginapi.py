@@ -25,17 +25,7 @@ def find_plugin(xml):
     
     return plugin_class(xml)
 
-def find_job_plugin(xml):
-    """locates the class for a Jenkins plugin in the PyJen plugin repo based on XML configuration data
 
-    :param str xml: the xml representation of the plugin configuration properties as found in the associated config.xml
-    :returns: The PyJen plugin class used to manage the given plugin. The caller can then instantiate an instance of the
-        class as needed.
-    :rtype: :py:mod:`pyjen.plugins.pluginbase`
-    """
-    plugin = pluginbase(xml)
-
-    return find_job_plugin_by_name(plugin.get_class_name())
 
 
 
@@ -181,6 +171,19 @@ def find_view_plugin(xml):
     plugin = pluginbase(xml)
 
     return find_view_plugin_by_name(plugin.get_class_name())
+
+def find_job_plugin(xml):
+    """locates the class for a Jenkins plugin in the PyJen plugin repo based on XML configuration data
+
+    :param str xml: the xml representation of the plugin configuration properties as found in the associated config.xml
+    :returns: The PyJen plugin class used to manage the given plugin. The caller can then instantiate an instance of the
+        class as needed.
+    :rtype: :py:mod:`pyjen.plugins.pluginbase`
+    """
+    plugin = pluginbase(xml)
+
+    return find_job_plugin_by_name(plugin.get_class_name())
+
 
 if __name__ == "__main__": # pragma: no cover
 
