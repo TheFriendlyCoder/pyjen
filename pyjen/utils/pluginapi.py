@@ -50,14 +50,7 @@ def find_job_plugin_by_name(plugin_name):
 
     return getattr(plugin_module, plugin_name.replace("-", "_"))
 
-def find_view_plugin(xml):
-    plugin = pluginbase(xml)
 
-    full_plugin_name = "pyjen.plugins.view." + plugin.get_module_name()
-
-    plugin_module = importlib.import_module(full_plugin_name)
-
-    return getattr(plugin_module, plugin.get_class_name())
 
 def list_job_plugins():
     """Returns a list off job plugins currently supported by the PyJen library
@@ -139,5 +132,54 @@ def get_view_plugins():
 
     return retval
 
+class PluginNotSupportedError(NotImplementedError):
+    """Basic extension to the NotImplementedError with details about which plugin was not found"""
+    def __init__(self, message, plugin_name):
+        """Constructor
+
+        :param str message: desciption of the error
+        :param str plugin_name: the class name / type of the plugin that was not found
+        """
+        super(PluginNotSupportedError, self).__init__()
+        self._message = message
+        self._plugin_name = plugin_name
+
+    def __str__(self):
+        return self._message
+
+    @property
+    def message(self):
+        return self._message
+
+    @property
+    def plugin_name(self):
+        return self._plugin_name
+
+def find_view_plugin_by_name(class_name):
+    """Given a Jenkins plugin class name, returns an instance of the PyJen class that manages it
+
+    An exception will be raised if no supporting PyJen plugin can be found
+
+    :param str class_name: the name of the Jenkins plugin to find
+    :return: an instance of the PyJen plugin class responsible for managing Jenkins plugins of the given type
+    """
+    for plugin in get_view_plugins():
+        if plugin.type == class_name:
+            return plugin
+
+    raise PluginNotSupportedError("View plugin {0} not found".format(class_name), class_name)
+
+def find_view_plugin(xml):
+    """Loads the PyJen class used to manage the plugin described by the given XML snippet
+
+    :param str xml: XML data, typically read from a Jenkins config.xml file, associated with the plugin to be found
+    :return: an instance of the PyJen plugin classs responsible for managing Jenkins plugins of the given type
+    """
+    plugin = pluginbase(xml)
+
+    return find_view_plugin_by_name(plugin.get_class_name())
+
 if __name__ == "__main__": # pragma: no cover
-    pass
+
+    v = find_view_plugin_by_name("hudson.model.ListView2")
+    print (v.type)

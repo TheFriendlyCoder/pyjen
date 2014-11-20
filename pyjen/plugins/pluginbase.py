@@ -33,12 +33,14 @@ class pluginbase(object):
         :rtype: :func:`str`
         """
 
-        if self._root.has_attrib('classname'):
+        if "classname" in self._root.attrib:
             temp = self._root.attrib['classname']
         else:
             temp = self._root.tag
 
-        return temp.split(".")[-1]
+        # NOTE: For some reason, class names with underscores in them are represented in
+        # the config.xml with double-underscores. We need to undo this obfuscation here
+        return temp.replace("__", "_")
 
         
     def get_version(self):

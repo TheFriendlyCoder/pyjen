@@ -28,24 +28,7 @@ class View(object):
         :return: An instance of the appropriate derived type for the given view
         :rtype: :py:mod:`pyjen.View`
         """
-
-        # NOTE: We need to import the classes to instantiate from inside this function
-        #       to prevent circular dependencies between these and the current class
-        from pyjen.plugins.listview import ListView
-        from pyjen.plugins.allview import AllView
-        from pyjen.plugins.myview import MyView
-
         config = controller.get_text('/config.xml')
-        root = ElementTree.fromstring(config)
-
-        if root.tag == "hudson.model.ListView":
-            return ListView(controller, jenkins_master)
-
-        if root.tag == "hudson.model.AllView":
-            return AllView(controller, jenkins_master)
-
-        if root.tag == "hudson.model.MyView":
-            return MyView(controller, jenkins_master)
 
         return pluginapi.find_view_plugin(config)(controller, jenkins_master)
 
