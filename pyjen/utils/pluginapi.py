@@ -100,7 +100,7 @@ def _load_modules(path):
     retval = []
     for loader, name, ispkg in pkgutil.walk_packages([path]):
         if not ispkg:
-            retval.append(loader.find_module(name).load_module(name))
+            retval.append(importlib.import_module("pyjen.plugins." + name))
 
     return retval
 
