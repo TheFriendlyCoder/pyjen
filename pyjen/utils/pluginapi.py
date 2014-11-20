@@ -2,6 +2,9 @@ import importlib
 from pyjen.plugins.pluginbase import pluginbase
 import os
 
+# Path where all PyJen plugins are stored
+PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
+
 def find_plugin(xml):
     """Dynamically locates the class for a Jenkins plugin
     
@@ -122,27 +125,17 @@ def _load_modules(path):
 
     return retval
 
-# Path where all PyJen plugins are stored
-PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
-def _get_all_view_plugins():
-    view_plugins_path = os.path.join(PYJEN_PLUGIN_FOLDER, "view")
-    all_modules = _load_modules(view_plugins_path)
+def get_view_plugins():
+    """Returns a list of view plugins currently supported by the PyJen library
+    :returns: a list of plugin names currently supported by the PyJen library
+    :rtype: :func:`list`
+    """
+    all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
     retval = []
     for module in all_modules:
         public_classes = _extract_public_classes(module)
         view_classes = _extract_classes_of_type(public_classes, "pyjen.view.View")
         retval.extend(view_classes)
-
-    return retval
-
-def list_view_plugins():
-    """Returns a list of view plugins currently supported by the PyJen library
-    :returns: a list of plugin names currently supported by the PyJen library
-    :rtype: :func:`list`
-    """
-    retval = []
-    for plugin in _get_all_view_plugins():
-        retval.append(plugin.type)
 
     return retval
 

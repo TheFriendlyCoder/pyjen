@@ -66,7 +66,8 @@ class View(object):
         retval.append("hudson.model.MyView")
 
         # types supported by plugins
-        retval.extend(pluginapi.list_view_plugins())
+        for plugin in pluginapi.get_view_plugins():
+            retval.append(plugin.type)
 
         return retval
 
@@ -227,7 +228,7 @@ class View(object):
     def type(self):
         """Retrieves the Jenkins view data type from this class instance
 
-        To be implemented in all derived classes
+        Base classes are expected to define a 'static' property named after this method
         :rtype: :func:`str`
         """
         raise NotYetImplementedError()
