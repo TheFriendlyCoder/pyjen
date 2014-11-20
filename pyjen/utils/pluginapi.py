@@ -71,49 +71,80 @@ def list_job_plugins():
 
     return retval
 
+
+
+def _extract_public_classes(module):
+    """Given an object of type 'module', extract all public 'class' type objects contained therein
+
+    :param module: The module containing classes to be processed
+    :return: :class:`list` of 'class' objects
+    :rtype: :class:`list`
+    """
+    import inspect
+    retval = []
+    for attribute_name in dir(module):
+        if not attribute_name.startswith("_"):
+            cur_attr = getattr(module, attribute_name)
+            if inspect.isclass(cur_attr):
+                retval.append(cur_attr)
+
+    return retval
+
+def _extract_classes_of_type(classes, base_type):
+    """Given a list of class objects, extract those which implement / derive from a given base class type
+
+    :param list classes: list of 1 or more objects of type 'class' to be analysed
+    :param str base_type: the descriptive name of the base class of all classes to be found
+    :return: :class:`list` of 'class' objects that inherit from a base class of type base_type
+    :rtype: :class:`list`
+    """
+    retval = []
+    for cur_class in classes:
+        for cur_baseclass in cur_class.__bases__:
+            class_name = cur_baseclass.__module__ + "." + cur_baseclass.__name__
+            if class_name == base_type:
+                retval.append(cur_class)
+                break
+    return retval
+
+def _load_modules(path):
+    """Gets a list of all modules found in a given path
+
+    :param str path: path containing Python modules to be loaded
+    :return: :class:`list` of objects of type 'module' found in the specified folder
+    :rtype: :class:`list`
+    """
+    import pkgutil
+    retval = []
+    for loader, name, ispkg in pkgutil.walk_packages([path]):
+        if not ispkg:
+            retval.append(loader.find_module(name).load_module(name))
+
+    return retval
+
+# Path where all PyJen plugins are stored
+PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
+def _get_all_view_plugins():
+    view_plugins_path = os.path.join(PYJEN_PLUGIN_FOLDER, "view")
+    all_modules = _load_modules(view_plugins_path)
+    retval = []
+    for module in all_modules:
+        public_classes = _extract_public_classes(module)
+        view_classes = _extract_classes_of_type(public_classes, "pyjen.view.View")
+        retval.extend(view_classes)
+
+    return retval
+
 def list_view_plugins():
     """Returns a list of view plugins currently supported by the PyJen library
     :returns: a list of plugin names currently supported by the PyJen library
     :rtype: :func:`list`
     """
-    path_to_plugins = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins", "view"))
-    plugin_files = os.listdir(path_to_plugins)
-
     retval = []
-    for file in plugin_files:
-        if file != "__init__.py" and os.path.isfile(os.path.join(path_to_plugins, file)):
-            full_plugin_name = "pyjen.plugins.view."+os.path.splitext(file)[0]
-            plugin_module = importlib.import_module(full_plugin_name)
-            plugin_name = os.path.splitext(file)[0]
-            plugin_name = plugin_name.replace("view-", "")
-            plugin_name = plugin_name.replace("-", "_")
-            plugin_class = getattr(plugin_module, plugin_name)
-
-            retval.append(plugin_class.type)
+    for plugin in _get_all_view_plugins():
+        retval.append(plugin.type)
 
     return retval
 
 if __name__ == "__main__": # pragma: no cover
-    import pyjen
-    path_to_plugins = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins", "view"))
-    #print(path_to_plugins)
-    #from pyjen.plugins.view import *
-    import pkgutil
-    for l, n, p in pkgutil.walk_packages([path_to_plugins]):
-        #print ("{0} - {1} - {2}".format(l, n, p))
-        mod = l.find_module(n).load_module(n)
-        #print(dir(mod.nested_view))
-        for z in dir(mod):
-            if not z.startswith("__"):
-                #print ("processing " + z)
-                tempattr = getattr(mod, z)
-                #print ("attribute {0}".format(tempattr))
-                #print ("Type of thing is {0}".format(type(mod)))
-                if hasattr(tempattr, "__bases__"):
-                    for i in tempattr.__bases__:
-                        class_name = i.__module__ + "." + i.__name__
-                        #print ("base class name is " + class_name)
-                        if class_name == "pyjen.view.View":
-                            print ("Found plugin class {0}".format(tempattr))
-        exit()
-    print("done")
+    pass
