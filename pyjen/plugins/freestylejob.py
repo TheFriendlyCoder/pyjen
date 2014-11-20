@@ -111,3 +111,5 @@ class FreestyleJob(Job):
             <buildWrappers/>
             </project>"""
         return xml
+
+    type = "project"

@@ -35,37 +35,13 @@ def find_job_plugin(xml):
     """
     plugin = pluginbase(xml)
 
-    return find_job_plugin_by_name(plugin.get_module_name())
-
-def find_job_plugin_by_name(plugin_name):
-    """locates the class for a Jenkins plugin in the PyJen plugin repo by name
-
-    :param str plugin_name: The name of the plugin to find
-    :returns: Instance of the class that manages the given plugin
-    :rtype: :py:mod:`pyjen.plugins.pluginbase`
-    """
-    full_plugin_name = "pyjen.plugins.job-" + plugin_name
-
-    plugin_module = importlib.import_module(full_plugin_name)
-
-    return getattr(plugin_module, plugin_name.replace("-", "_"))
+    return find_job_plugin_by_name(plugin.get_class_name())
 
 
 
-def list_job_plugins():
-    """Returns a list off job plugins currently supported by the PyJen library
-    :returns: a list of plugin names currently supported by the PyJen library
-    :rtype: :func:`list`
-    """
-    path_to_plugins = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
-    plugin_files = os.listdir(path_to_plugins)
 
-    retval = []
-    for file in plugin_files:
-        if os.path.isfile(os.path.join(path_to_plugins, file)) and file.startswith("job-"):
-            retval.append(os.path.splitext(file)[0].replace("job-", ""))
 
-    return retval
+
 
 
 
@@ -132,6 +108,20 @@ def get_view_plugins():
 
     return retval
 
+def get_job_plugins():
+    """Returns a list off job plugins currently supported by the PyJen library
+    :returns: a list of plugin names currently supported by the PyJen library
+    :rtype: :func:`list`
+    """
+    all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
+    retval = []
+    for module in all_modules:
+        public_classes = _extract_public_classes(module)
+        job_classes = _extract_classes_of_type(public_classes, "pyjen.job.Job")
+        retval.extend(job_classes)
+
+    return retval
+
 class PluginNotSupportedError(NotImplementedError):
     """Basic extension to the NotImplementedError with details about which plugin was not found"""
     def __init__(self, message, plugin_name):
@@ -169,6 +159,19 @@ def find_view_plugin_by_name(class_name):
 
     raise PluginNotSupportedError("View plugin {0} not found".format(class_name), class_name)
 
+def find_job_plugin_by_name(class_name):
+    """locates the class for a Jenkins plugin in the PyJen plugin repo by name
+
+    :param str plugin_name: The name of the plugin to find
+    :returns: Instance of the class that manages the given plugin
+    :rtype: :py:mod:`pyjen.plugins.pluginbase`
+    """
+    for plugin in get_job_plugins():
+        if plugin.type == class_name:
+            return plugin
+
+    raise PluginNotSupportedError("Job plugin {0} not found".format(class_name), class_name)
+
 def find_view_plugin(xml):
     """Loads the PyJen class used to manage the plugin described by the given XML snippet
 
@@ -181,5 +184,5 @@ def find_view_plugin(xml):
 
 if __name__ == "__main__": # pragma: no cover
 
-    v = find_view_plugin_by_name("hudson.model.ListView2")
-    print (v.type)
+    for i in get_job_plugins():
+        print(i.type)

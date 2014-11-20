@@ -451,4 +451,9 @@ class Jenkins(object):
         return Job.create(new_io_obj, self)
 
 if __name__ == '__main__':  # pragma: no cover
+    j = Jenkins.easy_connect("http://deepspace9:8080", ("kevin", "2545WxWolv"))
+    job = j.create_job("delme123", "maven2-moduleset")
+    #job = j.get_job("http://deepspace9:8080/job/FreestyleProj/")
+    print(job.name)
+    print(job.type)
     pass

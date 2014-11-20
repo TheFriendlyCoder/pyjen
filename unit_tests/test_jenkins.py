@@ -63,7 +63,7 @@ class jenkins_misc_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         j = Jenkins(mock_data_io)
         actual = j.job_types
-        self.assertIn("freestyle", actual)
+        self.assertIn("project", actual)
         
 class jenkins_job_tests(unittest.TestCase):
     def setUp(self):
@@ -294,4 +294,3 @@ class jenkins_nodes_tests(unittest.TestCase):
     
 if __name__ == "__main__":
     pytest.main()
-    

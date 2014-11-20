@@ -1,7 +1,9 @@
 """Primitives for interacting with Jenkins jobs"""
-from pyjen.build import Build
 import xml.etree.ElementTree as ElementTree
+
+from pyjen.build import Build
 import pyjen.utils.pluginapi as pluginapi
+
 
 class Job(object):
     """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
@@ -25,15 +27,9 @@ class Job(object):
         :return: An instance of the appropriate derived type for the given job
         :rtype: :py:mod:`pyjen.Job`
         """
-        # NOTE: We have to import the dependent classes from within this method
-        #       to prevent circular dependencies
-        from pyjen.freestylejob import FreestyleJob
+
 
         config = controller.get_text('/config.xml')
-        root = ElementTree.fromstring(config)
-
-        if root.tag == "project":
-            return FreestyleJob(controller, jenkins_master)
 
         return pluginapi.find_job_plugin(config)(controller, jenkins_master)
 
@@ -48,7 +44,7 @@ class Job(object):
         """
         # NOTE: We have to import the dependent classes from within this method
         #       to prevent circular dependencies
-        from pyjen.freestylejob import FreestyleJob
+        from pyjen.plugins.freestylejob import FreestyleJob
 
         if job_type.lower() == "freestyle":
             return FreestyleJob.template_config_xml()
@@ -66,11 +62,8 @@ class Job(object):
         """
         retval = []
 
-        # built in types
-        retval.append("freestyle")
-
-        # types supported by plugins
-        retval.extend(pluginapi.list_job_plugins())
+        for plugin in pluginapi.get_job_plugins():
+            retval.append(plugin.type)
 
         return retval
 
