@@ -1,7 +1,8 @@
 """Primitives for interacting with Jenkins views"""
+import xml.etree.ElementTree as ElementTree
+
 from pyjen.job import Job
 from pyjen.exceptions import NotYetImplementedError
-import xml.etree.ElementTree as ElementTree
 import pyjen.utils.pluginapi as pluginapi
 
 
@@ -30,9 +31,9 @@ class View(object):
 
         # NOTE: We need to import the classes to instantiate from inside this function
         #       to prevent circular dependencies between these and the current class
-        from pyjen.listview import ListView
-        from pyjen.allview import AllView
-        from pyjen.myview import MyView
+        from pyjen.plugins.listview import ListView
+        from pyjen.plugins.allview import AllView
+        from pyjen.plugins.myview import MyView
 
         config = controller.get_text('/config.xml')
         root = ElementTree.fromstring(config)
@@ -60,12 +61,6 @@ class View(object):
         """
         retval = []
 
-        # built in types
-        retval.append("hudson.model.ListView")
-        retval.append("hudson.model.AllView")
-        retval.append("hudson.model.MyView")
-
-        # types supported by plugins
         for plugin in pluginapi.get_view_plugins():
             retval.append(plugin.type)
 
@@ -245,4 +240,6 @@ class View(object):
         return v
 
 if __name__ == "__main__":  # pragma: no cover
+    for i in View.supported_types():
+        print(i)
     pass
