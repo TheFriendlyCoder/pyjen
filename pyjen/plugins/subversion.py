@@ -1,7 +1,7 @@
 #import xml.etree.ElementTree as ElementTree
 from pyjen.plugins.pluginbase import pluginbase
 
-class subversion(pluginbase):
+class Subversion(pluginbase):
     """Subversion SCM plugin"""
     
     def __init__(self, xml):
@@ -9,7 +9,7 @@ class subversion(pluginbase):
         
         :param str xml: the XML text for the subtree of the SVN plugin
         """
-        super(subversion, self).__init__(xml)
+        super(Subversion, self).__init__(xml)
     
         assert (self._root.tag == "scm")
         assert (self._root.attrib['class'] == "hudson.scm.SubversionSCM")
@@ -52,3 +52,5 @@ class subversion(pluginbase):
             retval.append(val)
             
         return retval
+
+    type = "hudson.scm.SubversionSCM"

@@ -33,8 +33,8 @@ class pluginbase(object):
         :rtype: :func:`str`
         """
 
-        if "classname" in self._root.attrib:
-            temp = self._root.attrib['classname']
+        if "class" in self._root.attrib:
+            temp = self._root.attrib['class']
         else:
             temp = self._root.tag
 

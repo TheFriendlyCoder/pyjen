@@ -17,14 +17,34 @@ def find_plugin(xml):
     """
     plugin = pluginbase(xml)
     
-    full_plugin_name = "pyjen.plugins." + plugin.get_module_name()
-    
-    plugin_module = importlib.import_module(full_plugin_name)
+    return find_plugin_by_name(plugin.get_class_name())
 
-    plugin_class = getattr(plugin_module, plugin.get_module_name())
-    
-    return plugin_class(xml)
+def get_xml_plugins():
+    """Gets a list of all generic plugins used by Jenkins config.xml
 
+    :returns:a list of all generic plugins used by Jenkins config.xml
+    :rtype: :class:`list`
+    """
+    all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
+    retval = []
+    for module in all_modules:
+        public_classes = _extract_public_classes(module)
+        view_classes = _extract_classes_of_type(public_classes, "pyjen.plugins.pluginbase.pluginbase")
+        retval.extend(view_classes)
+
+    return retval
+
+def find_plugin_by_name(class_name):
+    """Retrieves the PyJen class used to manage the Jenkins plugin of the specified name
+
+    :param str class_name: the name of the Jenkins class to be managed
+    :return: the PyJen class object, to instantiate to manage this Jenkins object
+    """
+    for plugin in get_xml_plugins():
+        if plugin.type == class_name:
+            return plugin
+
+    raise PluginNotSupportedError("XML plugin {0} not found".format(class_name), class_name)
 
 
 
@@ -186,6 +206,4 @@ def find_job_plugin(xml):
 
 
 if __name__ == "__main__": # pragma: no cover
-
-    for i in get_job_plugins():
-        print(i.type)
+    pass

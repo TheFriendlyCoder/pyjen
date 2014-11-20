@@ -1,7 +1,7 @@
 from unit_tests.xml_test_base import xml_test_case
 from pyjen.utils.job_xml import job_xml
 import pytest
-from pyjen.plugins.subversion import subversion
+from pyjen.plugins.subversion import Subversion
 import sys
 
 class job_xml_basic_config_tests(xml_test_case):
@@ -118,7 +118,7 @@ class job_xml_basic_config_tests(xml_test_case):
     def test_get_svn_scm(self):
         sample_xml = """
         <project>
-            <scm class="hudson.scm.SubversionSCM" plugin="subversion@1.53">
+            <scm class="hudson.scm.SubversionSCM" plugin="Subversion@1.53">
                 <locations>
                     <hudson.scm.SubversionSCM_-ModuleLocation>
                         <remote>http://repository/project/trunk</remote>
@@ -132,7 +132,7 @@ class job_xml_basic_config_tests(xml_test_case):
                 <excludedUsers/>
                 <excludedRevprop/>
                 <excludedCommitMessages/>
-                <workspaceUpdater class="hudson.scm.subversion.UpdateUpdater"/>
+                <workspaceUpdater class="hudson.scm.Subversion.UpdateUpdater"/>
                 <ignoreDirPropChanges>false</ignoreDirPropChanges>
                 <filterChangelog>false</filterChangelog>
             </scm>
@@ -140,7 +140,11 @@ class job_xml_basic_config_tests(xml_test_case):
         
         j = job_xml(sample_xml)
         scm = j.get_scm()
-        self.assertEqual (type(scm), subversion)
+        print(scm.__class__)
+
+        self.assertEqual(scm.type, "hudson.scm.SubversionSCM")
+        self.assertEqual(Subversion.type, "hudson.scm.SubversionSCM")
+        self.assertIsInstance(scm, Subversion)
         
 if __name__ == '__main__':
     pytest.main()

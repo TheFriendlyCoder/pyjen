@@ -69,13 +69,12 @@ class job_xml(object):
             One of any number of plugin objects responsible for providing
             extensions to the source code management portion of a job
         
-            Examples: :py:mod:`pyjen.plugins.subversion`
+            Examples: :py:mod:`pyjen.plugins.Subversion`
         
         :rtype: :py:mod:`pyjen.plugins.pluginbase`
         """
         Node = self.__root.find('scm')
         xml = ElementTree.tostring(Node)
         
-        return pluginapi.find_plugin(xml)
+        return pluginapi.find_plugin(xml)(xml)
 
-    
