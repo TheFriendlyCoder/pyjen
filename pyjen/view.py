@@ -219,7 +219,9 @@ class View(object):
         :rtype: :py:mod:`pyjen.View`
         """
         v = self._master.create_view(new_view_name, self.type)
-        v.set_config_xml (self.config_xml)
+        temp_xml = self.config_xml
+        temp_xml = temp_xml.replace(self.name, new_view_name)
+        v.set_config_xml(temp_xml)
         return v
 
 if __name__ == "__main__":  # pragma: no cover
