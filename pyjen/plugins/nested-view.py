@@ -77,3 +77,10 @@ class nested_view(View):
                 return View.create(new_io_obj, self._master)
                 
         raise NestedViewCreationError("Failed to create nested view " + view_name + " under " + self.name)
+
+    def clone_view(self, existing_view, new_view_name):
+        retval = self.create_view(new_view_name, existing_view.type)
+        orig_xml = existing_view.config_xml
+        new_xml = orig_xml.replace(existing_view.name, new_view_name)
+        retval.set_config_xml(new_xml)
+        return retval

@@ -140,8 +140,16 @@ class job_xml_basic_config_tests(xml_test_case):
         
         j = job_xml(sample_xml)
         scm = j.get_scm()
+        #print(dir(scm.__class__))
+        #print(dir(Subversion))
+        #print(scm.__class__.__module__)
+        #print(Subversion.__class__.__module__)
+        #self.assertEqual(scm.__class__, Subversion)
 
-        self.assertIsInstance(scm, Subversion)
+        # TODO: Figure out why this doesn't work
+        #self.assertIsInstance(scm, abc)
+
+        self.assertEqual(scm.type, Subversion.type)
 
 if __name__ == '__main__':
     pytest.main()

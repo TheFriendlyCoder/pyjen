@@ -82,6 +82,7 @@ def _extract_classes_of_type(classes, base_type):
     """
     retval = []
     for cur_class in classes:
+        # TODO: Rework this to use issubclass()
         for cur_baseclass in cur_class.__bases__:
             class_name = cur_baseclass.__module__ + "." + cur_baseclass.__name__
             if class_name == base_type:
@@ -98,10 +99,14 @@ def _load_modules(path):
     """
     import pkgutil
     retval = []
-    for loader, name, ispkg in pkgutil.walk_packages([path]):
-        if not ispkg:
-            retval.append(importlib.import_module("pyjen.plugins." + name))
 
+    for loader, name, ispkg in pkgutil.walk_packages([path], "pyjen.plugins."):
+        if not ispkg:
+            #retval.append(importlib.import_module(name))
+            cur_mod = loader.find_module(name).load_module(name)
+            retval.append(cur_mod)
+
+    #print("Found {0} items in {1}".format(len(retval), path))
     return retval
 
 def get_view_plugins():
@@ -110,12 +115,17 @@ def get_view_plugins():
     :rtype: :func:`list`
     """
     all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
+    #print ("all modules: " + str(all_modules))
     retval = []
     for module in all_modules:
+        #print("processing module " + str(module))
         public_classes = _extract_public_classes(module)
         view_classes = _extract_classes_of_type(public_classes, "pyjen.view.View")
+
+        #print("adding classes " + str(view_classes))
         retval.extend(view_classes)
 
+    #print("Supported plugins: " + str(retval))
     return retval
 
 def get_job_plugins():
@@ -163,8 +173,13 @@ def find_view_plugin_by_name(class_name):
     :param str class_name: the name of the Jenkins plugin to find
     :return: an instance of the PyJen plugin class responsible for managing Jenkins plugins of the given type
     """
+
     for plugin in get_view_plugins():
         if plugin.type == class_name:
+            #print("Found " + plugin.type)
+            #mod = importlib.import_module(plugin.__module__)
+            #classobj = getattr(mod, plugin.__name__)
+            #return classobj
             return plugin
 
     raise PluginNotSupportedError("View plugin {0} not found".format(class_name), class_name)
