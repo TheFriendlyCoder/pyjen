@@ -1,9 +1,8 @@
 """Primitives for interacting with Jenkins views"""
-import xml.etree.ElementTree as ElementTree
-
 from pyjen.job import Job
-from pyjen.exceptions import NotYetImplementedError
-from pyjen.utils.pluginapi import find_view_plugin, get_view_plugins, PluginBase
+from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.pluginapi import get_plugins, PluginBase
+from pyjen.plugins.pluginbase import pluginbase
 
 
 class View(PluginBase):
@@ -29,8 +28,14 @@ class View(PluginBase):
         :rtype: :py:mod:`pyjen.View`
         """
         config = controller.get_text('/config.xml')
+        pluginxml = pluginbase(config)
 
-        return find_view_plugin(config)(controller, jenkins_master)
+        for plugin in get_plugins():
+            if plugin.type == pluginxml.get_class_name():
+                return plugin(controller, jenkins_master)
+
+        raise PluginNotSupportedError("View plugin {0} not found".format(plugin.get_class_name), plugin.get_class_name)
+
 
     @staticmethod
     def supported_types():
@@ -43,9 +48,10 @@ class View(PluginBase):
         :rtype: :func:`str`
         """
         retval = []
-
-        for plugin in get_view_plugins():
-            retval.append(plugin.type)
+        from pyjen.view import View
+        for plugin in get_plugins():
+            if issubclass(plugin, View):
+                retval.append(plugin.type)
 
         return retval
 
@@ -217,6 +223,6 @@ class View(PluginBase):
 
 if __name__ == "__main__":  # pragma: no cover
 
-    #for i in View.supported_types():
-    #    print(i)
+    for i in View.supported_types():
+        print(i)
     pass

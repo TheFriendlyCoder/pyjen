@@ -1,8 +1,8 @@
 """Primitives for interacting with Jenkins jobs"""
-import xml.etree.ElementTree as ElementTree
-
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, find_job_plugin, find_job_plugin_by_name, get_job_plugins
+from pyjen.utils.pluginapi import PluginBase, get_plugins
+from pyjen.plugins.pluginbase import pluginbase
+from pyjen.exceptions import PluginNotSupportedError
 
 
 class Job(PluginBase):
@@ -30,8 +30,13 @@ class Job(PluginBase):
 
 
         config = controller.get_text('/config.xml')
+        pluginxml = pluginbase(config)
 
-        return find_job_plugin(config)(controller, jenkins_master)
+        for plugin in get_plugins():
+            if plugin.type == pluginxml.get_class_name():
+                return plugin(controller, jenkins_master)
+
+        raise PluginNotSupportedError("Job plugin {0} not found".format(pluginxml.class_name), pluginxml.class_name)
 
     @staticmethod
     def template_config_xml(job_type):
@@ -61,9 +66,10 @@ class Job(PluginBase):
         :rtype: :func:`str`
         """
         retval = []
-
-        for plugin in get_job_plugins():
-            retval.append(plugin.type)
+        from pyjen.job import Job
+        for plugin in get_plugins():
+            if issubclass(plugin, Job):
+                retval.append(plugin.type)
 
         return retval
 
@@ -443,4 +449,6 @@ class Job(PluginBase):
 
 
 if __name__ == "__main__":  # pragma: no cover
+    for i in Job.supported_types():
+        print(i)
     pass

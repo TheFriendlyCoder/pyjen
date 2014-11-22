@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ElementTree
-import pyjen.utils.pluginapi as pluginapi
+from pyjen.utils.pluginapi import get_plugins
+from pyjen.plugins.pluginbase import pluginbase
+from pyjen.exceptions import PluginNotSupportedError
 
 class job_xml(object):
     """ Wrapper around the config.xml for a Jenkins job
@@ -75,6 +77,11 @@ class job_xml(object):
         """
         Node = self.__root.find('scm')
         xml = ElementTree.tostring(Node)
-        
-        return pluginapi.find_plugin(xml)(xml)
+
+        pluginxml = pluginbase(xml)
+        for plugin in get_plugins():
+            if plugin.type == pluginxml.get_class_name():
+                return plugin(xml)
+
+        raise PluginNotSupportedError("Job XML plugin {0} not found".format(pluginxml.get_class_name()), pluginxml.get_class_name())
 

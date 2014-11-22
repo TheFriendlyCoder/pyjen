@@ -72,5 +72,29 @@ class NotYetImplementedError(PyJenError):
         """constructor"""
         super(NotYetImplementedError, self).__init__()
 
+
+class PluginNotSupportedError(NotImplementedError):
+    """Basic extension to the NotImplementedError with details about which plugin was not found"""
+    def __init__(self, message, plugin_name):
+        """Constructor
+
+        :param str message: description of the error
+        :param str plugin_name: the class name / type of the plugin that was not found
+        """
+        super(PluginNotSupportedError, self).__init__()
+        self._message = message
+        self._plugin_name = plugin_name
+
+    def __str__(self):
+        return self._message
+
+    @property
+    def message(self):
+        return self._message
+
+    @property
+    def plugin_name(self):
+        return self._plugin_name
+
 if __name__ == "__main__":  # pragma: no cover
     pass

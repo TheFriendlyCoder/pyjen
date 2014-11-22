@@ -1,7 +1,7 @@
 #import xml.etree.ElementTree as ElementTree
 from pyjen.plugins.pluginbase import pluginbase
-
-class Subversion(pluginbase):
+from pyjen.utils.pluginapi import PluginBase
+class Subversion(pluginbase, PluginBase):
     """Subversion SCM plugin"""
     
     def __init__(self, xml):
