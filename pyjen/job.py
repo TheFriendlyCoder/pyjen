@@ -2,10 +2,10 @@
 import xml.etree.ElementTree as ElementTree
 
 from pyjen.build import Build
-import pyjen.utils.pluginapi as pluginapi
+from pyjen.utils.pluginapi import PluginBase, find_job_plugin, find_job_plugin_by_name, get_job_plugins
 
 
-class Job(object):
+class Job(PluginBase):
     """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
 
     def __init__(self, controller, jenkins_master):
@@ -31,7 +31,7 @@ class Job(object):
 
         config = controller.get_text('/config.xml')
 
-        return pluginapi.find_job_plugin(config)(controller, jenkins_master)
+        return find_job_plugin(config)(controller, jenkins_master)
 
     @staticmethod
     def template_config_xml(job_type):
@@ -48,7 +48,7 @@ class Job(object):
 
         if job_type.lower() == "freestyle":
             return FreestyleJob.template_config_xml()
-        return pluginapi.find_job_plugin_by_name(job_type).template_config_xml()
+        return find_job_plugin_by_name(job_type).template_config_xml()
 
     @staticmethod
     def supported_types():
@@ -62,7 +62,7 @@ class Job(object):
         """
         retval = []
 
-        for plugin in pluginapi.get_job_plugins():
+        for plugin in get_job_plugins():
             retval.append(plugin.type)
 
         return retval
