@@ -1,8 +1,7 @@
 """Primitives for interacting with Jenkins views"""
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.pluginapi import get_plugins, PluginBase
-from pyjen.plugins.pluginxml import PluginXML
+from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
 
 
 class View(PluginBase):

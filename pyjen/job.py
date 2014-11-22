@@ -1,7 +1,6 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, get_plugins
-from pyjen.plugins.pluginxml import PluginXML
+from pyjen.utils.pluginapi import PluginBase, get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 
 

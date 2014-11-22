@@ -1,6 +1,7 @@
 import os
 from six import add_metaclass
 from abc import ABCMeta, abstractproperty
+import xml.etree.ElementTree as ElementTree
 
 # Path where all PyJen plugins are stored
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
@@ -20,6 +21,52 @@ class PluginBase(object):
         """
         raise NotImplementedError
 
+
+class PluginXML(object):
+    """Class used to process XML configuration information associated with Jenkins plugins"""
+    def __init__(self, xml):
+        """constructor
+
+        :param str xml: the XML sub-tree defining the properties of this plugin
+        """
+        self._root = ElementTree.fromstring(xml)
+
+    def get_module_name(self):
+        """Gets the name of the plugin
+
+        :returns: the plugin name
+        :rtype: :func:`str`
+        """
+        attr = self._root.attrib['plugin']
+        parts = attr.split('@')
+        return parts[0]
+
+    def get_class_name(self):
+        """Gets the Java class name of the plugin
+
+        :returns: the Java class name
+        :rtype: :func:`str`
+        """
+
+        if "class" in self._root.attrib:
+            temp = self._root.attrib['class']
+        else:
+            temp = self._root.tag
+
+        # NOTE: For some reason, class names with underscores in them are represented in
+        # the config.xml with double-underscores. We need to undo this obfuscation here
+        return temp.replace("__", "_")
+
+
+    def get_version(self):
+        """Gets the version of the plugin
+
+        :returns: the plugin version
+        :rtype: :func:`str`
+        """
+        attr = self._root.attrib['plugin']
+        parts = attr.split('@')
+        return parts[1]
 
 def get_plugins():
     """Returns list of classes for all plugins supported by PyJen

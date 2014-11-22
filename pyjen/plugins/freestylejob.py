@@ -71,7 +71,7 @@ class FreestyleJob(Job):
         :returns:
             One of several possible plugin objects which exposes the relevant set
             of properties supported by a given source code management tool.
-        :rtype: :py:class:`pyjen.plugins.pluginxml`
+        :rtype: :py:class:`pyjen.utils.pluginapi.pluginxml`
         """
         xml = self.config_xml
         jobxml = job_xml(xml)

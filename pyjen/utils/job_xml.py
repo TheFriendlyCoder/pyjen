@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.pluginapi import get_plugins
-from pyjen.plugins.pluginxml import PluginXML
+from pyjen.utils.pluginapi import get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 
 class job_xml(object):
