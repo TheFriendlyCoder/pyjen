@@ -1,5 +1,5 @@
-from pyjen.plugins.pluginbase import pluginbase
 from pyjen.job import Job
+
 
 class maven_plugin(Job):
     """Maven view plugin"""

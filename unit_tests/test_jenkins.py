@@ -125,7 +125,7 @@ class jenkins_job_tests(unittest.TestCase):
         jenkins_data_io.clone.return_value = job_data_io
 
         j = Jenkins(jenkins_data_io)
-        job = j.create_job(expected_name, "freestyle")
+        job = j.create_job(expected_name, "project")
 
         self.assertEqual(job.name, expected_name)
 

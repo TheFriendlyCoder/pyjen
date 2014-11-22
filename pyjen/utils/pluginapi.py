@@ -1,12 +1,10 @@
-import importlib
-from pyjen.plugins.pluginbase import pluginbase
 import os
+from six import add_metaclass
+from abc import ABCMeta, abstractproperty
 
 # Path where all PyJen plugins are stored
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
 
-from six import add_metaclass
-from abc import ABCMeta, abstractproperty
 
 
 @add_metaclass(ABCMeta)
@@ -59,6 +57,7 @@ def _load_modules(path):
     :rtype: :class:`list`
     """
     import pkgutil
+    import importlib
     retval = []
 
     for loader, name, ispkg in pkgutil.walk_packages([path], "pyjen.plugins."):

@@ -47,13 +47,11 @@ class Job(PluginBase):
         :return: XML configuration data for the specified job type
         :rtype: :func:`str`
         """
-        # NOTE: We have to import the dependent classes from within this method
-        #       to prevent circular dependencies
-        from pyjen.plugins.freestylejob import FreestyleJob
+        for plugin in get_plugins():
+            if plugin.type == job_type:
+                return plugin.template_config_xml()
 
-        if job_type.lower() == "freestyle":
-            return FreestyleJob.template_config_xml()
-        return find_job_plugin_by_name(job_type).template_config_xml()
+        raise PluginNotSupportedError("Job plugin {0} not found".format(job_type), job_type)
 
     @staticmethod
     def supported_types():
