@@ -1,7 +1,7 @@
-pyjen.plugins.pluginbase module
+pyjen.plugins.PluginXML module
 ===============================
 
-.. automodule:: pyjen.plugins.pluginbase
+.. automodule:: pyjen.plugins.PluginXML
     :members:
     :undoc-members:
     :show-inheritance:

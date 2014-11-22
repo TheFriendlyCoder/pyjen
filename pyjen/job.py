@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
 from pyjen.utils.pluginapi import PluginBase, get_plugins
-from pyjen.plugins.pluginbase import pluginbase
+from pyjen.plugins.pluginxml import PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 
 
@@ -30,7 +30,7 @@ class Job(PluginBase):
 
 
         config = controller.get_text('/config.xml')
-        pluginxml = pluginbase(config)
+        pluginxml = PluginXML(config)
 
         for plugin in get_plugins():
             if plugin.type == pluginxml.get_class_name():

@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.pluginapi import get_plugins
-from pyjen.plugins.pluginbase import pluginbase
+from pyjen.plugins.pluginxml import PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 
 class job_xml(object):
@@ -73,12 +73,12 @@ class job_xml(object):
         
             Examples: :py:mod:`pyjen.plugins.Subversion`
         
-        :rtype: :py:mod:`pyjen.plugins.pluginbase`
+        :rtype: :py:mod:`pyjen.plugins.PluginXML`
         """
         Node = self.__root.find('scm')
         xml = ElementTree.tostring(Node)
 
-        pluginxml = pluginbase(xml)
+        pluginxml = PluginXML(xml)
         for plugin in get_plugins():
             if plugin.type == pluginxml.get_class_name():
                 return plugin(xml)

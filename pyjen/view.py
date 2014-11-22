@@ -2,7 +2,7 @@
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import get_plugins, PluginBase
-from pyjen.plugins.pluginbase import pluginbase
+from pyjen.plugins.pluginxml import PluginXML
 
 
 class View(PluginBase):
@@ -28,7 +28,7 @@ class View(PluginBase):
         :rtype: :py:mod:`pyjen.View`
         """
         config = controller.get_text('/config.xml')
-        pluginxml = pluginbase(config)
+        pluginxml = PluginXML(config)
 
         for plugin in get_plugins():
             if plugin.type == pluginxml.get_class_name():

@@ -7,7 +7,7 @@ Submodules
 .. toctree::
 
    pyjen.plugins.job-maven-plugin
-   pyjen.plugins.pluginbase
+   pyjen.plugins.PluginXML
    pyjen.plugins.Subversion
    pyjen.plugins.view-nested-view
    pyjen.plugins.view-sectioned-view
