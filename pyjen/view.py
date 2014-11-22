@@ -3,10 +3,10 @@ import xml.etree.ElementTree as ElementTree
 
 from pyjen.job import Job
 from pyjen.exceptions import NotYetImplementedError
-import pyjen.utils.pluginapi as pluginapi
+from pyjen.utils.pluginapi import find_view_plugin, get_view_plugins, PluginBase
 
 
-class View(object):
+class View(PluginBase):
     """ 'Abstract' base class used by all view classes, providing functionality common to them all"""
 
     def __init__(self, data_io_controller, jenkins_master):
@@ -30,7 +30,7 @@ class View(object):
         """
         config = controller.get_text('/config.xml')
 
-        return pluginapi.find_view_plugin(config)(controller, jenkins_master)
+        return find_view_plugin(config)(controller, jenkins_master)
 
     @staticmethod
     def supported_types():
@@ -44,7 +44,7 @@ class View(object):
         """
         retval = []
 
-        for plugin in pluginapi.get_view_plugins():
+        for plugin in get_view_plugins():
             retval.append(plugin.type)
 
         return retval
@@ -202,15 +202,6 @@ class View(object):
 
         return retval
 
-    @property
-    def type(self):
-        """Retrieves the Jenkins view data type from this class instance
-
-        Base classes are expected to define a 'static' property named after this method
-        :rtype: :func:`str`
-        """
-        raise NotYetImplementedError()
-
     def clone(self, new_view_name):
         """Make a copy of this view with the specified name
 
@@ -225,6 +216,7 @@ class View(object):
         return v
 
 if __name__ == "__main__":  # pragma: no cover
-    for i in View.supported_types():
-        print(i)
+
+    #for i in View.supported_types():
+    #    print(i)
     pass

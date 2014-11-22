@@ -17,7 +17,7 @@ setup(
     description='Python wrapper for the Jenkins CI REST API',
     long_description=open('README.rst').read(),
     url='https://github.com/TheFriendlyCoder/pyjen',
-    install_requires=["requests>=2.0.1"],
+    install_requires=["requests>=2.0.1", "six"],
     classifiers=[
                    "Development Status :: 3 - Alpha",
                    "Environment :: Console",

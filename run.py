@@ -8,7 +8,7 @@ import shutil
 import sys
 
 # List of packages needed when building sources for pyjen
-REQUIREMENTS = ['requests>=2.0.1', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
+REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
 
 # Folder where log files will be stored
 log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))

@@ -5,6 +5,51 @@ import os
 # Path where all PyJen plugins are stored
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
 
+from six import add_metaclass
+from abc import ABCMeta, abstractproperty
+
+
+@add_metaclass(ABCMeta)
+class PluginBase(object):
+    @abstractproperty
+    def type(self):
+        raise NotImplementedError
+
+
+def get_plugins():
+    all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
+    retval = []
+    for module in all_modules:
+        retval.extend(_extract_plugin_classes(module))
+    return retval
+
+def get_plugin_types():
+    retval = []
+    for p in get_plugins():
+        retval.append(str(p.type))
+    return retval
+
+def _extract_plugin_classes(module):
+    from pyjen.utils.pluginapi import PluginBase
+    import inspect
+    retval = []
+    for name, obj in inspect.getmembers(module, inspect.isclass):
+        if obj.__module__.startswith("pyjen.plugins."):
+            #print("{0} - {1}".format(name, str(obj)))
+            #print(issubclass(obj, PluginBase))
+            if issubclass(obj, PluginBase):
+                retval.append(obj)
+    #for attribute_name in dir(module):
+    #    cur_attr = getattr(module, attribute_name)
+    #    if inspect.isclass(cur_attr) and issubclass(cur_attr, PluginBase):
+            #print(issubclass(cur_attr, PluginBase))
+            #print(cur_attr)
+    #        retval.append(cur_attr)
+
+    return retval
+#------------------------------------
+# OLD METHODS TO BE DEPRECATED
+
 def find_plugin(xml):
     """Dynamically locates the class for a Jenkins plugin
     
@@ -102,9 +147,9 @@ def _load_modules(path):
 
     for loader, name, ispkg in pkgutil.walk_packages([path], "pyjen.plugins."):
         if not ispkg:
-            #retval.append(importlib.import_module(name))
-            cur_mod = loader.find_module(name).load_module(name)
-            retval.append(cur_mod)
+            retval.append(importlib.import_module(name))
+            #cur_mod = loader.find_module(name).load_module(name)
+            #retval.append(cur_mod)
 
     #print("Found {0} items in {1}".format(len(retval), path))
     return retval

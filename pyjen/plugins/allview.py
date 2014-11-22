@@ -60,3 +60,8 @@ class AllView(View):
         return retval
 
     type = "hudson.model.AllView"
+
+
+if __name__ == "__main__":
+    import pyjen.utils.pluginapi as pluginapi
+    print(issubclass(AllView, pluginapi.PluginBase))
