@@ -1,25 +1,14 @@
 import os
-from six import add_metaclass
-from abc import ABCMeta, abstractproperty
+
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.plugin_base import PluginBase
 
 # Path where all PyJen plugins are stored
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
 
 
 
-@add_metaclass(ABCMeta)
-class PluginBase(object):
-    """Abstract base class common to all PyJen API plugins"""
 
-    @abstractproperty
-    def type(self):
-        """The Jenkins plugin descriptive name, used when instantiating objects of that type
-
-        :return: Jenkins plugin descriptive name, used when instantiating objects of that type
-        :rtype: :func:`str`
-        """
-        raise NotImplementedError
 
 
 class PluginXML(object):
@@ -86,7 +75,6 @@ def _get_plugin_classes(module):
     :returns: list of classes found within the given module that implement PyJen plugin interfaces
     :rtype: :func:`list` of :mod:`pyjen.utils.pluginapi.PluginBase` objects
     """
-    from pyjen.utils.pluginapi import PluginBase
     import inspect
     retval = []
     for name, obj in inspect.getmembers(module, inspect.isclass):
@@ -116,4 +104,6 @@ def _load_modules(path):
     return retval
 
 if __name__ == "__main__": # pragma: no cover
+    for i in get_plugins():
+        print(i.type)
     pass
