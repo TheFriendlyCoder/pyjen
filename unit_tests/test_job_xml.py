@@ -152,4 +152,4 @@ class job_xml_basic_config_tests(xml_test_case):
         self.assertEqual(scm.type, Subversion.type)
 
 if __name__ == '__main__':
-    pytest.main()
+    pytest.main([__file__, "-v", "-s"])

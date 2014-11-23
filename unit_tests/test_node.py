@@ -94,4 +94,4 @@ class node_misc_tests(unittest.TestCase):
         self.assertFalse(final_is_idle_value)
         
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__, "-v", "-s"])

@@ -293,4 +293,4 @@ class jenkins_nodes_tests(unittest.TestCase):
         self.assertEqual(self.second_node_name, nodes[1].name)
     
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__, "-v", "-s"])

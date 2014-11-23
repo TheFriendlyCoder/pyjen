@@ -80,4 +80,4 @@ class changeset_tests(unittest.TestCase):
         mock_controller.clone.assert_called_with(expected_url)
     
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__, "-v", "-s"])

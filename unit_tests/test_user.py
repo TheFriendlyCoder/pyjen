@@ -49,4 +49,4 @@ class user_tests(unittest.TestCase):
         self.assertEqual(u.email, expected_email)
     
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__, "-v", "-s"])

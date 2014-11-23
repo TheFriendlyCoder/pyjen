@@ -186,4 +186,4 @@ class view_tests(unittest.TestCase):
         mock_jenkins._clone_job.assert_called_once_with(orig_job_name, new_job_name)
 
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__, "-v", "-s"])
