@@ -44,6 +44,13 @@ class job_xml(object):
         
         if Node != None:
             self.__root.remove(Node)
+
+    @property
+    def custom_workspace(self):
+        Node = self.__root.find('customWorkspace')
+        if Node is None:
+            return ""
+        return Node.text
                         
     def get_xml(self):
         """Extracts the processed XML for export to a Jenkins job

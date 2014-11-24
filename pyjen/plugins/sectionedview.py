@@ -33,7 +33,8 @@ class SectionedViewXMLPlugin(object):
         temp = tagname.split(".")
         #print(temp[-1])
         import importlib
-        m = importlib.import_module("sectioned-view")
+        # TODO: Make this module name derive its value from the __file__ attribute
+        m = importlib.import_module("pyjen.plugins.sectionedview")
         c = getattr(m, temp[-1])
         #print(c)
         return c
