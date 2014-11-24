@@ -1,35 +1,32 @@
 import xml.etree.ElementTree as ElementTree
 
+
 class view_xml(object):
-    def __init__ (self, xml):
+    def __init__(self, xml):
         """Constructor
         
         :param str xml: Raw XML character string extracted from a Jenkins job.
         """
         
-        self.__root = ElementTree.fromstring(xml)
+        self._root = ElementTree.fromstring(xml)
 
-    def get_type(self):
-        """Returns the Jenkins type descriptor for this view
-        
-        :returns: type descriptor of this view
+    def get_xml(self):
+        """Extracts the processed XML for export to a Jenkins job
+
+        :returns:
+            Raw XML containing any and all customizations applied in
+            previous operations against this object. This character
+            string can be imported into Jenkins to configure a job.
+
         :rtype: :func:`str`
         """
-        
-        #The root element of the views configuration XML
-        #defines the kind of view. Specifically we need
-        #to examine the tag of the root element to get
-        #the appropriate class name 
-        retval = self.__root.tag
-        
-        #For some reason single underscores in the view type
-        #are replaced by double underscores in the element tag name
-        #so we reverse that here
-        retval = retval.replace("__", "_")
-        
-        #TODO: Add support for this via the plugin API
-        #TODO: Confirm built in types never have this problem
-        #TODO: Confirm that all view plugins give a plugin attribute on this node
-        
-        return retval
-        
+        retval = ElementTree.tostring(self._root, "UTF-8")
+        return retval.decode("utf-8")
+
+    def rename(self, new_name):
+        """Changes the name of the view
+
+        :param str new_name: The new name for the view
+        """
+        node = self._root.find('name')
+        node.text = new_name

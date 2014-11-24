@@ -2,6 +2,7 @@
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
+from pyjen.utils.view_xml import view_xml
 
 
 class View(PluginBase):
@@ -34,7 +35,6 @@ class View(PluginBase):
                 return plugin(controller, jenkins_master)
 
         raise PluginNotSupportedError("View plugin {0} not found".format(plugin.get_class_name), plugin.get_class_name)
-
 
     @staticmethod
     def supported_types():
@@ -215,10 +215,19 @@ class View(PluginBase):
         :rtype: :py:mod:`pyjen.View`
         """
         v = self._master.create_view(new_view_name, self.type)
-        temp_xml = self.config_xml
-        temp_xml = temp_xml.replace(self.name, new_view_name)
-        v.set_config_xml(temp_xml)
+        vxml = view_xml(self.config_xml)
+        vxml.rename(new_view_name)
+        v.set_config_xml(vxml.get_xml())
         return v
+
+    def rename(self, new_name):
+        """Rename this view
+
+        :param str new_name: new name for this view
+        """
+        new_view = self.clone(new_name)
+        self.delete()
+        self._controller = new_view._controller
 
 if __name__ == "__main__":  # pragma: no cover
 
