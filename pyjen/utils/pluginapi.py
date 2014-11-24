@@ -7,10 +7,6 @@ from pyjen.utils.plugin_base import PluginBase
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
 
 
-
-
-
-
 class PluginXML(object):
     """Class used to process XML configuration information associated with Jenkins plugins"""
     def __init__(self, xml):
