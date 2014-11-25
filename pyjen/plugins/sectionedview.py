@@ -34,6 +34,7 @@ class SectionedViewXMLPlugin(object):
         #print(temp[-1])
         import importlib
         # TODO: Make this module name derive its value from the __file__ attribute
+        # TODO: Consider just using the PyJen default plugin API for this
         m = importlib.import_module("pyjen.plugins.sectionedview")
         c = getattr(m, temp[-1])
         #print(c)

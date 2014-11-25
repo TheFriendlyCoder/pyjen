@@ -154,6 +154,12 @@ class View(PluginBase):
     def delete_all_jobs(self):
         """Helper method that allows callers to do bulk deletes of all jobs found in this view"""
 
+        # TODO: Find a way to leverage the job URLs contained within the View API data to accelerate this process
+        #   Maybe we could expose some static methods on the job() base class for doing deletes using an absolute URL
+        #   Or maybe we could allow the instantiation of the job() base class for performing basic operations through
+        #       the abstract interface, without needing to know the derived class we're using (and hence, avoid having
+        #       to make an extra hit on the server for each job just to pull back the config.xml)
+        # TODO: Apply this same pattern to other similar batch methods like disable_all_jobs
         my_jobs = self.jobs
         for j in my_jobs:
             j.delete()
@@ -183,9 +189,14 @@ class View(PluginBase):
         :returns: list of newly created jobs
         :rtype: :class:`list` of :py:mod:`pyjen.Job` objects
         """
+        # TODO: Need to clarify that the input parameters here are not regular expressions.
+        # Either that or we need to somehow add support for regexes here
         temp_jobs = self.jobs
 
         # Create a mapping table for names of jobs
+        # TODO: Add a helper method to this class that gets the list of job names only. This doesn't require any
+        #   hits on the server because the content is all within the config info for the view. This should improve
+        #   the performance of this section of the code
         job_map = {}
         for j in temp_jobs:
             orig_name = j.name
@@ -193,8 +204,13 @@ class View(PluginBase):
 
         # clone all jobs, and update internal references
         retval = []
+        count = 0
+        tot = len(temp_jobs)
         for j in temp_jobs:
+            count += 1
             orig_name = j.name
+            print("Cloning job {0} of {1}: {2}".format(count, tot, orig_name))
+
             new_job = j.clone(job_map[orig_name])
 
             # update all internal references

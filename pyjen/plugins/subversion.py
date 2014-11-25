@@ -2,55 +2,76 @@ import xml.etree.ElementTree as ElementTree
 from pyjen.utils.pluginapi import PluginBase
 
 
+class ModuleLocation(object):
+    def __init__(self, node):
+        self._root = node
+
+    @property
+    def url(self):
+        return self._root.find('remote').text
+
+    def set_url(self, new_url):
+        self._root.find('remote').text = new_url
+
+
+    @property
+    def local_dir(self):
+        return self._root.find('local').text
+
+    def set_local_dir(self, new_dir):
+
+        self._root.find('local').text = new_dir
+
+    @property
+    def depth_option(self):
+        return self._root.find('depthOption').text
+
+    @property
+    def ignore_externals(self):
+        temp = self._root.find('ignoreExternalsOption').text
+        assert temp.lower() == "true" or temp.lower() == "false"
+        return temp.lower() == "true"
+
+    def enable_ignore_externals(self):
+        self._root.find('ignoreExternalsOption').text = "true"
+    def disable_ignore_externals(self):
+        self._root.find('ignoreExternalsOption').text = "false"
+
 class Subversion(PluginBase):
     """Subversion SCM plugin"""
     
-    def __init__(self, xml):
+    def __init__(self, node):
         """constructor
         
-        :param str xml: the XML text for the subtree of the SVN plugin
+        :param node: ElementTree node initialized with the XML from the Jenkins job
         """
-        self._root = ElementTree.fromstring(xml)
+        self._root = node
         assert (self._root.tag == "scm")
         assert (self._root.attrib['class'] == "hudson.scm.SubversionSCM")
         
-    def get_modules(self):
-        """Gets the list of SVN repositories (aka: modules) being used by the target job
+    def get_locations(self):
+        """Gets the list of SVN URLs associated with this plugin instance
         
         :returns:
-            set of 0 or repository configuration options exposed by this job. Each element
-            will contain the following keys:
-            
-            * 'url' - the URL of the repository tree monitored by this job
-            * 'local_directory' - the local working path, typically under the jobs workspace folder
-            * 'depth' - indicates the depth under which the SCM checkout operation should go
-            * 'ignore_externals'- boolean indicating whether SVN externals are being monitored
-                            by any SCM triggers associated with this job.
-        :rtype: :class:`list` of :func:`dict` objects
+            set of 0 or more ModuleLocation objects describing the SVN parameters for this module.
+        :rtype: :class:`list` of :class:`ModuleLocation` objects
         """
         retval = []
         
         locations_node = self._root.find("locations")
         for loc in locations_node:
-            val = {}
-            tmp = loc.find('remote')
-            assert (tmp != None)
-            val['url'] = tmp.text
-            
-            tmp = loc.find('local')
-            assert(tmp != None)
-            val['local_directory'] = tmp.text
-            
-            tmp = loc.find('depthOption')
-            assert(tmp != None)
-            val['depth'] = tmp.text
-            
-            tmp = loc.find('ignoreExternalsOption')
-            assert(tmp != None)
-            val['ignore_externals'] = tmp.text
-            
-            retval.append(val)
+            retval.append(ModuleLocation(loc))
             
         return retval
+
+    @property
+    def included_regions(self):
+        temp = self._root.find("includedRegions").text
+        if temp is None:
+            return []
+        return temp.split()
+
+    def set_included_regions(self, new_regions):
+        self._root.find("includedRegions").text = "\n".join(new_regions)
 
     type = "hudson.scm.SubversionSCM"
