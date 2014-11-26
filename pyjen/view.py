@@ -75,7 +75,7 @@ class View(PluginBase):
         return False
 
     @property
-    def jobs (self):
+    def jobs(self):
         """Gets a list of jobs associated with this view
 
         Views are simply filters to help organize jobs on the
@@ -98,6 +98,16 @@ class View(PluginBase):
         return retval
 
     @property
+    def _light_jobs(self):
+
+        retval = []
+        for j in self._job_urls:
+            temp_data_io = self._controller.clone(j)
+            retval.append(Job._create(temp_data_io, self._master))
+
+        return retval
+
+    @property
     def job_count(self):
         """Gets the number of jobs contained under this view
 
@@ -107,6 +117,23 @@ class View(PluginBase):
         data = self._controller.get_api_data()
 
         return len(data['jobs'])
+
+    @property
+    def _job_names(self):
+        data = self._controller.get_api_data()
+        retval = []
+        for j in data['jobs']:
+            retval.append(j['name'])
+        return retval
+
+    @property
+    def _job_urls(self):
+        data = self._controller.get_api_data()
+        retval = []
+        for j in data['jobs']:
+            retval.append(j['url'])
+        return retval
+
 
     @property
     def config_xml(self):
@@ -160,20 +187,20 @@ class View(PluginBase):
         #       the abstract interface, without needing to know the derived class we're using (and hence, avoid having
         #       to make an extra hit on the server for each job just to pull back the config.xml)
         # TODO: Apply this same pattern to other similar batch methods like disable_all_jobs
-        my_jobs = self.jobs
-        for j in my_jobs:
+
+        for j in self._light_jobs:
             j.delete()
 
     def disable_all_jobs(self):
         """Helper method that allows caller to bulk-disable all jobs found in this view"""
-        my_jobs = self.jobs
-        for j in my_jobs:
+        for j in self._light_jobs:
             j.disable()
 
     def enable_all_jobs(self):
         """Helper method that allows caller to bulk-enable all jobs found in this view"""
-        my_jobs = self.jobs
-        for j in my_jobs:
+        # TODO: Give some thought to the repercussions of using 'light_jobs' here. For example, if a derived Job
+        # class were to override the 'enable' function, it would not get called here. Maybe we don't care...
+        for j in self._light_jobs:
             j.enable()
 
     def clone_all_jobs(self, source_job_name_regex, new_job_substring):
@@ -191,16 +218,15 @@ class View(PluginBase):
         """
         # TODO: Need to clarify that the input parameters here are not regular expressions.
         # Either that or we need to somehow add support for regexes here
-        temp_jobs = self.jobs
+        temp_jobs = self._light_jobs
 
         # Create a mapping table for names of jobs
         # TODO: Add a helper method to this class that gets the list of job names only. This doesn't require any
         #   hits on the server because the content is all within the config info for the view. This should improve
         #   the performance of this section of the code
         job_map = {}
-        for j in temp_jobs:
-            orig_name = j.name
-            job_map[orig_name] = orig_name.replace(source_job_name_regex, new_job_substring)
+        for j in self._job_names:
+            job_map[j] = j.replace(source_job_name_regex, new_job_substring)
 
         # clone all jobs, and update internal references
         retval = []

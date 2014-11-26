@@ -38,6 +38,17 @@ class Job(PluginBase):
         raise PluginNotSupportedError("Job plugin {0} not found".format(pluginxml.class_name), pluginxml.class_name)
 
     @staticmethod
+    def _create(controller, jenkins_master):
+        """Private helper method for use by other classes in the PyJen API, allowing the instantiation of this
+        abstract base class for internal optimizations"""
+        class PartialJob(Job):
+            def __init__(self, local_controller, local_master):
+                super(PartialJob, self).__init__(local_controller, local_master)
+            type = "Undefined"
+
+        return PartialJob(controller, jenkins_master)
+
+    @staticmethod
     def template_config_xml(job_type):
         """Generates a generic configuration file for use when creating a new job on the live Jenkins instance
 
