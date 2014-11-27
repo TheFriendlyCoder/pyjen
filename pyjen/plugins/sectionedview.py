@@ -1,10 +1,14 @@
+"""Primitives for working on Jenkins views of type 'SectionedView'"""
 from pyjen.view import View
 from pyjen.utils.view_xml import view_xml
+from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
+from pyjen.exceptions import PluginNotSupportedError
 import xml.etree.ElementTree as ElementTree
 
 
 class sectioned_view(View):
     """Sectioned view plugin"""
+    type = "hudson.plugins.sectioned_view.SectionedView"
 
     def __init__(self, controller, jenkins_master):
         """constructor
@@ -13,73 +17,58 @@ class sectioned_view(View):
         """
         super(sectioned_view, self).__init__(controller, jenkins_master)
 
-    type = "hudson.plugins.sectioned_view.SectionedView"
+    @property
+    def sections(self):
+        vxml = SectionedViewXML(self.config_xml)
+        return vxml.sections
 
-class SectionedViewXMLPlugin(object):
+
+class ListViewSection(PluginBase):
+    """One of several 'section' types defined for a sectioned view
+
+    Represents sections of type 'ListView'"""
+    type = "hudson.plugins.sectioned_view.ListViewSection"
+
     def __init__(self, node):
+        """Constructor"""
         self._root = node
 
-    @staticmethod
-    def create(node):
-        temp_class = SectionedViewXMLPlugin._get_section_class(node.tag)
-
-        import sys
-
-        #print(sys.modules.keys())
-        return temp_class(node)
-
-    @staticmethod
-    def _get_section_class(tagname):
-        temp = tagname.split(".")
-        #print(temp[-1])
-        import importlib
-        # TODO: Make this module name derive its value from the __file__ attribute
-        # TODO: Consider just using the PyJen default plugin API for this
-        m = importlib.import_module("pyjen.plugins.sectionedview")
-        c = getattr(m, temp[-1])
-        #print(c)
-        return c
-
-    def get_xml(self):
-        """Extracts the processed XML for export to a Jenkins job
-
-        :returns:
-            Raw XML containing any and all customizations applied in
-            previous operations against this object. This character
-            string can be imported into Jenkins to configure a job.
-
+    @property
+    def include_regex(self):
+        """Gets the regular expression associated with this section
+        :returns: the regular expression associated with this section
         :rtype: :func:`str`
         """
-        retval = ElementTree.tostring(self._root, "UTF-8")
-        return retval.decode("utf-8")
-
-class ListViewSection(SectionedViewXMLPlugin):
-    def __init__(self, node):
-        super(ListViewSection, self).__init__(node)
-
-    @property
-    def includeRegex(self):
         regex_node = self._root.find("includeRegex")
+        if regex_node is None:
+            return ""
         return regex_node.text
 
-    def set_include_regex(self, new_regex):
+    @include_regex.setter
+    def include_regex(self, new_regex):
+        """Gets the regular expression associated with this section
+        :returns: the regular expression associated with this section
+        :rtype: :func:`str`
+        """
         regex_node = self._root.find("includeRegex")
+        if regex_node is None:
+            regex_node = ElementTree.SubElement(self._root, 'includeRegex')
         regex_node.text = new_regex
 
-    @property
-    def type(self):
-        return "ListViewSection"
 
+class TextSection(PluginBase):
+    """One of several 'section' types defined for a sectioned view
 
-class TextSection(SectionedViewXMLPlugin):
+    Sections of this type contain simple descriptive text"""
+    type = "hudson.plugins.sectioned_view.TextSection"
+
     def __init__(self, node):
-        super(TextSection, self).__init__(node)
+        """Constructor"""
+        self._node = node
 
-    @property
-    def type(self):
-        return "TextSection"
 
 class SectionedViewXML(view_xml):
+    """Abstraction for operating on raw config.xml data for a Jenkins view of type 'Sectioned View'"""
     def __init__(self, xml):
         """Constructor"""
         super(SectionedViewXML, self).__init__(xml)
@@ -88,9 +77,21 @@ class SectionedViewXML(view_xml):
     def sections(self):
         """Gets a list of all 'section' objects contained in this view"""
         sections_node = self._root.find('sections')
+
         retval = []
         for node in sections_node:
-            retval.append(SectionedViewXMLPlugin.create(node))
+            configxml = ElementTree.tostring(node, "UTF-8").decode("utf-8")
+            pluginxml = PluginXML(configxml)
+
+            plugin_obj = None
+            for plugin in get_plugins():
+                if plugin.type == pluginxml.get_class_name():
+                    plugin_obj = plugin(sections_node)
+
+            if plugin_obj is None:
+                raise PluginNotSupportedError("Sectioned view plugin {0} not found".format(pluginxml.get_class_name()), pluginxml.get_class_name())
+
+            retval.append(plugin_obj)
         return retval
 
 
@@ -308,8 +309,8 @@ if __name__ == "__main__":  # pragma: no cover
     s = vxml.sections
     print(str(s))
     #print(isinstance(s[0], TextSection))
-    print(s[1].includeRegex)
-    s[1].set_include_regex(r"unified-4\.1\.x-.*-build-32")
+    print(s[1].include_regex)
+    s[1].include_regex = r"unified-4\.1\.x-.*-build-32"
     #print(s[1].get_xml())
     print(vxml.get_xml())
 

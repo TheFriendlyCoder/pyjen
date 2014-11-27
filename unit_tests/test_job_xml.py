@@ -47,7 +47,7 @@ class job_xml_basic_config_tests(xml_test_case):
         custom_workspace_path = "something/else"
         
         j = job_xml(self.__test_config)
-        j.set_custom_workspace(custom_workspace_path)
+        j.custom_workspace(custom_workspace_path)
         actual_xml = j.get_xml()
         
         self.assertTrue("<customWorkspace>" + custom_workspace_path + "</customWorkspace>" in actual_xml)
@@ -84,7 +84,7 @@ class job_xml_basic_config_tests(xml_test_case):
         
         new_custom_workspace = "some/new/path"
         j = job_xml(sample_xml)
-        j.set_custom_workspace(new_custom_workspace)
+        j.custom_workspace(new_custom_workspace)
         actual_xml = j.get_xml()
         
         self.assertTrue("<customWorkspace>" + new_custom_workspace + "</customWorkspace>" in actual_xml)

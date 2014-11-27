@@ -1,6 +1,8 @@
+"""Abstractions for managing the raw config.xml for a Jenkins job"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.pluginapi import get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
+
 
 class job_xml(object):
     """ Wrapper around the config.xml for a Jenkins job
@@ -9,7 +11,7 @@ class job_xml(object):
     appending "/config.xml" to it, as in "http://server/jobs/job1/config.xml"
      
     """
-    def __init__ (self, xml):
+    def __init__(self, xml):
         """Constructor
         
         :param str xml: Raw XML character string extracted from a Jenkins job.
@@ -19,48 +21,61 @@ class job_xml(object):
 
         assert (self.__root.tag == "project")
 
-    def set_custom_workspace(self, path):
-        """Defines a new or modified custom workspace for a job
-        
-        If the job already has a custom workspace it will be replaced with the given path
-        If not then a new custom workspace will be created with the given path
-        
-        :param str path: path of the new or modified custom workspace
-        """
-        Node = self.__root.find('customWorkspace')
-        
-        if Node == None:
-            Node = ElementTree.SubElement(self.__root, 'customWorkspace')
-
-        Node.text = path
-
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
         
         If the job is not currently using a custom workspace this method will do nothing
         """
     
-        Node =  self.__root.find('customWorkspace')
+        Node = self.__root.find('customWorkspace')
         
         if Node != None:
             self.__root.remove(Node)
 
     @property
     def custom_workspace(self):
+        """Gets the local path for the custom workspace associated with this job
+
+        :returns: the local path for the custom workspace associated with this job
+        :rtype: :func:`str`
+        """
         Node = self.__root.find('customWorkspace')
         if Node is None:
             return ""
         return Node.text
 
+    @custom_workspace.setter
+    def custom_workspace(self, path):
+        """Defines a new or modified custom workspace for a job
+
+        If the job already has a custom workspace it will be replaced with the given path
+        If not then a new custom workspace will be created with the given path
+
+        :param str path: path of the new or modified custom workspace
+        """
+        Node = self.__root.find('customWorkspace')
+
+        if Node is None:
+            Node = ElementTree.SubElement(self.__root, 'customWorkspace')
+
+        Node.text = path
 
     @property
     def assigned_node(self):
+        """Gets the build agent label this job is associated with
+        :returns: the build agent label this job is associated with
+        :rtype: :func:`str`
+        """
         Node = self.__root.find("assignedNode")
         if Node is None:
             return ""
         return Node.text
 
-    def set_assigned_node(self, node_label):
+    @assigned_node.setter
+    def assigned_node(self, node_label):
+        """Sets the build agent label this job is associated with
+        :param str node_label: the new build agent label to associate with this job
+        """
         Node = self.__root.find('assignedNode')
 
         if Node is None:

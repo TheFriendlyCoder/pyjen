@@ -1,7 +1,9 @@
+"""Primitives for working with Jenkins views of type 'NestedView'"""
 from pyjen.view import View
 from pyjen.utils.view_xml import view_xml
 from pyjen.exceptions import NestedViewCreationError
 import json
+
 
 class nested_view(View):
     """Nested view plugin"""
@@ -9,12 +11,19 @@ class nested_view(View):
     def __init__(self, controller, jenkins_master):
         """constructor
 
-        :param str controller: data processing object to manage interaction with Jenkins API
+        :param controller: data processing object to manage interaction with Jenkins API
         """
         super(nested_view, self).__init__(controller, jenkins_master)
 
     @property
     def views(self):
+        """Gets all views contained within this view
+
+        To get a recursive list of all child views and their children use :py:func:`all_views`.
+
+        :returns: list of all views contained within this view
+        :rtype: :func:`list`
+        """
         data = self._controller.get_api_data()
 
         raw_views = data['views']
@@ -29,6 +38,11 @@ class nested_view(View):
 
     @property
     def all_views(self):
+        """Gets all views contained within this view and it's children, recursively
+
+        :returns: list of all views contained within this view and it's children, recursively
+        :rtype: :func:`list`
+        """
         temp = self.views
 
         retval = []
@@ -105,6 +119,7 @@ class nested_view(View):
         new_view = self.clone_subview(existing_view, existing_view.name)
         existing_view.delete()
         return new_view
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass

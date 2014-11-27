@@ -1,9 +1,14 @@
+"""Declaration for abstract base class to be used by all PyJen plugins"""
 from six import add_metaclass
 from abc import ABCMeta, abstractproperty
 
+
 @add_metaclass(ABCMeta)
 class PluginBase(object):
-    """Abstract base class common to all PyJen API plugins"""
+    """Abstract base class common to all PyJen API plugins
+
+    All PyJen plugins must derive from this class and implement its abstract interface
+    """
 
     @abstractproperty
     def type(self):

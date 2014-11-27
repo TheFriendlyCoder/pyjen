@@ -1,11 +1,14 @@
+"""Primitives that manage Jenkins job of type 'Freestyle'"""
 from pyjen.job import Job
 from pyjen.user_params import JenkinsConfigParser
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.utils.job_xml import job_xml
 
+
 class FreestyleJob(Job):
     """Jenkins job of type 'freestyle' """
+    type = "project"
 
     def __init__(self, controller, jenkins_master):
         """Constructor
@@ -88,12 +91,17 @@ class FreestyleJob(Job):
         xml = self.config_xml
 
         jobxml = job_xml(xml)
-        jobxml.set_custom_workspace(path)
+        jobxml.custom_workspace(path)
 
         self.set_config_xml(jobxml.get_xml())
 
     @staticmethod
     def template_config_xml():
+        """Gets a basic XML configuration template for use when instantiating jobs of this type
+
+        :returns: a basic XML configuration template for use when instantiating jobs of this type
+        :rtype: :class:`str`
+        """
         xml = """<project>
             <actions/>
             <description/>
@@ -111,8 +119,6 @@ class FreestyleJob(Job):
             <buildWrappers/>
             </project>"""
         return xml
-
-    type = "project"
 
 
 if __name__ == "__main__":  # pragma: no cover

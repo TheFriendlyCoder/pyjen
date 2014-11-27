@@ -1,3 +1,4 @@
+"""Abstractions for managing the raw config.xml for a Jenkins view"""
 import xml.etree.ElementTree as ElementTree
 
 
@@ -30,6 +31,7 @@ class view_xml(object):
         """
         node = self._root.find('name')
         node.text = new_name
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass

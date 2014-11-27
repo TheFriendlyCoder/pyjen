@@ -1,18 +1,25 @@
+"""Primitives that operate on Jenkins jobs of type 'Maven'"""
 from pyjen.job import Job
 
 
 class maven_plugin(Job):
     """Maven view plugin"""
+    type = "maven2-moduleset"
 
     def __init__(self, controller, jenkins_master):
         """constructor
 
-        :param str controller: data processing object to manage interaction with Jenkins API
+        :param controller: data processing object to manage interaction with Jenkins API
         """
         super(maven_plugin, self).__init__(controller, jenkins_master)
 
     @staticmethod
     def template_config_xml():
+        """Gets a basic XML configuration template for use when instantiating jobs of this type
+
+        :returns: a basic XML configuration template for use when instantiating jobs of this type
+        :rtype: :class:`str`
+        """
         xml = """<maven2-moduleset plugin="maven-plugin@2.6">
         <actions/>
         <description/>
@@ -51,8 +58,6 @@ class maven_plugin(Job):
         </runPostStepsIfResult>
         </maven2-moduleset>"""
         return xml
-
-    type = "maven2-moduleset"
 
 
 if __name__ == "__main__":  # pragma: no cover

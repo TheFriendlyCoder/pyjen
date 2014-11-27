@@ -1,3 +1,4 @@
+"""Class that interact with Jenkins views of type "AllView" """
 from pyjen.view import View
 from pyjen.user_params import JenkinsConfigParser
 from pyjen.utils.data_requester import data_requester
@@ -9,6 +10,8 @@ class AllView(View):
 
     Instances of this class are typically instantiated directly or indirectly through :py:meth:`~pyjen.view.View.create`
     """
+    type = "hudson.model.AllView"
+
     def __init__(self, data_io_controller, jenkins_master):
         """Constructor"""
         super(AllView, self).__init__(data_io_controller, jenkins_master)
@@ -58,8 +61,6 @@ class AllView(View):
                 Please check configuration.", http_io)
 
         return retval
-
-    type = "hudson.model.AllView"
 
 
 if __name__ == "__main__":  # pragma: no cover

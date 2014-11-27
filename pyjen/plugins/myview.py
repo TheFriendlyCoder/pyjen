@@ -1,3 +1,4 @@
+"""Primitives for interacting with Jenkins views of type 'MyView'"""
 from pyjen.view import View
 from pyjen.user_params import JenkinsConfigParser
 from pyjen.utils.data_requester import data_requester
@@ -9,6 +10,7 @@ class MyView(View):
 
     Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
     """
+    type = "hudson.model.MyView"
 
     def __init__(self, data_io_controller, jenkins_master):
         """Constructor"""
@@ -60,7 +62,6 @@ class MyView(View):
 
         return retval
 
-    type = "hudson.model.MyView"
 
 if __name__ == "__main__":  # pragma: no cover
     pass

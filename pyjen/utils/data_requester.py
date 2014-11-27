@@ -6,6 +6,7 @@ if sys.version_info.major < 3:
 else:
     from urllib.parse import urljoin
 
+
 class data_requester (object):
     """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
         

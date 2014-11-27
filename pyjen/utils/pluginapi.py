@@ -1,3 +1,4 @@
+"""Primitives for interacting with the PyJen plugin API"""
 import os
 
 import xml.etree.ElementTree as ElementTree
@@ -42,7 +43,6 @@ class PluginXML(object):
         # the config.xml with double-underscores. We need to undo this obfuscation here
         return temp.replace("__", "_")
 
-
     def get_version(self):
         """Gets the version of the plugin
 
@@ -52,6 +52,7 @@ class PluginXML(object):
         attr = self._root.attrib['plugin']
         parts = attr.split('@')
         return parts[1]
+
 
 def get_plugins():
     """Returns list of classes for all plugins supported by PyJen
@@ -64,6 +65,7 @@ def get_plugins():
     for module in all_modules:
         retval.extend(_get_plugin_classes(module))
     return retval
+
 
 def _get_plugin_classes(module):
     """Gets a list of all PyJen plugins from a given Python module
@@ -79,6 +81,7 @@ def _get_plugin_classes(module):
                 retval.append(obj)
 
     return retval
+
 
 def _load_modules(path):
     """Gets a list of all modules found in a given path
@@ -98,6 +101,7 @@ def _load_modules(path):
             retval.append(cur_mod)
 
     return retval
+
 
 if __name__ == "__main__":  # pragma: no cover
     for i in get_plugins():

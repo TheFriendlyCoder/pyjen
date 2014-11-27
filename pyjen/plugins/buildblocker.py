@@ -1,7 +1,12 @@
+"""Interfaces for interacting with Build Blockers job property plugin"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.pluginapi import PluginBase
 
+
 class BuildBlockerProperty(PluginBase):
+    """Wrapper for Build Blocker job properties"""
+    type = "hudson.plugins.buildblocker.BuildBlockerProperty"
+
     def __init__(self, node):
         """constructor
 
@@ -11,6 +16,11 @@ class BuildBlockerProperty(PluginBase):
 
     @property
     def blockers(self):
+        """Gets the list of search criteria for blocking jobs
+
+        :return: list of search criteria for blocking jobs
+        :rtype: :class:`list`
+        """
         retval = []
         if not self.is_enabled:
             return retval
@@ -22,7 +32,12 @@ class BuildBlockerProperty(PluginBase):
         retval = temp.split()
         return retval
 
-    def set_blockers(self, new_blockers):
+    @blockers.setter
+    def blockers(self, new_blockers):
+        """Sets the list of search criteria for blocking jobs
+
+        :param list new_blockers: list of search criteria for blocking jobs
+        """
         Node = self._root.find("blockingJobs")
         if Node is None:
             Node = ElementTree.SubElement(self._root, 'blockingJobs')
@@ -30,24 +45,27 @@ class BuildBlockerProperty(PluginBase):
 
     @property
     def is_enabled(self):
+        """Checks to see whether this blockers property is currently enabled
+
+        :returns: true if these blocking jobs are enabled, false if not
+        :rtype: :func:`str`
+        """
         temp = self._root.find("useBuildBlocker").text
         return temp.lower() == "true"
 
-    @property
     def enable(self):
+        """Enables this set of build blockers"""
         Node = self._root.find("useBuildBlocker")
         if Node is None:
             Node = ElementTree.SubElement(self._root, 'useBuildBlocker')
         Node.text = "true"
 
-    @property
     def disable(self):
+        """Disables this set of build blockers"""
         Node = self._root.find("useBuildBlocker")
         if Node is None:
             Node = ElementTree.SubElement(self._root, 'useBuildBlocker')
         Node.text = "false"
-
-    type = "hudson.plugins.buildblocker.BuildBlockerProperty"
 
 
 if __name__ == "__main__":  # pragma: no cover
