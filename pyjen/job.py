@@ -15,6 +15,7 @@ class Job(PluginBase):
         """
         self._controller = controller
         self._master = jenkins_master
+        self._name = None
 
     @staticmethod
     def create(controller, jenkins_master):
@@ -38,7 +39,7 @@ class Job(PluginBase):
         raise PluginNotSupportedError("Job plugin {0} not found".format(pluginxml.class_name), pluginxml.class_name)
 
     @staticmethod
-    def _create(controller, jenkins_master):
+    def _create(controller, jenkins_master, job_name):
         """Private helper method for use by other classes in the PyJen API, allowing the instantiation of this
         abstract base class for internal optimizations"""
         class PartialJob(Job):
@@ -46,7 +47,9 @@ class Job(PluginBase):
                 super(PartialJob, self).__init__(local_controller, local_master)
             type = "Undefined"
 
-        return PartialJob(controller, jenkins_master)
+        retval = PartialJob(controller, jenkins_master)
+        retval._name = job_name
+        return retval
 
     @staticmethod
     def template_config_xml(job_type):
@@ -88,6 +91,9 @@ class Job(PluginBase):
         :returns: The name of the job
         :rtype: :func:`str`
         """
+        if self._name is not None:
+            return self._name
+
         data = self._controller.get_api_data()
         return data['name']
 

@@ -3,7 +3,9 @@ from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
 from pyjen.utils.view_xml import view_xml
+import logging
 
+log = logging.getLogger(__name__)
 
 class View(PluginBase):
     """ 'Abstract' base class used by all view classes, providing functionality common to them all"""
@@ -100,10 +102,11 @@ class View(PluginBase):
     @property
     def _light_jobs(self):
 
+        data = self._controller.get_api_data()
         retval = []
-        for j in self._job_urls:
-            temp_data_io = self._controller.clone(j)
-            retval.append(Job._create(temp_data_io, self._master))
+        for j in data['jobs']:
+            temp_data_io = self._controller.clone(j['url'])
+            retval.append(Job._create(temp_data_io, self._master, j['name']))
 
         return retval
 
@@ -189,11 +192,13 @@ class View(PluginBase):
         # TODO: Apply this same pattern to other similar batch methods like disable_all_jobs
 
         for j in self._light_jobs:
+            log.debug("Deleting job " + j.name)
             j.delete()
 
     def disable_all_jobs(self):
         """Helper method that allows caller to bulk-disable all jobs found in this view"""
         for j in self._light_jobs:
+            log.debug("Disabling job " + j.name)
             j.disable()
 
     def enable_all_jobs(self):
@@ -201,6 +206,7 @@ class View(PluginBase):
         # TODO: Give some thought to the repercussions of using 'light_jobs' here. For example, if a derived Job
         # class were to override the 'enable' function, it would not get called here. Maybe we don't care...
         for j in self._light_jobs:
+            log.debug("Enabling job " + j.name)
             j.enable()
 
     def clone_all_jobs(self, source_job_name_regex, new_job_substring):
@@ -225,8 +231,8 @@ class View(PluginBase):
         #   hits on the server because the content is all within the config info for the view. This should improve
         #   the performance of this section of the code
         job_map = {}
-        for j in self._job_names:
-            job_map[j] = j.replace(source_job_name_regex, new_job_substring)
+        for j in temp_jobs:
+            job_map[j.name] = j.name.replace(source_job_name_regex, new_job_substring)
 
         # clone all jobs, and update internal references
         retval = []
@@ -235,7 +241,7 @@ class View(PluginBase):
         for j in temp_jobs:
             count += 1
             orig_name = j.name
-            print("Cloning job {0} of {1}: {2}".format(count, tot, orig_name))
+            log.info("Cloning job {0} of {1}: {2}".format(count, tot, orig_name))
 
             new_job = j.clone(job_map[orig_name])
 

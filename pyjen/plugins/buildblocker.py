@@ -16,6 +16,9 @@ class BuildBlockerProperty(PluginBase):
             return retval
 
         temp = self._root.find("blockingJobs").text
+        if temp is None:
+            return retval
+
         retval = temp.split()
         return retval
 
