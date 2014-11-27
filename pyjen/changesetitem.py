@@ -38,4 +38,5 @@ class ChangeSetItem(object):
 
         return outStr
 
-
+if __name__ == "__main__":  # pragma: no cover
+    pass

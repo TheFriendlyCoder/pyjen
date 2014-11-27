@@ -461,7 +461,6 @@ class Job(PluginBase):
         return self._master._clone_job(self.name, new_job_name)
 
 
-
 if __name__ == "__main__":  # pragma: no cover
     for i in Job.supported_types():
         print(i)

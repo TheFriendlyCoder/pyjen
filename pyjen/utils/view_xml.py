@@ -30,3 +30,6 @@ class view_xml(object):
         """
         node = self._root.find('name')
         node.text = new_name
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

@@ -62,6 +62,5 @@ class AllView(View):
     type = "hudson.model.AllView"
 
 
-if __name__ == "__main__":
-    import pyjen.utils.pluginapi as pluginapi
-    print(issubclass(AllView, pluginapi.PluginBase))
+if __name__ == "__main__":  # pragma: no cover
+    pass

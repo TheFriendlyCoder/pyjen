@@ -1,5 +1,6 @@
 from pyjen.changesetitem import ChangeSetItem
 
+
 class changeset (object):
     """class that manages the interpretation of the "changeSet" properties of a Jenkins build"""
 
@@ -69,3 +70,6 @@ class changeset (object):
         :rtype: :func:`str`
         """
         return self.__data['kind']
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

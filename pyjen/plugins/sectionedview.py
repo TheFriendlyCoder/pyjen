@@ -94,7 +94,9 @@ class SectionedViewXML(view_xml):
         return retval
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
+    pass
+
     sample = """<?xml version="1.0" encoding="UTF-8"?>
 <hudson.plugins.sectioned__view.SectionedView plugin="sectioned-view@1.18">
   <name>trunk</name>

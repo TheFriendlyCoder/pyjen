@@ -451,4 +451,22 @@ class Jenkins(object):
         return Job.create(new_io_obj, self)
 
 if __name__ == '__main__':  # pragma: no cover
-    pass
+    #j = Jenkins.easy_connect("http://deepspace9:8080", ("kevin", "2545WxWolv"))
+    # TODO: Test the moveview method on nested view
+    # TODO: Figure out a way to move a view back, out of nested and back onto root
+    #v1 = j.get_view("http://deepspace9:8080/view/nested1/")
+    #v2 = j.get_view("http://deepspace9:8080/view/pyjen/")
+    #v3 = v1.clone_view(v2, "delme1")
+
+    #print(v3.type)
+    #print(v3.name)
+    #v1 = j.get_view("http://deepspace9:8080/view/nested1/view/delme1/")
+    #v1.rename("test")
+    #print(v1.name)
+    j = Jenkins.easy_connect("http://builds.caris.priv", ("kphillips", "Ovvluoeb4"))
+    v = j.get_view("http://builds.caris.priv/view/unified/view/4.3.x/")
+    #print("deleting jobs")
+    #v.delete_all_jobs()
+    #print("deleting view")
+    #v.delete()
+    v.enable_all_jobs()

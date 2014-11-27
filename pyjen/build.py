@@ -159,7 +159,6 @@ class Build(object):
 
         return changeset(data['changeSet'], self.__data_io)
 
-    
 
 if __name__ == "__main__":  # pragma: no cover
     pass

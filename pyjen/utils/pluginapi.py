@@ -99,7 +99,7 @@ def _load_modules(path):
 
     return retval
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     for i in get_plugins():
         print(i.type)
     pass

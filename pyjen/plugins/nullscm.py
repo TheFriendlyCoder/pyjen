@@ -1,5 +1,6 @@
 from pyjen.utils.pluginapi import PluginBase
 
+
 class NullSCM(PluginBase):
     """Subversion SCM plugin"""
 
@@ -11,3 +12,7 @@ class NullSCM(PluginBase):
         self._root = node
 
     type = "hudson.scm.NullSCM"
+
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

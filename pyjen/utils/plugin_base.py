@@ -13,3 +13,7 @@ class PluginBase(object):
         :rtype: :func:`str`
         """
         raise NotImplementedError
+
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

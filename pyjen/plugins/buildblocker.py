@@ -48,3 +48,7 @@ class BuildBlockerProperty(PluginBase):
         Node.text = "false"
 
     type = "hudson.plugins.buildblocker.BuildBlockerProperty"
+
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

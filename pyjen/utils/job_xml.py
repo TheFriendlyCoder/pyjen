@@ -121,7 +121,9 @@ class job_xml(object):
         return retval
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
+    pass
+
     xml = r"""<?xml version="1.0" encoding="UTF-8"?><project>
   <actions/>
   <description/>

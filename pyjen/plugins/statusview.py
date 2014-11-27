@@ -1,5 +1,6 @@
 from pyjen.view import View
 
+
 class status_view(View):
     """Status view plugin"""
 
@@ -13,5 +14,6 @@ class status_view(View):
     type = "hudson.plugins.status_view.StatusView"
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass
+

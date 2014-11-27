@@ -53,5 +53,8 @@ class maven_plugin(Job):
         return xml
 
     type = "maven2-moduleset"
-if __name__ == "__main__": # pragma: no cover
+
+
+if __name__ == "__main__":  # pragma: no cover
     pass
+

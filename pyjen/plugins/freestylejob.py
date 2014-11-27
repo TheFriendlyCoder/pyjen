@@ -113,3 +113,7 @@ class FreestyleJob(Job):
         return xml
 
     type = "project"
+
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

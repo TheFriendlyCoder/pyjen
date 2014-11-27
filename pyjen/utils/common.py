@@ -18,3 +18,6 @@ def get_root_url(source_url):
     """
     tmp = urlparse(source_url)
     return tmp.scheme + "://" + tmp.netloc
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

@@ -105,3 +105,6 @@ class nested_view(View):
         new_view = self.clone_subview(existing_view, existing_view.name)
         existing_view.delete()
         return new_view
+
+if __name__ == "__main__":  # pragma: no cover
+    pass
