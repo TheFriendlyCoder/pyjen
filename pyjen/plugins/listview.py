@@ -4,12 +4,14 @@ from pyjen.user_params import JenkinsConfigParser
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 
+
 class ListView(View):
     """Class that encapsulates all Jenkins related 'view' information for views of type ListView
 
     Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
     """
     type = "hudson.model.ListView"
+
     def __init__(self, data_io_controller, jenkins_master):
         """constructor
 

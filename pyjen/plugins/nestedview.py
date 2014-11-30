@@ -5,15 +5,17 @@ from pyjen.exceptions import NestedViewCreationError
 import json
 
 
-class nested_view(View):
+class NestedView(View):
     """Nested view plugin"""
+
+    type = "hudson.plugins.nested_view.NestedView"
 
     def __init__(self, controller, jenkins_master):
         """constructor
 
         :param controller: data processing object to manage interaction with Jenkins API
         """
-        super(nested_view, self).__init__(controller, jenkins_master)
+        super(NestedView, self).__init__(controller, jenkins_master)
 
     @property
     def views(self):
@@ -53,11 +55,11 @@ class nested_view(View):
         retval.extend(temp)
         return retval
 
-
-    type = "hudson.plugins.nested_view.NestedView"
-
     @property
     def contains_views(self):
+        """Indicates whether this view type supports sub-views
+        :rtype: :func:`bool`
+        """
         return True
 
     def create_view(self, view_name, view_type):

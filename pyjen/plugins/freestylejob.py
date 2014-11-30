@@ -80,7 +80,15 @@ class FreestyleJob(Job):
         jobxml = job_xml(xml)
         return jobxml.get_scm()
 
-    def set_custom_workspace(self, path):
+    @property
+    def custom_workspace(self):
+        xml = self.config_xml
+
+        jobxml = job_xml(xml)
+        return jobxml.custom_workspace
+
+    @custom_workspace.setter
+    def custom_workspace(self, path):
         """Defines a new custom workspace for the job
 
         If this job is already using a custom workspace it
@@ -91,7 +99,7 @@ class FreestyleJob(Job):
         xml = self.config_xml
 
         jobxml = job_xml(xml)
-        jobxml.custom_workspace(path)
+        jobxml.custom_workspace = path
 
         self.set_config_xml(jobxml.get_xml())
 

@@ -38,10 +38,10 @@ class BuildBlockerProperty(PluginBase):
 
         :param list new_blockers: list of search criteria for blocking jobs
         """
-        Node = self._root.find("blockingJobs")
-        if Node is None:
-            Node = ElementTree.SubElement(self._root, 'blockingJobs')
-        Node.text = "\n".join(new_blockers)
+        node = self._root.find("blockingJobs")
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'blockingJobs')
+        node.text = "\n".join(new_blockers)
 
     @property
     def is_enabled(self):
@@ -55,17 +55,17 @@ class BuildBlockerProperty(PluginBase):
 
     def enable(self):
         """Enables this set of build blockers"""
-        Node = self._root.find("useBuildBlocker")
-        if Node is None:
-            Node = ElementTree.SubElement(self._root, 'useBuildBlocker')
-        Node.text = "true"
+        node = self._root.find("useBuildBlocker")
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'useBuildBlocker')
+        node.text = "true"
 
     def disable(self):
         """Disables this set of build blockers"""
-        Node = self._root.find("useBuildBlocker")
-        if Node is None:
-            Node = ElementTree.SubElement(self._root, 'useBuildBlocker')
-        Node.text = "false"
+        node = self._root.find("useBuildBlocker")
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'useBuildBlocker')
+        node.text = "false"
 
 
 if __name__ == "__main__":  # pragma: no cover

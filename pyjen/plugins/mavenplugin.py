@@ -2,8 +2,8 @@
 from pyjen.job import Job
 
 
-class maven_plugin(Job):
-    """Maven view plugin"""
+class MavenPlugin(Job):
+    """Maven job plugin"""
     type = "maven2-moduleset"
 
     def __init__(self, controller, jenkins_master):
@@ -11,7 +11,7 @@ class maven_plugin(Job):
 
         :param controller: data processing object to manage interaction with Jenkins API
         """
-        super(maven_plugin, self).__init__(controller, jenkins_master)
+        super(MavenPlugin, self).__init__(controller, jenkins_master)
 
     @staticmethod
     def template_config_xml():

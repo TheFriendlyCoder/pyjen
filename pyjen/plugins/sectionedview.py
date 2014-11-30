@@ -6,7 +6,7 @@ from pyjen.exceptions import PluginNotSupportedError
 import xml.etree.ElementTree as ElementTree
 
 
-class sectioned_view(View):
+class SectionedView(View):
     """Sectioned view plugin"""
     type = "hudson.plugins.sectioned_view.SectionedView"
 
@@ -15,7 +15,7 @@ class sectioned_view(View):
 
         :param str controller: data processing object to manage interaction with Jenkins API
         """
-        super(sectioned_view, self).__init__(controller, jenkins_master)
+        super(SectionedView, self).__init__(controller, jenkins_master)
 
     @property
     def sections(self):

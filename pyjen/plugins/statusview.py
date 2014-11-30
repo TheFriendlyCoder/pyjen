@@ -2,7 +2,7 @@
 from pyjen.view import View
 
 
-class status_view(View):
+class StatusView(View):
     """Status view plugin"""
     type = "hudson.plugins.status_view.StatusView"
 
@@ -11,7 +11,7 @@ class status_view(View):
 
         :param str controller: data processing object to manage interaction with Jenkins API
         """
-        super(status_view, self).__init__(controller, jenkins_master)
+        super(StatusView, self).__init__(controller, jenkins_master)
 
 
 if __name__ == "__main__":  # pragma: no cover
