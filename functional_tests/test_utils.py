@@ -34,7 +34,7 @@ def start_jenkins(war_file, home_folder):
 
     cmd_line = '"' + java_app + '"' + java_options + ' -jar ' + war_file
     args = shlex.split(cmd_line)
-    
+
     #Now launch Jenkins in a secondary, non-blocking process
     jenkins_process = subprocess.Popen( args , stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     

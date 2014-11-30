@@ -118,7 +118,7 @@ class view_tests(unittest.TestCase):
         mock_job1_dataio.get_text.return_value = "<project></project>"
 
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url}]}
+        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url, 'name':job1_name}]}
         mock_data_io.clone.return_value = mock_job1_dataio
 
         v = vView(mock_data_io, None)
@@ -134,7 +134,7 @@ class view_tests(unittest.TestCase):
         mock_job1_dataio.get_text.return_value = "<project></project>"
 
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url}]}
+        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url, 'name':job1_name}]}
         mock_data_io.clone.return_value = mock_job1_dataio
 
         v = vView(mock_data_io, None)
@@ -150,7 +150,7 @@ class view_tests(unittest.TestCase):
         mock_job1_dataio.get_text.return_value = "<project></project>"
 
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url}]}
+        mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url, 'name':job1_name}]}
         mock_data_io.clone.return_value = mock_job1_dataio
             
         v = vView(mock_data_io, None)
@@ -169,7 +169,7 @@ class view_tests(unittest.TestCase):
         mock_job_controller.get_api_data.return_value = {"name":orig_job_name}
 
         mock_view_controller = MagicMock()
-        mock_view_controller.get_api_data.return_value = {"jobs":[{"url":"http://fake/job/original_job"}]}
+        mock_view_controller.get_api_data.return_value = {"jobs":[{"url":"http://fake/job/original_job","name":orig_job_name}]}
         mock_view_controller.clone.return_value = mock_job_controller
 
         mock_new_job = MagicMock()

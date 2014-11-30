@@ -38,17 +38,7 @@ class PluginAPITests(unittest.TestCase):
     def test_all_plugins(self):
         all_plugins = get_plugins()
 
-        # First, let's make sure we report exactly one plugin class per
-        # py file in the plugin folder
-        num_plugin_modules = 0
-        for file in os.listdir(PYJEN_PLUGIN_FOLDER):
-            if os.path.isfile(os.path.join(PYJEN_PLUGIN_FOLDER, file)) \
-                    and os.path.splitext(file)[1].lower() == ".py" and not file.startswith("__"):
-                num_plugin_modules += 1
-
-        self.assertEqual(len(all_plugins), num_plugin_modules)
-
-        # Then, lets make sure each Jenkins plugin maps to one and only one PyJen plugin
+        # List of all plugins supported by PyJen atm
         expected_plugins = [
             "hudson.model.AllView",
             "project",
@@ -57,9 +47,14 @@ class PluginAPITests(unittest.TestCase):
             "hudson.model.MyView",
             "hudson.plugins.nested_view.NestedView",
             "hudson.plugins.sectioned_view.SectionedView",
+            "hudson.plugins.sectioned_view.TextSection",
+            "hudson.plugins.sectioned_view.ListViewSection",
             "hudson.plugins.status_view.StatusView",
-            "hudson.scm.SubversionSCM"]
+            "hudson.scm.NullSCM",
+            "hudson.scm.SubversionSCM",
+            "hudson.plugins.buildblocker.BuildBlockerProperty"]
 
+        self.assertEqual(len(all_plugins), len(expected_plugins))
         for cur_plugin in all_plugins:
             self.assertIn(cur_plugin.type, expected_plugins)
             expected_plugins.remove(cur_plugin.type)
