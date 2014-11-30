@@ -1,12 +1,13 @@
-"""Primitives for interacting with Jenkins jobs"""
+"""Primitives for interacting with Jenkins users"""
 from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.user_params import JenkinsConfigParser
 
+
 class User (object):
     """Interface to all primitives associated with a Jenkins user"""
     
-    def __init__ (self, data_io_controller):
+    def __init__(self, data_io_controller):
         """Constructor
         
         To instantiate an instance of this class using auto-generated

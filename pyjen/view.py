@@ -7,6 +7,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
+
 class View(PluginBase):
     """ 'Abstract' base class used by all view classes, providing functionality common to them all"""
 
@@ -157,7 +158,8 @@ class View(PluginBase):
         """
         return self._controller.get_text("/config.xml")
 
-    def set_config_xml(self, new_xml):
+    @config_xml.setter
+    def config_xml(self, new_xml):
         """Updates the raw configuration of this view with a new set of properties
 
         This method should typically used in conjunction with

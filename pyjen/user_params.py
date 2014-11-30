@@ -8,7 +8,8 @@ if sys.version_info.major < 3:
     import ConfigParser as configparser
 else:
     import configparser
-    
+
+
 class JenkinsConfigParser(configparser.ConfigParser):
     """ Interface to the PyJen user configuration file
 
@@ -85,7 +86,7 @@ class JenkinsConfigParser(configparser.ConfigParser):
         # Second search location is the users home folder
         retval.append(os.path.join(os.path.expanduser("~"), config_filename))
         # First search location is the current working folder
-        retval.append (os.path.join(os.getcwd(), config_filename))
+        retval.append(os.path.join(os.getcwd(), config_filename))
         
         return retval
 

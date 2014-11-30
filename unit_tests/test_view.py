@@ -102,7 +102,7 @@ class view_tests(unittest.TestCase):
         mock_data_io = MagicMock()
         
         v = vView(mock_data_io, None)
-        v.set_config_xml(expected_config_xml)
+        v.config_xml = expected_config_xml
         
         self.assertEqual(mock_data_io.post.call_count, 1)
         self.assertEqual(mock_data_io.post.call_args[0][0], "/config.xml")

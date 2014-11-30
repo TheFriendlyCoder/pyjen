@@ -1,7 +1,7 @@
 from pyjen.user import User
 
 class ChangeSetItem(object):
-    """Encapsulation of all info related to a single change in a changeset
+    """Encapsulation of all info related to a single change in a Changeset
 
     See also :py:mod:`pyjen.Changeset`
     """

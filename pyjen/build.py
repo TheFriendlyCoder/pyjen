@@ -1,11 +1,12 @@
 """Primitives for interacting with Jenkins builds"""
 
 from pyjen.utils.data_requester import data_requester
-from pyjen.changeset import changeset
+from pyjen.changeset import Changeset
 from pyjen.user import User
 from datetime import datetime
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.user_params import JenkinsConfigParser
+
 
 class Build(object):
     """Class that encapsulates all jenkins related 'build' information
@@ -14,8 +15,7 @@ class Build(object):
     typically generated from the :py:mod:`pyjen.job` class.
     """
 
-
-    def __init__ (self, data_io_controller):
+    def __init__(self, data_io_controller):
         """constructor
 
         To instantiate an instance of this class using auto-generated
@@ -144,20 +144,20 @@ class Build(object):
 
     @property
     def changeset(self):
-        """Gets changeset object associated with this build
+        """Gets Changeset object associated with this build
 
-        NOTE: This changeset may be empty if there were no SCM
+        NOTE: This Changeset may be empty if there were no SCM
         changes associated with this build, as may be the case
         with a forced build for example.
 
         :returns:
             Changeset object representing the set of SCM changes
             associated with / included in this build
-        :rtype: :py:mod:`pyjen.changeset`
+        :rtype: :py:mod:`pyjen.Changeset`
         """
         data = self.__data_io.get_api_data()
 
-        return changeset(data['changeSet'], self.__data_io)
+        return Changeset(data['changeSet'], self.__data_io)
 
 
 if __name__ == "__main__":  # pragma: no cover

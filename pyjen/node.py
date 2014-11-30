@@ -10,12 +10,13 @@ from pyjen.utils.data_requester import data_requester
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.user_params import JenkinsConfigParser
 
+
 class Node(object):
     """Wrapper around a Jenkins build agent (aka: Node) configuration
 
     Use this class to manipulate agents managed by a Jenkins master"""
 
-    def __init__ (self, data_io_controller):
+    def __init__(self, data_io_controller):
         """constructor
 
         To instantiate an instance of this class using auto-generated

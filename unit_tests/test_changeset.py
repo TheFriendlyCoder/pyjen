@@ -1,4 +1,4 @@
-from pyjen.changeset import changeset
+from pyjen.changeset import Changeset
 import unittest
 import pytest
 from mock import MagicMock
@@ -11,7 +11,7 @@ class changeset_tests(unittest.TestCase):
         data = {}
         data['kind'] = "svn"
         data['items'] = []
-        cs = changeset(data, mock_controller)
+        cs = Changeset(data, mock_controller)
         
         self.assertEqual("svn", cs.get_scm_type())
         
@@ -21,7 +21,7 @@ class changeset_tests(unittest.TestCase):
         data = {}
         data['kind'] = "svn"
         data['items'] = []
-        cs = changeset(data, mock_controller)
+        cs = Changeset(data, mock_controller)
         
         self.assertFalse(cs.has_changes())
         
@@ -31,7 +31,7 @@ class changeset_tests(unittest.TestCase):
         data = {}
         data['kind'] = "svn"
         data['items'] = {"message":"Hello World"}
-        cs = changeset(data, mock_controller)
+        cs = Changeset(data, mock_controller)
         
         self.assertTrue(cs.has_changes())
 
@@ -42,7 +42,7 @@ class changeset_tests(unittest.TestCase):
         data = {}
         data['kind'] = "svn"
         data['items'] = [{"msg":expected_message}]
-        cs = changeset(data, mock_controller)
+        cs = Changeset(data, mock_controller)
         actual_items = cs.affected_items
 
         self.assertEqual(len(actual_items), 1)
@@ -54,7 +54,7 @@ class changeset_tests(unittest.TestCase):
         data = {}
         data['kind'] = "svn"
         data['items'] = []
-        cs = changeset(data, mock_controller)
+        cs = Changeset(data, mock_controller)
         actual_items = cs.affected_items
 
         self.assertIsNotNone(actual_items)
@@ -72,7 +72,7 @@ class changeset_tests(unittest.TestCase):
         data = {}
         data['kind'] = "svn"
         data['items'] = [{"author": {"absoluteUrl": expected_url, "fullName": expected_name}}]
-        cs = changeset(data, mock_controller)
+        cs = Changeset(data, mock_controller)
         actual_items = cs.affected_items
 
         self.assertEqual(len(actual_items), 1)

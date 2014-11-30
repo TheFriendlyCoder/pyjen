@@ -1,7 +1,7 @@
 from pyjen.changesetitem import ChangeSetItem
 
 
-class changeset (object):
+class Changeset (object):
     """class that manages the interpretation of the "changeSet" properties of a Jenkins build"""
 
     def __init__(self, data, controller):
@@ -22,20 +22,20 @@ class changeset (object):
         assert('items' in data.keys())
         assert('kind' in data.keys())
     
-        self.__data = data
+        self._data = data
         self._controller = controller
 
     @property
     def affected_items(self):
         """gets details of the changes associated with the parent build
 
-        :returns: list of items detailing each change associated with this changeset
+        :returns: list of items detailing each change associated with this Changeset
         :rtype: :func:`list` of :py:mod:`pyjen.ChangeSetItem` objects
         
         """
         retval = []
 
-        for item in self.__data['items']:
+        for item in self._data['items']:
             retval.append(ChangeSetItem(item, self._controller))
 
         return retval
@@ -58,7 +58,7 @@ class changeset (object):
                 False : there are no changes        
         :rtype: :func:`bool`
         """
-        if (self.__data['items']):
+        if (self._data['items']):
             return True
         else:
             return False
@@ -69,7 +69,7 @@ class changeset (object):
         :returns: Name of the SCM tool associated with this change
         :rtype: :func:`str`
         """
-        return self.__data['kind']
+        return self._data['kind']
 
 if __name__ == "__main__":  # pragma: no cover
     pass

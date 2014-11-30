@@ -16,7 +16,7 @@ Submodules
 
    pyjen.allview
    pyjen.build
-   pyjen.changeset
+   pyjen.Changeset
    pyjen.changesetitem
    pyjen.exceptions
    pyjen.freestylejob

@@ -135,7 +135,8 @@ class Job(PluginBase):
         """
         return self._controller.get_text('/config.xml')
 
-    def set_config_xml(self, new_xml):
+    @config_xml.setter
+    def config_xml(self, new_xml):
         """Allows a caller to manually override the entire job configuration
 
         WARNING: This is an advanced method that should only be used in
@@ -395,7 +396,7 @@ class Job(PluginBase):
         """
         self._controller.post("/enable")
 
-    def delete (self):
+    def delete(self):
         """Deletes this job from the Jenkins dashboard"""
         self._controller.post("/doDelete")
 
