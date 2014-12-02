@@ -1,6 +1,6 @@
 """Primitives for interacting with Jenkins builds"""
 
-from pyjen.utils.data_requester import data_requester
+from pyjen.utils.datarequester import DataRequester
 from pyjen.changeset import Changeset
 from pyjen.user import User
 from datetime import datetime
@@ -57,7 +57,7 @@ class Build(object):
             password = credentials[1]
         
 
-        http_io = data_requester(url, username, password)
+        http_io = DataRequester(url, username, password)
         retval = Build(http_io)
 
         # Sanity check: make sure we can successfully parse the view's name from

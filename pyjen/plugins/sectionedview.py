@@ -1,6 +1,6 @@
 """Primitives for working on Jenkins views of type 'SectionedView'"""
 from pyjen.view import View
-from pyjen.utils.view_xml import view_xml
+from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 import xml.etree.ElementTree as ElementTree
@@ -67,7 +67,7 @@ class TextSection(PluginBase):
         self._node = node
 
 
-class SectionedViewXML(view_xml):
+class SectionedViewXML(ViewXML):
     """Abstraction for operating on raw config.xml data for a Jenkins view of type 'Sectioned View'"""
     def __init__(self, xml):
         """Constructor"""
@@ -312,7 +312,7 @@ if __name__ == "__main__":  # pragma: no cover
     print(s[1].include_regex)
     s[1].include_regex = r"unified-4\.1\.x-.*-build-32"
     #print(s[1].get_xml())
-    print(vxml.get_xml())
+    print(vxml.XML())
 
 
 

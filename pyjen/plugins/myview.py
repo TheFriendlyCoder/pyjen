@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins views of type 'MyView'"""
 from pyjen.view import View
 from pyjen.user_params import JenkinsConfigParser
-from pyjen.utils.data_requester import data_requester
+from pyjen.utils.datarequester import DataRequester
 from pyjen.exceptions import InvalidJenkinsURLError
 
 
@@ -46,7 +46,7 @@ class MyView(View):
             password = credentials[1]
 
 
-        http_io = data_requester(url, username, password)
+        http_io = DataRequester(url, username, password)
         retval = MyView(http_io, None)
 
         # Sanity check: make sure we can successfully parse the view's name from the IO controller

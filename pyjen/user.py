@@ -1,5 +1,5 @@
 """Primitives for interacting with Jenkins users"""
-from pyjen.utils.data_requester import data_requester
+from pyjen.utils.datarequester import DataRequester
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.user_params import JenkinsConfigParser
 
@@ -49,7 +49,7 @@ class User (object):
             password = credentials[1]
         
         
-        http_io = data_requester(url, username, password)
+        http_io = DataRequester(url, username, password)
         retval = User(http_io)
         
         # Sanity check: make sure we can successfully parse the users ID from the IO controller 

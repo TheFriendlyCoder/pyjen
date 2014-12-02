@@ -1,11 +1,11 @@
 from unit_tests.xml_test_base import xml_test_case
-from pyjen.utils.job_xml import job_xml
+from pyjen.utils.jobxml import JobXML
 import pytest
 from pyjen.plugins.subversion import Subversion
 import sys
 
 class job_xml_basic_config_tests(xml_test_case):
-    """Tests for the job_xml class that use a trivial job configuration as input"""
+    """Tests for the JobXML class that use a trivial job configuration as input"""
     def setUp(self):
         self.__test_config = """
         <project>
@@ -28,13 +28,13 @@ class job_xml_basic_config_tests(xml_test_case):
 
     def test_no_op(self):
         
-        j = job_xml(self.__test_config)
-        actual_xml = j.get_xml()
+        j = JobXML(self.__test_config)
+        actual_xml = j.XML
         
         self.assertEqualXML(self.__test_config, actual_xml)
     def test_get_xml_return_type(self):
-        j = job_xml(self.__test_config)
-        actual_xml = j.get_xml()
+        j = JobXML(self.__test_config)
+        actual_xml = j.XML
 
         # In python2 unicode strings are of type 'unicode'
         # but in python3 'unicode' was deprecated because all strings are unicode
@@ -46,19 +46,19 @@ class job_xml_basic_config_tests(xml_test_case):
     def test_new_custom_workspace(self):    
         custom_workspace_path = "something/else"
         
-        j = job_xml(self.__test_config)
+        j = JobXML(self.__test_config)
         j.custom_workspace = custom_workspace_path
-        actual_xml = j.get_xml()
+        actual_xml = j.XML
         
         self.assertTrue("<customWorkspace>" + custom_workspace_path + "</customWorkspace>" in actual_xml)
         
     def test_disable_empty_custom_workspace(self):
         # our sample config does not have a custom workspace
-        j = job_xml(self.__test_config)
+        j = JobXML(self.__test_config)
         # make sure disabling custom workspace when none exists doesn't fail
         j.disable_custom_workspace()
         
-        actual_xml = j.get_xml()
+        actual_xml = j.XML
         
         self.assertTrue("<customWorkspace>" not in actual_xml)
         
@@ -83,9 +83,9 @@ class job_xml_basic_config_tests(xml_test_case):
         </project>"""
         
         new_custom_workspace = "some/new/path"
-        j = job_xml(sample_xml)
+        j = JobXML(sample_xml)
         j.custom_workspace = new_custom_workspace
-        actual_xml = j.get_xml()
+        actual_xml = j.XML
         
         self.assertTrue("<customWorkspace>" + new_custom_workspace + "</customWorkspace>" in actual_xml)
         
@@ -109,9 +109,9 @@ class job_xml_basic_config_tests(xml_test_case):
           <buildWrappers/>
         </project>"""
         
-        j = job_xml(sample_xml)
+        j = JobXML(sample_xml)
         j.disable_custom_workspace()
-        actual_xml = j.get_xml()
+        actual_xml = j.XML
         
         self.assertTrue("<customWorkspace>" not in actual_xml)
     
@@ -138,8 +138,8 @@ class job_xml_basic_config_tests(xml_test_case):
             </scm>
         </project>"""
         
-        j = job_xml(sample_xml)
-        scm = j.get_scm()
+        j = JobXML(sample_xml)
+        scm = j.scm
         #print(dir(scm.__class__))
         #print(dir(Subversion))
         #print(scm.__class__.__module__)

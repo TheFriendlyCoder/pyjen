@@ -75,7 +75,6 @@ class ModuleLocation(object):
         """
         self._root.find('remote').text = new_url
 
-
     @property
     def local_dir(self):
         """Gets the local folder where the source code for this module is checked out to

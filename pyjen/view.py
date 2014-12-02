@@ -2,7 +2,7 @@
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
-from pyjen.utils.view_xml import view_xml
+from pyjen.utils.viewxml import ViewXML
 import logging
 
 log = logging.getLogger(__name__)
@@ -265,9 +265,9 @@ class View(PluginBase):
         :rtype: :py:mod:`pyjen.View`
         """
         v = self._master.create_view(new_view_name, self.type)
-        vxml = view_xml(self.config_xml)
+        vxml = ViewXML(self.config_xml)
         vxml.rename(new_view_name)
-        v.set_config_xml(vxml.get_xml())
+        v.set_config_xml(vxml.XML())
         return v
 
     def rename(self, new_name):

@@ -6,7 +6,7 @@ if sys.version_info.major < 3:
 else:
     from urllib.parse import quote as url_quote
     
-from pyjen.utils.data_requester import data_requester
+from pyjen.utils.datarequester import DataRequester
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.user_params import JenkinsConfigParser
 
@@ -58,7 +58,7 @@ class Node(object):
             password = credentials[1]
         
 
-        http_io = data_requester(url, username, password)
+        http_io = DataRequester(url, username, password)
         retval = Node(http_io)
 
         # Sanity check: make sure the given IO object can successfully

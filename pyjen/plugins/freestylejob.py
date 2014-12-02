@@ -1,9 +1,9 @@
 """Primitives that manage Jenkins job of type 'Freestyle'"""
 from pyjen.job import Job
 from pyjen.user_params import JenkinsConfigParser
-from pyjen.utils.data_requester import data_requester
+from pyjen.utils.datarequester import DataRequester
 from pyjen.exceptions import InvalidJenkinsURLError
-from pyjen.utils.job_xml import job_xml
+from pyjen.utils.jobxml import JobXML
 
 
 class FreestyleJob(Job):
@@ -51,7 +51,7 @@ class FreestyleJob(Job):
             username = credentials[0]
             password = credentials[1]
 
-        http_io = data_requester(url, username, password)
+        http_io = DataRequester(url, username, password)
         retval = FreestyleJob(http_io, None)
 
         # Sanity check: make sure we can successfully parse the view's name from the IO controller
@@ -77,14 +77,14 @@ class FreestyleJob(Job):
         :rtype: :py:class:`pyjen.utils.pluginapi.pluginxml`
         """
         xml = self.config_xml
-        jobxml = job_xml(xml)
-        return jobxml.get_scm()
+        jobxml = JobXML(xml)
+        return jobxml.scm()
 
     @property
     def custom_workspace(self):
         xml = self.config_xml
 
-        jobxml = job_xml(xml)
+        jobxml = JobXML(xml)
         return jobxml.custom_workspace
 
     @custom_workspace.setter
@@ -98,10 +98,10 @@ class FreestyleJob(Job):
         """
         xml = self.config_xml
 
-        jobxml = job_xml(xml)
+        jobxml = JobXML(xml)
         jobxml.custom_workspace = path
 
-        self.set_config_xml(jobxml.get_xml())
+        self.set_config_xml(jobxml.XML())
 
     @staticmethod
     def template_config_xml():

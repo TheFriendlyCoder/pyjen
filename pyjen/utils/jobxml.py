@@ -4,7 +4,7 @@ from pyjen.utils.pluginapi import get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 
 
-class job_xml(object):
+class JobXML(object):
     """ Wrapper around the config.xml for a Jenkins job
     
     The source xml can be loaded from nearly any URL by
@@ -83,7 +83,8 @@ class job_xml(object):
 
         Node.text = node_label
 
-    def get_xml(self):
+    @property
+    def XML(self):
         """Extracts the processed XML for export to a Jenkins job
         
         :returns:
@@ -95,8 +96,9 @@ class job_xml(object):
         """
         retval = ElementTree.tostring(self.__root, "UTF-8")
         return retval.decode("utf-8")
-    
-    def get_scm(self):
+
+    @property
+    def scm(self):
         """Retrieves the appropriate plugin for the SCM portion of a job
         
         Detects which source code management tool is being used by this
@@ -291,4 +293,4 @@ BUILD_TRIGGER_NUM=$BUILD_NUMBER</properties>
     </org.jenkinsci.plugins.buildnamesetter.BuildNameSetter>
   </buildWrappers>
 </project>"""
-    jxml = job_xml(xml)
+    jxml = JobXML(xml)

@@ -1,7 +1,7 @@
-pyjen.utils.job_xml module
+pyjen.utils.JobXML module
 ==========================
 
-.. automodule:: pyjen.utils.job_xml
+.. automodule:: pyjen.utils.JobXML
     :members:
     :undoc-members:
     :show-inheritance:

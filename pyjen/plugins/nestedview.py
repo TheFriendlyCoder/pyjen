@@ -1,6 +1,6 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
 from pyjen.view import View
-from pyjen.utils.view_xml import view_xml
+from pyjen.utils.viewxml import ViewXML
 from pyjen.exceptions import NestedViewCreationError
 import json
 
@@ -105,9 +105,9 @@ class NestedView(View):
          :rtype: :class:`pyjen.view.View`
          """
         retval = self.create_view(new_view_name, existing_view.type)
-        vxml = view_xml(existing_view.config_xml)
+        vxml = ViewXML(existing_view.config_xml)
         vxml.rename(new_view_name)
-        retval.set_config_xml(vxml.get_xml())
+        retval.set_config_xml(vxml.XML())
         return retval
 
     def move_view(self, existing_view):

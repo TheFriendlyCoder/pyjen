@@ -1,7 +1,7 @@
-pyjen.utils.data_requester module
+pyjen.utils.DataRequester module
 =================================
 
-.. automodule:: pyjen.utils.data_requester
+.. automodule:: pyjen.utils.DataRequester
     :members:
     :undoc-members:
     :show-inheritance:

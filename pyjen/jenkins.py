@@ -3,7 +3,7 @@ import json
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
-from pyjen.utils.data_requester import data_requester
+from pyjen.utils.datarequester import DataRequester
 from pyjen.user_params import JenkinsConfigParser
 from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
 
@@ -87,7 +87,7 @@ class Jenkins(object):
             username = credentials[0]
             password = credentials[1]
         
-        http_io = data_requester(url, username, password)
+        http_io = DataRequester(url, username, password)
         retval = Jenkins(http_io)
 
         # Sanity check: make sure the given IO object can 

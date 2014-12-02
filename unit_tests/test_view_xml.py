@@ -1,5 +1,5 @@
 import unittest
-from pyjen.utils.view_xml import view_xml
+from pyjen.utils.viewxml import ViewXML
 import pytest
 
 class view_xml_tests(unittest.TestCase):
@@ -9,9 +9,9 @@ class view_xml_tests(unittest.TestCase):
         new_name = "newname"
         expected_xml = "<view><name>{0}</name></view>".format(new_name)
 
-        vxml = view_xml(orig_xml)
+        vxml = ViewXML(orig_xml)
         vxml.rename(new_name)
-        self.assertIn(expected_xml, vxml.get_xml())
+        self.assertIn(expected_xml, vxml.XML)
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

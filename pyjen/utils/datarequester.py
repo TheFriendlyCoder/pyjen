@@ -7,7 +7,7 @@ else:
     from urllib.parse import urljoin
 
 
-class data_requester (object):
+class DataRequester (object):
     """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
         
     def __init__(self, jenkins_url, username, password):
@@ -43,8 +43,8 @@ class data_requester (object):
         
         :param str new_url: optional replacement URL associated with the cloned object
             credentials will be preserved in the clone
-        :returns: new :py:class:`data_requester` object, with settings cloned from this instance
-        :rtype: :py:class:`data_requester`
+        :returns: new :py:class:`DataRequester` object, with settings cloned from this instance
+        :rtype: :py:class:`DataRequester`
         """
         
         if new_url != None:
@@ -53,9 +53,9 @@ class data_requester (object):
             clone_url = self.__url
 
         if self.__credentials:
-            return data_requester (clone_url, self.__credentials[0], self.__credentials[1])
+            return DataRequester (clone_url, self.__credentials[0], self.__credentials[1])
         else:
-            return data_requester (clone_url, None, None)
+            return DataRequester (clone_url, None, None)
         
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
