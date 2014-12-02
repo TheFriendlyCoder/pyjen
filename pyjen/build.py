@@ -2,7 +2,6 @@
 
 from pyjen.utils.datarequester import DataRequester
 from pyjen.changeset import Changeset
-from pyjen.user import User
 from datetime import datetime
 from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.user_params import JenkinsConfigParser
