@@ -13,7 +13,7 @@ class changeset_tests(unittest.TestCase):
         data['items'] = []
         cs = Changeset(data, mock_controller)
         
-        self.assertEqual("svn", cs.get_scm_type())
+        self.assertEqual("svn", cs.scm_type)
         
     def test_has_no_changes(self):
         mock_controller = MagicMock()
@@ -23,7 +23,7 @@ class changeset_tests(unittest.TestCase):
         data['items'] = []
         cs = Changeset(data, mock_controller)
         
-        self.assertFalse(cs.has_changes())
+        self.assertFalse(cs.has_changes)
         
     def test_has_changes(self):
         mock_controller = MagicMock()
@@ -33,7 +33,7 @@ class changeset_tests(unittest.TestCase):
         data['items'] = {"message":"Hello World"}
         cs = Changeset(data, mock_controller)
         
-        self.assertTrue(cs.has_changes())
+        self.assertTrue(cs.has_changes)
 
     def test_affected_items(self):
         expected_message = "Here is the commit log"

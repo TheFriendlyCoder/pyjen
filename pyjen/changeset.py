@@ -1,4 +1,4 @@
-from pyjen.changesetitem import ChangeSetItem
+from pyjen.changesetitem import ChangesetItem
 
 
 class Changeset (object):
@@ -30,13 +30,13 @@ class Changeset (object):
         """gets details of the changes associated with the parent build
 
         :returns: list of items detailing each change associated with this Changeset
-        :rtype: :func:`list` of :py:mod:`pyjen.ChangeSetItem` objects
+        :rtype: :func:`list` of :py:mod:`pyjen.ChangesetItem` objects
         
         """
         retval = []
 
         for item in self._data['items']:
-            retval.append(ChangeSetItem(item, self._controller))
+            retval.append(ChangesetItem(item, self._controller))
 
         return retval
     
@@ -49,7 +49,8 @@ class Changeset (object):
         else:
             outStr = "No Changes\n"
         return outStr
-    
+
+    @property
     def has_changes(self):
         """Checks whether or not there are any SCM changes
         
@@ -62,8 +63,9 @@ class Changeset (object):
             return True
         else:
             return False
-        
-    def get_scm_type(self):
+
+    @property
+    def scm_type(self):
         """Gets the name of the SCM tool associated with this change
         
         :returns: Name of the SCM tool associated with this change

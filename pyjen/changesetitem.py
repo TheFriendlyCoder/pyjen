@@ -1,12 +1,12 @@
 from pyjen.user import User
 
-class ChangeSetItem(object):
+class ChangesetItem(object):
     """Encapsulation of all info related to a single change in a Changeset
 
     See also :py:mod:`pyjen.Changeset`
     """
 
-    def __init__ (self, data, controller):
+    def __init__(self, data, controller):
         """Constructor"""
         self._data = data
         self._controller = controller

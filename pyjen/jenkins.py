@@ -46,7 +46,7 @@ class Jenkins(object):
     
     """
     
-    def __init__ (self, data_io_controller):
+    def __init__(self, data_io_controller):
         """constructor
         
         To instantiate an instance of this class using auto-generated

@@ -138,7 +138,6 @@ class View(PluginBase):
             retval.append(j['url'])
         return retval
 
-
     @property
     def config_xml(self):
         """Gets the raw configuration data in XML format

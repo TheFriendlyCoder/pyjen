@@ -61,7 +61,7 @@ class build_tests(unittest.TestCase):
         b = Build(mock_data_io)
         cs = b.changeset
         
-        self.assertEqual(cs.get_scm_type(), "svn")
+        self.assertEqual(cs.scm_type, "svn")
 
     def test_get_changeset(self):
         mock_data_io = MagicMock()
