@@ -235,7 +235,7 @@ class Job(PluginBase):
 
         lgb = data['lastSuccessfulBuild']
 
-        if lgb == None:
+        if lgb is None:
             return None
 
         temp_data_io = self._controller.clone(lgb['url'])
@@ -257,11 +257,11 @@ class Job(PluginBase):
 
         last_build = data['lastBuild']
 
-        if last_build == None:
+        if last_build is None:
             return None
 
         temp_data_io = self._controller.clone(last_build['url'])
-        return Build (temp_data_io)
+        return Build(temp_data_io)
 
     @property
     def last_failed_build(self):
@@ -278,7 +278,7 @@ class Job(PluginBase):
 
         bld = data['lastFailedBuild']
 
-        if bld == None:
+        if bld is None:
             return None
 
         temp_data_io = self._controller.clone(bld['url'])
@@ -300,7 +300,7 @@ class Job(PluginBase):
 
         bld = data['lastCompletedBuild']
 
-        if bld == None:
+        if bld is None:
             return None
 
         temp_data_io = self._controller.clone(bld['url'])
@@ -321,7 +321,7 @@ class Job(PluginBase):
 
         bld = data['lastUnsuccessfulBuild']
 
-        if bld == None:
+        if bld is None:
             return None
 
         temp_data_io = self._controller.clone(bld['url'])
@@ -453,12 +453,15 @@ class Job(PluginBase):
         for run in self.recent_builds:
             if run.build_time < start_time:
                 break
-            elif run.build_time >= start_time and run.build_time <= end_time:
+            elif end_time >= run.build_time >= start_time:
                 builds.append(run)
         return builds
 
     def clone(self, new_job_name):
-        #TODO: throw exception if _master is None
+        """"Create a new job with the same configuration as this one
+
+        :param str new_job_name: Name of the new job to be created
+        """
         return self._master._clone_job(self.name, new_job_name)
 
 

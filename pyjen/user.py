@@ -59,7 +59,7 @@ class User (object):
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. \
                 Please check configuration.", http_io) 
-        if user_id == None or user_id == "":
+        if user_id is None or user_id == "":
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.user. \
                 Please check configuration.", http_io) 
     

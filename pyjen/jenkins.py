@@ -98,7 +98,7 @@ class Jenkins(object):
             raise InvalidJenkinsURLError("Invalid connection parameters provided to \
                 PyJen.Jenkins. Please check configuration.", http_io)
 
-        if version == None or version == "" or version == "Unknown":
+        if version is None or version == "" or version == "Unknown":
             raise InvalidJenkinsURLError("Invalid connection parameters provided to \
                 PyJen.Jenkins. Please check configuration.", http_io)
         return retval
@@ -339,7 +339,7 @@ class Jenkins(object):
         self._controller.post('/createView', args)
         
         retval = self.find_view(view_name)
-        assert retval != None
+        assert retval is not None
         return retval       
 
     def create_job(self, job_name, job_type):

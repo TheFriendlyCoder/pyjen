@@ -127,7 +127,7 @@ class JobXML(object):
     @property
     def properties(self):
         """Gets a list of 0 or more Jenkins properties associated with this job"""
-        retval =[]
+        retval = []
         properties_node = self.__root.find('properties')
         for property in properties_node:
             pluginxml = PluginXML(ElementTree.tostring(property))

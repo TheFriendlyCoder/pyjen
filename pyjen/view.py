@@ -266,7 +266,7 @@ class View(PluginBase):
         v = self._master.create_view(new_view_name, self.type)
         vxml = ViewXML(self.config_xml)
         vxml.rename(new_view_name)
-        v.set_config_xml(vxml.XML())
+        v.set_config_xml(vxml.XML)
         return v
 
     def rename(self, new_name):

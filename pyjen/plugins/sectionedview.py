@@ -89,7 +89,8 @@ class SectionedViewXML(ViewXML):
                     plugin_obj = plugin(sections_node)
 
             if plugin_obj is None:
-                raise PluginNotSupportedError("Sectioned view plugin {0} not found".format(pluginxml.get_class_name()), pluginxml.get_class_name())
+                raise PluginNotSupportedError("Sectioned view plugin {0} not found".format(pluginxml.get_class_name()),
+                                              pluginxml.get_class_name())
 
             retval.append(plugin_obj)
         return retval
@@ -312,7 +313,7 @@ if __name__ == "__main__":  # pragma: no cover
     print(s[1].include_regex)
     s[1].include_regex = r"unified-4\.1\.x-.*-build-32"
     #print(s[1].get_xml())
-    print(vxml.XML())
+    print(vxml.XML)
 
 
 

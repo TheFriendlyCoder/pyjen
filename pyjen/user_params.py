@@ -66,7 +66,7 @@ class JenkinsConfigParser(configparser.ConfigParser):
             raise InvalidUserParamsError("No username specified for password under " + section_name)
         if not temp_password:
             raise InvalidUserParamsError("No password specified for user " + temp_username + " under " + section_name)
-        return (temp_username, temp_password)
+        return temp_username, temp_password
 
     @staticmethod
     def get_default_configfiles():

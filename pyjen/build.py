@@ -84,7 +84,7 @@ class Build(object):
         raise RuntimeError("Objects do not match")
     
     def __ne__(self, obj):
-        """Overrides the defualt not equal operation"""
+        """Overrides the default not equal operation"""
         if isinstance(obj, Build):
             data = self.__data_io.get_api_data()
             build_url = data['url']

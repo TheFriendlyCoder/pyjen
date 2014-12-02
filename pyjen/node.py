@@ -69,7 +69,7 @@ class Node(object):
             raise InvalidJenkinsURLError("Invalid connection parameters \
                 provided to PyJen.Node. Please check configuration.", http_io)
 
-        if name == None or name == "":
+        if name is None or name == "":
             raise InvalidJenkinsURLError("Invalid connection parameters \
                 provided to PyJen.Node. Please check configuration.", http_io)
         return retval
@@ -119,7 +119,7 @@ class Node(object):
             optional descriptive message to display on the dashboard explaining
             the reason for this operation.
         """
-        if message != None:
+        if message is not None:
             post_cmd = "/toggleOffline?offlineMessage=" + url_quote(message)
         else:
             post_cmd = "/toggleOffline"
@@ -141,7 +141,7 @@ class Node(object):
         """
         sleep_duration = 1
 
-        if max_timeout == None:
+        if max_timeout is None:
             while not self.is_idle:
                 time.sleep(sleep_duration)
         else:

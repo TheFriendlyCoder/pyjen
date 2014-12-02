@@ -47,7 +47,7 @@ class DataRequester (object):
         :rtype: :py:class:`DataRequester`
         """
         
-        if new_url != None:
+        if new_url is not None:
             clone_url = new_url
         else:
             clone_url = self.__url
@@ -68,7 +68,7 @@ class DataRequester (object):
         
         """
         tmp = self.__url
-        if path != None:
+        if path is not None:
             tmp = urljoin(tmp, path.lstrip("/\\"))  
         
         return self._get_raw_text(tmp)
@@ -126,7 +126,7 @@ class DataRequester (object):
         """
         
         temp_path = self.__url
-        if path != None:
+        if path is not None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))    
         
         req = requests.get(temp_path, auth=self.__credentials)
@@ -152,10 +152,10 @@ class DataRequester (object):
             * 'data' - dictionary of assorted / misc data properties and their values 
         """          
         temp_path = self.__url
-        if path != None:
+        if path is not None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))
               
-        if args != None:
+        if args is not None:
             req = requests.post(temp_path, auth=self.__credentials, **args)
         else:
             req = requests.post(temp_path, auth=self.__credentials)

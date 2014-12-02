@@ -86,7 +86,6 @@ class NestedView(View):
         data = self._controller.get_api_data()
 
         raw_views = data['views']
-        retval = []
 
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
@@ -107,7 +106,7 @@ class NestedView(View):
         retval = self.create_view(new_view_name, existing_view.type)
         vxml = ViewXML(existing_view.config_xml)
         vxml.rename(new_view_name)
-        retval.set_config_xml(vxml.XML())
+        retval.set_config_xml(vxml.XML)
         return retval
 
     def move_view(self, existing_view):

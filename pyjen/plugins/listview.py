@@ -64,7 +64,7 @@ class ListView(View):
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
                 Please check configuration.", http_io)
-        if name == None or name == "":
+        if name is None or name == "":
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.View. \
                 Please check configuration.", http_io)
 

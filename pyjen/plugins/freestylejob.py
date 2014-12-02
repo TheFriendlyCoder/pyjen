@@ -61,7 +61,7 @@ class FreestyleJob(Job):
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Job. \
                 Please check configuration.", http_io)
-        if name == None or name == "":
+        if name is None or name == "":
             raise InvalidJenkinsURLError("Invalid connection parameters provided to PyJen.Job. \
                 Please check configuration.", http_io)
 
@@ -101,7 +101,7 @@ class FreestyleJob(Job):
         jobxml = JobXML(xml)
         jobxml.custom_workspace = path
 
-        self.set_config_xml(jobxml.XML())
+        self.set_config_xml(jobxml.XML)
 
     @staticmethod
     def template_config_xml():
