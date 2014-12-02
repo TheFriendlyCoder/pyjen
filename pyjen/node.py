@@ -26,7 +26,7 @@ class Node(object):
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
         """
-        self.__data_io = data_io_controller
+        self._data_io = data_io_controller
 
     @staticmethod
     def easy_connect(url, credentials=None):
@@ -81,7 +81,7 @@ class Node(object):
         :returns: the name of this Node
         :rtype: :func:`str`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
         return data['displayName']
 
@@ -92,7 +92,7 @@ class Node(object):
         :returns: true if this Node is offline otherwise false
         :rtype: :func:`bool`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
         return data['offline']
 
@@ -105,7 +105,7 @@ class Node(object):
             moment otherwise returns false
         :rtype: :func:`bool`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
         return data['idle']
     
     def toggle_offline(self, message=None):
@@ -124,7 +124,7 @@ class Node(object):
         else:
             post_cmd = "/toggleOffline"
 
-        self.__data_io.post(post_cmd)
+        self._data_io.post(post_cmd)
 
     def wait_for_idle(self, max_timeout=None):
         """Blocks execution until this Node enters an idle state

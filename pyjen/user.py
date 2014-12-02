@@ -17,7 +17,7 @@ class User (object):
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API        
         """
-        self.__data_io = data_io_controller
+        self._data_io = data_io_controller
         
     @staticmethod
     def easy_connect(url, credentials=None):
@@ -72,7 +72,7 @@ class User (object):
         :returns: unique identifier for this user
         :rtype: :func:`str`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
         return data['id']
     
     @property
@@ -82,7 +82,7 @@ class User (object):
         :returns: this users' full name
         :rtype: :func:`str`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
         return data['fullName']
     
     @property
@@ -93,7 +93,7 @@ class User (object):
             May be None if no description found 
         :rtype: :func:`str`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
         return data['description']
     
     @property
@@ -103,7 +103,7 @@ class User (object):
         :returns: email address of this user 
         :rtype: :func:`str`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
         for prop in data['property']:
             if 'address' in prop:
                 return prop['address']

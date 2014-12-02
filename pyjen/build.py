@@ -25,7 +25,7 @@ class Build(object):
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
         """
-        self.__data_io = data_io_controller
+        self._data_io = data_io_controller
 
     @staticmethod
     def easy_connect(url, credentials=None):
@@ -67,7 +67,7 @@ class Build(object):
         except:
             raise InvalidJenkinsURLError("Invalid connection parameters \
                 provided to PyJen.Build. Please check configuration.", http_io)
-        if number == None or number <= 0:
+        if number is None or number <= 0:
             raise InvalidJenkinsURLError("Invalid connection parameters \
                 provided to PyJen.Build. Please check configuration.", http_io)
 
@@ -76,9 +76,9 @@ class Build(object):
     def __eq__(self, obj):
         """Overrides the default equality operation"""
         if isinstance(obj, Build):
-            data = self.__data_io.get_api_data()
+            data = self._data_io.get_api_data()
             build_url = data['url']
-            obj_data = obj.__data_io.get_api_data()
+            obj_data = obj._data_io.get_api_data()
             obj_build_url = obj_data["url"]
             return build_url == obj_build_url
         raise RuntimeError("Objects do not match")
@@ -86,9 +86,9 @@ class Build(object):
     def __ne__(self, obj):
         """Overrides the default not equal operation"""
         if isinstance(obj, Build):
-            data = self.__data_io.get_api_data()
+            data = self._data_io.get_api_data()
             build_url = data['url']
-            obj_data = obj.__data_io.get_api_data()
+            obj_data = obj._data_io.get_api_data()
             obj_build_url = obj_data["url"]
             return build_url != obj_build_url
         raise RuntimeError("Objects do not match")
@@ -102,7 +102,7 @@ class Build(object):
         :rtype: :func:`int`
         """
 
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
         return data['number']    
     
@@ -116,7 +116,7 @@ class Build(object):
 
         """
 
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
         time_in_seconds = data['timestamp'] * 0.001
 
@@ -129,7 +129,7 @@ class Build(object):
         :returns: true if the build is executing otherwise false
         :rtype: :func:`bool`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
         return data['building']
 
@@ -140,7 +140,7 @@ class Build(object):
         :returns: Raw console output from this build, in plain text format
         :rtype: :func:`str`
         """
-        return self.__data_io.get_text("/consoleText")
+        return self._data_io.get_text("/consoleText")
 
     @property
     def changeset(self):
@@ -155,9 +155,9 @@ class Build(object):
             associated with / included in this build
         :rtype: :py:mod:`pyjen.Changeset`
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
-        return Changeset(data['changeSet'], self.__data_io)
+        return Changeset(data['changeSet'], self._data_io)
 
 
 if __name__ == "__main__":  # pragma: no cover

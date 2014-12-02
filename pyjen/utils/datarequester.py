@@ -22,21 +22,21 @@ class DataRequester (object):
             for anonymous access.
         """
 
-        self.__url = jenkins_url.rstrip("/\\") + "/"
+        self._url = jenkins_url.rstrip("/\\") + "/"
         if not username or not password:
-            self.__credentials = None
+            self._credentials = None
         else:
-            self.__credentials = (username, password)
+            self._credentials = (username, password)
         
     @property
     def url(self):
         """Gets the URL used by all IO operations on this object"""
-        return self.__url
+        return self._url
     
     @property
     def credentials(self):
         """Gets the authentication credentials used for all IO operations on this object"""
-        return self.__credentials
+        return self._credentials
     
     def clone(self, new_url=None):
         """create a copy of this connection object
@@ -50,10 +50,10 @@ class DataRequester (object):
         if new_url is not None:
             clone_url = new_url
         else:
-            clone_url = self.__url
+            clone_url = self._url
 
-        if self.__credentials:
-            return DataRequester (clone_url, self.__credentials[0], self.__credentials[1])
+        if self._credentials:
+            return DataRequester (clone_url, self._credentials[0], self._credentials[1])
         else:
             return DataRequester (clone_url, None, None)
         
@@ -67,7 +67,7 @@ class DataRequester (object):
         :rtype: :func:`str`
         
         """
-        tmp = self.__url
+        tmp = self._url
         if path is not None:
             tmp = urljoin(tmp, path.lstrip("/\\"))  
         
@@ -80,7 +80,7 @@ class DataRequester (object):
         :returns:  Text returned from the given URL
         :rtype: :func:`str`
         """
-        req = requests.get(url, auth=self.__credentials)
+        req = requests.get(url, auth=self._credentials)
         
         if req.status_code != 200:
             req.raise_for_status()
@@ -108,7 +108,7 @@ class DataRequester (object):
             with the given URL.
         :rtype: :class:`object`
         """
-        temp_url = urljoin(self.__url, "api/python")
+        temp_url = urljoin(self._url, "api/python")
         
         txt = self._get_raw_text(temp_url)
         
@@ -125,11 +125,11 @@ class DataRequester (object):
         :rtype: :func:`dict`
         """
         
-        temp_path = self.__url
+        temp_path = self._url
         if path is not None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))    
         
-        req = requests.get(temp_path, auth=self.__credentials)
+        req = requests.get(temp_path, auth=self._credentials)
             
         if req.status_code != 200:
             req.raise_for_status()
@@ -151,14 +151,14 @@ class DataRequester (object):
             * 'headers' - dictionary of HTTP header properties and their associated values
             * 'data' - dictionary of assorted / misc data properties and their values 
         """          
-        temp_path = self.__url
+        temp_path = self._url
         if path is not None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))
               
         if args is not None:
-            req = requests.post(temp_path, auth=self.__credentials, **args)
+            req = requests.post(temp_path, auth=self._credentials, **args)
         else:
-            req = requests.post(temp_path, auth=self.__credentials)
+            req = requests.post(temp_path, auth=self._credentials)
 
         if req.status_code != 200:
             req.raise_for_status()

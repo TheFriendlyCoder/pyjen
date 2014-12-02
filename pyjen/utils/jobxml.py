@@ -17,20 +17,19 @@ class JobXML(object):
         :param str xml: Raw XML character string extracted from a Jenkins job.
         """
         
-        self.__root = ElementTree.fromstring(xml)
+        self._root = ElementTree.fromstring(xml)
 
-        assert (self.__root.tag == "project")
+        assert self._root.tag == "project"
 
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
         
         If the job is not currently using a custom workspace this method will do nothing
         """
-    
-        Node = self.__root.find('customWorkspace')
+        node = self._root.find('customWorkspace')
         
-        if Node != None:
-            self.__root.remove(Node)
+        if node is not None:
+            self._root.remove(node)
 
     @property
     def custom_workspace(self):
@@ -39,10 +38,10 @@ class JobXML(object):
         :returns: the local path for the custom workspace associated with this job
         :rtype: :func:`str`
         """
-        Node = self.__root.find('customWorkspace')
-        if Node is None:
+        node = self._root.find('customWorkspace')
+        if node is None:
             return ""
-        return Node.text
+        return node.text
 
     @custom_workspace.setter
     def custom_workspace(self, path):
@@ -53,12 +52,12 @@ class JobXML(object):
 
         :param str path: path of the new or modified custom workspace
         """
-        Node = self.__root.find('customWorkspace')
+        node = self._root.find('customWorkspace')
 
-        if Node is None:
-            Node = ElementTree.SubElement(self.__root, 'customWorkspace')
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'customWorkspace')
 
-        Node.text = path
+        node.text = path
 
     @property
     def assigned_node(self):
@@ -66,22 +65,22 @@ class JobXML(object):
         :returns: the build agent label this job is associated with
         :rtype: :func:`str`
         """
-        Node = self.__root.find("assignedNode")
-        if Node is None:
+        node = self._root.find("assignedNode")
+        if node is None:
             return ""
-        return Node.text
+        return node.text
 
     @assigned_node.setter
     def assigned_node(self, node_label):
         """Sets the build agent label this job is associated with
         :param str node_label: the new build agent label to associate with this job
         """
-        Node = self.__root.find('assignedNode')
+        node = self._root.find('assignedNode')
 
-        if Node is None:
-            Node = ElementTree.SubElement(self.__root, 'assignedNode')
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'assignedNode')
 
-        Node.text = node_label
+        node.text = node_label
 
     @property
     def XML(self):
@@ -94,7 +93,7 @@ class JobXML(object):
         
         :rtype: :func:`str`
         """
-        retval = ElementTree.tostring(self.__root, "UTF-8")
+        retval = ElementTree.tostring(self._root, "UTF-8")
         return retval.decode("utf-8")
 
     @property
@@ -114,21 +113,22 @@ class JobXML(object):
         
         :rtype: :py:mod:`pyjen.plugins.PluginXML`
         """
-        Node = self.__root.find('scm')
-        xml = ElementTree.tostring(Node)
+        node = self._root.find('scm')
+        xml = ElementTree.tostring(node)
 
         pluginxml = PluginXML(xml)
         for plugin in get_plugins():
             if plugin.type == pluginxml.get_class_name():
-                return plugin(Node)
+                return plugin(node)
 
-        raise PluginNotSupportedError("Job XML plugin {0} not found".format(pluginxml.get_class_name()), pluginxml.get_class_name())
+        raise PluginNotSupportedError("Job XML plugin {0} not found".format(pluginxml.get_class_name()),
+                                      pluginxml.get_class_name())
 
     @property
     def properties(self):
         """Gets a list of 0 or more Jenkins properties associated with this job"""
         retval = []
-        properties_node = self.__root.find('properties')
+        properties_node = self._root.find('properties')
         for property in properties_node:
             pluginxml = PluginXML(ElementTree.tostring(property))
             for plugin in get_plugins():

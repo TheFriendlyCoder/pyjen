@@ -37,7 +37,8 @@ class View(PluginBase):
             if plugin.type == pluginxml.get_class_name():
                 return plugin(controller, jenkins_master)
 
-        raise PluginNotSupportedError("View plugin {0} not found".format(pluginxml.get_class_name()), pluginxml.get_class_name())
+        raise PluginNotSupportedError("View plugin {0} not found".format(pluginxml.get_class_name()),
+                                      pluginxml.get_class_name())
 
     @staticmethod
     def supported_types():

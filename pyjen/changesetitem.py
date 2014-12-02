@@ -1,5 +1,6 @@
 from pyjen.user import User
 
+
 class ChangesetItem(object):
     """Encapsulation of all info related to a single change in a Changeset
 
