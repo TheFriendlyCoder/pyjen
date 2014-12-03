@@ -12,6 +12,8 @@ class Build(object):
 
     Builds are executions of jobs and thus instances of this class are
     typically generated from the :class:`~.job.Job` class.
+
+    .. seealso:: :class:`~.job.Job`
     """
 
     def __init__(self, data_io_controller):
@@ -124,7 +126,7 @@ class Build(object):
     def is_building(self):
         """Checks to see whether this build is currently executing
 
-        :returns: :py:const:`True` if the build is executing otherwise :py:const:`False`
+        :returns: True if the build is executing otherwise False
         :rtype: :class:`bool`
         """
         data = self._data_io.get_api_data()

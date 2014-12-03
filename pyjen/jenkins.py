@@ -16,12 +16,12 @@ class Jenkins(object):
     aspect of the Jenkins dashboard is then provided by the
     objects exposed by this class including:
 
-    * :py:mod:`pyjen.Job` - abstraction for a Jenkins job, allowing manipulation
-                    of job settings and controlling builds of those jobs
-    * :py:mod:`pyjen.build` - abstraction for an instance of a build of a
-                    particular job
-    * :py:mod:`pyjen.View` - abstraction for a view on the dashboard, allowing
-                jobs to be filtered based on different criteria like job name.
+    * :class:`~.job.Job` - abstraction for a Jenkins job, allowing manipulation
+      of job settings and controlling builds of those jobs
+    * :class:`~.build.Build` - abstraction for an instance of a build of a
+      particular job
+    * :class:`~.view.View` - abstraction for a view on the dashboard, allowing
+      jobs to be filtered based on different criteria like job name.
 
     **Example:** finding a job ::
 
@@ -33,28 +33,24 @@ class Jenkins(object):
             print ('job ' + Job.get_name() + ' found at ' + Job.get_url())
 
 
-    **Example:** 
-        find the build number of the last good build 
-        of the first job on the default view ::
+    **Example:** find the build number of the last good build of the first job on the default view ::
     
         j = pyjen.Jenkins.easy_connect('http://localhost:8080/')
         View = j.get_default_view()
         jobs = View.get_jobs()
         lgb = jobs[0].get_last_good_build()
-        print ('last good build of the first job in the default view is ' +\
-                lgb.get_build_number())
-    
+        print ('last good build of the first job in the default view is ' + lgb.get_build_number())
     """
     
     def __init__(self, data_io_controller):
-        """constructor
-        
+        """
         To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
         
-        :param obj data_io_controller:
+        :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API        
+            object to the Jenkins REST API
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         """
         self._controller = data_io_controller
             
@@ -62,15 +58,16 @@ class Jenkins(object):
     def easy_connect(url, credentials=None):
         """Factory method to simplify creating connections to Jenkins servers
         
-        :param str url: Full URL of the Jenkins instance to connect to. Must be
+        :param str url:
+            Full URL of the Jenkins instance to connect to. Must be
             a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and 
-            password for authenticating to the URL
+        :param tuple credentials:
+            A 2-element tuple with the username and password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns:
+            Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
+        :rtype: :class:`.Jenkins`
         """
         # Default to anonymous access
         username = None
@@ -108,7 +105,7 @@ class Jenkins(object):
         """Gets the version of Jenkins pointed to by this object
         
         :return: Version number of the currently running Jenkins instance
-        :rtype: :func:`str`
+        :rtype: :class:`str`
             
         """
         headers = self._controller.get_headers('/api/python')
@@ -122,9 +119,10 @@ class Jenkins(object):
     def is_shutting_down(self):
         """checks to see whether the Jenkins master is in the process of shutting down.
         
-        :returns: If the Jenkins master is preparing to shutdown 
-            (ie: in quiet down state), return true, otherwise returns false.
-        :rtype: :func:`bool`
+        :returns:
+            If the Jenkins master is preparing to shutdown
+            (ie: in quiet down state), return True, otherwise returns False.
+        :rtype: :class:`bool`
             
         """
         data = self._controller.get_api_data()
@@ -136,8 +134,7 @@ class Jenkins(object):
         """gets the list of nodes (aka: agents) managed by this Jenkins master
         
         :returns: list of 0 or more Node objects managed by this Jenkins master 
-        :rtype: :func:`list` of :py:mod:`pyjen.Node` objects
-            
+        :rtype: :class:`list` of :class:`~.node.Node` objects
         """
         tmp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/computer")
         data = tmp_data_io.get_api_data()
@@ -163,7 +160,7 @@ class Jenkins(object):
         the main URL. Typically this will be the "All" view.
         
         :returns: object that manages the default Jenkins view
-        :rtype: :py:mod:`pyjen.View`            
+        :rtype: :class:`~.view.View`
         """        
         data = self._controller.get_api_data()
 
@@ -177,10 +174,10 @@ class Jenkins(object):
         """Gets a list of all views directly managed by the Jenkins dashboard
 
         To retrieve all views managed by this Jenkins instance, including recursing into
-        views that support sub-views, see the :py:meth:`pyjen.View.all_views` property
+        views that support sub-views, see the :py:meth:`.all_views` property
 
         :returns: list of one or more views defined on this Jenkins instance. 
-        :rtype: :func:`list` of :py:mod:`pyjen.View` objects
+        :rtype: :class:`list` of :class:`~.view.View` objects
             
         """
         data = self._controller.get_api_data()
@@ -203,6 +200,12 @@ class Jenkins(object):
 
     @property
     def all_views(self):
+        """Gets a list of all views managed by this Jenkins instance, including all nested views
+
+        :returns: list of one or more views defined on this Jenkins instance.
+        :rtype: :class:`list` of :class:`~.view.View` objects
+        """
+
         temp = self.views
 
         retval = []
@@ -219,7 +222,7 @@ class Jenkins(object):
         Analogous to the "Prepare for Shutdown" link on the Manage Jenkins configuration page
         
         You can cancel a previous requested shutdown using the 
-        :py:meth:`pyjen.Jenkins.cancel_shutdown` method
+        :py:meth:`.cancel_shutdown` method
         """
         self._controller.post('/quietDown')
         
@@ -227,7 +230,7 @@ class Jenkins(object):
         """Cancels a previous scheduled shutdown sequence
         
         Cancels a shutdown operation initiated by the 
-        :py:meth:`pyjen.Jenkins.prepare_shutdown` method
+        :py:meth:`.prepare_shutdown` method
         """
         self._controller.post('/cancelQuietDown')
     
@@ -236,10 +239,9 @@ class Jenkins(object):
         """Searches all jobs managed by this Jenkins instance for a specific job
         
         :param str job_name: the name of the job to search for
-        :returns: If a job with the specified name can be found, and object
-            to manage the job will be returned, otherwise an empty
-            object is returned (ie: None)
-        :rtype: :py:mod:`pyjen.Job`
+        :returns:
+            If a job with the specified name can be found, and object to manage the job will be returned, otherwise None
+        :rtype: :class:`~.job.Job`
         """
         data = self._controller.get_api_data()
         tjobs = data['jobs']
@@ -255,11 +257,10 @@ class Jenkins(object):
         """Searches all views managed by this Jenkins instance for a specific view
         
         :param str view_name: the name of the view to search for
-            
-        :returns: If a view with the specified name can be found, an object
-            to manage the view will be returned, otherwise an empty
-            object is returned (ie: None)
-        :rtype: :py:mod:`pyjen.View`
+        :returns:
+            If a view with the specified name can be found, an object to manage the view will be returned,
+            otherwise None
+        :rtype: :class:`~.view.View`
         """
         data = self._controller.get_api_data()
         
@@ -292,10 +293,11 @@ class Jenkins(object):
     def _find_view_helper(self, view, view_name):
         """Helper function, used by find_view method, to recursively search for views within sub-views
 
-        :param obj view: :py:mod:`pyjen.View` object which supports nested views
+        :param view: View object which supports nested views
+        :type view: :class:`~.view.View`
         :param str view_name: the name of the view to locate
         :return: Reference to the view being searched, or None if not found
-        :rtype: :py:mod:`pyjen.View`
+        :rtype: :class:`~view.View`
         """
         sub_views = view.views
         for cur_view in sub_views:
@@ -313,16 +315,17 @@ class Jenkins(object):
     def create_view(self, view_name, view_type):
         """Creates a new view on the Jenkins dashboard
         
-        :param str view_name: the name for this new view
+        :param str view_name:
+            the name for this new view
             This name should be unique, different from any other views
             currently managed by the Jenkins instance
-        :param str view_type: type of view to create
+        :param str view_type:
+            type of view to create
             must match one or more of the available view types supported
-            by this Jenkins instance. See attributes of the :py:mod:`pyjen.View`
-            class for compatible options.
-            Defaults to a list view type
+            by this Jenkins instance. See :py:meth:`.view_types`
+            for a list of supported view types.
         :returns: An object to manage the newly created view
-        :rtype: :py:mod:`pyjen.View`
+        :rtype: :class:`~.view.View`
         """
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         data = {
@@ -345,10 +348,12 @@ class Jenkins(object):
     def create_job(self, job_name, job_type):
         """Creates a new job on this Jenkins instance
 
-        :param str job_name: The name for the job to be created.
+        :param str job_name:
+            The name for the job to be created.
             expected to be universally unique on this instance of Jenkins
-        :param str job_type: descriptive type for the base configuration of this new job
-            for a list of currently supported job types see :meth:`Jenkins.job_types`
+        :param str job_type:
+            descriptive type for the base configuration of this new job
+            for a list of currently supported job types see :meth:`.job_types`
         """
         params = {'name': job_name}
         headers = {'Content-Type': 'text/xml'}
@@ -373,36 +378,37 @@ class Jenkins(object):
 
     @property
     def job_types(self):
-        """Returns a list of Jenkins job types currently supported by this instance of PyJen
-
-        Elements from this list may be used when creating new jobs on this Jenkins instance,
-        so long as the accompanying job type is supported by the live Jenkins server
+        """
+        :returns: a list of Jenkins job types currently supported by this instance of PyJen
+                 Elements from this list may be used when creating new jobs on this Jenkins instance,
+                 so long as the accompanying job type is supported by the live Jenkins server
+        :rtype: :class:`list` of :class:`str`
         """
         return Job.supported_types()
 
     @property
     def view_types(self):
-        """Returns a list of Jenkins view types currently supported by this instance of PyJen
-
-        Elements from this list may be used when creating new views on this Jenkins instance,
-        so long as the accompanying view type is supported by the live Jenkins server
+        """
+        :returns: a list of Jenkins view types currently supported by this instance of PyJen
+                  Elements from this list may be used when creating new views on this Jenkins instance,
+                  so long as the accompanying view type is supported by the live Jenkins server
+        :rtype: :class:`list` of :class:`str`
         """
         return View.supported_types()
 
     def _clone_job(self, source_job_name, new_job_name):
         """Makes a copy of this job on the dashboard with a new name        
         
-        :param str source_job_name: The name of the existing Jenkins job
-            which is to have it's configuration cloned to create a new job.
+        :param str source_job_name:
+            The name of the existing Jenkins job which is to have it's configuration cloned to create a new job.
             A job of this name must exist on this Jenkins instance. 
         :param str new_job_name:
             the name of the newly created job whose settings will
             be an exact copy of the source job. There must be no existing
             jobs on the Jenkins dashboard with this same name.
             
-        :returns: a reference to the newly created job resulting
-            from the clone operation
-        :rtype: :py:mod:`pyjen.Job`
+        :returns: a reference to the newly created job resulting from the clone operation
+        :rtype: :class:`~.job.Job`
         """
         params = {'name': new_job_name,
                   'mode': 'copy',
@@ -433,8 +439,8 @@ class Jenkins(object):
         This method, although a bit more cumbersome, has better performance than :py:meth:`find_view`
 
         :param str url: absolute URL of the view to load
-        :return: an instance of the appropriate pyjen.View class for the given view
-        :rtype: :py:mod:`pyjen.View`
+        :return: an instance of the appropriate pyjen.View subclass for the given view
+        :rtype: :class:`~.view.View`
         """
         new_io_obj = self._controller.clone(url)
         return View.create(new_io_obj, self)
@@ -442,11 +448,11 @@ class Jenkins(object):
     def get_job(self, url):
         """Generates a Job object based on an absolute URL
 
-        This method, although a bit more cumbersome, has better performance than :py:meth:`find_job`
+        This method, although a bit more cumbersome, has better performance than :py:meth:`.find_job`
 
         :param str url: absolute URL of the job to load
-        :return: an instance of the appropriate pyjen.View class for the given view
-        :rtype: :py:mod:`pyjen.View`
+        :return: an instance of the appropriate pyjen.View subclass for the given view
+        :rtype: :class:`~.view.View`
         """
         new_io_obj = self._controller.clone(url)
         return Job.create(new_io_obj, self)

@@ -1,29 +1,35 @@
+"""Primitives for interacting with SCM changesets associated with a build"""
 from pyjen.user import User
 
 
 class ChangesetItem(object):
-    """Encapsulation of all info related to a single change in a Changeset
+    """Encapsulates all info related to a single change in a Changeset
 
-    See also :py:mod:`pyjen.Changeset`
+    .. seealso:: :class:`~.changeset.Changeset`
     """
 
     def __init__(self, data, controller):
-        """Constructor"""
+        """
+        :param dict data: Dictionary of attributes describing this single changeset
+        :param controller: Interface to the Jenkins API
+        :type controller: :class:`~.utils.datarequester.DataRequester`"""
         self._data = data
         self._controller = controller
 
     @property
     def author(self):
-        """Person who committed this change to the associated SCM
-        :rtype: :py:mod:`pyjen.User`
+        """
+        :returns: Person who committed this change to the associated SCM
+        :rtype: :class:`~.user.User`
         """
         temp_data_io = self._controller.clone(self._data['author']['absoluteUrl'])
         return User(temp_data_io)
 
     @property
     def message(self):
-        """SCM commit message associated with this change
-        :rtype: :func:`str`
+        """
+        :returns: SCM commit message associated with this change
+        :rtype: :class:`str`
         """
         return self._data['msg']
 

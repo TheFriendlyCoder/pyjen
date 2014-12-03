@@ -2,21 +2,21 @@ from pyjen.changesetitem import ChangesetItem
 
 
 class Changeset (object):
-    """class that manages the interpretation of the "changeSet" properties of a Jenkins build"""
+    """manages the interpretation of the "changeSet" properties of a Jenkins build
+
+    .. seealso:: :class:`~.build.Build`
+    """
 
     def __init__(self, data, controller):
-        """constructor
-        
-        :param dict data: 
-            Dictionary of data elements typically parsed from the "changeSet" node
-            of a builds source data as provided by the Jenkins REST API. Should have
-            at least the following keys (NOTE: Some addins provide extra properties
-            not explicitly exposed by this class) 
-            'kind' - string describing the SCM tool associated with this change
-            all changes reported by this object are expected to be stored
-            in the same SCM tool     
-            'items' - list of 0 or more actual changesets included in the associated build
-        
+        """
+        :param dict data: Dictionary of data elements typically parsed from the "changeSet" node
+                          of a builds source data as provided by the Jenkins REST API. Should have
+                          at least the following keys:
+        * **'kind'** - string describing the SCM tool associated with this change all changes reported
+          by this object are expected to be stored in the same SCM tool
+        * **'items'** - list of 0 or more actual changesets included in the associated build
+        :param controller: object controlling access to Jenkins API
+        :type controller: :class:`~.utils.datarequester.DataRequester`
         """
 
         assert('items' in data.keys())
@@ -29,9 +29,8 @@ class Changeset (object):
     def affected_items(self):
         """gets details of the changes associated with the parent build
 
-        :returns: list of items detailing each change associated with this Changeset
-        :rtype: :func:`list` of :py:mod:`pyjen.ChangesetItem` objects
-        
+        :returns: list of 0 or more items detailing each change associated with this Changeset
+        :rtype: :class:`list` of :class:`~.changesetitem.ChangesetItem` objects
         """
         retval = []
 
@@ -54,10 +53,8 @@ class Changeset (object):
     def has_changes(self):
         """Checks whether or not there are any SCM changes
         
-        :returns:
-                True : changes have been found
-                False : there are no changes        
-        :rtype: :func:`bool`
+        :returns: True if changes have been found, False if not
+        :rtype: :class:`bool`
         """
         if (self._data['items']):
             return True
@@ -69,7 +66,7 @@ class Changeset (object):
         """Gets the name of the SCM tool associated with this change
         
         :returns: Name of the SCM tool associated with this change
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         return self._data['kind']
 
