@@ -6,11 +6,11 @@ Submodules
 
 .. toctree::
 
-   pyjen.utils.common
-   pyjen.utils.DataRequester
-   pyjen.utils.JobXML
+   pyjen.utils.datarequester
+   pyjen.utils.jobxml
+   pyjen.utils.plugin_base
    pyjen.utils.pluginapi
-   pyjen.utils.ViewXML
+   pyjen.utils.viewxml
 
 Module contents
 ---------------

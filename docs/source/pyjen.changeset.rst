@@ -1,7 +1,7 @@
-pyjen.Changeset module
+pyjen.changeset module
 ======================
 
-.. automodule:: pyjen.Changeset
+.. automodule:: pyjen.changeset
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,7 +1,7 @@
-pyjen.plugins.Subversion module
+pyjen.plugins.subversion module
 ===============================
 
-.. automodule:: pyjen.plugins.Subversion
+.. automodule:: pyjen.plugins.subversion
     :members:
     :undoc-members:
     :show-inheritance:

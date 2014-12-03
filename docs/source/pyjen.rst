@@ -14,16 +14,12 @@ Submodules
 
 .. toctree::
 
-   pyjen.allview
    pyjen.build
-   pyjen.Changeset
+   pyjen.changeset
    pyjen.changesetitem
    pyjen.exceptions
-   pyjen.freestylejob
    pyjen.jenkins
    pyjen.job
-   pyjen.listview
-   pyjen.myview
    pyjen.node
    pyjen.user
    pyjen.user_params

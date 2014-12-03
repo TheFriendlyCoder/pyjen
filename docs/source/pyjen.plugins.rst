@@ -6,12 +6,17 @@ Submodules
 
 .. toctree::
 
-   pyjen.plugins.job-maven-plugin
-   pyjen.plugins.PluginXML
-   pyjen.plugins.Subversion
-   pyjen.plugins.view-nested-view
-   pyjen.plugins.view-sectioned-view
-   pyjen.plugins.view-status-view
+   pyjen.plugins.allview
+   pyjen.plugins.buildblocker
+   pyjen.plugins.freestylejob
+   pyjen.plugins.listview
+   pyjen.plugins.mavenplugin
+   pyjen.plugins.myview
+   pyjen.plugins.nestedview
+   pyjen.plugins.nullscm
+   pyjen.plugins.sectionedview
+   pyjen.plugins.statusview
+   pyjen.plugins.subversion
 
 Module contents
 ---------------
