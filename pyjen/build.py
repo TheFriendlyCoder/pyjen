@@ -8,21 +8,20 @@ from pyjen.user_params import JenkinsConfigParser
 
 
 class Build(object):
-    """Class that encapsulates all jenkins related 'build' information
+    """Class that encapsulates information about a single build / run of a :class:`~.job.Job`
 
     Builds are executions of jobs and thus instances of this class are
-    typically generated from the :py:mod:`pyjen.job` class.
+    typically generated from the :class:`~.job.Job` class.
     """
 
     def __init__(self, data_io_controller):
-        """constructor
-
-        To instantiate an instance of this class using auto-generated
+        """To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
 
-        :param obj data_io_controller:
+        :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         """
         self._data_io = data_io_controller
 
@@ -32,13 +31,13 @@ class Build(object):
         
         :param str url: Full URL of the Jenkins instance to connect to. Must be
             a valid running Jenkins instance.
-        :param tuple credentials: A 2-element tuple with the username and 
+        :param tuple credentials: A 2-element tuple with the username and
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns: Jenkins object, pre-configured with the appropriate credentials and connection parameters for
+            the given URL.
+        :rtype: :class:`~.jenkins.Jenkins`
         """
         # Default to anonymous access
         username = None
@@ -96,9 +95,9 @@ class Build(object):
     def build_number(self):
         """Gets the numeric build number for this build
 
-        :returns: This is the unique numeric identifier, typically a
-            sequential integer that is incremented with each build.
-        :rtype: :func:`int`
+        :returns: This is the unique numeric identifier, typically a sequential integer that is incremented
+            with each build.
+        :rtype: :class:`int`
         """
 
         data = self._data_io.get_api_data()
@@ -125,8 +124,8 @@ class Build(object):
     def is_building(self):
         """Checks to see whether this build is currently executing
 
-        :returns: true if the build is executing otherwise false
-        :rtype: :func:`bool`
+        :returns: :py:const:`True` if the build is executing otherwise :py:const:`False`
+        :rtype: :class:`bool`
         """
         data = self._data_io.get_api_data()
 
@@ -137,22 +136,17 @@ class Build(object):
         """Gets the raw console output for this build as plain text
 
         :returns: Raw console output from this build, in plain text format
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         return self._data_io.get_text("/consoleText")
 
     @property
     def changeset(self):
-        """Gets Changeset object associated with this build
+        """Gets the list of SCM changes associated with this build
 
-        NOTE: This Changeset may be empty if there were no SCM
-        changes associated with this build, as may be the case
-        with a forced build for example.
-
-        :returns:
-            Changeset object representing the set of SCM changes
-            associated with / included in this build
-        :rtype: :py:mod:`pyjen.Changeset`
+        :returns: 0 or more SCM changesets associated with / included in this build.
+            If no changesets are found, returns None
+        :rtype: :class:`~.changeset.Changeset`
         """
         data = self._data_io.get_api_data()
 

@@ -100,6 +100,8 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+# Enable output of docs for constructors
+autoclass_content = 'both'
 
 # -- Options for HTML output ----------------------------------------------
 

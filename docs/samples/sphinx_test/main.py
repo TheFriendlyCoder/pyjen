@@ -9,14 +9,20 @@
 * floats: :class:`float`
 * ints: :class:`int`
 * lists: :class:`list`
+* booleans: :class:`bool`
 * tuples: :func:`tuple`
 """
 
 class MyClass (object):
+    """Some descriptive text for my class
+
+    here is some more detailed info here
+    """
     def __init__(self, p1):
         """Constructor
 
-        :param list p1: First parameter is a list
+        :param p1: First parameter is a list
+        :type p1: :class:`list`
         """
         pass
 
@@ -66,6 +72,8 @@ class MyClass2():
 
 def someFn(p1):
     """My description
+
+    For an example of a short-form link see :py:meth:`~MyClass2.MyMethod`
 
     :param str p1: Here is parameter one
     """
