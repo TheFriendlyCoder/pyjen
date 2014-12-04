@@ -16,28 +16,27 @@ class Jenkins(object):
     aspect of the Jenkins dashboard is then provided by the
     objects exposed by this class including:
 
+    * :class:`~.view.View` - abstraction for a view on the dashboard, allowing
+      jobs to be filtered based on different criteria like job name.
     * :class:`~.job.Job` - abstraction for a Jenkins job, allowing manipulation
       of job settings and controlling builds of those jobs
     * :class:`~.build.Build` - abstraction for an instance of a build of a
       particular job
-    * :class:`~.view.View` - abstraction for a view on the dashboard, allowing
-      jobs to be filtered based on different criteria like job name.
 
     **Example:** finding a job ::
 
-        j = pyjen.Jenkins.easy_connect('http://localhost:8080')
-        Job= j.find_job('My Job')
-        if Job = None:
+        j = Jenkins.easy_connect('http://localhost:8080')
+        job = j.find_job('My Job')
+        if job is None:
             print ('no job by that name found')
         else:
-            print ('job ' + Job.get_name() + ' found at ' + Job.get_url())
-
+            print ('job ' + job.name + ' found')
 
     **Example:** find the build number of the last good build of the first job on the default view ::
     
         j = pyjen.Jenkins.easy_connect('http://localhost:8080/')
-        View = j.get_default_view()
-        jobs = View.get_jobs()
+        v = j.get_default_view()
+        jobs = v.get_jobs()
         lgb = jobs[0].get_last_good_build()
         print ('last good build of the first job in the default view is ' + lgb.get_build_number())
     """
@@ -233,11 +232,12 @@ class Jenkins(object):
         :py:meth:`.prepare_shutdown` method
         """
         self._controller.post('/cancelQuietDown')
-    
-      
+
     def find_job(self, job_name):
         """Searches all jobs managed by this Jenkins instance for a specific job
-        
+
+        .. seealso: :py:meth:`.get_job`
+
         :param str job_name: the name of the job to search for
         :returns:
             If a job with the specified name can be found, and object to manage the job will be returned, otherwise None
@@ -255,7 +255,9 @@ class Jenkins(object):
     
     def find_view(self, view_name):
         """Searches all views managed by this Jenkins instance for a specific view
-        
+
+        .. seealso: :py:meth:`.get_view`
+
         :param str view_name: the name of the view to search for
         :returns:
             If a view with the specified name can be found, an object to manage the view will be returned,
@@ -434,25 +436,31 @@ class Jenkins(object):
         return new_job
 
     def get_view(self, url):
-        """Generates a View object based on an absolute URL
+        """Establishes a connection to a View based on an absolute URL
 
-        This method, although a bit more cumbersome, has better performance than :py:meth:`find_view`
+        This method may be a bit less convenient to use in certain situations but it
+        has better performance than :py:meth:`.find_view`
+
+        .. seealso: :py:meth:`.find_view`
 
         :param str url: absolute URL of the view to load
-        :return: an instance of the appropriate pyjen.View subclass for the given view
+        :return: an instance of the appropriate View subclass for the given view
         :rtype: :class:`~.view.View`
         """
         new_io_obj = self._controller.clone(url)
         return View.create(new_io_obj, self)
 
     def get_job(self, url):
-        """Generates a Job object based on an absolute URL
+        """Establishes a connection to a Job based on an absolute URL
 
-        This method, although a bit more cumbersome, has better performance than :py:meth:`.find_job`
+        This method may be a bit less convenient to use in certain situations but it
+        has better performance than :py:meth:`.find_job`
+
+        .. seealso: :py:meth:`.find_job`
 
         :param str url: absolute URL of the job to load
-        :return: an instance of the appropriate pyjen.View subclass for the given view
-        :rtype: :class:`~.view.View`
+        :return: an instance of the appropriate Job subclass for the given job
+        :rtype: :class:`~.job.Job`
         """
         new_io_obj = self._controller.clone(url)
         return Job.create(new_io_obj, self)

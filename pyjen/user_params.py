@@ -73,7 +73,7 @@ class JenkinsConfigParser(configparser.ConfigParser):
         """Gets a list of potential locations where PyJen config files may be found
         
         :returns: list of paths to be searched
-        :rtype: :func:`list`
+        :rtype: :class:`list`
         """
         if platform.system() == "Windows":
             config_filename = "pyjen.cfg"

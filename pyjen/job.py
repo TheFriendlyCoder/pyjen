@@ -8,10 +8,11 @@ class Job(PluginBase):
     """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
 
     def __init__(self, controller, jenkins_master):
-        """Constructor
-
-        :param obj controller: IO interface which manages interaction with the live Jenkins job
-        :param obj jenkins_master: Instance of the :py:mod:`pyjen.Jenkins` class this job belongs to
+        """
+        :param controller: IO interface which manages interaction with the live Jenkins job
+        :type controller: :class:`~.datarequester.DataRequester`
+        :param jenkins_master: Jenkins instance containing this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
         self._controller = controller
         self._master = jenkins_master
@@ -21,14 +22,14 @@ class Job(PluginBase):
     def create(controller, jenkins_master):
         """Factory method used to instantiate the appropriate job type for a given configuration
 
-        :param obj controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
+        :param controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
             with the connection parameters for the job to be processed.
-        :param obj jenkins_master: Instance of the :py:mod:`pyjen.Jenkins` class this job belongs to
+        :type controller: :class:`~.datarequester.DataRequester`
+        :param jenkins_master: Jenkins instance containing this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
         :return: An instance of the appropriate derived type for the given job
-        :rtype: :py:mod:`pyjen.Job`
+        :rtype: :class:`~.job.Job`
         """
-
-
         config = controller.get_text('/config.xml')
         pluginxml = PluginXML(config)
 
@@ -41,7 +42,17 @@ class Job(PluginBase):
     @staticmethod
     def _create(controller, jenkins_master, job_name):
         """Private helper method for use by other classes in the PyJen API, allowing the instantiation of this
-        abstract base class for internal optimizations"""
+        abstract base class for internal optimizations
+
+        :param controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
+            with the connection parameters for the job to be processed.
+        :type controller: :class:`~.datarequester.DataRequester`
+        :param jenkins_master: Jenkins instance containing this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
+        :param str job_name: The unique descriptive name for the newly created job
+        :return: An instance of the appropriate derived type for the given job
+        :rtype: :class:`~.job.Job`
+        """
         class PartialJob(Job):
             def __init__(self, local_controller, local_master):
                 super(PartialJob, self).__init__(local_controller, local_master)
@@ -56,9 +67,9 @@ class Job(PluginBase):
         """Generates a generic configuration file for use when creating a new job on the live Jenkins instance
 
         :param str job_type: the type descriptor of the job being created
-            For valid values see the :py:meth:`pyjen.Job.supported_types` method
+            For valid values see the :py:meth:`.supported_types` method
         :return: XML configuration data for the specified job type
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         for plugin in get_plugins():
             if plugin.type == job_type:
@@ -70,11 +81,11 @@ class Job(PluginBase):
     def supported_types():
         """Returns a list of all job types supported by this instance of PyJen
 
-        These job types can be used in such methods as :py:meth:`pyjen.Jenkins.create_job`, which take as input
+        These job types can be used in such methods as :py:meth:`~.jenkins.Jenkins.create_job`, which take as input
         a job type classifier
 
         :return: list of all job types supported by this instance of PyJen, including those supported by plugins
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         retval = []
         from pyjen.job import Job
@@ -89,7 +100,7 @@ class Job(PluginBase):
         """Returns the name of the job managed by this object
 
         :returns: The name of the job
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         if self._name is not None:
             return self._name
@@ -101,9 +112,8 @@ class Job(PluginBase):
     def is_disabled(self):
         """Indicates whether this job is disabled or not
 
-        :returns:
-            true if the job is disabled, otherwise false
-        :rtype: :func:`bool`
+        :returns: True if the job is disabled, otherwise False
+        :rtype: :class:`bool`
         """
         data = self._controller.get_api_data()
 
@@ -114,7 +124,7 @@ class Job(PluginBase):
         """Checks to see whether this job has ever been built or not
 
         :returns: True if the job has been built at least once, otherwise false
-        :rtype: :py:module:`bool`
+        :rtype: :class:`bool`
         """
 
         data = self._controller.get_api_data()
@@ -125,13 +135,10 @@ class Job(PluginBase):
     def config_xml(self):
         """Gets the raw XML configuration for the job
 
-        Used in conjunction with the set_config_xml method,
-        callers are free to manipulate the raw job configuration
-        as desired.
+        Allows callers to manipulate the raw job configuration file as desired.
 
-        :returns:
-            the full XML tree describing this jobs configuration
-        :rtype: :func:`str`
+        :returns: the full XML tree describing this jobs configuration
+        :rtype: :class:`str`
         """
         return self._controller.get_text('/config.xml')
 
@@ -143,8 +150,7 @@ class Job(PluginBase):
         rare circumstances. All configuration changes should normally
         be handled using other methods provided on this class.
 
-        :param str new_xml:
-            A complete XML tree compatible with the Jenkins API
+        :param str new_xml: A complete XML tree compatible with the Jenkins API
         """
         headers = {'Content-Type': 'text/xml'}
         args = {}
@@ -158,7 +164,7 @@ class Job(PluginBase):
         """Gets the list of upstream dependencies for this job
 
         :returns: A list of 0 or more jobs that this job depends on
-        :rtype: :class:`list` of :py:mod:`pyjen.Job` objects
+        :rtype: :class:`list` of :class:`~.job.Job` objects
         """
         data = self._controller.get_api_data()
 
@@ -181,7 +187,7 @@ class Job(PluginBase):
         jobs, recursively for all upstream dependencies
 
         :returns: A list of 0 or more jobs this job depend on
-        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
+        :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
         data = self._controller.get_api_data()
         jobs = data['upstreamProjects']
@@ -204,7 +210,8 @@ class Job(PluginBase):
         synonymous with the short list provided on the main info
         page for the job on the dashboard.
 
-        :rtype: :func:`list` of :py:mod:`pyjen.Build` objects
+        :returns: a list of the most recent builds for this job
+        :rtype: :class:`list` of :class:`~.build.Build` objects
         """
         data = self._controller.get_api_data()
 
@@ -229,7 +236,7 @@ class Job(PluginBase):
             object that provides information and control for the
             last build which completed with a status of 'success'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.Build`
+        :rtype: :class:`~.build.Build`
         """
         data = self._controller.get_api_data()
 
@@ -251,7 +258,7 @@ class Job(PluginBase):
             object that provides information and control for the
             most recent build of this job.
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.Build`
+        :rtype: :class:`~.build.Build`
         """
         data = self._controller.get_api_data()
 
@@ -272,7 +279,7 @@ class Job(PluginBase):
         :returns:
             Most recent build with a status of 'failed'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.Build`
+        :rtype: :class:`~.build.Build`
         """
         data = self._controller.get_api_data()
 
@@ -294,7 +301,7 @@ class Job(PluginBase):
         :returns:
             Most recent build with a status of 'stable'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.Build`
+        :rtype: :class:`~.build.Build`
         """
         data = self._controller.get_api_data()
 
@@ -315,7 +322,7 @@ class Job(PluginBase):
         :returns:
             Most recent build with a status of 'unstable'
             If there are no such builds in the build history, this method returns None
-        :rtype: :py:mod:`pyjen.Build`
+        :rtype: :class:`~.build.Build`
         """
         data = self._controller.get_api_data()
 
@@ -332,7 +339,7 @@ class Job(PluginBase):
         """Gets the list of jobs to be triggered after this job completes
 
         :returns: A list of 0 or more jobs which depend on this one
-        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
+        :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
         data = self._controller.get_api_data()
 
@@ -355,7 +362,7 @@ class Job(PluginBase):
         jobs, recursively for all downstream dependencies
 
         :returns: A list of 0 or more jobs which depend on this one
-        :rtype:  :class:`list` of :py:mod:`pyjen.Job` objects
+        :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
         data = self._controller.get_api_data()
 
@@ -377,8 +384,8 @@ class Job(PluginBase):
         Sets the state of this job to disabled so as to prevent the
         job from being triggered.
 
-        Use in conjunction with the :py:func:`enable` and :py:func:`is_disabled`
-        methods to control the state of the job.
+        Use in conjunction with :py:meth:`.enable` and :py:attr:`.is_disabled`
+        to control the state of the job.
         """
         self._controller.post("/disable")
 
@@ -392,7 +399,8 @@ class Job(PluginBase):
         Enabling a job allows it to be triggered, either automatically
         via commit hooks / polls or manually through the dashboard.
 
-        Use in conjunction with the :py:func:`disable` and :py:func:`is_disabled` methods
+        Use in conjunction with :py:meth:`.disable` and :py:attr:`.is_disabled`
+        to control the state of the job
         """
         self._controller.post("/enable")
 
@@ -419,7 +427,7 @@ class Job(PluginBase):
         :returns:
             Build object for the build with the given numeric identifier
             If such a build does not exist, returns None
-        :rtype: :py:mod:`pyjen.Build`
+        :rtype: :class:`~.build.Build`
         """
         temp_data_io = self._controller.clone(self._controller.url + "/" + str(build_number))
 
@@ -436,12 +444,10 @@ class Job(PluginBase):
         """ Returns a list of all of the builds for a job that
             occurred between the specified start and end times
 
-            :param datetime start_time:
-                    starting time index for range of builds to find
-            :param datetime end_time:
-                    ending time index for range of builds to find
+            :param datetime start_time: starting time index for range of builds to find
+            :param datetime end_time: ending time index for range of builds to find
             :returns: a list of 0 or more builds
-            :rtype: :class:`list` of :py:mod:`pyjen.Build` objects
+            :rtype: :class:`list` of :class:`~.build.Build` objects
         """
         if start_time > end_time:
             tmp = end_time
@@ -461,6 +467,8 @@ class Job(PluginBase):
         """"Create a new job with the same configuration as this one
 
         :param str new_job_name: Name of the new job to be created
+        :returns: reference to newly created job
+        :rtype: :class:`~.job.Job`
         """
         return self._master._clone_job(self.name, new_job_name)
 

@@ -17,14 +17,13 @@ class Node(object):
     Use this class to manipulate agents managed by a Jenkins master"""
 
     def __init__(self, data_io_controller):
-        """constructor
-
-        To instantiate an instance of this class using auto-generated
+        """To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
 
-        :param obj data_io_controller:
+        :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         """
         self._data_io = data_io_controller
 
@@ -38,9 +37,9 @@ class Node(object):
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
+        :returns: Node object, pre-configured with the
             appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :rtype: :class:`~.node.Node`
         """
         # Default to anonymous access
         username = None
@@ -79,7 +78,7 @@ class Node(object):
         """Gets the display name of this Node
 
         :returns: the name of this Node
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         data = self._data_io.get_api_data()
 
@@ -89,8 +88,8 @@ class Node(object):
     def is_offline(self):
         """Checks to see whether this Node is currently offline or not
 
-        :returns: true if this Node is offline otherwise false
-        :rtype: :func:`bool`
+        :returns: True if this Node is offline otherwise False
+        :rtype: :class:`bool`
         """
         data = self._data_io.get_api_data()
 
@@ -101,9 +100,9 @@ class Node(object):
         """Checks to see whether any executors are in use on this Node or not
 
         :returns:
-            returns true if there are no active builds on this Node at the
-            moment otherwise returns false
-        :rtype: :func:`bool`
+            returns True if there are no active builds on this Node at the
+            moment otherwise returns False
+        :rtype: :class:`bool`
         """
         data = self._data_io.get_api_data()
         return data['idle']
@@ -117,7 +116,7 @@ class Node(object):
 
         :param str message:
             optional descriptive message to display on the dashboard explaining
-            the reason for this operation.
+            the reason this node has been taken offline.
         """
         if message is not None:
             post_cmd = "/toggleOffline?offlineMessage=" + url_quote(message)
@@ -135,9 +134,9 @@ class Node(object):
             will block indefinitely.
 
         :returns:
-            true if the Node has entered idle state before returning
-            otherwise returns false
-        :rtype: :func:`bool`
+            True if the Node has entered idle state before returning
+            otherwise returns False
+        :rtype: :class:`bool`
         """
         sleep_duration = 1
 

@@ -8,14 +8,13 @@ class User (object):
     """Interface to all primitives associated with a Jenkins user"""
     
     def __init__(self, data_io_controller):
-        """Constructor
-        
-        To instantiate an instance of this class using auto-generated
+        """To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
         
-        :param obj data_io_controller:
+        :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API        
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         """
         self._data_io = data_io_controller
         
@@ -29,9 +28,8 @@ class User (object):
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the 
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns: User initialized with the given connection parameters
+        :rtype: :class:`~.user.User`
         """
         # Default to anonymous access
         username = None
@@ -70,7 +68,7 @@ class User (object):
         """Gets the unique identifier for this user
         
         :returns: unique identifier for this user
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         data = self._data_io.get_api_data()
         return data['id']
@@ -80,7 +78,7 @@ class User (object):
         """Gets the users full name, typically first and last names separated by a space
         
         :returns: this users' full name
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         data = self._data_io.get_api_data()
         return data['fullName']
@@ -91,7 +89,7 @@ class User (object):
         
         :returns: some descriptive text explaining something about this user. 
             May be None if no description found 
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         data = self._data_io.get_api_data()
         return data['description']
@@ -101,7 +99,7 @@ class User (object):
         """Gets this users' email address as reported by Jenkins
         
         :returns: email address of this user 
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         data = self._data_io.get_api_data()
         for prop in data['property']:
