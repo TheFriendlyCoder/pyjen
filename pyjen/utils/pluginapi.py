@@ -11,8 +11,7 @@ PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), ".
 class PluginXML(object):
     """Class used to process XML configuration information associated with Jenkins plugins"""
     def __init__(self, xml):
-        """constructor
-
+        """
         :param str xml: the XML sub-tree defining the properties of this plugin
         """
         self._root = ElementTree.fromstring(xml)
@@ -21,7 +20,7 @@ class PluginXML(object):
         """Gets the name of the plugin
 
         :returns: the plugin name
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         attr = self._root.attrib['plugin']
         parts = attr.split('@')
@@ -31,7 +30,7 @@ class PluginXML(object):
         """Gets the Java class name of the plugin
 
         :returns: the Java class name
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
 
         if "class" in self._root.attrib:
@@ -47,7 +46,7 @@ class PluginXML(object):
         """Gets the version of the plugin
 
         :returns: the plugin version
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         attr = self._root.attrib['plugin']
         parts = attr.split('@')
@@ -58,7 +57,7 @@ def get_plugins():
     """Returns list of classes for all plugins supported by PyJen
 
     :returns: list of classes for all PyJen plugins
-    :rtype: :func:`list` of :mod:`pyjen.utils.pluginapi.PluginBase` derived objects
+    :rtype: :class:`list` of :class:`~.PluginBase` derived objects
     """
     all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
     retval = []
@@ -69,9 +68,10 @@ def get_plugins():
 
 def _get_plugin_classes(module):
     """Gets a list of all PyJen plugins from a given Python module
+
     :param module: A Python module object to be processed
     :returns: list of classes found within the given module that implement PyJen plugin interfaces
-    :rtype: :func:`list` of :mod:`pyjen.utils.pluginapi.PluginBase` objects
+    :rtype: :class:`list` of :class:`~.pluginapi.PluginBase` objects
     """
     import inspect
     retval = []

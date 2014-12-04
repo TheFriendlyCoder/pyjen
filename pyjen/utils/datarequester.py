@@ -11,8 +11,7 @@ class DataRequester (object):
     """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
         
     def __init__(self, jenkins_url, username, password):
-        """Constructor
-        
+        """
         :param str jenkins_url: 
             HTTP URL to use for all subsequent IO operations performed on this object.
         :param str username:
@@ -30,12 +29,18 @@ class DataRequester (object):
         
     @property
     def url(self):
-        """Gets the URL used by all IO operations on this object"""
+        """Gets the URL used by all IO operations on this object
+        :returns: the URL used by all IO operations on this object
+        :rtype: :class:`str`
+        """
         return self._url
     
     @property
     def credentials(self):
-        """Gets the authentication credentials used for all IO operations on this object"""
+        """Gets the authentication credentials used for all IO operations on this object
+        :returns: user name and password used for authenticated communication with Jenkins
+        :rtype: :func:`tuple` of :class:`str`
+        """
         return self._credentials
     
     def clone(self, new_url=None):
@@ -43,8 +48,8 @@ class DataRequester (object):
         
         :param str new_url: optional replacement URL associated with the cloned object
             credentials will be preserved in the clone
-        :returns: new :py:class:`DataRequester` object, with settings cloned from this instance
-        :rtype: :py:class:`DataRequester`
+        :returns: new DataRequester object, with settings cloned from this instance
+        :rtype: :class:`~.datarequester.DataRequester`
         """
         
         if new_url is not None:
@@ -64,7 +69,7 @@ class DataRequester (object):
             when performing the get operation
             
         :returns: the text loaded from this objects' URL
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         
         """
         tmp = self._url
@@ -78,7 +83,7 @@ class DataRequester (object):
         
         :param str url: the full HTTP URL to be polled
         :returns:  Text returned from the given URL
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         req = requests.get(url, auth=self._credentials)
         
@@ -122,7 +127,7 @@ class DataRequester (object):
             URL managed by this object when performing the
             get operation
         :returns: dictionary of HTTP header attributes with their associated values
-        :rtype: :func:`dict`
+        :rtype: :class:`dict`
         """
         
         temp_path = self._url

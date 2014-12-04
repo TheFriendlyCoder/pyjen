@@ -12,8 +12,7 @@ class JobXML(object):
      
     """
     def __init__(self, xml):
-        """Constructor
-        
+        """
         :param str xml: Raw XML character string extracted from a Jenkins job.
         """
         
@@ -36,7 +35,7 @@ class JobXML(object):
         """Gets the local path for the custom workspace associated with this job
 
         :returns: the local path for the custom workspace associated with this job
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         node = self._root.find('customWorkspace')
         if node is None:
@@ -62,8 +61,9 @@ class JobXML(object):
     @property
     def assigned_node(self):
         """Gets the build agent label this job is associated with
+
         :returns: the build agent label this job is associated with
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         node = self._root.find("assignedNode")
         if node is None:
@@ -73,6 +73,7 @@ class JobXML(object):
     @assigned_node.setter
     def assigned_node(self, node_label):
         """Sets the build agent label this job is associated with
+
         :param str node_label: the new build agent label to associate with this job
         """
         node = self._root.find('assignedNode')
@@ -91,7 +92,7 @@ class JobXML(object):
             previous operations against this object. This character
             string can be imported into Jenkins to configure a job.
         
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         retval = ElementTree.tostring(self._root, "UTF-8")
         return retval.decode("utf-8")
@@ -109,9 +110,9 @@ class JobXML(object):
             One of any number of plugin objects responsible for providing
             extensions to the source code management portion of a job
         
-            Examples: :py:mod:`pyjen.plugins.Subversion`
+            Examples: :class:`~pyjen.plugins.subversion.Subversion`
         
-        :rtype: :py:mod:`pyjen.plugins.PluginXML`
+        :rtype: :class:`~.pluginapi.PluginXML`
         """
         node = self._root.find('scm')
         xml = ElementTree.tostring(node)
@@ -126,7 +127,11 @@ class JobXML(object):
 
     @property
     def properties(self):
-        """Gets a list of 0 or more Jenkins properties associated with this job"""
+        """Gets a list of 0 or more Jenkins properties associated with this job
+
+        :returns: a list of customizable properties associated with this job
+        :rtype: :class:`list` of property plugins supported by this job
+        """
         retval = []
         properties_node = self._root.find('properties')
         for property in properties_node:

@@ -15,7 +15,7 @@ class PluginBase(object):
         """The Jenkins plugin descriptive name, used when instantiating objects of that type
 
         :return: Jenkins plugin descriptive name, used when instantiating objects of that type
-        :rtype: :func:`str`
+        :rtype: :class:`str`
         """
         raise NotImplementedError
 
