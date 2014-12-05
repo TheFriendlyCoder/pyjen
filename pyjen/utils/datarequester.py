@@ -2,6 +2,7 @@
 import requests
 import sys
 from pyjen.exceptions import JenkinsFlushFailure
+import logging
 
 if sys.version_info.major < 3:
     from urlparse import urljoin
@@ -13,6 +14,8 @@ else:
 # behavior has not been sufficiently tested for this to be considered
 # production ready
 ENABLE_CACHING = False
+
+log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 class DataRequester (object):
@@ -101,9 +104,17 @@ class DataRequester (object):
         if url in DataRequester._text_cache:
             return DataRequester._text_cache[url]
 
+        log.debug("Text cache miss: " + url)
+
         req = requests.get(url, auth=self._credentials)
         
         if req.status_code != 200:
+            log.debug("Error getting raw text from URL: " + url)
+            if self._credentials is None:
+                log.debug("Not using authenticated access")
+            else:
+                log.debug("Authenticating as user: " + self._credentials[0])
+            log.debug("Details: " + str(req))
             req.raise_for_status()
 
         if ENABLE_CACHING:
@@ -156,6 +167,8 @@ class DataRequester (object):
         if temp_path in DataRequester._header_cache:
             return DataRequester._header_cache[temp_path]
 
+        log.debug("Header cache miss: " + temp_path)
+
         req = requests.get(temp_path, auth=self._credentials)
             
         if req.status_code != 200:
@@ -191,6 +204,15 @@ class DataRequester (object):
             req = requests.post(temp_path, auth=self._credentials)
 
         if req.status_code != 200:
+            log.debug("Failed posting Jenkins data to " + temp_path)
+            if self._credentials is None:
+                log.debug("Not using authenticated access")
+            else:
+                log.debug("Authenticating as user: " + self._credentials[0])
+            if args is not None:
+                log.debug("Using custom post data: " + str(args))
+
+            log.debug("Details: " + str(req))
             req.raise_for_status()
 
     @property
@@ -199,13 +221,15 @@ class DataRequester (object):
 
         :rtype: :class:`str`
         """
+
+        # NOTE: First we check to see whether an entry for this objects config file
+        #       exists in the 'modified' configxml cache, and it it does we use it
+        #       from there rather than polling the server
         if self._url in DataRequester._configxml_cache:
+            log.debug("Config.xml read cache hit: " + self._url)
             return DataRequester._configxml_cache[self._url]
 
         retval = self.get_text("/config.xml")
-
-        if ENABLE_CACHING:
-            DataRequester._configxml_cache[self._url] = retval
 
         return retval
 
@@ -226,7 +250,6 @@ class DataRequester (object):
         # to be exploited in practice, but care would need to be taken to ensure this fact
         if ENABLE_CACHING:
             DataRequester._configxml_cache[self._url] = new_xml
-            print("Setting dirty flag")
             DataRequester._needs_flush = True
         else:
             headers = {'Content-Type': 'text/xml'}
@@ -237,7 +260,9 @@ class DataRequester (object):
 
     def flush(self):
         """Ensures that any non-synchronized changes cached by this object are uploaded to the remote Jenkins server"""
+        log.debug("Flushing cached data")
         if not DataRequester._needs_flush:
+            log.debug("Ignoring clean flush call")
             return
 
         DataRequester._needs_flush = False
@@ -279,6 +304,16 @@ class DataRequester (object):
         cls._text_cache = dict()
         cls._needs_flush = False
 
+    def __del__(self):
+        """Destructor
+
+        Used to simply record some state information in the output logger for debugging purposes
+        """
+        log.debug("Destroying datarequester: ")
+        log.debug("\tText cache size: " + str(len(self._text_cache)))
+        log.debug("\tHeader cache size: " + str(len(self._header_cache)))
+        log.debug("\tConfig.xml cache size: " + str(len(self._configxml_cache)))
+        log.debug("\tIs cache dirty?: " + str(self.is_dirty))
 
 if __name__ == "__main__":  # pragma: no cover
     pass
