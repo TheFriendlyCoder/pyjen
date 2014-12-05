@@ -1,7 +1,7 @@
-pyjen.plugins.PluginXML module
+pyjen.plugins.statusview module
 ===============================
 
-.. automodule:: pyjen.plugins.PluginXML
+.. automodule:: pyjen.plugins.statusview
     :members:
     :undoc-members:
     :show-inheritance:

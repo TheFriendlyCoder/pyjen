@@ -1,7 +1,7 @@
-pyjen.utils.ViewXML module
+pyjen.plugins.myview module
 ===========================
 
-.. automodule:: pyjen.utils.ViewXML
+.. automodule:: pyjen.plugins.myview
     :members:
     :undoc-members:
     :show-inheritance:

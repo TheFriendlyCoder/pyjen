@@ -1,7 +1,7 @@
-pyjen.freestylejob module
+pyjen.utils.jobxml module
 =========================
 
-.. automodule:: pyjen.freestylejob
+.. automodule:: pyjen.utils.jobxml
     :members:
     :undoc-members:
     :show-inheritance:

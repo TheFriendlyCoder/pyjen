@@ -1,7 +1,7 @@
-pyjen.utils.JobXML module
+pyjen.utils.viewxml module
 ==========================
 
-.. automodule:: pyjen.utils.JobXML
+.. automodule:: pyjen.utils.viewxml
     :members:
     :undoc-members:
     :show-inheritance:

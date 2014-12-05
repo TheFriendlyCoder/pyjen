@@ -1,7 +1,7 @@
-pyjen.utils.DataRequester module
+pyjen.plugins.freestylejob module
 =================================
 
-.. automodule:: pyjen.utils.DataRequester
+.. automodule:: pyjen.plugins.freestylejob
     :members:
     :undoc-members:
     :show-inheritance:
