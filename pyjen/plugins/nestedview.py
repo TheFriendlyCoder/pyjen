@@ -119,7 +119,7 @@ class NestedView(View):
         retval = self.create_view(new_view_name, existing_view.type)
         vxml = ViewXML(existing_view.config_xml)
         vxml.rename(new_view_name)
-        retval.set_config_xml(vxml.XML)
+        retval.config_xml = vxml.XML
         return retval
 
     def move_view(self, existing_view):
@@ -135,6 +135,10 @@ class NestedView(View):
         new_view = self.clone_subview(existing_view, existing_view.name)
         existing_view.delete()
         return new_view
+
+    #TODO: Disable the get/set config_xml operations here to prevent bugs when interacting with this plugin on live servers
+    #       rationale: there is abug in this plugin that causes the XML retrieved from the REST API to be incomplete, so if you pull the
+    #       XML then re-post it it'll essentially corrupt the view - not good.
 
 
 if __name__ == "__main__":  # pragma: no cover

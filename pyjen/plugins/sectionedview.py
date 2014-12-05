@@ -109,7 +109,7 @@ class SectionedViewXML(ViewXML):
             plugin_obj = None
             for plugin in get_plugins():
                 if plugin.type == pluginxml.get_class_name():
-                    plugin_obj = plugin(sections_node)
+                    plugin_obj = plugin(node)
 
             if plugin_obj is None:
                 raise PluginNotSupportedError("Sectioned view plugin {0} not found".format(pluginxml.get_class_name()),

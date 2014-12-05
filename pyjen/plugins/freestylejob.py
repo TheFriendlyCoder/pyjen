@@ -107,7 +107,7 @@ class FreestyleJob(Job):
         jobxml = JobXML(xml)
         jobxml.custom_workspace = path
 
-        self.set_config_xml(jobxml.XML)
+        self.config_xml = jobxml.XML
 
     @staticmethod
     def template_config_xml():

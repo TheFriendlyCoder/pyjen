@@ -33,8 +33,7 @@ class View(PluginBase):
         :return: An instance of the appropriate derived type for the given view
         :rtype: :class:`~.view.View`
         """
-        config = controller.get_config_xml()
-        pluginxml = PluginXML(config)
+        pluginxml = PluginXML(controller.config_xml)
 
         for plugin in get_plugins():
             if plugin.type == pluginxml.get_class_name():
@@ -259,7 +258,7 @@ class View(PluginBase):
             xml = new_job.config_xml
             for k in job_map.keys():
                 xml = xml.replace(k, job_map[k])
-            new_job.set_config_xml(xml)
+            new_job.config_xml = xml
 
             retval.append(new_job)
 
@@ -275,7 +274,7 @@ class View(PluginBase):
         v = self._master.create_view(new_view_name, self.type)
         vxml = ViewXML(self.config_xml)
         vxml.rename(new_view_name)
-        v.set_config_xml(vxml.XML)
+        v.config_xml = vxml.XML
         return v
 
     def rename(self, new_name):
