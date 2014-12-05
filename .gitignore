@@ -16,3 +16,4 @@ test_results.xml
 /logs
 /docs/build
 /.idea/workspace.xml
+/.idea/pyjen.iml
