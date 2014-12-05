@@ -5,16 +5,19 @@ class Changeset (object):
     """manages the interpretation of the "changeSet" properties of a Jenkins build
 
     .. seealso:: :class:`~.build.Build`
+
     """
 
     def __init__(self, data, controller):
         """
-        :param dict data: Dictionary of data elements typically parsed from the "changeSet" node
-                          of a builds source data as provided by the Jenkins REST API. Should have
-                          at least the following keys:
-        * **'kind'** - string describing the SCM tool associated with this change all changes reported
-          by this object are expected to be stored in the same SCM tool
-        * **'items'** - list of 0 or more actual changesets included in the associated build
+        :param dict data:
+            Dictionary of data elements typically parsed from the "changeSet" node
+            of a builds source data as provided by the Jenkins REST API. Should have
+            at least the following keys:
+
+            * **'kind'** - string describing the SCM tool associated with this change all changes reported by this
+              object are expected to be stored in the same SCM tool
+            * **'items'** - list of 0 or more actual changesets included in the associated build
         :param controller: object controlling access to Jenkins API
         :type controller: :class:`~.utils.datarequester.DataRequester`
         """

@@ -50,19 +50,19 @@ Quick Start Guide
 
 ::
 
-# pip --version
+    # pip --version
 
 which should result in output that looks something like this:
 
 ::
 
-pip 1.5.6 from C:\Users\kevin\Documents\python\pyjen\py3\lib\site-packages (python 3.4)
+    pip 1.5.6 from C:\Users\kevin\Documents\python\pyjen\py3\lib\site-packages (python 3.4)
 
 3. Install PyJen directly from PyPI using PIP:
 
 ::
 
-# pip install pyjen --pre
+    # pip install pyjen --pre
 
 4. import the pyjen module and start scripting! Here is a short example that shows how you can get the name of the default view from a Jenkins instance:
 ::

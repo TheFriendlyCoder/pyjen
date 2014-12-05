@@ -130,7 +130,7 @@ class NestedView(View):
         :param existing_view: Instance of a PyJen view to be moved
         :type existing_view: :class:`~.view.View`
         :returns: reference to new, relocated view object
-        :rtype: :class:`~.view.View"
+        :rtype: :class:`~.view.View`
         """
         new_view = self.clone_subview(existing_view, existing_view.name)
         existing_view.delete()
