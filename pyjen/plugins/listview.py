@@ -34,9 +34,9 @@ class ListView(View):
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns:
+            Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
+        :rtype: :class:`~.jenkins.Jenkins`
         """
         # Default to anonymous access
         username = None

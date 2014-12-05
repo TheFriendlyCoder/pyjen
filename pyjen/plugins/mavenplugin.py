@@ -3,13 +3,13 @@ from pyjen.job import Job
 
 
 class MavenPlugin(Job):
-    """Maven job plugin"""
+    """Custom Maven job type"""
     type = "maven2-moduleset"
 
     def __init__(self, controller, jenkins_master):
-        """constructor
-
+        """
         :param controller: data processing object to manage interaction with Jenkins API
+        :type controller: :class:`~.utils.datarequester.DataRequester`
         """
         super(MavenPlugin, self).__init__(controller, jenkins_master)
 

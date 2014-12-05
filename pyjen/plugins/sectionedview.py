@@ -7,18 +7,30 @@ import xml.etree.ElementTree as ElementTree
 
 
 class SectionedView(View):
-    """Sectioned view plugin"""
+    """Interface to Jenkins views of type "SectionedView"
+
+     Views of this type support groupings of jobs into 'sections'
+     which each have their own filters"""
     type = "hudson.plugins.sectioned_view.SectionedView"
 
     def __init__(self, controller, jenkins_master):
-        """constructor
-
-        :param str controller: data processing object to manage interaction with Jenkins API
         """
+        :param controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API
+        :type controller: :class:`~.utils.datarequester.DataRequester`
+        :param jenkins_master:
+            Reference to Jenkins object associated with the master instance managing
+            this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`        """
         super(SectionedView, self).__init__(controller, jenkins_master)
 
     @property
     def sections(self):
+        """
+        :returns: a list of sections contained within this view
+        :rtype: :class:`list` of one of the 'SectionedView' section types
+        """
         vxml = SectionedViewXML(self.config_xml)
         return vxml.sections
 
@@ -30,14 +42,17 @@ class ListViewSection(PluginBase):
     type = "hudson.plugins.sectioned_view.ListViewSection"
 
     def __init__(self, node):
-        """Constructor"""
+        """
+        :param node: XML node defining the settings for a ListView section
+        :type node: :class:`ElementTree.Element`
+        """
         self._root = node
 
     @property
     def include_regex(self):
-        """Gets the regular expression associated with this section
-        :returns: the regular expression associated with this section
-        :rtype: :func:`str`
+        """regular filter for jobs to be shown in this section
+
+        :rtype: :class:`str`
         """
         regex_node = self._root.find("includeRegex")
         if regex_node is None:
@@ -46,9 +61,9 @@ class ListViewSection(PluginBase):
 
     @include_regex.setter
     def include_regex(self, new_regex):
-        """Gets the regular expression associated with this section
-        :returns: the regular expression associated with this section
-        :rtype: :func:`str`
+        """Sets the filter to use for jobs shown in this section
+
+        :param str new_regex: a new regular expression to use for the filter
         """
         regex_node = self._root.find("includeRegex")
         if regex_node is None:
@@ -63,19 +78,27 @@ class TextSection(PluginBase):
     type = "hudson.plugins.sectioned_view.TextSection"
 
     def __init__(self, node):
-        """Constructor"""
+        """
+        :param node: XML node defining the settings for a ListView section
+        :type node: :class:`ElementTree.Element`
+        """
         self._node = node
 
 
 class SectionedViewXML(ViewXML):
     """Abstraction for operating on raw config.xml data for a Jenkins view of type 'Sectioned View'"""
     def __init__(self, xml):
-        """Constructor"""
+        """
+        :param str xml: XML string describing a sectioned view
+        """
         super(SectionedViewXML, self).__init__(xml)
 
     @property
     def sections(self):
-        """Gets a list of all 'section' objects contained in this view"""
+        """
+        :returns: a list of all 'section' objects contained in this view
+        :rtype: :class:`list` of section plugins associated with this view
+        """
         sections_node = self._root.find('sections')
 
         retval = []

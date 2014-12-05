@@ -11,14 +11,19 @@ class FreestyleJob(Job):
     type = "project"
 
     def __init__(self, controller, jenkins_master):
-        """Constructor
-
+        """
         To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
 
-        :param obj data_io_controller:
+        :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
+        :param jenkins_master:
+            Reference to Jenkins object associated with the master instance managing
+            this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
+
         """
         super(FreestyleJob, self).__init__(controller, jenkins_master)
 
@@ -32,9 +37,9 @@ class FreestyleJob(Job):
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns:
+            Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
+        :rtype: :class:`~.jenkins.Jenkins`
         """
         # Default to anonymous access
         username = None
@@ -74,7 +79,7 @@ class FreestyleJob(Job):
         :returns:
             One of several possible plugin objects which exposes the relevant set
             of properties supported by a given source code management tool.
-        :rtype: :py:class:`pyjen.utils.pluginapi.pluginxml`
+        :rtype: :class:`~.utils.pluginapi.PluginXML`
         """
         xml = self.config_xml
         jobxml = JobXML(xml)
@@ -82,6 +87,10 @@ class FreestyleJob(Job):
 
     @property
     def custom_workspace(self):
+        """
+        :returns: custom workspace associated with this job
+        :rtype: :class:`str`
+        """
         xml = self.config_xml
 
         jobxml = JobXML(xml)
@@ -90,9 +99,6 @@ class FreestyleJob(Job):
     @custom_workspace.setter
     def custom_workspace(self, path):
         """Defines a new custom workspace for the job
-
-        If this job is already using a custom workspace it
-        will be updated to the new path provided.
 
         :param str path: new custom workspace path
         """

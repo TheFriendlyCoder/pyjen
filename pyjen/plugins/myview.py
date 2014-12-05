@@ -13,7 +13,18 @@ class MyView(View):
     type = "hudson.model.MyView"
 
     def __init__(self, data_io_controller, jenkins_master):
-        """Constructor"""
+        """To instantiate an instance of this class using auto-generated
+        configuration parameters, see the :py:func:`easy_connect` method
+
+        :param data_io_controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
+        :param jenkins_master:
+            Reference to Jenkins object associated with the master instance managing
+            this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
+        """
         super(MyView, self).__init__(data_io_controller, jenkins_master)
 
     @staticmethod
@@ -26,9 +37,9 @@ class MyView(View):
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns:
+            Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
+        :rtype: :class:`~.jenkins.Jenkins`
         """
         # Default to anonymous access
         username = None

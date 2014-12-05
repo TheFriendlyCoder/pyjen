@@ -8,12 +8,18 @@ from pyjen.exceptions import InvalidJenkinsURLError
 class AllView(View):
     """Interface to a view which displays all jobs managed by this Jenkins instance
 
-    Instances of this class are typically instantiated directly or indirectly through :py:meth:`~pyjen.view.View.create`
+    Instances of this class are typically instantiated directly or indirectly through
+    :py:meth:`~.view.View.create`
     """
     type = "hudson.model.AllView"
 
     def __init__(self, data_io_controller, jenkins_master):
-        """Constructor"""
+        """
+        :param data_io_controller: IO interface to the Jenkins API
+        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
+        :param jenkins_master: Reference to Jenkins master interface
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
+        """
         super(AllView, self).__init__(data_io_controller, jenkins_master)
 
     @staticmethod
@@ -26,9 +32,9 @@ class AllView(View):
             password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :returns: :py:mod:`pyjen.Jenkins` object, pre-configured with the
-            appropriate credentials and connection parameters for the given URL.
-        :rtype: :py:mod:`pyjen.Jenkins`
+        :returns:
+            Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
+        :rtype: :class:`~.jenkins.Jenkins`
         """
         # Default to anonymous access
         username = None

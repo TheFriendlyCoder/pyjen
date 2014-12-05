@@ -7,9 +7,9 @@ class NullSCM(PluginBase):
     type = "hudson.scm.NullSCM"
 
     def __init__(self, node):
-        """constructor
-
-        :param node: ElementTree node initialized with the XML from the Jenkins job
+        """
+        :param node: XML node defining the settings for a this plugin
+        :type node: :class:`ElementTree.Element`
         """
         self._root = node
 

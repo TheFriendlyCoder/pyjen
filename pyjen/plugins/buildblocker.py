@@ -8,8 +8,7 @@ class BuildBlockerProperty(PluginBase):
     type = "hudson.plugins.buildblocker.BuildBlockerProperty"
 
     def __init__(self, node):
-        """constructor
-
+        """
         :param node: ElementTree node initialized with the XML from the Jenkins job
         """
         self._root = node
@@ -47,8 +46,8 @@ class BuildBlockerProperty(PluginBase):
     def is_enabled(self):
         """Checks to see whether this blockers property is currently enabled
 
-        :returns: true if these blocking jobs are enabled, false if not
-        :rtype: :func:`str`
+        :returns: True if these blocking jobs are enabled, False if not
+        :rtype: :class:`str`
         """
         temp = self._root.find("useBuildBlocker").text
         return temp.lower() == "true"

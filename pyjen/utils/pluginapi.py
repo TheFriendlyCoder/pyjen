@@ -71,7 +71,7 @@ def _get_plugin_classes(module):
 
     :param module: A Python module object to be processed
     :returns: list of classes found within the given module that implement PyJen plugin interfaces
-    :rtype: :class:`list` of :class:`~.pluginapi.PluginBase` objects
+    :rtype: :class:`list` of :class:`~.PluginBase` objects
     """
     import inspect
     retval = []
@@ -88,7 +88,7 @@ def _load_modules(path):
 
     :param str path: path containing Python modules to be loaded
     :return: :class:`list` of objects of type 'module' found in the specified folder
-    :rtype: :class:`list`
+    :rtype: :class:`list` of Python modules
     """
     import pkgutil
     import importlib

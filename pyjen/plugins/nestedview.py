@@ -6,15 +6,26 @@ import json
 
 
 class NestedView(View):
-    """Nested view plugin"""
+    """Interface to Jenkins views of type "NestedView"
+
+    Views of this type contain other views as sub-views
+    """
 
     type = "hudson.plugins.nested_view.NestedView"
 
     def __init__(self, controller, jenkins_master):
-        """constructor
-
-        :param controller: data processing object to manage interaction with Jenkins API
         """
+        To instantiate an instance of this class using auto-generated
+        configuration parameters, see the :py:func:`easy_connect` method
+
+        :param controller:
+            class capable of handling common HTTP IO requests sent by this
+            object to the Jenkins REST API
+        :type controller: :class:`~.utils.datarequester.DataRequester`
+        :param jenkins_master:
+            Reference to Jenkins object associated with the master instance managing
+            this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`        """
         super(NestedView, self).__init__(controller, jenkins_master)
 
     @property
@@ -24,7 +35,7 @@ class NestedView(View):
         To get a recursive list of all child views and their children use :py:func:`all_views`.
 
         :returns: list of all views contained within this view
-        :rtype: :func:`list`
+        :rtype: :class:`list`
         """
         data = self._controller.get_api_data()
 
@@ -43,7 +54,7 @@ class NestedView(View):
         """Gets all views contained within this view and it's children, recursively
 
         :returns: list of all views contained within this view and it's children, recursively
-        :rtype: :func:`list`
+        :rtype: :class:`list`
         """
         temp = self.views
 
@@ -58,7 +69,9 @@ class NestedView(View):
     @property
     def contains_views(self):
         """Indicates whether this view type supports sub-views
-        :rtype: :func:`bool`
+
+        :returns: True if this class contains other views, otherwise False
+        :rtype: :class:`bool`
         """
         return True
 
@@ -98,10 +111,10 @@ class NestedView(View):
         """Creates a clone of an existing view under this nested view
 
          :param existing_view: Instance of a PyJen view to be cloned
-         :type existing_view: :class:`pyjen.view.View`
+         :type existing_view: :class:`~.view.View`
          :param str new_view_name: the new name for the view
          :returns: reference to new PyJen view object
-         :rtype: :class:`pyjen.view.View`
+         :rtype: :class:`~.view.View`
          """
         retval = self.create_view(new_view_name, existing_view.type)
         vxml = ViewXML(existing_view.config_xml)
@@ -113,9 +126,11 @@ class NestedView(View):
         """Moves an existing view to a new location
 
         NOTE: The original view object becomes obsolete after executing this operation
+
         :param existing_view: Instance of a PyJen view to be moved
+        :type existing_view: :class:`~.view.View`
         :returns: reference to new, relocated view object
-        :rtype: :class:`pyjen.view.View"
+        :rtype: :class:`~.view.View"
         """
         new_view = self.clone_subview(existing_view, existing_view.name)
         existing_view.delete()

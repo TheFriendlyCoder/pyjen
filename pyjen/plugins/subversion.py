@@ -1,4 +1,5 @@
-"""Module defining the interfaces for interacting with Subversion properties associated with a :py:mod:`pyjen.job.Job`"""
+"""Module defining the interfaces for interacting with Subversion properties
+associated with a :py:mod:`pyjen.job.Job`"""
 from pyjen.utils.pluginapi import PluginBase
 
 
@@ -7,9 +8,9 @@ class Subversion(PluginBase):
     type = "hudson.scm.SubversionSCM"
 
     def __init__(self, node):
-        """constructor
-        
-        :param node: ElementTree node initialized with the XML from the Jenkins job
+        """
+        :param node: XML node defining the settings for a this plugin
+        :type node: :class:`ElementTree.Element`
         """
         self._root = node
         assert (self._root.tag == "scm")
@@ -33,9 +34,8 @@ class Subversion(PluginBase):
 
     @property
     def included_regions(self):
-        """Gets a list of patterns reflecting the regions of the SVN repo to include in SCM operations
+        """list of patterns reflecting the regions of the SVN repo to include in SCM operations
 
-        :returns: a list of patterns reflecting the regions of the SVN repo to include in SCM operations
         :rtype: :class:`list` of :class:`str`
         """
         temp = self._root.find("includedRegions").text
@@ -54,16 +54,18 @@ class Subversion(PluginBase):
 
 class ModuleLocation(object):
     """Interface to SCM module declarations in a Subversion property of a job"""
+
     def __init__(self, node):
-        """Constructor
-        :param node: XML node managing the portion of a config.xml associated with SVN module locations
+        """
+        :param node: XML node defining the settings for a this plugin
+        :type node: :class:`ElementTree.Element`
         """
         self._root = node
 
     @property
     def url(self):
-        """Gets the SVN URL where the source code for this module can be found
-        :returns: the SVN URL where the source code for this module can be found
+        """SVN URL where the source code for this module can be found
+
         :rtype: :class:`str`
         """
         return self._root.find('remote').text
@@ -71,14 +73,15 @@ class ModuleLocation(object):
     @url.setter
     def url(self, new_url):
         """Sets the SVN URL where the source code for this module can be found
+
         :param str new_url: the SVN URL where the source code for this module can be found
         """
         self._root.find('remote').text = new_url
 
     @property
     def local_dir(self):
-        """Gets the local folder where the source code for this module is checked out to
-        :returns: the local folder where the source code for this module is checked out to
+        """local folder where the source code for this module is checked out to
+
         :rtype: :class:`str`
         """
         return self._root.find('local').text
@@ -86,14 +89,14 @@ class ModuleLocation(object):
     @local_dir.setter
     def local_dir(self, new_dir):
         """Sets the local folder to checkout the source code for this module
+
         :param str new_dir: New, relative path within the workspace to checkout the source for this module
         """
         self._root.find('local').text = new_dir
 
     @property
     def depth_option(self):
-        """Gets the current SVN 'depth' options associated with this module
-
+        """
         :returns: the current SVN 'depth' options associated with this module
         :rtype: :class:`str`
         """
@@ -103,8 +106,8 @@ class ModuleLocation(object):
     def ignore_externals(self):
         """Checks to see whether the 'ignore externals' option is enabled on this job
 
-        :returns: true if ignore externals is enabled, otherwise false
-        :rtype: :func:`bool`
+        :returns: True if ignore externals is enabled, otherwise False
+        :rtype: :class:`bool`
         """
         temp = self._root.find('ignoreExternalsOption').text
         assert temp.lower() == "true" or temp.lower() == "false"
