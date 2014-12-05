@@ -1,15 +1,28 @@
 """Primitives for handling direct IO with the Jenkins REST API"""
 import requests
 import sys
+from pyjen.exceptions import JenkinsFlushFailure
+
 if sys.version_info.major < 3:
     from urlparse import urljoin
 else:
     from urllib.parse import urljoin
 
+# Indicates whether prototype caching logic should be enabled or not
+# WARNING: Do not enable this in a production environment. The caching
+# behavior has not been sufficiently tested for this to be considered
+# production ready
+ENABLE_CACHING = False
+
 
 class DataRequester (object):
     """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
-        
+
+    _text_cache = dict()
+    _header_cache = dict()
+    _configxml_cache = dict()
+    _needs_flush = False
+
     def __init__(self, jenkins_url, username, password):
         """
         :param str jenkins_url: 
@@ -85,11 +98,17 @@ class DataRequester (object):
         :returns:  Text returned from the given URL
         :rtype: :class:`str`
         """
+        if url in DataRequester._text_cache:
+            return DataRequester._text_cache[url]
+
         req = requests.get(url, auth=self._credentials)
         
         if req.status_code != 200:
             req.raise_for_status()
-        
+
+        if ENABLE_CACHING:
+            DataRequester._text_cache[url] = req.text
+
         return req.text
         
     def get_data(self, path=None):
@@ -133,12 +152,18 @@ class DataRequester (object):
         temp_path = self._url
         if path is not None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))    
-        
+
+        if temp_path in DataRequester._header_cache:
+            return DataRequester._header_cache[temp_path]
+
         req = requests.get(temp_path, auth=self._credentials)
             
         if req.status_code != 200:
             req.raise_for_status()
-            
+
+        if ENABLE_CACHING:
+            DataRequester._header_cache[temp_path] = req.headers
+
         return req.headers
     
     def post(self, path=None, args=None):
@@ -167,6 +192,93 @@ class DataRequester (object):
 
         if req.status_code != 200:
             req.raise_for_status()
-            
+
+    @property
+    def config_xml(self):
+        """Configuration file used to manage the Jenkins entity backed by this object
+
+        :rtype: :class:`str`
+        """
+        if self._url in DataRequester._configxml_cache:
+            return DataRequester._configxml_cache[self._url]
+
+        retval = self.get_text("/config.xml")
+
+        if ENABLE_CACHING:
+            DataRequester._configxml_cache[self._url] = retval
+
+        return retval
+
+    @config_xml.setter
+    def config_xml(self, new_xml):
+        """
+        :param str new_xml: The new configuration data for this object
+        """
+        # This is by far the most risky method here
+        # The most problematic issue is that here we assume that unique URLs on Jenkins represent unique entities, which is not always the case
+        # for example, jobs may exist on multiple views, and can be accessed as sub-components of the view URL, and thus may be accessed
+        #       by multiple URLs. If one were to access the same job from different URLs and update the config.xml for each, this caching
+        #       mechanism would certainly break down.
+        #       Potential Solution: make sure to reduce every URL for every entity to it's shortest form to ensure consistent URL usage
+        #       TODO: Figure out whether this multiplicity problem affects anything other than jobs. It may not.
+        # Another potential problem here would be if calls to other methods on this class may invalidate the content of the cached
+        # config.xml. For example, maybe if someone renames a job, the cached URL would be invalidated. Maybe there is no way for this
+        # to be exploited in practice, but care would need to be taken to ensure this fact
+        if ENABLE_CACHING:
+            DataRequester._configxml_cache[self._url] = new_xml
+            print("Setting dirty flag")
+            DataRequester._needs_flush = True
+        else:
+            headers = {'Content-Type': 'text/xml'}
+            args = dict()
+            args['data'] = new_xml
+            args['headers'] = headers
+            self.post("/config.xml", args)
+
+    def flush(self):
+        """Ensures that any non-synchronized changes cached by this object are uploaded to the remote Jenkins server"""
+        if not DataRequester._needs_flush:
+            return
+
+        DataRequester._needs_flush = False
+
+        headers = {'Content-Type': 'text/xml'}
+
+        failed_items = dict()
+
+        for cache_item in DataRequester._configxml_cache:
+            args = dict()
+            args['data'] = DataRequester._configxml_cache[cache_item]
+            args['headers'] = headers
+            temp_path = cache_item + "/config.xml"
+            req = requests.post(temp_path, auth=self._credentials, **args)
+            if req.status_code != 200:
+                failed_items[cache_item] = req
+
+        if len(failed_items) > 0:
+            raise JenkinsFlushFailure(failed_items)
+
+    @property
+    def is_dirty(self):
+        """Checks to see if there are any unsynchronized changes pending on this object
+
+        :returns: True if there are changes cached in this instance that have not yet been flushed to the remote Jenkins server, False otherwise
+        :rtype: :class:`bool`
+        """
+        return DataRequester._needs_flush
+
+    @classmethod
+    def clear(cls):
+        """Deletes all cached data so subsequent operations will reload from source
+
+        WARNING: Make sure to call flush() before clear() if there are potentially
+        unwritten changes in the cache
+        """
+        cls._configxml_cache = dict()
+        cls._header_cache = dict()
+        cls._text_cache = dict()
+        cls._needs_flush = False
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

@@ -465,5 +465,18 @@ class Jenkins(object):
         new_io_obj = self._controller.clone(url)
         return Job.create(new_io_obj, self)
 
+    def flush_cache(self):
+        """Flushes any pending writes to the remote Jenkins server"""
+        self._controller.flush()
+
+    def reset_cache(self):
+        """Resets all cached data
+
+        WARNING: Any unwritten changes to the cache will be lost if not
+        flushed previously using the flush_cache() method
+        """
+        self._controller.clear()
+
+
 if __name__ == '__main__':  # pragma: no cover
     pass

@@ -30,8 +30,7 @@ class Job(PluginBase):
         :return: An instance of the appropriate derived type for the given job
         :rtype: :class:`~.job.Job`
         """
-        config = controller.get_text('/config.xml')
-        pluginxml = PluginXML(config)
+        pluginxml = PluginXML(controller.config_xml)
 
         for plugin in get_plugins():
             if plugin.type == pluginxml.get_class_name():
@@ -140,7 +139,7 @@ class Job(PluginBase):
         :returns: the full XML tree describing this jobs configuration
         :rtype: :class:`str`
         """
-        return self._controller.get_text('/config.xml')
+        return self._controller.config_xml
 
     @config_xml.setter
     def config_xml(self, new_xml):
@@ -152,12 +151,7 @@ class Job(PluginBase):
 
         :param str new_xml: A complete XML tree compatible with the Jenkins API
         """
-        headers = {'Content-Type': 'text/xml'}
-        args = {}
-        args['data'] = new_xml
-        args['headers'] = headers
-
-        self._controller.post("/config.xml", args)
+        self._controller.config_xml = new_xml
 
     @property
     def upstream_jobs(self):

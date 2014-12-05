@@ -33,7 +33,7 @@ class View(PluginBase):
         :return: An instance of the appropriate derived type for the given view
         :rtype: :class:`~.view.View`
         """
-        config = controller.get_text('/config.xml')
+        config = controller.get_config_xml()
         pluginxml = PluginXML(config)
 
         for plugin in get_plugins():
@@ -172,7 +172,7 @@ class View(PluginBase):
             a plain text string format
         :rtype: :class:`str`
         """
-        return self._controller.get_text("/config.xml")
+        return self._controller.config_xml
 
     @config_xml.setter
     def config_xml(self, new_xml):
@@ -185,12 +185,7 @@ class View(PluginBase):
             NOTE: It is assumed that this input text meets the schema
             requirements for a Jenkins view.
         """
-        headers = {'Content-Type': 'text/xml'}
-        args = {}
-        args['data'] = new_xml
-        args['headers'] = headers
-
-        self._controller.post("/config.xml", args)
+        self._controller.config_xml = new_xml
 
     def delete(self):
         """Deletes this view from the dashboard"""

@@ -96,5 +96,22 @@ class PluginNotSupportedError(NotImplementedError):
     def plugin_name(self):
         return self._plugin_name
 
+
+class JenkinsFlushFailure(PyJenError):
+    """Exception raised when flushing cached Jenkins data to the remote server fails"""
+    def __init__(self, failed_items):
+        super(JenkinsFlushFailure, self).__init__()
+        self._failed_items = failed_items
+
+    @property
+    def failed_items(self):
+        return self._failed_items
+
+    def __str__(self):
+        msg = "The following data failed to get flushed to the server"
+        for i in self._failed_items.keys():
+            msg += "URL: " + i + " Status: " + str(self._failed_items[i])
+        return msg
+
 if __name__ == "__main__":  # pragma: no cover
     pass
