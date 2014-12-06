@@ -1,5 +1,5 @@
 import pytest
-from functional_tests.test_utils import jenkins_process, safe_delete
+from functional_tests.test_utils import JenkinsProcess, safe_delete
 from pyjen.jenkins import Jenkins
 from pyjen.view import View
 from pyjen.job import Job
@@ -7,6 +7,7 @@ import os
 from testtools import TestCase
 import tempfile
 import shutil
+
 
 def setup_workspace(config_folder):
     """Helper function used to prepare a test workspace for Jenkins
@@ -27,38 +28,38 @@ def setup_workspace(config_folder):
     shutil.copytree(src_path, target_dir)
     return target_dir
 
+
 class lts_tests(TestCase):
     """Functional tests applied to the LTS edition of Jenkins"""
     @classmethod
-    def get_edition(self):
+    def get_edition(cls):
         return "lts"
     
     @classmethod
-    def setUpClass(self):
-        self._jenkins_home = setup_workspace("jenkins_job_view")
-        self._jenkins = jenkins_process(self.get_edition())
-        self._jenkins.start(self._jenkins_home)
-        self._jenkins_url = self._jenkins.url
+    def setUpClass(cls):
+        cls._jenkins_home = setup_workspace("jenkins_job_view")
+        cls._jenkins = JenkinsProcess(cls.get_edition())
+        cls._jenkins.start(cls._jenkins_home)
+        cls._jenkins_url = cls._jenkins.url
         
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
         print("killing jenkins")
-        self._jenkins.terminate()
+        cls._jenkins.terminate()
         # todo: see if this call should be moved into terminate()
         #(sout, serr) = self._jenkins_process.communicate()
         #print ("done killing: " + str(sout) + " - " + str(serr))
 
         #clean up working folder
-        safe_delete(os.path.abspath(os.path.join(self._jenkins_home, "..")))
+        safe_delete(os.path.abspath(os.path.join(cls._jenkins_home, "..")))
 
-        
     def test_create_view(self):
         new_view_name = "test_create_view"
         j = Jenkins.easy_connect(self._jenkins_url, None)
         j.create_view(new_view_name, "hudson.model.ListView")
         v = j.find_view(new_view_name)
         
-        self.assertTrue(v != None)
+        self.assertTrue(v is not None)
         
         self.assertEqual(v.name, new_view_name)
         

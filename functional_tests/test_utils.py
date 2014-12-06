@@ -18,7 +18,8 @@ else:
 lts_url = "http://mirrors.jenkins-ci.org/war-stable/latest/jenkins.war"
 latest_url = "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
 
-class jenkins_process(object):
+
+class JenkinsProcess(object):
     def __init__(self, edition):
         assert edition == "lts" or edition == "latest"
 
@@ -51,11 +52,11 @@ class jenkins_process(object):
         args.append('-DJENKINS_HOME=' + home_folder)
         args.append("-jar")
         args.append(war_file)
-        JENKINS_PORT=random.randrange(1000,1100)
+        JENKINS_PORT=random.randrange(1000, 1100)
         args.append("--httpPort={0}".format(JENKINS_PORT))
 
         #Now launch Jenkins in a secondary, non-blocking process
-        jenkins_process = subprocess.Popen( args , stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        jenkins_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
         #Wait until the Jenkins service has completed its startup before continuing
         jenkins_running = False
@@ -85,14 +86,16 @@ class jenkins_process(object):
     def terminate(self):
         self._process.terminate()
 
-    def _get_jenkins_war (self):
+    def _get_jenkins_war(self):
         """Downloads the latest and LTS versions of the Jenkins WAR file
 
         if any .war files already exist in the target folder they will not
         be overwritten
+
         :return: path to the downloaded war file
-        :rtype: `func`:str
+        :rtype: :class:`str`
         """
+
         print("Getting Jenkins war")
         output_path = os.path.dirname(os.path.abspath(__file__))
         if self._edition == "lts":
@@ -115,7 +118,7 @@ class jenkins_process(object):
         :param int total_size: the total number of bytes being downloaded
         """
         if block_number == 0:
-            jenkins_process._progress_hook.counter = 0
+            JenkinsProcess._progress_hook.counter = 0
             #print ("10..", end="")
             sys.stdout.flush()
         total_blocks = math.ceil(total_size / block_size)
@@ -123,13 +126,14 @@ class jenkins_process(object):
         percent_done = math.ceil(block_number / total_blocks * 100)
 
         increment = math.floor(percent_done / 10)
-        if increment != jenkins_process._progress_hook.counter:
+        if increment != JenkinsProcess._progress_hook.counter:
             msg = str(10-increment)
             if increment != 10:
                 msg += ".."
             #print (msg, end="")
             sys.stdout.flush()
-        jenkins_process._progress_hook.counter = increment
+        JenkinsProcess._progress_hook.counter = increment
+
 
 def safe_delete (path):
     """Recursively deletes the contents of a given folder, even when files are read only
@@ -150,7 +154,7 @@ if __name__ == "__main__":
 
     home = os.path.join(os.getcwd(), "empty home")
 
-    tester = jenkins_process("lts")
+    tester = JenkinsProcess("lts")
 
     print("starting jenkins")
     tester.start(home)
