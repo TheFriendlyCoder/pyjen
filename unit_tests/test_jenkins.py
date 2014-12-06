@@ -76,10 +76,10 @@ class jenkins_job_tests(unittest.TestCase):
         # io objects used by the two views managed by our mock Jenkins instance
         self.job1_mock_data_io = MagicMock()
         self.job1_mock_data_io.get_api_data.return_value = {'name':self.job1_name}
-        self.job1_mock_data_io.get_text.return_value = "<project></project>"
+        self.job1_mock_data_io.config_xml = "<project></project>"
         self.job2_mock_data_io = MagicMock()
         self.job2_mock_data_io.get_api_data.return_value = {'name':self.job2_name}
-        self.job2_mock_data_io.get_text.return_value = "<project></project>"
+        self.job2_mock_data_io.config_xml = "<project></project>"
         
         # mock jenkins instance which exposes 2 views
         self.mock_jenkins_data_io = MagicMock()
@@ -120,7 +120,7 @@ class jenkins_job_tests(unittest.TestCase):
         jenkins_data_io = MagicMock()
 
         job_data_io = MagicMock()
-        job_data_io.get_text.return_value = "<project></project>"
+        job_data_io.config_xml = "<project></project>"
         job_data_io.get_api_data.return_value = {"name": expected_name}
         jenkins_data_io.clone.return_value = job_data_io
 
@@ -144,17 +144,17 @@ class jenkins_view_tests(unittest.TestCase):
         self.view2_job1_name = 'j1'
         mock_job1_dataio = MagicMock()
         mock_job1_dataio.get_api_data.return_value = {"name":self.view2_job1_name}
-        mock_job1_dataio.get_text.return_value = "<project></project>"
+        mock_job1_dataio.config_xml = "<project></project>"
 
         # io objects used by the two views managed by our mock Jenkins instance
         self.mock_primary_view_data_io = MagicMock()
         self.mock_primary_view_data_io.get_api_data.return_value = {'name':self.primary_view_name}
         # TODO: double check to make sure this is the corrrect view type
-        self.mock_primary_view_data_io.get_text.return_value = "<hudson.model.ListView/>"
+        self.mock_primary_view_data_io.config_xml = "<hudson.model.ListView/>"
         self.mock_view2_data_io = MagicMock()
         self.mock_view2_data_io.get_api_data.return_value = {'name':self.view2_name, 'jobs':[{'url':self.view2_job1_url}]}
         self.mock_view2_data_io.clone.side_effect = self.mock_clone
-        self.mock_view2_data_io.get_text.return_value = "<hudson.model.ListView/>"
+        self.mock_view2_data_io.config_xml = "<hudson.model.ListView/>"
 
         # mock jenkins instance which exposes 2 views
         self.mock_jenkins_data_io = MagicMock()
@@ -233,7 +233,7 @@ class jenkins_view_tests(unittest.TestCase):
         new_view_name = "MyView"
         new_view_dataio = MagicMock()
         new_view_dataio.get_api_data.return_value = {'name':new_view_name}
-        new_view_dataio.get_text.return_value = "<hudson.model.ListView/>"
+        new_view_dataio.config_xml = "<hudson.model.ListView/>"
         self.mock_jenkins_data_io.get_api_data.return_value['views'].append({'url':new_view_url,'name':new_view_name})
         self.clone_map[new_view_url] = new_view_dataio
         j = Jenkins(self.mock_jenkins_data_io)

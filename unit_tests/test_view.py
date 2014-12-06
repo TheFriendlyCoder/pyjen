@@ -1,10 +1,12 @@
 from pyjen.view import View
 import unittest
 import pytest
-from mock import MagicMock
+from mock import MagicMock, PropertyMock
+
 
 class vView(View):
     type = ""
+
 
 class view_tests(unittest.TestCase):
     
@@ -50,10 +52,10 @@ class view_tests(unittest.TestCase):
         job2_name = 'j2'
         mock_job1_dataio = MagicMock()
         mock_job1_dataio.get_api_data.return_value = {"name":job1_name}
-        mock_job1_dataio.get_text.return_value = "<project></project>"
+        mock_job1_dataio.config_xml = "<project></project>"
         mock_job2_dataio = MagicMock()
         mock_job2_dataio.get_api_data.return_value = {"name":job2_name}
-        mock_job2_dataio.get_text.return_value = "<project></project>"
+        mock_job2_dataio.config_xml = "<project></project>"
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {'name':"MyView1", 'jobs':[{'url':job1_url},{'url':job2_url}]}
         def mock_clone(new_url):
@@ -80,15 +82,17 @@ class view_tests(unittest.TestCase):
         
     def test_get_config_xml(self):
         expected_xml = "<sample_xml/>"
+
+        p = PropertyMock(return_value=expected_xml)
         mock_data_io = MagicMock()
-        mock_data_io.get_text.return_value = expected_xml
+        type(mock_data_io).config_xml = p
         
         v = vView(mock_data_io, None)
         actual_xml = v.config_xml
         
         self.assertEqual(actual_xml, expected_xml)
-        mock_data_io.get_text.assert_called_once_with("/config.xml")
-   
+        p.assert_called_once_with()
+
     def test_delete_view(self):
         mock_data_io = MagicMock()
         
@@ -100,15 +104,14 @@ class view_tests(unittest.TestCase):
     def test_set_config_xml(self):
         expected_config_xml = "<Sample Config XML/>"
         mock_data_io = MagicMock()
-        
+        p = PropertyMock(return_value=expected_config_xml)
+        type(mock_data_io).config_xml = p
+
         v = vView(mock_data_io, None)
         v.config_xml = expected_config_xml
-        
-        self.assertEqual(mock_data_io.post.call_count, 1)
-        self.assertEqual(mock_data_io.post.call_args[0][0], "/config.xml")
-        post_data = mock_data_io.post.call_args[0][1]
-        self.assertTrue('data' in post_data.keys())
-        self.assertEqual(post_data['data'], expected_config_xml)
+
+        self.assertEqual(p.call_count, 1)
+        p.assert_called_once_with(expected_config_xml)
 
     def test_delete_all_jobs(self):
         job1_url = 'http://localhost:8080/job/j1'

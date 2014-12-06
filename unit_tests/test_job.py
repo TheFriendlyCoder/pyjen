@@ -1,11 +1,13 @@
 import unittest
 from pyjen.job import Job
-from mock import MagicMock
+from mock import MagicMock, PropertyMock
 import pytest
 from datetime import datetime
 
+
 class vJob(Job):
     type = ""
+
 
 class job_misc_tests(unittest.TestCase):
     """Tests for remaining utility methods of the Job class not tested by other cases"""
@@ -84,26 +86,26 @@ class job_misc_tests(unittest.TestCase):
         
     def test_get_config_xml(self):
         expected_config_xml = "<Sample Config XML/>"
+        p = PropertyMock(return_value=expected_config_xml)
         mock_data_io = MagicMock()
-        mock_data_io.get_text.return_value = expected_config_xml
+        type(mock_data_io).config_xml = p
 
         j = vJob (mock_data_io, None)
         
         self.assertEqual(j.config_xml, expected_config_xml)
-        mock_data_io.get_text.assert_called_once_with('/config.xml')
-        
+        p.assert_called_with()
+
     def test_set_config_xml(self):
         expected_config_xml = "<Sample Config XML/>"
+        p = PropertyMock(return_value=expected_config_xml)
         mock_data_io = MagicMock()
-        
+        type(mock_data_io).config_xml = p
+
         j = vJob(mock_data_io, None)
         j.config_xml = expected_config_xml
         
-        self.assertEqual(mock_data_io.post.call_count, 1)
-        self.assertEqual(mock_data_io.post.call_args[0][0], "/config.xml")
-        post_data = mock_data_io.post.call_args[0][1]
-        self.assertTrue('data' in post_data.keys())
-        self.assertEqual(post_data['data'], expected_config_xml)
+        self.assertEqual(p.call_count, 1)
+        p.assert_called_once_with(expected_config_xml)
 
     def test_clone(self):
         new_job_name = "ClonedJob"
@@ -155,7 +157,7 @@ class job_dependencies_tests(unittest.TestCase):
         downstream_job_name = "j1"
         mock_dependent_job_data_io = MagicMock()
         mock_dependent_job_data_io.get_api_data.return_value = {"name":downstream_job_name}
-        mock_dependent_job_data_io.get_text.return_value = "<project></project>"
+        mock_dependent_job_data_io.config_xml = "<project></project>"
 
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"downstreamProjects":[{"url":"http://localhost:8080/job/" + downstream_job_name}]}
@@ -184,14 +186,14 @@ class job_dependencies_tests(unittest.TestCase):
             else:
                 self.fail("unexpected input value given to mock clone function: " + url)
 
-            mock_dependent_job_data_io.get_text.return_value = "<project></project>"
+            mock_dependent_job_data_io.config_xml = "<project></project>"
             return mock_dependent_job_data_io
         
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"downstreamProjects":[{"url":downstream_job_url1},{"url":downstream_job_url2}]}
         mock_data_io.clone = mock_clone
                 
-        j = vJob (mock_data_io, None)
+        j = vJob(mock_data_io, None)
         dependencies = j.downstream_jobs
         
         self.assertEqual(len(dependencies), 2, "Test job should have two downstream dependencies")
@@ -208,7 +210,7 @@ class job_dependencies_tests(unittest.TestCase):
         downstream_job_url1 = "http://localhost:8080/job/" + downstream_job_name1
         mock_job1_data_io = MagicMock()
         mock_job1_data_io.get_api_data.return_value = {"name":downstream_job_name1, "downstreamProjects":[]}
-        mock_job1_data_io.get_text.return_value = "<project></project>"
+        mock_job1_data_io.config_xml = "<project></project>"
 
         # job j2 triggers job j1
         downstream_job_name2 = "j2"
@@ -216,7 +218,7 @@ class job_dependencies_tests(unittest.TestCase):
         mock_job2_data_io = MagicMock()
         mock_job2_data_io.get_api_data.return_value = {"name":downstream_job_name2,"downstreamProjects":[{"url":downstream_job_url1}]}
         mock_job2_data_io.clone.return_value = mock_job1_data_io
-        mock_job2_data_io.get_text.return_value = "<project></project>"
+        mock_job2_data_io.config_xml = "<project></project>"
 
         # job j3 triggers job j2
         downstream_job_name3 = "j3"
@@ -224,7 +226,7 @@ class job_dependencies_tests(unittest.TestCase):
         mock_job3_data_io = MagicMock()
         mock_job3_data_io.get_api_data.return_value = {"name": downstream_job_name3, "downstreamProjects": [{"url": downstream_job_url2}]}
         mock_job3_data_io.clone.return_value = mock_job2_data_io
-        mock_job3_data_io.get_text.return_value = "<project></project>"
+        mock_job3_data_io.config_xml = "<project></project>"
 
         # our main job triggers job j3
         mock_data_io = MagicMock()
@@ -259,7 +261,7 @@ class job_dependencies_tests(unittest.TestCase):
         upstream_job_name = "j1"
         mock_dependent_job_data_io = MagicMock()
         mock_dependent_job_data_io.get_api_data.return_value = {"name":upstream_job_name}
-        mock_dependent_job_data_io.get_text.return_value = "<project></project>"
+        mock_dependent_job_data_io.config_xml = "<project></project>"
 
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"upstreamProjects":[{"url":"http://localhost:8080/job/" + upstream_job_name}]}
@@ -287,7 +289,7 @@ class job_dependencies_tests(unittest.TestCase):
                 mock_dependent_job_data_io.get_api_data.return_value = {"name":upstream_job_name2}
             else:
                 self.fail("unexpected input value given to mock clone function: " + url)
-            mock_dependent_job_data_io.get_text.return_value = "<project></project>"
+            mock_dependent_job_data_io.config_xml = "<project></project>"
             return mock_dependent_job_data_io
         
         mock_data_io = MagicMock()
@@ -311,7 +313,7 @@ class job_dependencies_tests(unittest.TestCase):
         upstream_job_url1 = "http://localhost:8080/job/" + upstream_job_name1
         mock_job1_data_io = MagicMock()
         mock_job1_data_io.get_api_data.return_value = {"name": upstream_job_name1, "upstreamProjects": []}
-        mock_job1_data_io.get_text.return_value = "<project></project>"
+        mock_job1_data_io.config_xml = "<project></project>"
 
         # job j1 triggers job j2
         upstream_job_name2 = "j2"
@@ -319,7 +321,7 @@ class job_dependencies_tests(unittest.TestCase):
         mock_job2_data_io = MagicMock()
         mock_job2_data_io.get_api_data.return_value = {"name": upstream_job_name2, "upstreamProjects": [{"url": upstream_job_url1}]}
         mock_job2_data_io.clone.return_value = mock_job1_data_io
-        mock_job2_data_io.get_text.return_value = "<project></project>"
+        mock_job2_data_io.config_xml = "<project></project>"
 
         # job j3 triggers job j2
         upstream_job_name3 = "j3"
@@ -327,13 +329,13 @@ class job_dependencies_tests(unittest.TestCase):
         mock_job3_data_io = MagicMock()
         mock_job3_data_io.get_api_data.return_value = {"name": upstream_job_name3, "upstreamProjects": [{"url": upstream_job_url2}]}
         mock_job3_data_io.clone.return_value = mock_job2_data_io
-        mock_job3_data_io.get_text.return_value = "<project></project>"
+        mock_job3_data_io.config_xml = "<project></project>"
 
         # job j2 triggers our main job
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"upstreamProjects": [{"url": upstream_job_url3}]}
         mock_data_io.clone.return_value = mock_job3_data_io
-        mock_data_io.get_text.return_value = "<project></project>"
+        mock_data_io.config_xml = "<project></project>"
 
         # code under test 
         j = vJob(mock_data_io, None)
