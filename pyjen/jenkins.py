@@ -252,6 +252,19 @@ class Jenkins(object):
                 return Job.create(new_io_obj, self)
         
         return None
+
+    @property
+    def all_job_names(self):
+        """Gets list of all jobs found on this server"""
+        retval = []
+
+        data = self._controller.get_api_data()
+        tjobs = data['jobs']
+
+        for tjob in tjobs:
+            retval.append(tjob['name'])
+
+        return retval
     
     def find_view(self, view_name):
         """Searches all views managed by this Jenkins instance for a specific view

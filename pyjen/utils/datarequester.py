@@ -193,7 +193,10 @@ class DataRequester (object):
             
             * 'headers' - dictionary of HTTP header properties and their associated values
             * 'data' - dictionary of assorted / misc data properties and their values 
-        """          
+        """
+
+        #TODO: If the cache is currently dirty, flush it
+        #TODO: clear the existing cache because posting data of any kind to Jenkins server could potentially invalidate our cache
         temp_path = self._url
         if path is not None:
             temp_path = urljoin(temp_path, path.lstrip("/\\"))
@@ -280,6 +283,8 @@ class DataRequester (object):
             if req.status_code != 200:
                 failed_items[cache_item] = req
 
+        # TODO: After flushing the configxml cache, move those entities over to the textcache for future reference
+
         if len(failed_items) > 0:
             raise JenkinsFlushFailure(failed_items)
 
@@ -309,6 +314,8 @@ class DataRequester (object):
 
         Used to simply record some state information in the output logger for debugging purposes
         """
+        if not ENABLE_CACHING:
+            return
         log.debug("Destroying datarequester: ")
         log.debug("\tText cache size: " + str(len(self._text_cache)))
         log.debug("\tHeader cache size: " + str(len(self._header_cache)))

@@ -49,6 +49,41 @@ class NestedView(View):
 
         return retval
 
+    def find_view(self, view_name):
+        """Attempts to locate a sub-view under this nested view with the given name
+
+        :param str view_name: the name of the sub-view to locate
+        :returns: Reference to View object for the view with the given name, or None if no view with that name exists
+        :rtype: Object derived from :class:`~.view.View`
+        """
+
+        data = self._controller.get_api_data()
+
+        raw_views = data['views']
+
+        for cur_view in raw_views:
+            if cur_view['name'] == view_name:
+                new_io_obj = self._controller.clone(cur_view['url'])
+                return View.create(new_io_obj, self._master)
+
+        return None
+
+    def has_view(self, view_name):
+        """Checks to see whether a view with the given name already exists under this view
+
+        :param str view_name: the name of the view to look for
+        :returns: True if a view with that name already exists, otherwise false
+        :rtype: :class:`bool`
+        """
+        data = self._controller.get_api_data()
+
+        raw_views = data['views']
+
+        for cur_view in raw_views:
+            if cur_view['name'] == view_name:
+                return True
+        return False
+
     @property
     def all_views(self):
         """Gets all views contained within this view and it's children, recursively
