@@ -2,6 +2,9 @@
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.pluginapi import get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class JobXML(object):
@@ -136,10 +139,37 @@ class JobXML(object):
         properties_node = self._root.find('properties')
         for property in properties_node:
             pluginxml = PluginXML(ElementTree.tostring(property))
+            found_plugin = False
             for plugin in get_plugins():
                 if plugin.type == pluginxml.get_class_name():
                     retval.append(plugin(property))
-            #TODO: Report missing plugins here as warnings or non-blocking errors
+                    found_plugin = True
+                    break
+
+            if not found_plugin:
+                log.warning("Unsupported job 'property' plugin: " + pluginxml.get_class_name())
+        return retval
+
+    @property
+    def publishers(self):
+        """Gets a list of 0 or more post-build publisher objects associated with this job
+
+        :returns: a list of post-build publishers associated with this job
+        :rtype: :class:`list` of publisher plugins supported by this job
+        """
+        retval = []
+        publishers_node = self._root.find('publishers')
+        for publisher in publishers_node:
+            pluginxml = PluginXML(ElementTree.tostring(publisher))
+            found_plugin = False
+            for plugin in get_plugins():
+                if plugin.type == pluginxml.get_class_name():
+                    retval.append(plugin(publisher))
+                    found_plugin = True
+                    break
+
+            if not found_plugin:
+                log.warning("Unsupported job 'publisher' plugin: " + pluginxml.get_class_name())
         return retval
 
 

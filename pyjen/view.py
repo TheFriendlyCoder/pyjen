@@ -132,7 +132,7 @@ class View(PluginBase):
         return len(data['jobs'])
 
     @property
-    def _job_names(self):
+    def job_names(self):
         """Gets the list of names of all jobs contained within this view
 
         :returns: the list of names of all jobs contained within this view
@@ -218,51 +218,24 @@ class View(PluginBase):
             log.debug("Enabling job " + j.name)
             j.enable()
 
-    def clone_all_jobs(self, source_job_name_regex, new_job_substring):
+    def clone_all_jobs(self, source_job_name_pattern, new_job_substring):
         """Batch-clones all jobs contained within this view
 
-        :param str source_job_name_regex:
+        :param str source_job_name_pattern:
             pattern to use as a substitution rule when generating new names for cloned jobs. Substrings within the
             existing job names that match this pattern will be replaced by the given substitution string
         :param str new_job_substring:
             character string used to generate new job names for the clones of the existing jobs. The substring
             of an existing job that matches the given regex will be replaced by this new string to create the
             new job name for it's cloned counterpart.
-        :returns: list of newly created jobs
-        :rtype: :class:`list` of :class:`~.job.Job` objects
         """
-        # TODO: Need to clarify that the input parameters here are not regular expressions.
-        # Either that or we need to somehow add support for regexes here
-        temp_jobs = self._light_jobs
-
-        # Create a mapping table for names of jobs
-        # TODO: Add a helper method to this class that gets the list of job names only. This doesn't require any
-        #   hits on the server because the content is all within the config info for the view. This should improve
-        #   the performance of this section of the code
         job_map = {}
-        for j in temp_jobs:
-            job_map[j.name] = j.name.replace(source_job_name_regex, new_job_substring)
+        for j in self.job_names:
+            job_map[j] = j.replace(source_job_name_pattern, new_job_substring)
 
-        # clone all jobs, and update internal references
-        retval = []
-        count = 0
-        tot = len(temp_jobs)
-        for j in temp_jobs:
-            count += 1
-            orig_name = j.name
-            log.info("Cloning job {0} of {1}: {2}".format(count, tot, orig_name))
-
-            new_job = j.clone(job_map[orig_name])
-
-            # update all internal references
-            xml = new_job.config_xml
-            for k in job_map.keys():
-                xml = xml.replace(k, job_map[k])
-            new_job.config_xml = xml
-
-            retval.append(new_job)
-
-        return retval
+        for j in job_map:
+            log.info("Cloning job {0} to {1}".format(j, job_map[j]))
+            self._master._clone_job(j, job_map[j])
 
     def clone(self, new_view_name):
         """Make a copy of this view with the specified name

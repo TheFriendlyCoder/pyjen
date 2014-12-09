@@ -421,9 +421,6 @@ class Jenkins(object):
             the name of the newly created job whose settings will
             be an exact copy of the source job. There must be no existing
             jobs on the Jenkins dashboard with this same name.
-            
-        :returns: a reference to the newly created job resulting from the clone operation
-        :rtype: :class:`~.job.Job`
         """
         params = {'name': new_job_name,
                   'mode': 'copy',
@@ -436,17 +433,12 @@ class Jenkins(object):
         args['headers'] = headers
         
         self._controller.post("createItem", args)
-        
+
         temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + new_job_name)
-        new_job = Job.create(temp_data_io, self)
-        
-        # Sanity check - make sure the job actually exists by checking its name
-        assert new_job.name == new_job_name
+        new_job = Job._create(temp_data_io, self, new_job_name)
         
         #disable the newly created job so it doesn't accidentally start running
         new_job.disable()
-        
-        return new_job
 
     def get_view(self, url):
         """Establishes a connection to a View based on an absolute URL

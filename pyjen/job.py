@@ -2,7 +2,7 @@
 from pyjen.build import Build
 from pyjen.utils.pluginapi import PluginBase, get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
-
+from pyjen.utils.jobxml import JobXML
 
 class Job(PluginBase):
     """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
@@ -461,10 +461,18 @@ class Job(PluginBase):
         """"Create a new job with the same configuration as this one
 
         :param str new_job_name: Name of the new job to be created
-        :returns: reference to newly created job
-        :rtype: :class:`~.job.Job`
         """
-        return self._master._clone_job(self.name, new_job_name)
+        self._master._clone_job(self.name, new_job_name)
+
+    @property
+    def publishers(self):
+        jxml = JobXML(self.config_xml)
+        return jxml.publishers
+
+    @property
+    def properties(self):
+        jxml = JobXML(self.config_xml)
+        return jxml.properties
 
 
 if __name__ == "__main__":  # pragma: no cover
