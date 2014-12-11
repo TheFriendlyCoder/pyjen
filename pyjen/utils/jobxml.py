@@ -172,6 +172,28 @@ class JobXML(object):
                 log.warning("Unsupported job 'publisher' plugin: " + pluginxml.get_class_name())
         return retval
 
+    @property
+    def builders(self):
+        """Gets a list of 0 or more build operations associated with this job
+
+        :returns: a list of build operations associated with this job
+        :rtype: :class:`list` of builder plugins used by this job
+        """
+        retval = []
+        builders_node = self._root.find('builders')
+        for builder in builders_node:
+            pluginxml = PluginXML(ElementTree.tostring(builder))
+            found_plugin = False
+            for plugin in get_plugins():
+                if plugin.type == pluginxml.get_class_name():
+                    retval.append(plugin(builder))
+                    found_plugin = True
+                    break
+
+            if not found_plugin:
+                log.warning("Unsupported job 'builder' plugin: " + pluginxml.get_class_name())
+
+        return retval
 
 if __name__ == "__main__":  # pragma: no cover
     pass

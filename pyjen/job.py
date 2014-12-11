@@ -4,6 +4,7 @@ from pyjen.utils.pluginapi import PluginBase, get_plugins, PluginXML
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
 
+
 class Job(PluginBase):
     """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
 
@@ -473,6 +474,11 @@ class Job(PluginBase):
     def properties(self):
         jxml = JobXML(self.config_xml)
         return jxml.properties
+
+    @property
+    def builders(self):
+        jxml = JobXML(self.config_xml)
+        return jxml.builders
 
 
 if __name__ == "__main__":  # pragma: no cover
