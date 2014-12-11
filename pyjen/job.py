@@ -221,6 +221,24 @@ class Job(PluginBase):
         return retval
 
     @property
+    def all_builds(self):
+        """Gets all recorded builds for this job
+        :returns: all recorded builds for this job
+        :rtype: :class:`list` of :class:`~.build.Build` objects
+        """
+        data = self._controller.get_api_data(query_params="tree=allBuilds[url]")
+
+        builds = data['allBuilds']
+
+        retval = []
+        for cur_build in builds:
+            temp_data_io = self._controller.clone(cur_build['url'])
+            temp_build = Build(temp_data_io)
+            retval.append(temp_build)
+
+        return retval
+
+    @property
     def last_good_build(self):
         """Gets the most recent successful build of this job
 

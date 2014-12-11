@@ -135,16 +135,19 @@ class DataRequester (object):
         """
         return eval(self.get_text(path))
     
-    def get_api_data(self):
+    def get_api_data(self, query_params=None):
         """Convenience method that retrieves the Jenkins API specific data from the specified URL
-        
+
+        :param str query_params: optional set of query parameters to customize the returned data
         :returns:
             The set of Jenkins attributes, converted to Python objects, associated
             with the given URL.
         :rtype: :class:`object`
         """
         temp_url = urljoin(self._url, "api/python")
-        
+        if query_params is not None:
+            temp_url += "?" + query_params
+
         txt = self._get_raw_text(temp_url)
         
         return eval(txt)
