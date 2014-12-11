@@ -1,16 +1,15 @@
 """Primitives for interacting with Jenkins users"""
-from pyjen.utils.datarequester import DataRequester
-from pyjen.exceptions import InvalidJenkinsURLError
-from pyjen.user_params import JenkinsConfigParser
 
 
 class User (object):
-    """Interface to all primitives associated with a Jenkins user"""
+    """Interface to all primitives associated with a Jenkins user
+
+    Instances of this class are typically created using one of the user
+    methods on the Jenkins class, such as :py:meth:`~.jenkins.Jenkins.find_user`
+    """
     
     def __init__(self, data_io_controller):
-        """To instantiate an instance of this class using auto-generated
-        configuration parameters, see the :py:func:`easy_connect` method
-        
+        """
         :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API        

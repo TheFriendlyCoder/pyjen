@@ -5,16 +5,16 @@ if sys.version_info.major < 3:
     from urllib import quote as url_quote
 else:
     from urllib.parse import quote as url_quote
-    
-from pyjen.utils.datarequester import DataRequester
-from pyjen.exceptions import InvalidJenkinsURLError
-from pyjen.user_params import JenkinsConfigParser
 
 
 class Node(object):
     """Wrapper around a Jenkins build agent (aka: Node) configuration
 
-    Use this class to manipulate agents managed by a Jenkins master"""
+    Use this class to manipulate agents managed by a Jenkins master
+
+    Instances of this class are typically created using one of the node
+    methods on the Jenkins class, such as :py:meth:`~.jenkins.Jenkins.find_node`
+    """
 
     def __init__(self, data_io_controller):
         """To instantiate an instance of this class using auto-generated
