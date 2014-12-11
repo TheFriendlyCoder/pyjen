@@ -3,6 +3,7 @@ import json
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
+from pyjen.user import User
 from pyjen.utils.datarequester import DataRequester
 from pyjen.user_params import JenkinsConfigParser
 from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
@@ -469,6 +470,37 @@ class Jenkins(object):
         """
         new_io_obj = self._controller.clone(url)
         return Job.create(new_io_obj, self)
+
+    def get_user(self, url):
+        """Establishes a connection to a Jenkins User based on an absolute URL
+
+        This method may be a bit less convenient to use in certain situations but it
+        has better performance than :py:meth:`.find_user`
+
+        .. seealso: :py:meth:`.find_user`
+
+        :param str url: absolute URL of the user to load
+        :return: A user object allowing interaction with the given user's settings and information
+        :rtype: :class:`~.user.User`
+        """
+        new_io_obj = self._controller.clone(url)
+        return User(new_io_obj)
+
+    def find_user(self, username):
+        """Locates a user with the given username on this Jenkins instance
+
+        :param str username: name of user to locate
+        :returns: reference to Jenkins object that manages this users information.
+        :rtype: :class:`~.user.User` or None if user not found
+        """
+        new_url = self._controller.url + "/user/" + username
+        new_io_obj = self._controller.clone(new_url)
+        try:
+            retval = User(new_io_obj)
+            retval.user_id
+            return retval
+        except:
+            return None
 
     def flush_cache(self):
         """Flushes any pending writes to the remote Jenkins server"""
