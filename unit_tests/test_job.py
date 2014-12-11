@@ -126,9 +126,6 @@ class job_misc_tests(unittest.TestCase):
         jb = vJob(mock_data_io, mock_jenkins)
         newjob = jb.clone(new_job_name)
 
-        # Make sure our new mock object is the one returned
-        self.assertEqual(newjob.name, new_job_name)
-
         # Make sure the Jenkins clone job method was called, which performs the clone
         mock_jenkins._clone_job.assert_called_once_with(cur_job_name, new_job_name)
 

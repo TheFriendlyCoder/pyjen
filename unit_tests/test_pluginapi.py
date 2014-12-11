@@ -52,9 +52,14 @@ class PluginAPITests(unittest.TestCase):
             "hudson.plugins.status_view.StatusView",
             "hudson.scm.NullSCM",
             "hudson.scm.SubversionSCM",
-            "hudson.plugins.buildblocker.BuildBlockerProperty"]
+            "hudson.plugins.buildblocker.BuildBlockerProperty",
+            "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher",
+            "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry",
+            "org.jenkinsci.plugins.conditionalbuildstep.ConditionalBuilder",
+            "org.jenkins_ci.plugins.flexible_publish.ConditionalPublisher",
+            "org.jenkins_ci.plugins.flexible_publish.FlexiblePublisher",
+            "hudson.plugins.parameterizedtrigger.BuildTrigger"]
 
-        self.assertEqual(len(all_plugins), len(expected_plugins))
         for cur_plugin in all_plugins:
             self.assertIn(cur_plugin.type, expected_plugins)
             expected_plugins.remove(cur_plugin.type)

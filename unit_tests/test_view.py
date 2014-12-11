@@ -3,7 +3,6 @@ import unittest
 import pytest
 from mock import MagicMock, PropertyMock
 
-
 class vView(View):
     type = ""
 
@@ -165,8 +164,6 @@ class view_tests(unittest.TestCase):
         new_job_name = "new_job"
         orig_job_name = "original_job"
 
-
-
         mock_job_controller = MagicMock()
         mock_job_controller.get_text.return_value = "<project></project>"
         mock_job_controller.get_api_data.return_value = {"name":orig_job_name}
@@ -182,10 +179,8 @@ class view_tests(unittest.TestCase):
         mock_jenkins._clone_job.return_value = mock_new_job
 
         v = vView(mock_view_controller, mock_jenkins)
-        new_jobs = v.clone_all_jobs(orig_job_name, new_job_name)
+        v.clone_all_jobs(orig_job_name, new_job_name)
 
-        self.assertEqual(len(new_jobs), 1)
-        self.assertEqual(new_jobs[0].name, new_job_name)
         mock_jenkins._clone_job.assert_called_once_with(orig_job_name, new_job_name)
 
 if __name__ == "__main__":
