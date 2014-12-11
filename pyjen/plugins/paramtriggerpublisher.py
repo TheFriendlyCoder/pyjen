@@ -1,5 +1,6 @@
 """Primitives for operating on Jenkins post-build publisher of type Parameterized Build Trigger"""
 from pyjen.utils.pluginapi import PluginBase
+import xml.etree.ElementTree as ElementTree
 import logging
 
 log = logging.getLogger(__name__)
@@ -18,7 +19,10 @@ class BuildTriggerConfig(object):
         """
         projects_node = self._root.find('projects')
         log.info(projects_node.text)
-        return projects_node.text.split(",")
+        retval = projects_node.text.split(",")
+
+        # To simplify post-processing, lets make sure to exclude any superfluous white space from the list items
+        return [i.lstrip().rstrip() for i in retval]
 
     @job_names.setter
     def job_names(self, triggered_jobs):
