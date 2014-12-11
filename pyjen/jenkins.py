@@ -497,7 +497,38 @@ class Jenkins(object):
         new_io_obj = self._controller.clone(new_url)
         try:
             retval = User(new_io_obj)
-            retval.user_id
+            assert retval.user_id == username
+            return retval
+        except:
+            return None
+
+    def get_node(self, url):
+        """Loads data for a Jenkins build agent based on an absolute URL
+
+        This method may be a bit less convenient to use in certain situations but it
+        has better performance than :py:meth:`.find_node`
+
+        .. seealso: :py:meth:`.find_node`
+
+        :param str url: absolute URL of the node data to load
+        :return: A node object allowing interaction with the given node's settings and information
+        :rtype: :class:`~.node.Node`
+        """
+        new_io_obj = self._controller.clone(url)
+        return Node(new_io_obj)
+
+    def find_node(self, nodename):
+        """Locates a Jenkins build agent with the given name on this Jenkins instance
+
+        :param str nodename: name of node to locate
+        :returns: reference to Jenkins object that manages this node's information.
+        :rtype: :class:`~.node.Node` or None if node not found
+        """
+        new_url = self._controller.url + "/computer/" + nodename
+        new_io_obj = self._controller.clone(new_url)
+        try:
+            retval = Node(new_io_obj)
+            assert retval.name == nodename
             return retval
         except:
             return None
