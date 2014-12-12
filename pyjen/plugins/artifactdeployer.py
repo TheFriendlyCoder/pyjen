@@ -1,5 +1,5 @@
 """Primitives for operating on properties of the 'artifact deployer' publishing plugin"""
-from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
+from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
 from pyjen.exceptions import PluginNotSupportedError
 import xml.etree.ElementTree as ElementTree
 
@@ -23,24 +23,17 @@ class ArtifactDeployer(PluginBase):
         :rtype: :class:`list` of :class:`ArtifactDeployerEntry` objects
         """
 
-        entries_node = self._root.find("entries")
+        nodes = self._root.find("entries")
 
         retval = []
-        for cur_entry in entries_node:
-            configxml = ElementTree.tostring(cur_entry, "UTF-8").decode("utf-8")
-            pluginxml = PluginXML(configxml)
+        for node in nodes:
+            plugin = find_xml_plugin(node)
+            if plugin is not None:
+                retval.append(plugin)
+            else:
+                raise PluginNotSupportedError("Artifact deployer configuration plugin {0} not found".format(
+                    get_plugin_name(node)), get_plugin_name(node))
 
-            plugin_obj = None
-            for plugin in get_plugins():
-                if plugin.type == pluginxml.get_class_name():
-                    plugin_obj = plugin(cur_entry)
-                    break
-
-            if plugin_obj is None:
-                raise PluginNotSupportedError("Artifact deployer configuration plugin {0} not found".format(pluginxml.get_class_name()),
-                                              pluginxml.get_class_name())
-
-            retval.append(plugin_obj)
         return retval
 
 

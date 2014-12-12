@@ -35,7 +35,7 @@ class FreestyleJob(Job):
         :returns:
             One of several possible plugin objects which exposes the relevant set
             of properties supported by a given source code management tool.
-        :rtype: :class:`~.utils.pluginapi.PluginXML`
+        :rtype: :class:`~.utils.pluginapi.PluginBase`
         """
         xml = self.config_xml
         jobxml = JobXML(xml)

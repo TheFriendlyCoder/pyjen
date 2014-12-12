@@ -1,8 +1,9 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, PluginXML, get_job_plugins
+from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, find_plugin, get_extension_plugin
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
+import xml.etree.ElementTree as ElementTree
 
 
 class Job(PluginBase):
@@ -31,13 +32,13 @@ class Job(PluginBase):
         :return: An instance of the appropriate derived type for the given job
         :rtype: :class:`~.job.Job`
         """
-        pluginxml = PluginXML(controller.config_xml)
+        plugin = get_extension_plugin(controller, jenkins_master)
+        if plugin is not None:
+            return plugin
 
-        for plugin in get_job_plugins():
-            if plugin.type == pluginxml.get_class_name():
-                return plugin(controller, jenkins_master)
-
-        raise PluginNotSupportedError("Job plugin {0} not found".format(pluginxml.class_name), pluginxml.class_name)
+        node = ElementTree.fromstring(controller.config_xml)
+        plugin_name = get_plugin_name(node)
+        raise PluginNotSupportedError("Job plugin {0} not found".format(plugin_name), plugin_name)
 
     @staticmethod
     def _create(controller, jenkins_master, job_name):
@@ -71,9 +72,9 @@ class Job(PluginBase):
         :return: XML configuration data for the specified job type
         :rtype: :class:`str`
         """
-        for plugin in get_job_plugins():
-            if plugin.type == job_type:
-                return plugin.template_config_xml()
+        plugin = find_plugin(job_type)
+        if plugin is not None:
+            return plugin.template_config_xml()
 
         raise PluginNotSupportedError("Job plugin {0} not found".format(job_type), job_type)
 

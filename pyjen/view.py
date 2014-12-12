@@ -1,9 +1,10 @@
 """Primitives for interacting with Jenkins views"""
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.pluginapi import PluginBase, PluginXML, get_view_plugins
+from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, get_extension_plugin
 from pyjen.utils.viewxml import ViewXML
 import logging
+import xml.etree.ElementTree as ElementTree
 
 log = logging.getLogger(__name__)
 
@@ -33,14 +34,13 @@ class View(PluginBase):
         :return: An instance of the appropriate derived type for the given view
         :rtype: :class:`~.view.View`
         """
-        pluginxml = PluginXML(controller.config_xml)
+        plugin = get_extension_plugin(controller, jenkins_master)
+        if plugin is not None:
+            return plugin
 
-        for plugin in get_view_plugins():
-            if plugin.type == pluginxml.get_class_name():
-                return plugin(controller, jenkins_master)
-
-        raise PluginNotSupportedError("View plugin {0} not found".format(pluginxml.get_class_name()),
-                                      pluginxml.get_class_name())
+        node = ElementTree.fromstring(controller.config_xml)
+        plugin_name = get_plugin_name(node)
+        raise PluginNotSupportedError("View plugin {0} not found".format(plugin_name), plugin_name)
 
     @staticmethod
     def supported_types():
@@ -52,10 +52,10 @@ class View(PluginBase):
         :return: list of all view types supported by this instance of PyJen, including those supported by plugins
         :rtype: :class:`list` of :class:`str`
         """
-        plugins = get_view_plugins()
         retval = []
-        for p in plugins:
-            retval.append(p.type)
+        for plugin in get_view_plugins():
+            retval.append(plugin.type)
+
         return retval
 
     @property

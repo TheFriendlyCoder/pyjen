@@ -1,9 +1,11 @@
 """Primitives for working on Jenkins views of type 'SectionedView'"""
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
-from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
-from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
 import xml.etree.ElementTree as ElementTree
+import logging
+
+log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 class SectionedView(View):
@@ -99,23 +101,16 @@ class SectionedViewXML(ViewXML):
         :returns: a list of all 'section' objects contained in this view
         :rtype: :class:`list` of section plugins associated with this view
         """
-        sections_node = self._root.find('sections')
+        nodes = self._root.find('sections')
 
         retval = []
-        for node in sections_node:
-            configxml = ElementTree.tostring(node, "UTF-8").decode("utf-8")
-            pluginxml = PluginXML(configxml)
+        for node in nodes:
+            plugin = find_xml_plugin(node)
+            if plugin is not None:
+                retval.append(plugin)
+            else:
+                log.warning("Sectioned view plugin {0} not found".format(get_plugin_name(node)))
 
-            plugin_obj = None
-            for plugin in get_plugins():
-                if plugin.type == pluginxml.get_class_name():
-                    plugin_obj = plugin(node)
-
-            if plugin_obj is None:
-                raise PluginNotSupportedError("Sectioned view plugin {0} not found".format(pluginxml.get_class_name()),
-                                              pluginxml.get_class_name())
-
-            retval.append(plugin_obj)
         return retval
 
 

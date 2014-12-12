@@ -1,6 +1,6 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.pluginapi import get_plugins, PluginXML
+from pyjen.utils.pluginapi import find_xml_plugin, get_plugin_name
 from pyjen.exceptions import PluginNotSupportedError
 import logging
 
@@ -115,18 +115,15 @@ class JobXML(object):
         
             Examples: :class:`~pyjen.plugins.subversion.Subversion`
         
-        :rtype: :class:`~.pluginapi.PluginXML`
+        :rtype: :class:`~.pluginapi.PluginBase`
         """
         node = self._root.find('scm')
-        xml = ElementTree.tostring(node)
+        plugin = find_xml_plugin(node)
+        if plugin is not None:
+            return plugin
 
-        pluginxml = PluginXML(xml)
-        for plugin in get_plugins():
-            if plugin.type == pluginxml.get_class_name():
-                return plugin(node)
-
-        raise PluginNotSupportedError("Job XML plugin {0} not found".format(pluginxml.get_class_name()),
-                                      pluginxml.get_class_name())
+        raise PluginNotSupportedError("Job XML plugin {0} not found".format(get_plugin_name(node)),
+                                      get_plugin_name(node))
 
     @property
     def properties(self):
@@ -136,18 +133,13 @@ class JobXML(object):
         :rtype: :class:`list` of property plugins supported by this job
         """
         retval = []
-        properties_node = self._root.find('properties')
-        for property in properties_node:
-            pluginxml = PluginXML(ElementTree.tostring(property))
-            found_plugin = False
-            for plugin in get_plugins():
-                if plugin.type == pluginxml.get_class_name():
-                    retval.append(plugin(property))
-                    found_plugin = True
-                    break
-
-            if not found_plugin:
-                log.warning("Unsupported job 'property' plugin: " + pluginxml.get_class_name())
+        nodes = self._root.find('properties')
+        for node in nodes:
+            plugin = find_xml_plugin(node)
+            if plugin is not None:
+                retval.append(plugin)
+            else:
+                log.warning("Unsupported job 'property' plugin: " + get_plugin_name(node))
         return retval
 
     @property
@@ -158,18 +150,13 @@ class JobXML(object):
         :rtype: :class:`list` of publisher plugins supported by this job
         """
         retval = []
-        publishers_node = self._root.find('publishers')
-        for publisher in publishers_node:
-            pluginxml = PluginXML(ElementTree.tostring(publisher))
-            found_plugin = False
-            for plugin in get_plugins():
-                if plugin.type == pluginxml.get_class_name():
-                    retval.append(plugin(publisher))
-                    found_plugin = True
-                    break
-
-            if not found_plugin:
-                log.warning("Unsupported job 'publisher' plugin: " + pluginxml.get_class_name())
+        nodes = self._root.find('publishers')
+        for node in nodes:
+            plugin = find_xml_plugin(node)
+            if plugin is not None:
+                retval.append(plugin)
+            else:
+                log.warning("Unsupported job 'publisher' plugin: " + get_plugin_name(node))
         return retval
 
     @property
@@ -180,18 +167,13 @@ class JobXML(object):
         :rtype: :class:`list` of builder plugins used by this job
         """
         retval = []
-        builders_node = self._root.find('builders')
-        for builder in builders_node:
-            pluginxml = PluginXML(ElementTree.tostring(builder))
-            found_plugin = False
-            for plugin in get_plugins():
-                if plugin.type == pluginxml.get_class_name():
-                    retval.append(plugin(builder))
-                    found_plugin = True
-                    break
-
-            if not found_plugin:
-                log.warning("Unsupported job 'builder' plugin: " + pluginxml.get_class_name())
+        nodes = self._root.find('builders')
+        for node in nodes:
+            plugin = find_xml_plugin(node)
+            if plugin is not None:
+                retval.append(plugin)
+            else:
+                log.warning("Unsupported job 'builder' plugin: " + get_plugin_name(node))
 
         return retval
 

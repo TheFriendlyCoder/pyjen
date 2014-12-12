@@ -1,6 +1,5 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
-from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
-from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
 import xml.etree.ElementTree as ElementTree
 import logging
 
@@ -25,24 +24,17 @@ class FlexiblePublisher(PluginBase):
         :returns: list of publishers associated with this instance of the flexible publisher
         :rtype: :class:`list` of Flexible Publish publishers such as :class:`ConditionalPublisher`
         """
-        publishers_node = self._root.find("publishers")
+        nodes = self._root.find("publishers")
 
         retval = []
-        for cur_publisher in publishers_node:
-            configxml = ElementTree.tostring(cur_publisher, "UTF-8").decode("utf-8")
-            pluginxml = PluginXML(configxml)
+        for node in nodes:
+            plugin = find_xml_plugin(node)
+            if plugin is not None:
+                retval.append(plugin)
+            else:
+                log.warning("Flexible publisher plugin {0} not found".format(
+                    get_plugin_name(node)))
 
-            plugin_obj = None
-            for plugin in get_plugins():
-                if plugin.type == pluginxml.get_class_name():
-                    plugin_obj = plugin(cur_publisher)
-                    break
-
-            if plugin_obj is None:
-                raise PluginNotSupportedError("Flexible publisher plugin {0} not found".format(pluginxml.get_class_name()),
-                                              pluginxml.get_class_name())
-
-            retval.append(plugin_obj)
         return retval
 
 
@@ -65,21 +57,14 @@ class ConditionalPublisher(PluginBase):
         :rtype: :class:`list` of PyJen objects, typically one or more plugins supported by the Flexible Publish plugin
                 Return None if an publisher plugin not currently supported by PyJen is being used
         """
-        publisher_node = self._root.find("publisher")
+        node = self._root.find("publisher")
+        plugin = find_xml_plugin(node)
 
-        configxml = ElementTree.tostring(publisher_node, "UTF-8").decode("utf-8")
-        pluginxml = PluginXML(configxml)
+        if plugin is None:
+            log.warning("Publisher plugin {0} referenced by Flexible Publisher not found".format(
+                get_plugin_name(node)))
 
-        plugin_obj = None
-        for plugin in get_plugins():
-            if plugin.type == pluginxml.get_class_name():
-                plugin_obj = plugin(publisher_node)
-                break
-
-        if plugin_obj is None:
-            log.warning("Publisher plugin {0} referenced by Flexible Publisher not found".format(pluginxml.get_class_name()))
-
-        return plugin_obj
+        return plugin
 
 if __name__ == "__main__":  # pragma: no cover
     pass
