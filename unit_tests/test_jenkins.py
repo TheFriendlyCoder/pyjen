@@ -193,7 +193,7 @@ class jenkins_view_tests(unittest.TestCase):
     def test_get_multiple_views(self):
         # test logic
         j = Jenkins(self.mock_jenkins_data_io)
-        views = j.all_views
+        views = j.views
         
         # verification
         self.assertEqual(len(views), 2)

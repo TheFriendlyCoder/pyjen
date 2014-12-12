@@ -72,15 +72,6 @@ class View(PluginBase):
         return data['name']
 
     @property
-    def contains_views(self):
-        """Indicates whether this view type supports sub-views
-
-        :returns: True if this type of view contains other views, False if not
-        :rtype: :class:`bool`
-        """
-        return False
-
-    @property
     def jobs(self):
         """Gets a list of jobs associated with this view
 

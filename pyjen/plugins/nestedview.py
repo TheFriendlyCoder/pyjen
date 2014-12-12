@@ -95,20 +95,11 @@ class NestedView(View):
 
         retval = []
         for cur_view in temp:
-            if cur_view.contains_views:
+            if cur_view.type == self.type:
                 retval.extend(cur_view.all_views)
 
         retval.extend(temp)
         return retval
-
-    @property
-    def contains_views(self):
-        """Indicates whether this view type supports sub-views
-
-        :returns: True if this class contains other views, otherwise False
-        :rtype: :class:`bool`
-        """
-        return True
 
     def create_view(self, view_name, view_type):
         """Creates a new sub-view within this nested view

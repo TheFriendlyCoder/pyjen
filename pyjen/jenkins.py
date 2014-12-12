@@ -197,24 +197,6 @@ class Jenkins(object):
             retval.append(tview)
             
         return retval
-
-    @property
-    def all_views(self):
-        """Gets a list of all views managed by this Jenkins instance, including all nested views
-
-        :returns: list of one or more views defined on this Jenkins instance.
-        :rtype: :class:`list` of :class:`~.view.View` objects
-        """
-
-        temp = self.views
-
-        retval = []
-        for cur_view in temp:
-            if cur_view.contains_views:
-                retval.extend(cur_view.all_views)
-
-        retval.extend(temp)
-        return retval
     
     def prepare_shutdown(self):
         """Sends a shutdown signal to the Jenkins master preventing new builds from executing
@@ -268,7 +250,7 @@ class Jenkins(object):
         return retval
     
     def find_view(self, view_name):
-        """Searches all views managed by this Jenkins instance for a specific view
+        """Searches views directly managed by this Jenkins instance for a specific view
 
         .. seealso: :py:meth:`.get_view`
 
@@ -290,42 +272,7 @@ class Jenkins(object):
 
                 new_io_obj = self._controller.clone(turl)
                 return View.create(new_io_obj, self)
-
-        for cur_view in raw_views:
-            turl = cur_view['url']
-            if turl.find('view') == -1:
-                turl = turl.rstrip("/") + "/view/" + cur_view['name']
-
-            new_io_obj = self._controller.clone(turl)
-            v = View.create(new_io_obj, self)
-            if v.contains_views:
-                res = self._find_view_helper(v, view_name)
-                if res is not None:
-                    return res
                         
-        return None
-
-    @staticmethod
-    def _find_view_helper(self, view, view_name):
-        """Helper function, used by find_view method, to recursively search for views within sub-views
-
-        :param view: View object which supports nested views
-        :type view: :class:`~.view.View`
-        :param str view_name: the name of the view to locate
-        :return: Reference to the view being searched, or None if not found
-        :rtype: :class:`~view.View`
-        """
-        sub_views = view.views
-        for cur_view in sub_views:
-            if cur_view.name == view_name:
-                return cur_view
-
-        for cur_view in sub_views:
-            if cur_view.contains_views:
-                res = self._find_view_helper(cur_view, view_name)
-                if res is not None:
-                    return res
-
         return None
 
     def create_view(self, view_name, view_type):
