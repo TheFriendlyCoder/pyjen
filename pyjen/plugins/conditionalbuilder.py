@@ -56,6 +56,7 @@ class ConditionalBuilder(PluginBase):
             log.warning("Builder plugin {0} used by conditional builder not found".format(pluginxml.get_class_name()))
 
         return plugin_obj
+
 if __name__ == "__main__":  # pragma: no cover
     pass
 

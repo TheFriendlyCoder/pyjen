@@ -1,9 +1,11 @@
 """All PyJen specific exception declarations"""
 
+
 class PyJenError (Exception):
     """Base class for all PyJen related exceptions"""
     def __init__(self):
         super(PyJenError, self).__init__()
+
 
 class InvalidUserParamsError (PyJenError):
     """Exception caused by invalid parameters in the user configuration file"""
@@ -17,6 +19,7 @@ class InvalidUserParamsError (PyJenError):
 
     def __str__(self):
         return "Error parsing config file: " + self.__msg
+
 
 class InvalidJenkinsURLError (PyJenError):
     """Exception raised when attempting to connect to a URL that doesn't point
@@ -36,6 +39,7 @@ class InvalidJenkinsURLError (PyJenError):
         return "Error connecting to Jenkins API via " + self.__url + ": \n\t" +\
             self.__msg
 
+
 class InvalidParameterError(PyJenError):
     """Exception raised when the caller provides an invalid value as an input
         parameter to a PyJen method call"""
@@ -52,6 +56,7 @@ class InvalidParameterError(PyJenError):
     def __str__(self):
         return self.__msg
 
+
 class NestedViewCreationError(PyJenError):
     """Error when creating a sub-view in the nested-view plugin"""
     def __init__(self, msg):
@@ -64,6 +69,7 @@ class NestedViewCreationError(PyJenError):
 
     def __str__(self):
         return self._msg
+
 
 class NotYetImplementedError(PyJenError):
     """Exception thrown from methods that are not yet implemented"""
