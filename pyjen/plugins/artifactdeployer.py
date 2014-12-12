@@ -65,20 +65,5 @@ class ArtifactDeployerEntry(PluginBase):
         return node.text
 
 if __name__ == "__main__":  # pragma: no cover
-    from pyjen.jenkins import Jenkins
-    user = "kphillips"
-    pw = "Ovvluoeb5"
-    creds = (user, pw)
-    j = Jenkins.easy_connect("http://builds.caris.priv", creds)
-    job = j.get_job("http://builds.caris.priv/view/unified/view/DEBUG4.3.x/job/DEBUGunified-4.3.x-bdb-editor-package-32")
-    pubs = job.publishers
-    for p in pubs:
-        actions = p.actions
-        for a in actions:
-            sp = a.publisher
-            if sp is not None:
-                if sp.type == ArtifactDeployer.type:
-                    for e in sp.entries:
-                        print(e.remote)
     pass
 
