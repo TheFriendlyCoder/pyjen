@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins views"""
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.pluginapi import get_plugins, PluginBase, PluginXML
+from pyjen.utils.pluginapi import PluginBase, PluginXML, get_view_plugins
 from pyjen.utils.viewxml import ViewXML
 import logging
 
@@ -35,7 +35,7 @@ class View(PluginBase):
         """
         pluginxml = PluginXML(controller.config_xml)
 
-        for plugin in get_plugins():
+        for plugin in get_view_plugins():
             if plugin.type == pluginxml.get_class_name():
                 return plugin(controller, jenkins_master)
 
@@ -52,12 +52,10 @@ class View(PluginBase):
         :return: list of all view types supported by this instance of PyJen, including those supported by plugins
         :rtype: :class:`list` of :class:`str`
         """
+        plugins = get_view_plugins()
         retval = []
-        from pyjen.view import View
-        for plugin in get_plugins():
-            if issubclass(plugin, View):
-                retval.append(plugin.type)
-
+        for p in plugins:
+            retval.append(p.type)
         return retval
 
     @property
@@ -234,7 +232,7 @@ class View(PluginBase):
             job_map[j] = j.replace(source_job_name_pattern, new_job_substring)
 
         for j in job_map:
-            log.info("Cloning job {0} to {1}".format(j, job_map[j]))
+            log.debug("Cloning job {0} to {1}".format(j, job_map[j]))
             self._master._clone_job(j, job_map[j])
 
     def clone(self, new_view_name):

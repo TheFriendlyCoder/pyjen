@@ -1,6 +1,6 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, get_plugins, PluginXML
+from pyjen.utils.pluginapi import PluginBase, PluginXML, get_job_plugins
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
 
@@ -33,7 +33,7 @@ class Job(PluginBase):
         """
         pluginxml = PluginXML(controller.config_xml)
 
-        for plugin in get_plugins():
+        for plugin in get_job_plugins():
             if plugin.type == pluginxml.get_class_name():
                 return plugin(controller, jenkins_master)
 
@@ -71,7 +71,7 @@ class Job(PluginBase):
         :return: XML configuration data for the specified job type
         :rtype: :class:`str`
         """
-        for plugin in get_plugins():
+        for plugin in get_job_plugins():
             if plugin.type == job_type:
                 return plugin.template_config_xml()
 
@@ -88,10 +88,8 @@ class Job(PluginBase):
         :rtype: :class:`str`
         """
         retval = []
-        from pyjen.job import Job
-        for plugin in get_plugins():
-            if issubclass(plugin, Job):
-                retval.append(plugin.type)
+        for plugin in get_job_plugins():
+            retval.append(plugin.type)
 
         return retval
 

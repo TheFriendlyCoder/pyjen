@@ -66,6 +66,35 @@ def get_plugins():
     return retval
 
 
+def get_view_plugins():
+    """Returns a list of plugins that extend the default Jenkins View type
+
+    :returns: list of plugins that extend the default Jenkins View type
+    :rtype: :class:`list` of :class:`~.utils.plugin_base.PluginBase` derived classes
+    """
+    from pyjen.view import View
+    retval = []
+    for plugin in get_plugins():
+        if issubclass(plugin, View):
+            retval.append(plugin)
+
+    return retval
+
+
+def get_job_plugins():
+    """Returns a list of plugins that extend the default Jenkins Job type
+
+    :returns: list of plugins that extend the default Jenkins Job type
+    :rtype: :class:`list` of :class:`~.utils.plugin_base.PluginBase` derived classes
+    """
+    from pyjen.job import Job
+    retval = []
+    for plugin in get_plugins():
+        if issubclass(plugin, Job):
+            retval.append(plugin)
+    return retval
+
+
 def _get_plugin_classes(module):
     """Gets a list of all PyJen plugins from a given Python module
 
@@ -96,8 +125,8 @@ def _load_modules(path):
 
     for loader, name, ispkg in pkgutil.walk_packages([path], "pyjen.plugins."):
         if not ispkg:
-            #retval.append(importlib.import_module(name))
-            cur_mod = loader.find_module(name).load_module(name)
+            cur_mod = importlib.import_module(name)
+            #cur_mod = loader.find_module(name).load_module(name)
             retval.append(cur_mod)
 
     return retval
