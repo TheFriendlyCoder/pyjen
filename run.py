@@ -355,8 +355,8 @@ def _make_docs():
     # TODO: Rework this to call 'make clean' from the command line
     doc_dir = os.path.join(os.getcwd(), "docs")
     build_dir = os.path.join(doc_dir, "build")
-    if os.path.exists(build_dir):
-        shutil.rmtree(build_dir)
+    #if os.path.exists(build_dir):
+    #    shutil.rmtree(build_dir)
 
     # First generate the documentation build scripts
     #       -f  force overwrite of output files
