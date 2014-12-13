@@ -50,6 +50,9 @@ Quick start guide
 
 3. import the pyjen module and start scripting! See below for some common examples.
 
+For a more in-depth guide to contributing to the project, see our contributors guide on
+`ReadTheDocs.com <https://pyjen.readthedocs.org/en/latest/>`_.
+
 ================
 Examples
 ================
@@ -60,11 +63,11 @@ Display a list of all jobs on the default view
 
     from pyjen.jenkins import Jenkins
     jk = Jenkins.easy_connect("http://localhost:8080")
-    vw = jk.get_default_view()
-    jobs = vw.get_jobs()
+    vw = jk.default_view
+    jobs = vw.jobs
 
     for j in jobs:
-        print j.get_name()
+        print(j.name)
         
 
 Disable all jobs in a view named "My View"
@@ -86,10 +89,10 @@ Get all upstream dependencies of a job named "JobA"
     from pyjen.jenkins import Jenkins
     jen = Jenkins.easy_connect("http://localhost:8080")
     jb = jen.find_job("JobA")
-    upstream = jb.get_upstream_jobs(True)
+    upstream = jb.all_upstream_jobs
 
     for u in upstream:
-        print u.get_name()
+        print(u.name)
 
 Clone all jobs in a view who are named with a 'trunk' identifier for a new branch configuration
 ------------------------------------------------------------------------------------------------
@@ -99,4 +102,4 @@ Clone all jobs in a view who are named with a 'trunk' identifier for a new branc
     from pyjen.jenkins import Jenkins
     j = Jenkins.easy_connect("http://localhost:8080")
     v = j.find_view("trunk_builds")
-    v.clone_all_jobs(".*trunk.*", "branch")
+    v.clone_all_jobs("trunk", "branch")
