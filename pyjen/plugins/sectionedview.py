@@ -1,7 +1,7 @@
 """Primitives for working on Jenkins views of type 'SectionedView'"""
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
-from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
+from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 import xml.etree.ElementTree as ElementTree
 import logging
 
@@ -105,7 +105,7 @@ class SectionedViewXML(ViewXML):
 
         retval = []
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:

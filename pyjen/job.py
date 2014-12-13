@@ -1,6 +1,6 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, find_plugin, get_extension_plugin
+from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, find_plugin, init_extension_plugin
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
 import xml.etree.ElementTree as ElementTree
@@ -32,7 +32,7 @@ class Job(PluginBase):
         :return: An instance of the appropriate derived type for the given job
         :rtype: :class:`~.job.Job`
         """
-        plugin = get_extension_plugin(controller, jenkins_master)
+        plugin = init_extension_plugin(controller, jenkins_master)
         if plugin is not None:
             return plugin
 

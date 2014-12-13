@@ -1,5 +1,5 @@
 """Primitives for operating on Jenkins job builder of type 'Conditional Builder'"""
-from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
+from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 import xml.etree.ElementTree as ElementTree
 import logging
 
@@ -29,7 +29,7 @@ class ConditionalBuilder(PluginBase):
 
         retval = []
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:

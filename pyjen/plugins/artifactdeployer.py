@@ -1,5 +1,5 @@
 """Primitives for operating on properties of the 'artifact deployer' publishing plugin"""
-from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
+from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 from pyjen.exceptions import PluginNotSupportedError
 import xml.etree.ElementTree as ElementTree
 
@@ -27,7 +27,7 @@ class ArtifactDeployer(PluginBase):
 
         retval = []
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:

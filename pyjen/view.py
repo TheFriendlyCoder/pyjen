@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins views"""
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, get_extension_plugin
+from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, init_extension_plugin
 from pyjen.utils.viewxml import ViewXML
 import logging
 import xml.etree.ElementTree as ElementTree
@@ -34,7 +34,7 @@ class View(PluginBase):
         :return: An instance of the appropriate derived type for the given view
         :rtype: :class:`~.view.View`
         """
-        plugin = get_extension_plugin(controller, jenkins_master)
+        plugin = init_extension_plugin(controller, jenkins_master)
         if plugin is not None:
             return plugin
 

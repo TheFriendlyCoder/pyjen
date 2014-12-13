@@ -1,5 +1,5 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
-from pyjen.utils.pluginapi import find_xml_plugin, PluginBase, get_plugin_name
+from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 import xml.etree.ElementTree as ElementTree
 import logging
 
@@ -28,7 +28,7 @@ class FlexiblePublisher(PluginBase):
 
         retval = []
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
@@ -58,7 +58,7 @@ class ConditionalPublisher(PluginBase):
                 Return None if an publisher plugin not currently supported by PyJen is being used
         """
         node = self._root.find("publisher")
-        plugin = find_xml_plugin(node)
+        plugin = create_xml_plugin(node)
 
         if plugin is None:
             log.warning("Publisher plugin {0} referenced by Flexible Publisher not found".format(

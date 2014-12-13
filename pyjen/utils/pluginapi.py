@@ -96,8 +96,8 @@ def get_job_plugins():
     return retval
 
 
-def find_xml_plugin(xml_node):
-    """Locates the appropriate XML-compatible PyJen plugin
+def create_xml_plugin(xml_node):
+    """Instantiates the appropriate XML-compatible PyJen plugin
 
     :param xml_node: the node of the XML configuration defining the plugin configuration
     :type xml_node: xml.etree.ElementTree
@@ -124,8 +124,8 @@ def find_plugin(plugin_type):
     return None
 
 
-def get_extension_plugin(dataio, jenkins_master):
-    """Searches for a plugin that extends one of the Jenkins native objects such as a view or job
+def init_extension_plugin(dataio, jenkins_master):
+    """Instantiates a plugin that extends one of the Jenkins native objects such as a view or job
 
     :param dataio: Jenkins REST API interface, initialized with the connection parameters of the new object
     :param jenkins_master: Instance of the Jenkins master object that manages this entity

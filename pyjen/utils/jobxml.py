@@ -1,6 +1,6 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.pluginapi import find_xml_plugin, get_plugin_name
+from pyjen.utils.pluginapi import create_xml_plugin, get_plugin_name
 from pyjen.exceptions import PluginNotSupportedError
 import logging
 
@@ -118,7 +118,7 @@ class JobXML(object):
         :rtype: :class:`~.pluginapi.PluginBase`
         """
         node = self._root.find('scm')
-        plugin = find_xml_plugin(node)
+        plugin = create_xml_plugin(node)
         if plugin is not None:
             return plugin
 
@@ -135,7 +135,7 @@ class JobXML(object):
         retval = []
         nodes = self._root.find('properties')
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
@@ -152,7 +152,7 @@ class JobXML(object):
         retval = []
         nodes = self._root.find('publishers')
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
@@ -169,7 +169,7 @@ class JobXML(object):
         retval = []
         nodes = self._root.find('builders')
         for node in nodes:
-            plugin = find_xml_plugin(node)
+            plugin = create_xml_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
