@@ -6,32 +6,32 @@ class PluginXmlTests(unittest.TestCase):
     def test_get_module_name(self):
         expected_module_name = "nested-view"
         xml = '<test plugin="{0}@123"/>'.format(expected_module_name)
-        ob = PluginXML(xml)
+        ob = PluginXML(ElementTree.fromstring(xml))
         self.assertEqual(ob.get_module_name(), expected_module_name)
 
     def test_get_version(self):
         expected_module_version = "123"
         xml = '<test plugin="nested-view@{0}"/>'.format(expected_module_version)
-        ob = PluginXML(xml)
+        ob = PluginXML(ElementTree.fromstring(xml))
         self.assertEqual(ob.get_version(), expected_module_version)
 
     def test_get_class_name_from_attribute(self):
         expected_module_name = "nested-view"
         xml = '<test class="{0}"/>'.format(expected_module_name)
-        ob = PluginXML(xml)
+        ob = PluginXML(ElementTree.fromstring(xml))
         self.assertEqual(ob.get_class_name(), expected_module_name)
 
     def test_get_class_name_from_node(self):
         expected_module_name = "nested-view"
         xml = '<{0}/>'.format(expected_module_name)
-        ob = PluginXML(xml)
+        ob = PluginXML(ElementTree.fromstring(xml))
         self.assertEqual(ob.get_class_name(), expected_module_name)
 
     def test_get_class_name_reformat(self):
         original_module_name = "hudson.plugin.nested__view.NestedView"
         expected_module_name = "hudson.plugin.nested_view.NestedView"
         xml = '<{0}/>'.format(original_module_name)
-        ob = PluginXML(xml)
+        ob = PluginXML(ElementTree.fromstring(xml))
         self.assertEqual(ob.get_class_name(), expected_module_name)
 
 class PluginAPITests(unittest.TestCase):
