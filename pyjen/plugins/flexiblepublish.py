@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 class FlexiblePublisher(PluginBase):
     """Publisher plugin enabling conditional execution of post-build steps in a Jenkins job"""
-    type = "org.jenkins_ci.plugins.flexible_publish.FlexiblePublisher"
+    type = "org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher"
 
     def __init__(self, node):
         """
@@ -40,7 +40,7 @@ class FlexiblePublisher(PluginBase):
 
 class ConditionalPublisher(PluginBase):
     """Interface to a single 'conditional' publisher contained within the flexible publish plugin"""
-    type = "org.jenkins_ci.plugins.flexible_publish.ConditionalPublisher"
+    type = "org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher"
 
     def __init__(self, node):
         """

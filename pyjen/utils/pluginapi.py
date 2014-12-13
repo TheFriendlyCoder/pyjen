@@ -35,13 +35,9 @@ class PluginXML(object):
         """
 
         if "class" in self._root.attrib:
-            temp = self._root.attrib['class']
+            return self._root.attrib['class']
         else:
-            temp = self._root.tag
-
-        # NOTE: For some reason, class names with underscores in them are represented in
-        # the config.xml with double-underscores. We need to undo this obfuscation here
-        return temp.replace("__", "_")
+            return self._root.tag
 
     def get_version(self):
         """Gets the version of the plugin

@@ -13,7 +13,7 @@ class SectionedView(View):
 
      Views of this type support groupings of jobs into 'sections'
      which each have their own filters"""
-    type = "hudson.plugins.sectioned_view.SectionedView"
+    type = "hudson.plugins.sectioned__view.SectionedView"
 
     def __init__(self, controller, jenkins_master):
         """
@@ -41,7 +41,7 @@ class ListViewSection(PluginBase):
     """One of several 'section' types defined for a sectioned view
 
     Represents sections of type 'ListView'"""
-    type = "hudson.plugins.sectioned_view.ListViewSection"
+    type = "hudson.plugins.sectioned__view.ListViewSection"
 
     def __init__(self, node):
         """
@@ -77,7 +77,7 @@ class TextSection(PluginBase):
     """One of several 'section' types defined for a sectioned view
 
     Sections of this type contain simple descriptive text"""
-    type = "hudson.plugins.sectioned_view.TextSection"
+    type = "hudson.plugins.sectioned__view.TextSection"
 
     def __init__(self, node):
         """

@@ -11,7 +11,7 @@ class NestedView(View):
     Views of this type contain other views as sub-views
     """
 
-    type = "hudson.plugins.nested_view.NestedView"
+    type = "hudson.plugins.nested__view.NestedView"
 
     def __init__(self, controller, jenkins_master):
         """
@@ -25,7 +25,8 @@ class NestedView(View):
         :param jenkins_master:
             Reference to Jenkins object associated with the master instance managing
             this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`        """
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
+        """
         super(NestedView, self).__init__(controller, jenkins_master)
 
     @property

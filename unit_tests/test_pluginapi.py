@@ -27,13 +27,6 @@ class PluginXmlTests(unittest.TestCase):
         ob = PluginXML(ElementTree.fromstring(xml))
         self.assertEqual(ob.get_class_name(), expected_module_name)
 
-    def test_get_class_name_reformat(self):
-        original_module_name = "hudson.plugin.nested__view.NestedView"
-        expected_module_name = "hudson.plugin.nested_view.NestedView"
-        xml = '<{0}/>'.format(original_module_name)
-        ob = PluginXML(ElementTree.fromstring(xml))
-        self.assertEqual(ob.get_class_name(), expected_module_name)
-
 class PluginAPITests(unittest.TestCase):
     def test_all_plugins(self):
         all_plugins = get_plugins()
@@ -45,19 +38,19 @@ class PluginAPITests(unittest.TestCase):
             "hudson.model.ListView",
             "maven2-moduleset",
             "hudson.model.MyView",
-            "hudson.plugins.nested_view.NestedView",
-            "hudson.plugins.sectioned_view.SectionedView",
-            "hudson.plugins.sectioned_view.TextSection",
-            "hudson.plugins.sectioned_view.ListViewSection",
-            "hudson.plugins.status_view.StatusView",
+            "hudson.plugins.nested__view.NestedView",
+            "hudson.plugins.sectioned__view.SectionedView",
+            "hudson.plugins.sectioned__view.TextSection",
+            "hudson.plugins.sectioned__view.ListViewSection",
+            "hudson.plugins.status__view.StatusView",
             "hudson.scm.NullSCM",
             "hudson.scm.SubversionSCM",
             "hudson.plugins.buildblocker.BuildBlockerProperty",
             "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher",
             "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry",
             "org.jenkinsci.plugins.conditionalbuildstep.ConditionalBuilder",
-            "org.jenkins_ci.plugins.flexible_publish.ConditionalPublisher",
-            "org.jenkins_ci.plugins.flexible_publish.FlexiblePublisher",
+            "org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher",
+            "org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher",
             "hudson.plugins.parameterizedtrigger.BuildTrigger"]
 
         for cur_plugin in all_plugins:

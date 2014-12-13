@@ -4,7 +4,7 @@ from pyjen.view import View
 
 class StatusView(View):
     """Interface to Jenkins views of type 'StatusView'"""
-    type = "hudson.plugins.status_view.StatusView"
+    type = "hudson.plugins.status__view.StatusView"
 
     def __init__(self, controller, jenkins_master):
         """
