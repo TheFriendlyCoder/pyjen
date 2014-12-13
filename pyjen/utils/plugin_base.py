@@ -7,7 +7,14 @@ from abc import ABCMeta, abstractproperty
 class PluginBase(object):
     """Abstract base class common to all PyJen API plugins
 
-    All PyJen plugins must derive from this class and implement its abstract interface
+    All PyJen plugins must derive, directly or indirectly, from this class
+    and implement its abstract interface
+
+    Most plugins will derive directly from this class, however plugins that
+    extend the native Jenkins objects like views and jobs must derive from
+    their appropriate base classes instead. Any class that supports such
+    extensions will, themselves, derive from this class, including :class:`~.view.View`
+    and :class:`~.job.Job`.
     """
 
     @abstractproperty
