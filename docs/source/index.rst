@@ -25,11 +25,12 @@ PyJen - Jenkins CI Python library
 Table of Contents
 =================
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    examples
    modules
    contrib_guide
+   revision_history
    faq
 
 Overview

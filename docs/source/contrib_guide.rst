@@ -15,11 +15,31 @@ to facilitate automatic document generation by our scripts and hosting sites.
 =======
 Plugins
 =======
-Once the PyJen API is complete, most custom functionality will be provided by plugins. PyJen supports a plugin
-system that essentially mirrors the Jenkins plugin system which allows developers to write their own classes
-to wrap the REST API for any plugin they may like.
+Just as found in the Jenkins back end implementation, most custom functionality in PyJen will be provided by plugins.
+PyJen supports a plugin system that essentially mirrors the Jenkins system which allows developers to write their own
+classes to wrap the REST API for any plugin they may like.
 
-For details on writing plugins see the :py:class:`~.utils.plugin_base.PluginBase` class.
+At the most basic level, PyJen plugins are simply Python classes that meet the following two criteria:
 
+* the class declarations must be placed in a module under the pyjen/plugins subfolder
+* the class must derive, directly or indirectly, from te :py:class:`~.utils.plugin_base.PluginBase` abstract base class
 
-** UNDER CONSTRUCTION **
+This second requirement forces derived classes to implement specific criteria to implement the required abstract
+interface. Currently this interface simply has two requirements:
+
+* a static property named 'type' of type :class:`str` containing the character representation of the Jenkins plugin
+  managed by the PyJen plugin
+* a constructor compatible with the type of plugin being managed (in most cases, this is a single parameter of type
+  :class:`xml.ElementTree.Element`.)
+
+Beyond that, plugin implementers can then proceed to implement public methods and properties on their plugin class
+to expose functionality particular to the plugin.
+
+-------------
+Using Plugins
+-------------
+
+Any primitive or operation in Jenkins that supports a plugable interface is equally addressable by the associated
+PyJen interface without further customization by the plugin author. For example, to add support for a new type of
+'builder', simply write your plugin class as described above and it will automatically be accessible from the
+:py:meth:`~.pyjen.job.Job.builders` property.
