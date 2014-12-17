@@ -11,7 +11,7 @@ class build_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"number":expected_build_number}
         b = Build(mock_data_io)
         
-        self.assertEqual(b.build_number, expected_build_number)
+        self.assertEqual(b.number, expected_build_number)
         
     def test_is_building(self):
         mock_data_io = MagicMock()
@@ -43,7 +43,7 @@ class build_tests(unittest.TestCase):
         mock_data_io.get_api_data.return_value = {"timestamp":1385784197000}
         
         b = Build(mock_data_io)
-        build_time = b.build_time
+        build_time = b.start_time
         
         self.assertEqual(build_time.day, 30)
         self.assertEqual(build_time.month, 11)

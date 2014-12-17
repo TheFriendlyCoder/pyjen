@@ -469,9 +469,9 @@ class Job(PluginBase):
         builds = []
 
         for run in self.recent_builds:
-            if run.build_time < start_time:
+            if run.start_time < start_time:
                 break
-            elif end_time >= run.build_time >= start_time:
+            elif end_time >= run.start_time >= start_time:
                 builds.append(run)
         return builds
 

@@ -43,24 +43,22 @@ class Build(object):
         raise RuntimeError("Objects do not match")
         
     @property
-    def build_number(self):
-        """Gets the numeric build number for this build
+    def number(self):
+        """Gets the sequence number of this build
 
-        :returns: This is the unique numeric identifier, typically a sequential integer that is incremented
-            with each build.
+        :returns: sequentially assigned integer value associated with this build
         :rtype: :class:`int`
         """
 
         data = self._data_io.get_api_data()
 
-        return data['number']    
-    
+        return data['number']
 
     @property
-    def build_time(self):
-        """Gets the time stamp of when this build was executed
+    def start_time(self):
+        """Gets the time stamp of when this build was started
 
-        :returns: the date and time at which this build was executed
+        :returns: the date and time at which this build was started
         :rtype: :class:`datetime.datetime`
 
         """
@@ -103,6 +101,27 @@ class Build(object):
 
         return Changeset(data['changeSet'], self._data_io)
 
+    @property
+    def description(self):
+        """Gets the descriptive test associated with this build
+
+        :rtype: :class:`str`
+        """
+        data = self._data_io.get_api_data()
+        retval = data["description"]
+        if retval is None:
+            return ""
+        return retval
+
+    @property
+    def id(self):
+        """Gets the unique identifier associated with this build
+
+        :rtype: :class:`str`
+        """
+
+        data = self._data_io.get_api_data()
+        return data["id"]
 
 if __name__ == "__main__":  # pragma: no cover
     pass
