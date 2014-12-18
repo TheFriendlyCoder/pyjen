@@ -51,3 +51,12 @@ Clone all jobs in a view who are named with a 'trunk' identifier for a new branc
     j = Jenkins.easy_connect("http://localhost:8080")
     v = j.find_view("trunk_builds")
     v.clone_all_jobs("trunk", "branch")
+
+Locate a nested subview on a Jenkins instance that uses the NestedView plugin
+-----------------------------------------------------------------------------
+
+::
+
+    from pyjen.utils.helpers import find_view
+    v = find_view("http://localhost:8080", ('user', 'pw'), "MySubView")
+    print(v.name)

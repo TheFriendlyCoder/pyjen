@@ -10,7 +10,13 @@ work there. When you are happy with the changes you have made simply perform a p
 
 We try to keep our code inline with PEP-8 standards, and we do have PyLint support in the project to verifying
 the content meets this standard. Further, we ask that all docstrings be compatible with the Sphinx API-doc plugin
-to facilitate automatic document generation by our scripts and hosting sites.
+to facilitate automatic document generation by our scripts and hosting sites. Finally, we encourage contributors
+to add sufficient unit test coverage for any changes they make using the py.test framework used by this project.
+
+Seeing as how PyJen supports the latest versions of both Python 2 and Python 3, all code contributions must be
+compatible with both of these versions. Finally, we try our best to ensure the API is compatible with both the LTS
+and Latest editions of the Jenkins REST API, so care should be taken to make sure contributed code - especially
+those supporting new Jenkins plugins - is compatible wiith both of these versions wherever possible.
 
 =======
 Plugins
@@ -43,3 +49,9 @@ Any primitive or operation in Jenkins that supports a plugable interface is equa
 PyJen interface without further customization by the plugin author. For example, to add support for a new type of
 'builder', simply write your plugin class as described above and it will automatically be accessible from the
 :py:meth:`~.pyjen.job.Job.builders` property.
+
+This is accomplished by leveraging the metadata embedded in the Jenkins configuration information for each primitive
+such as a view or a job. The back-end Java plugins supported by Jenkins embed type information in the configuration
+metadata which maps directly onto PyJen plugin classes. So when you use PyJen to request data from the Jenkins REST
+API it will automatically look for and load any plugin that the active Jenkins instance may be using without further
+modification to the PyJen API.
