@@ -47,6 +47,10 @@ class ParameterizedBuildTrigger(PluginBase):
 
     @property
     def triggers(self):
+        """Gets the list of trigger operations defined for this instance of the plugin
+
+        :rtype: :class:`list` of :class:`BuildTriggerConfig` objects
+        """
         retval = []
         configs_node = self._root.find('configs')
         for config in configs_node:

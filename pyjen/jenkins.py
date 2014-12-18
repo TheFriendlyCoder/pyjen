@@ -481,7 +481,11 @@ class Jenkins(object):
             return None
 
     def flush_cache(self):
-        """Flushes any pending writes to the remote Jenkins server"""
+        """Flushes any pending writes to the remote Jenkins server
+
+        WARNING: This method interacts with a new, crude prototype caching
+        system being tested and should not be used in production
+        """
         self._controller.flush()
 
     def reset_cache(self):
@@ -489,6 +493,9 @@ class Jenkins(object):
 
         WARNING: Any unwritten changes to the cache will be lost if not
         flushed previously using the flush_cache() method
+
+        WARNING: This method interacts with a new, crude prototype caching
+        system being tested and should not be used in production
         """
         self._controller.clear()
 

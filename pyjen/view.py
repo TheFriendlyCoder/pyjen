@@ -98,8 +98,8 @@ class View(PluginBase):
     def _light_jobs(self):
         """Private helper method used to instantiate partial job classes for improved performance
 
-        :returns: list of abstract jobs contained wthin this view
-        :rtype: :class:`list` of :class:`str`
+        :returns: list of abstract jobs contained within this view
+        :rtype: :class:`list` of :class:`~.job.Job` objects
         """
         data = self._controller.get_api_data()
         retval = []
@@ -136,6 +136,7 @@ class View(PluginBase):
     @property
     def _job_urls(self):
         """Gets the list of URLs for all jobs contained by this view
+
         :returns: the list of URLs for all jobs contained by this view
         :rtype: :class:`list` of :class:`str`
         """
@@ -201,8 +202,6 @@ class View(PluginBase):
 
     def enable_all_jobs(self):
         """Batch method that allows caller to bulk-enable all jobs found in this view"""
-        # TODO: Give some thought to the repercussions of using 'light_jobs' here. For example, if a derived Job
-        # class were to override the 'enable' function, it would not get called here. Maybe we don't care...
         for j in self._light_jobs:
             log.debug("Enabling job " + j.name)
             j.enable()

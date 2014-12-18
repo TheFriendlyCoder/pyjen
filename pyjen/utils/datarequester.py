@@ -46,6 +46,7 @@ class DataRequester (object):
     @property
     def url(self):
         """Gets the URL used by all IO operations on this object
+
         :returns: the URL used by all IO operations on this object
         :rtype: :class:`str`
         """
@@ -54,6 +55,7 @@ class DataRequester (object):
     @property
     def credentials(self):
         """Gets the authentication credentials used for all IO operations on this object
+
         :returns: user name and password used for authenticated communication with Jenkins
         :rtype: :func:`tuple` of :class:`str`
         """

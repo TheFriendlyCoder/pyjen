@@ -1,8 +1,5 @@
 """Primitives that manage Jenkins job of type 'Freestyle'"""
 from pyjen.job import Job
-from pyjen.user_params import JenkinsConfigParser
-from pyjen.utils.datarequester import DataRequester
-from pyjen.exceptions import InvalidJenkinsURLError
 from pyjen.utils.jobxml import JobXML
 
 

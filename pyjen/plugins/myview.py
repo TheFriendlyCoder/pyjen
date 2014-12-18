@@ -1,8 +1,5 @@
 """Primitives for interacting with Jenkins views of type 'MyView'"""
 from pyjen.view import View
-from pyjen.user_params import JenkinsConfigParser
-from pyjen.utils.datarequester import DataRequester
-from pyjen.exceptions import InvalidJenkinsURLError
 
 
 class MyView(View):

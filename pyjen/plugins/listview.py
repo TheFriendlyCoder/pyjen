@@ -1,8 +1,5 @@
 """Primitives that operate on Jenkins views of type 'List'"""
 from pyjen.view import View
-from pyjen.user_params import JenkinsConfigParser
-from pyjen.utils.datarequester import DataRequester
-from pyjen.exceptions import InvalidJenkinsURLError
 
 
 class ListView(View):
