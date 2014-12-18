@@ -67,6 +67,14 @@ class NestedView(View):
                 new_io_obj = self._controller.clone(cur_view['url'])
                 return View.create(new_io_obj, self._master)
 
+        for cur_view in raw_views:
+            new_io_obj = self._controller.clone(cur_view['url'])
+            temp_view = View.create(new_io_obj, self._master)
+            if temp_view.type == NestedView.type:
+                sub_view = temp_view.find_view(view_name)
+                if sub_view is not None:
+                    return sub_view
+
         return None
 
     def has_view(self, view_name):

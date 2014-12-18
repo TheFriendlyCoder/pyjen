@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    pyjen.utils.datarequester
+   pyjen.utils.helpers
    pyjen.utils.jobxml
    pyjen.utils.plugin_base
    pyjen.utils.pluginapi

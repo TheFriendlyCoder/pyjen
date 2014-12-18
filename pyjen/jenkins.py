@@ -197,6 +197,22 @@ class Jenkins(object):
             retval.append(tview)
             
         return retval
+
+    @property
+    def view_names(self):
+        """Gets a list of the names of the views managed by this Jenkins instance
+
+        :rtype: :class:`list` of :class:`~.view.View` objects
+        """
+        data = self._controller.get_api_data()
+
+        raw_views = data['views']
+        retval = []
+
+        for cur_view in raw_views:
+            retval.append(cur_view['name'])
+
+        return retval
     
     def prepare_shutdown(self):
         """Sends a shutdown signal to the Jenkins master preventing new builds from executing
