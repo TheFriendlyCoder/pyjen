@@ -515,7 +515,7 @@ class job_build_methods_tests(unittest.TestCase):
         
     def test_get_builds_in_time_range_no_builds(self):
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"builds":[]}
+        mock_data_io.get_api_data.return_value = {"allBuilds":[]}
  
         start_time = datetime(2013, 1, 21, 12, 0, 0)
         end_time = datetime(2013, 1, 21, 13, 0, 0)        
@@ -529,7 +529,7 @@ class job_build_methods_tests(unittest.TestCase):
         mock_build1_data_io.get_api_data.return_value = {"number":123, "timestamp":0}
         
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"builds":[{"url":"http://localhost:8080/job/j1/123"}]}
+        mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/123"}]}
         mock_data_io.clone.return_value = mock_build1_data_io
         
  
@@ -551,7 +551,7 @@ class job_build_methods_tests(unittest.TestCase):
         mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":timestamp}
         
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"builds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
+        mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
         mock_data_io.clone.return_value = mock_build1_data_io
         
  
@@ -571,7 +571,7 @@ class job_build_methods_tests(unittest.TestCase):
         mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":timestamp}
         
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"builds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
+        mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
         mock_data_io.clone.return_value = mock_build1_data_io
         
  
@@ -594,7 +594,7 @@ class job_build_methods_tests(unittest.TestCase):
         mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":start_time_timestamp}
         
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"builds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
+        mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
         mock_data_io.clone.return_value = mock_build1_data_io
         
  
@@ -614,7 +614,7 @@ class job_build_methods_tests(unittest.TestCase):
         mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":end_time_timestamp}
         
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"builds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
+        mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
         mock_data_io.clone.return_value = mock_build1_data_io
         
  

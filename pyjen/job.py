@@ -222,6 +222,7 @@ class Job(PluginBase):
     @property
     def all_builds(self):
         """Gets all recorded builds for this job
+
         :returns: all recorded builds for this job
         :rtype: :class:`list` of :class:`~.build.Build` objects
         """
@@ -468,7 +469,7 @@ class Job(PluginBase):
 
         builds = []
 
-        for run in self.recent_builds:
+        for run in self.all_builds:
             if run.start_time < start_time:
                 break
             elif end_time >= run.start_time >= start_time:
@@ -484,16 +485,19 @@ class Job(PluginBase):
 
     @property
     def publishers(self):
+        """Gets all plugins configured as 'publishers' for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.publishers
 
     @property
     def properties(self):
+        """Gets all plugins configured as extra configuration properties for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.properties
 
     @property
     def builders(self):
+        """Gets all plugins configured as 'builders' for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.builders
 
