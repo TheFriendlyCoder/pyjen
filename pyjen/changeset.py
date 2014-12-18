@@ -34,7 +34,7 @@ class Changeset (object):
         """gets details of the changes associated with the parent build
 
         :returns: list of 0 or more items detailing each change associated with this Changeset
-        :rtype: :class:`list` of :class:`~.changesetitem.ChangesetItem` objects
+        :rtype: :class:`list` of :class:`ChangesetItem` objects
         """
         retval = []
 
