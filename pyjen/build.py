@@ -123,5 +123,21 @@ class Build(object):
         data = self._data_io.get_api_data()
         return data["id"]
 
+    @property
+    def artifact_urls(self):
+        """Gets a list of URLs which can be used to download the published build artifacts for this build
+
+        :rtype: :class:`list` of :class:`str`
+        """
+        data = self._data_io.get_api_data()
+        artifacts_node = data['artifacts']
+        retval = []
+
+        for node in artifacts_node:
+            url = self._data_io.url + "artifact/" + node['fileName']
+            retval.append(url)
+
+        return retval
+
 if __name__ == "__main__":  # pragma: no cover
     pass

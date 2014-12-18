@@ -442,7 +442,7 @@ class Job(PluginBase):
             If such a build does not exist, returns None
         :rtype: :class:`~.build.Build`
         """
-        temp_data_io = self._controller.clone(self._controller.url + "/" + str(build_number))
+        temp_data_io = self._controller.clone(self._controller.url + str(build_number))
 
         # Lets try loading data from the given URL to see if it is valid.
         # If it's not valid we'll assume a build with the given number doesn't exist
