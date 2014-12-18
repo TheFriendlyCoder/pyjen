@@ -10,6 +10,7 @@ Submodules
    pyjen.utils.jobxml
    pyjen.utils.plugin_base
    pyjen.utils.pluginapi
+   pyjen.utils.user_params
    pyjen.utils.viewxml
 
 Module contents

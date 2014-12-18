@@ -1,4 +1,4 @@
-from pyjen.user_params import JenkinsConfigParser
+from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.exceptions import InvalidUserParamsError
 import unittest
 import pytest

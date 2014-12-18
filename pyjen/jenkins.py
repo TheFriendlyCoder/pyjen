@@ -5,8 +5,8 @@ from pyjen.node import Node
 from pyjen.job import Job
 from pyjen.user import User
 from pyjen.utils.datarequester import DataRequester
-from pyjen.user_params import JenkinsConfigParser
-from pyjen.exceptions import InvalidJenkinsURLError, InvalidParameterError
+from pyjen.utils.user_params import JenkinsConfigParser
+from pyjen.exceptions import InvalidJenkinsURLError
 
 
 class Jenkins(object):
