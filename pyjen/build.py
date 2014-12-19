@@ -30,7 +30,7 @@ class Build(object):
             obj_data = obj._data_io.get_api_data()
             obj_build_url = obj_data["url"]
             return build_url == obj_build_url
-        raise RuntimeError("Objects do not match")
+        return False
     
     def __ne__(self, obj):
         """Overrides the default not equal operation"""
@@ -40,7 +40,7 @@ class Build(object):
             obj_data = obj._data_io.get_api_data()
             obj_build_url = obj_data["url"]
             return build_url != obj_build_url
-        raise RuntimeError("Objects do not match")
+        return False
         
     @property
     def number(self):
@@ -138,6 +138,19 @@ class Build(object):
             retval.append(url)
 
         return retval
+
+    @property
+    def status(self):
+        """Gets the status of the build
+        SUCCESS
+        UNSTABLE
+        FAILED
+        :rtype: :class:`str`
+        """
+        data = self._data_io.get_api_data()
+
+        return data['result']
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass
