@@ -142,9 +142,13 @@ class Build(object):
     @property
     def status(self):
         """Gets the status of the build
-        SUCCESS
-        UNSTABLE
-        FAILED
+
+        :returns:
+            Result state of the associated job upon completion of this build. Typically one of the following:
+
+            * "SUCCESS"
+            * "UNSTABLE"
+            * "FAILED"
         :rtype: :class:`str`
         """
         data = self._data_io.get_api_data()
