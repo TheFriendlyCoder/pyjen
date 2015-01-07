@@ -59,5 +59,13 @@ class PluginAPITests(unittest.TestCase):
 
         self.assertEquals(len(expected_plugins), 0, "One or more plugins not found: " + str(expected_plugins))
 
+    def test_multiple_calls(self):
+        # TODO: Figure out why this test passes even with the old implementation of the plugin loader when in production
+        #       doing something like this has been shown to fail
+        first_set = get_plugins()
+        second_set = get_plugins()
+        for cur_plugin in first_set:
+            self.assertIn(cur_plugin, second_set)
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
