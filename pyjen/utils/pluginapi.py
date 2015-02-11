@@ -195,8 +195,8 @@ def _load_modules(path):
         if not ispkg:
             cur_mod = importlib.import_module(name)
 
-            # TODO: Consider whether we need to check for duplicate modules that have been previously loaded
-            retval.append(cur_mod)
+            if not cur_mod in retval:
+                retval.append(cur_mod)
 
     # TODO: See whether we need to consider loading newly added plugins that may not have existed the first time this function is called
     return retval
