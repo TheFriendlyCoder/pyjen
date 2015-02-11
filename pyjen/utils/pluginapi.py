@@ -185,7 +185,7 @@ def _load_modules(path):
             cur_module = sys.modules[cur_module_name]
 
             # Make sure to exclude 'package initialization' modules
-            if not cur_module.__file__.endswith("__init__.py"):
+            if cur_module is not None and not cur_module.__file__.endswith("__init__.py"):
                 retval.append(cur_module)
 
             # TODO: Consider whether we need to consider re-loading plugins in certain cases
