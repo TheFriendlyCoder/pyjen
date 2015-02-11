@@ -27,6 +27,20 @@ class build_tests(unittest.TestCase):
         b = Build(mock_data_io)
         self.assertFalse(b.is_building, "Build should indicate that it is not currently running")
         
+    def test_result_success(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"result":"SUCCESS"}
+        
+        b = Build(mock_data_io)
+        self.assertEqual("SUCCESS", b.result)
+    
+    def test_result_fail(self):
+        mock_data_io = MagicMock()
+        mock_data_io.get_api_data.return_value = {"result":"FAILURE"}
+        
+        b = Build(mock_data_io)
+        self.assertEqual("FAILURE", b.result)
+            
     def test_get_console_output(self):
         expected_console_output = "Some sample console output"
         mock_data_io = MagicMock()
