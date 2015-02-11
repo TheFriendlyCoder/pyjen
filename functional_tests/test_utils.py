@@ -75,7 +75,7 @@ class JenkinsProcess(object):
 
         # Give the Jenkins process a couple of seconds to finish startup just to be safe
         time.sleep(10)
-        print ("Jenkins started...")
+        print("Jenkins started...")
         self._url = "http://localhost:{0}".format(JENKINS_PORT)
         self._process = jenkins_process
 
@@ -135,7 +135,7 @@ class JenkinsProcess(object):
         JenkinsProcess._progress_hook.counter = increment
 
 
-def safe_delete (path):
+def safe_delete(path):
     """Recursively deletes the contents of a given folder, even when files are read only
 
     :param str path: root folder to be deleted

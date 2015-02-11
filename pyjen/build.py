@@ -96,7 +96,7 @@ class Build(object):
         :return: the status of this build. Typically "SUCCESS" or "FAILURE" but may also be "UNSTABLE"
         :rtype: `func`:str
         """
-        data = self.__data_io.get_api_data()
+        data = self._data_io.get_api_data()
 
         return data['result']
     

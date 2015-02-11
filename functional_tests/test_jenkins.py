@@ -155,6 +155,7 @@ class lts_tests(TestCase):
             expected_numbers.remove(build.build_number)
             expected_results.remove(build.result)"""
 
+
 class latest_tests(lts_tests):
     """Repetition of all LTS functional tests in the latest Jenkins version"""
     @classmethod
