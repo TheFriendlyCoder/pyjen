@@ -1,12 +1,13 @@
 """Primitives for interacting with the PyJen plugin API"""
 import os
-
+import logging
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.plugin_base import PluginBase
 
 # Path where all PyJen plugins are stored
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
 
+log = logging.getLogger(__name__)
 
 class PluginXML(object):
     """Class used to process XML configuration information associated with Jenkins plugins"""
@@ -129,8 +130,8 @@ def init_extension_plugin(dataio, jenkins_master):
     :rtype: :class:`~.utils.pluginbase.PluginBase` derived object
     """
     pluginxml = PluginXML(ElementTree.fromstring(dataio.config_xml))
-
-    for plugin in get_plugins():
+    all_plugins = get_plugins()
+    for plugin in all_plugins:
         if plugin.type == pluginxml.get_class_name():
             return plugin(dataio, jenkins_master)
     return None
@@ -173,16 +174,32 @@ def _load_modules(path):
     """
     import pkgutil
     import importlib
+    # TODO: Consider how we should customize this prefix in case we want to load plugins from multiple paths / packages
+    package_prefix = "pyjen.plugins."
     retval = []
 
-    for loader, name, ispkg in pkgutil.walk_packages([path], "pyjen.plugins."):
+    # First, check to see if any plugins have already been loaded
+    import sys
+    for cur_module_name in sys.modules:
+        if cur_module_name.startswith(package_prefix):
+            cur_module = sys.modules[cur_module_name]
+
+            # Make sure to exclude 'package initialization' modules
+            if not cur_module.__file__.endswith("__init__.py"):
+                retval.append(cur_module)
+
+            # TODO: Consider whether we need to consider re-loading plugins in certain cases
+
+    # If not, then lets walk all modules in the plugin path and load them all
+    for loader, name, ispkg in pkgutil.iter_modules([path], package_prefix):
         if not ispkg:
             cur_mod = importlib.import_module(name)
-            #cur_mod = loader.find_module(name).load_module(name)
+
+            # TODO: Consider whether we need to check for duplicate modules that have been previously loaded
             retval.append(cur_mod)
 
+    # TODO: See whether we need to consider loading newly added plugins that may not have existed the first time this function is called
     return retval
-
 
 if __name__ == "__main__":  # pragma: no cover
     for i in get_plugins():
