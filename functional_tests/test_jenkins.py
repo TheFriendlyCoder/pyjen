@@ -4,7 +4,7 @@ from pyjen.jenkins import Jenkins
 from pyjen.view import View
 from pyjen.job import Job
 import os
-from testtools import TestCase
+import unittest
 import tempfile
 import shutil
 
@@ -29,7 +29,7 @@ def setup_workspace(config_folder):
     return target_dir
 
 
-class lts_tests(TestCase):
+class lts_tests(unittest.TestCase):
     """Functional tests applied to the LTS edition of Jenkins"""
     @classmethod
     def get_edition(cls):
