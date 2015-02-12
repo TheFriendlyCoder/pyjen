@@ -1,8 +1,6 @@
 import pytest
 from functional_tests.test_utils import JenkinsProcess, safe_delete
 from pyjen.jenkins import Jenkins
-from pyjen.view import View
-from pyjen.job import Job
 import os
 import unittest
 import tempfile
@@ -63,7 +61,7 @@ class lts_tests(unittest.TestCase):
         
         self.assertEqual(v.name, new_view_name)
         
-    """def test_shutdown(self):
+    def test_shutdown(self):
         j = Jenkins.easy_connect(self._jenkins_url, None)
 
         self.assertFalse(j.is_shutting_down)
@@ -77,7 +75,7 @@ class lts_tests(unittest.TestCase):
         j = Jenkins.easy_connect(self._jenkins_url, None)
         
         v = j.default_view
-        self.assertTrue(v != None)
+        self.assertIsNotNone(v)
         self.assertEqual("All", v.name)        
         
     def test_find_view(self):
@@ -100,60 +98,68 @@ class lts_tests(unittest.TestCase):
         
     def test_last_build(self):
         job_url = self._jenkins_url + "/job/JobNumber1"
-        
-        j = Job.easy_connect(job_url, None)
-        
+
+        j = Jenkins.easy_connect(self._jenkins_url, None)
+
+        job = j.get_job(job_url)
+
         #sanity check: make sure our generated URL works correctly
-        self.assertEqual("JobNumber1", j.name)
+        self.assertEqual("JobNumber1", job.name)
         
-        build = j.last_build
+        build = job.last_build
         
-        self.assertEqual(2, build.build_number)
+        self.assertEqual(2, build.number)
         
     def test_last_good_build(self):
         job_url = self._jenkins_url + "/job/JobNumber1"
-        
-        j = Job.easy_connect(job_url, None)
-        
+
+        j = Jenkins.easy_connect(self._jenkins_url, None)
+
+        job = j.get_job(job_url)
+
         #sanity check: make sure our generated URL works correctly
-        self.assertEqual("JobNumber1", j.name)
+        self.assertEqual("JobNumber1", job.name)
         
-        build = j.last_good_build
+        build = job.last_good_build
         
-        self.assertEqual(1, build.build_number)
+        self.assertEqual(1, build.number)
         self.assertEqual("SUCCESS", build.result)
         
     def test_last_failed_build(self):
         job_url = self._jenkins_url + "/job/JobNumber1"
-        
-        j = Job.easy_connect(job_url, None)
-        
+
+        j = Jenkins.easy_connect(self._jenkins_url, None)
+
+        job = j.get_job(job_url)
+
         #sanity check: make sure our generated URL works correctly
-        self.assertEqual("JobNumber1", j.name)
+        self.assertEqual("JobNumber1", job.name)
         
-        build = j.last_failed_build
+        build = job.last_failed_build
         
-        self.assertEqual(2, build.build_number)
+        self.assertEqual(2, build.number)
         self.assertEqual("FAILURE", build.result)
 
     def test_get_builds(self):
         job_url = self._jenkins_url + "/job/JobNumber1"
-        
-        j = Job.easy_connect(job_url, None)
-        
+
+        j = Jenkins.easy_connect(self._jenkins_url, None)
+
+        job = j.get_job(job_url)
+
         #sanity check: make sure our generated URL works correctly
-        self.assertEqual("JobNumber1", j.name)
+        self.assertEqual("JobNumber1", job.name)
         
-        builds = j.recent_builds
+        builds = job.recent_builds
         
         self.assertEqual(2, len(builds))
         expected_numbers = [1, 2]
         expected_results = ["SUCCESS", "FAILURE"]
         for build in builds:
-            self.assertTrue(build.build_number in expected_numbers)
+            self.assertTrue(build.number in expected_numbers)
             self.assertTrue(build.result in expected_results)
-            expected_numbers.remove(build.build_number)
-            expected_results.remove(build.result)"""
+            expected_numbers.remove(build.number)
+            expected_results.remove(build.result)
 
 
 class latest_tests(lts_tests):
