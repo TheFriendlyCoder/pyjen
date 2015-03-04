@@ -306,6 +306,7 @@ class Jenkins(object):
         :returns: An object to manage the newly created view
         :rtype: :class:`~.view.View`
         """
+        view_type = view_type.replace("__", "_")
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         data = {
             "name": view_name,

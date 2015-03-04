@@ -116,6 +116,7 @@ class NestedView(View):
         :param str view_name: name of the new sub-view to create
         :param str view_type: data type for newly generated view
         """
+        view_type = view_type.replace("__", "_")
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         data = {
             "name": view_name,
