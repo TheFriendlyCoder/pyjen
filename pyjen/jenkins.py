@@ -69,22 +69,14 @@ class Jenkins(object):
             Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
         :rtype: :class:`.Jenkins`
         """
-        # Default to anonymous access
-        username = None
-        password = None
-
-        # If not explicit credentials provided, load credentials from any config files
-        if not credentials:
+        # If no explicit credentials provided, load credentials from any config files
+        if credentials is None:
             config = JenkinsConfigParser()
             config.read(JenkinsConfigParser.get_default_configfiles())
             credentials = config.get_credentials(url)
-            
-        # If explicit credentials have been found, use them rather than use anonymous access 
-        if credentials:
-            username = credentials[0]
-            password = credentials[1]
-        
-        http_io = DataRequester(url, username, password)
+
+        http_io = DataRequester(url)
+        http_io.credentials = credentials
         retval = Jenkins(http_io)
 
         # Sanity check: make sure the given IO object can 

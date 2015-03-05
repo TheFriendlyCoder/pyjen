@@ -26,7 +26,7 @@ class DataRequester (object):
     _configxml_cache = dict()
     _needs_flush = False
 
-    def __init__(self, jenkins_url, username, password):
+    def __init__(self, jenkins_url):
         """
         :param str jenkins_url: 
             HTTP URL to use for all subsequent IO operations performed on this object.
@@ -38,20 +38,8 @@ class DataRequester (object):
         """
 
         self._url = jenkins_url.rstrip("/\\") + "/"
-        if not username or not password:
-            self._credentials = None
-        else:
-            self._credentials = (username, password)
-        
-    @property
-    def url(self):
-        """Gets the URL used by all IO operations on this object
+        self._credentials = None
 
-        :returns: the URL used by all IO operations on this object
-        :rtype: :class:`str`
-        """
-        return self._url
-    
     @property
     def credentials(self):
         """Gets the authentication credentials used for all IO operations on this object
@@ -60,6 +48,23 @@ class DataRequester (object):
         :rtype: :func:`tuple` of :class:`str`
         """
         return self._credentials
+
+    @credentials.setter
+    def credentials(self, creds):
+        """Sets new creds for authenticatng this Jenkins connection
+
+        :param tuple creds: 2-tuple containing user name and password
+        """
+        self._credentials = creds
+
+    @property
+    def url(self):
+        """Gets the URL used by all IO operations on this object
+
+        :returns: the URL used by all IO operations on this object
+        :rtype: :class:`str`
+        """
+        return self._url
     
     def clone(self, new_url=None):
         """create a copy of this connection object
@@ -75,11 +80,13 @@ class DataRequester (object):
         else:
             clone_url = self._url
 
+        retval = DataRequester(clone_url)
+
         if self._credentials:
-            return DataRequester (clone_url, self._credentials[0], self._credentials[1])
-        else:
-            return DataRequester (clone_url, None, None)
-        
+            retval.credentials = self._credentials
+
+        return retval
+
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
 
@@ -92,8 +99,8 @@ class DataRequester (object):
         """
         tmp = self._url
         if path is not None:
-            tmp = urljoin(tmp, path.lstrip("/\\"))  
-        
+            tmp = urljoin(tmp, path.lstrip("/\\"))
+
         return self._get_raw_text(tmp)
     
     def _get_raw_text(self, url):
