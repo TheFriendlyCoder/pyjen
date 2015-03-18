@@ -249,7 +249,20 @@ class View(PluginBase):
         
     def report(self):
         """Composes a report on the jobs contained within the view
-
+        
+        Contents:
+        view: Name of the view
+        total_jobs: Number of all jobs contained in the view
+        broken_jobs_count: Number of all broken jobs in the view
+        unstable_jobs_count: Number of all unstable jobs in the view
+        disabled_jobs_count: Number of all disabled jobs in the view
+        hard: Percentage of jobs in the view that are not broken or unstable
+        soft: Percentage of jobs in the view that are not broken
+        broken_jobs: Comma separated list of broken jobs
+        unstable_jobs: Comma separated list of unstable jobs
+        disabled_jobs: Comma separated list of disabled jobs
+        NOTE: Lists of job URLs are sorted alphabetically ascending
+        
         :return: Dictionary containing current metrics of all the jobs in the view
         """
         data = self._controller.get_api_data()
