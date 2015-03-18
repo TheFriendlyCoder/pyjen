@@ -246,6 +246,47 @@ class View(PluginBase):
         new_view = self.clone(new_name)
         self.delete()
         self._controller = new_view._controller
+        
+    def report(self):
+        """Composes a report on the jobs contained within the view
+
+        :return: Dictionary containing current metrics of all the jobs in the view
+        """
+        data = self._controller.get_api_data()
+
+        broken_jobs = []
+        disabled_jobs = []
+        unstable_jobs = []
+        broken_job_count = 0
+        disabled_jobs_count = 0
+        unstable_job_count = 0
+
+        for job in data["jobs"]:
+            if job["color"] == "red":
+                broken_job_count += 1
+                broken_jobs.append(job["url"])
+            elif job["color"] == "disabled":
+                disabled_jobs_count += 1
+                disabled_jobs.append(job["url"])
+            elif job["color"] == "yellow":
+                unstable_job_count += 1
+                unstable_jobs.append(job["url"])
+
+        # Alphabetically sort the job lists
+        broken_jobs.sort(key=str.lower)
+        disabled_jobs.sort(key=str.lower)
+        unstable_jobs.sort(key=str.lower)
+
+        return {"view": self.name,
+                "total_jobs": self.job_count,
+                "broken_jobs_count": broken_job_count,
+                "disabled_jobs_count": disabled_jobs_count,
+                "unstable_jobs_count": unstable_job_count,
+                "hard": "%0.0f" % float((self.job_count - broken_job_count - unstable_job_count) / self.job_count * 100),
+                "soft": "%0.0f" % float((self.job_count - broken_job_count) / self.job_count * 100),
+                "broken_jobs": ('[%s]' % ', '.join(map(str, broken_jobs)))[1:-1],
+                "unstable_jobs": ('[%s]' % ', '.join(map(str, unstable_jobs)))[1:-1],
+                "disabled_jobs": ('[%s]' % ', '.join(map(str, disabled_jobs)))[1:-1]}
 
 if __name__ == "__main__":  # pragma: no cover
 
