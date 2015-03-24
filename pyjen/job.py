@@ -106,6 +106,15 @@ class Job(PluginBase):
 
         data = self._controller.get_api_data()
         return data['name']
+        
+    @property
+    def url(self):
+        """Returns the URL to the job
+
+        :returns: The URL of the job
+        :rtype: :class:'str'
+        """
+        return self._controller.url
 
     @property
     def is_disabled(self):

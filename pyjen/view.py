@@ -247,23 +247,19 @@ class View(PluginBase):
         self.delete()
         self._controller = new_view._controller
         
-    def report(self):
+    def view_metrics(self):
         """Composes a report on the jobs contained within the view
-        
+
         Contents:
-        view: Name of the view
-        total_jobs: Number of all jobs contained in the view
-        broken_jobs_count: Number of all broken jobs in the view
-        unstable_jobs_count: Number of all unstable jobs in the view
-        disabled_jobs_count: Number of all disabled jobs in the view
-        hard: Percentage of jobs in the view that are not broken or unstable
-        soft: Percentage of jobs in the view that are not broken
-        broken_jobs: Comma separated list of broken jobs
-        unstable_jobs: Comma separated list of unstable jobs
-        disabled_jobs: Comma separated list of disabled jobs
-        NOTE: Lists of job URLs are sorted alphabetically ascending
-        
-        :return: Dictionary containing current metrics of all the jobs in the view
+        broken_job_count: Number of all broken jobs in the view
+        unstable_job_count: Number of all unstable jobs in the view
+        disabled_job_count: Number of all disabled jobs in the view
+        broken_jobs: List of broken jobs
+        unstable_jobs: List of unstable jobs
+        disabled_jobs: List of disabled jobs
+                
+        :return: Dictionary
+        :rtype: :class:'dict'
         """
         data = self._controller.get_api_data()
 
@@ -275,31 +271,26 @@ class View(PluginBase):
         unstable_job_count = 0
 
         for job in data["jobs"]:
+
+            temp_data_io = self._controller.clone(job['url'])
+            temp_job = Job._create(temp_data_io, self._master, job['name'])
+
             if job["color"] == "red":
                 broken_job_count += 1
-                broken_jobs.append(job["url"])
+                broken_jobs.append(temp_job)
             elif job["color"] == "disabled":
                 disabled_jobs_count += 1
-                disabled_jobs.append(job["url"])
+                disabled_jobs.append(temp_job)
             elif job["color"] == "yellow":
                 unstable_job_count += 1
-                unstable_jobs.append(job["url"])
+                unstable_jobs.append(temp_job)
 
-        # Alphabetically sort the job lists
-        broken_jobs.sort(key=str.lower)
-        disabled_jobs.sort(key=str.lower)
-        unstable_jobs.sort(key=str.lower)
-
-        return {"view": self.name,
-                "total_jobs": self.job_count,
-                "broken_jobs_count": broken_job_count,
+        return {"broken_jobs_count": broken_job_count,
                 "disabled_jobs_count": disabled_jobs_count,
                 "unstable_jobs_count": unstable_job_count,
-                "hard": "%0.0f" % float((self.job_count - broken_job_count - unstable_job_count) / self.job_count * 100),
-                "soft": "%0.0f" % float((self.job_count - broken_job_count) / self.job_count * 100),
-                "broken_jobs": ('[%s]' % ', '.join(map(str, broken_jobs)))[1:-1],
-                "unstable_jobs": ('[%s]' % ', '.join(map(str, unstable_jobs)))[1:-1],
-                "disabled_jobs": ('[%s]' % ', '.join(map(str, disabled_jobs)))[1:-1]}
+                "broken_jobs": broken_jobs,
+                "unstable_jobs": unstable_jobs,
+                "disabled_jobs": disabled_jobs}
 
 if __name__ == "__main__":  # pragma: no cover
 
