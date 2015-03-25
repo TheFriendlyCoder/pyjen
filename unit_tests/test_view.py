@@ -2,7 +2,6 @@ from pyjen.view import View
 import unittest
 import pytest
 from mock import MagicMock, PropertyMock
-import copy
 
 class vView(View):
     type = ""
