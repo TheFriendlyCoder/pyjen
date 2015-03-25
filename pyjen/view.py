@@ -249,17 +249,9 @@ class View(PluginBase):
         
     def view_metrics(self):
         """Composes a report on the jobs contained within the view
-
-        Contents:
-        broken_job_count: Number of all broken jobs in the view
-        unstable_job_count: Number of all unstable jobs in the view
-        disabled_job_count: Number of all disabled jobs in the view
-        broken_jobs: List of broken jobs
-        unstable_jobs: List of unstable jobs
-        disabled_jobs: List of disabled jobs
                 
-        :return: Dictionary
-        :rtype: :class:'dict'
+        :return: Dictionary containing metrics about the view
+        :rtype: :class:`dict`
         """
         data = self._controller.get_api_data()
 
