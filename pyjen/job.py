@@ -20,6 +20,18 @@ class Job(PluginBase):
         self._master = jenkins_master
         self._name = None
 
+    def __eq__(self, other):
+        """ Compares an object to the current object and determines if they are the same
+        """
+        if isinstance(other, Job):
+            return other.name == self._name
+        return False
+
+    def __hash__(self):
+        """ Allows the current object to be hashable
+        """
+        return hash(self.name)
+
     @staticmethod
     def create(controller, jenkins_master):
         """Factory method used to instantiate the appropriate job type for a given configuration
@@ -106,7 +118,7 @@ class Job(PluginBase):
 
         data = self._controller.get_api_data()
         return data['name']
-        
+
     @property
     def url(self):
         """Returns the URL to the job
