@@ -95,6 +95,17 @@ class Build(object):
         return self._data_io.get_text("/consoleText")
 
     @property
+        def result(self):
+        """Gets the final status of this build
+
+        :return: the status of this build. Typically "SUCCESS" or "FAILURE" but may also be "UNSTABLE"
+        :rtype: `func`:str
+        """
+        data = self._data_io.get_api_data()
+
+        return data['result']
+
+    @property
     def changeset(self):
         """Gets the list of SCM changes associated with this build
 
