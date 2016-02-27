@@ -182,6 +182,51 @@ class view_tests(unittest.TestCase):
         v.clone_all_jobs(orig_job_name, new_job_name)
 
         mock_jenkins._clone_job.assert_called_once_with(orig_job_name, new_job_name)
+        
+    def test_view_metrics(self):
+        mock_data_io = MagicMock()
+        jobs = []
+        jobs.append({'url': 'http://fake/job/a',
+                     'name': 'a',
+                     'color': 'blue'})
+        jobs.append({'url': 'http://fake/job/b',
+                     'name': 'b',
+                     'color': 'red'})
+        jobs.append({'url': 'http://fake/job/c',
+                     'name': 'c',
+                     'color': 'yellow'})
+        jobs.append({'url': 'http://fake/job/d',
+                     'name': 'd',
+                     'color': 'disabled'})
+        jobs.append({'url': 'http://fake/job/e',
+                     'name': 'e',
+                     'color': 'red'})
+
+        def mock_clone(job_url):
+            temp_data_io = MagicMock()
+            temp_data_io.url = job_url
+            return temp_data_io
+
+        mock_data_io.get_api_data.return_value = {'name': "MyView1", 'jobs': jobs}
+        mock_data_io.clone.side_effect = mock_clone
+
+        v = vView(mock_data_io, None)
+        result = v.view_metrics()
+        
+        self.assertEquals(result['broken_jobs_count'], 2)
+        self.assertEquals(result['disabled_jobs_count'], 1)
+        self.assertEquals(result['unstable_jobs_count'], 1)
+        self.assertEquals(v.job_count, 5)
+        
+        for broken_job in result['broken_jobs']:
+            self.assertIn(broken_job.url, ['http://fake/job/b', 'http://fake/job/e'])
+        
+        for unstable_job in result['unstable_jobs']:
+            self.assertIn(unstable_job.url, ['http://fake/job/c'])
+            
+        for disabled_job in result['disabled_jobs']:
+            self.assertIn(disabled_job.url, ['http://fake/job/d'])
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

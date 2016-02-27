@@ -35,7 +35,7 @@ via simple Python commands.
 
 Comments, suggestions and bugs may be reported to the project `maintainer <mailto:kevin@thefriendlycoder.com>`_
 
-Full API documentation can be found on `ReadTheDocs.org <http://pyjen.readthedocs.org/en/latest/>`_.
+Full API documentation can be found on `ReadTheDocs.org <http://pyjen.readthedocs.org/en/v0.0.10dev/>`_.
 
 =================
 Quick start guide
@@ -50,8 +50,8 @@ Quick start guide
 
 3. import the pyjen module and start scripting! See below for some common examples.
 
-For a more in-depth guide to contributing to the project, see our contributors guide on
-`ReadTheDocs.com <https://pyjen.readthedocs.org/en/latest/>`_.
+For a more in-depth guide to contributing to the project, see our 
+`contributors guide <https://pyjen.readthedocs.org/en/v0.0.10dev/contrib_guide.html>`_.
 
 ================
 Examples

@@ -3,5 +3,5 @@ Abstraction layer for the Jenkins REST API designed to simplify the interaction 
 from the Python scripting environment.
 """
 
-__version__ = "0.0.9dev"
+__version__ = "0.0.10dev"
 

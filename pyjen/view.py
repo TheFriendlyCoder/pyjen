@@ -246,6 +246,43 @@ class View(PluginBase):
         new_view = self.clone(new_name)
         self.delete()
         self._controller = new_view._controller
+        
+    def view_metrics(self):
+        """Composes a report on the jobs contained within the view
+                
+        :return: Dictionary containing metrics about the view
+        :rtype: :class:`dict`
+        """
+        data = self._controller.get_api_data()
+
+        broken_jobs = []
+        disabled_jobs = []
+        unstable_jobs = []
+        broken_job_count = 0
+        disabled_jobs_count = 0
+        unstable_job_count = 0
+
+        for job in data["jobs"]:
+
+            temp_data_io = self._controller.clone(job['url'])
+            temp_job = Job._create(temp_data_io, self._master, job['name'])
+
+            if job["color"] == "red":
+                broken_job_count += 1
+                broken_jobs.append(temp_job)
+            elif job["color"] == "disabled":
+                disabled_jobs_count += 1
+                disabled_jobs.append(temp_job)
+            elif job["color"] == "yellow":
+                unstable_job_count += 1
+                unstable_jobs.append(temp_job)
+
+        return {"broken_jobs_count": broken_job_count,
+                "disabled_jobs_count": disabled_jobs_count,
+                "unstable_jobs_count": unstable_job_count,
+                "broken_jobs": broken_jobs,
+                "unstable_jobs": unstable_jobs,
+                "disabled_jobs": disabled_jobs}
 
 if __name__ == "__main__":  # pragma: no cover
 
