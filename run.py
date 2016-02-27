@@ -67,29 +67,6 @@ def _split_requirement(package_requirement):
 
     return package_name, package_version
 
-def _find_missing_packages():
-    """Helper function that generates a list of packages that need to be installed
-
-    :return: list of 0 or more packages that need to be installed
-    :rtype: :class:`list`
-    """
-    import pip
-
-    #Using pip, see what packages are currently installed
-    installed_packages = pip.get_installed_distributions()
-    required_packages = REQUIREMENTS
-
-    #Now, remove any currently installed packages from our list of dependencies
-    for ip in installed_packages:
-        for rp in required_packages:
-            (name, version) = _split_requirement(rp)
-            if ip.key == name:
-                if _version_string_to_tuple(ip.version) >= version:
-                    required_packages.remove(rp)
-        if len(required_packages) == 0:
-            return []
-
-    return required_packages
 
 def _prepare_env():
     """Adds all PyJen dependencies to the Python runtime environment used to call this script
@@ -103,18 +80,12 @@ def _prepare_env():
         modlog.error("PIP package not installed. See this website for details on how to install it: " + pip_url)
         exit(1)
 
-    required_packages = _find_missing_packages()
-
-    if len(required_packages) == 0:
-        modlog.info("All required dependencies already installed")
-        return
-
-    modlog.info("Installing the following new packages: " + str(required_packages))
+    required_packages = REQUIREMENTS
 
     # Construct a list of arguments to pass to the PIP tool
     pip_args = []
 
-    #See if any web proxy is enabled on the system an use it if found
+    # See if any web proxy is enabled on the system and use it if found
     if 'http_proxy' in os.environ:
         proxy = os.environ['http_proxy']
         pip_args.append('--proxy')
@@ -130,26 +101,32 @@ def _prepare_env():
     # Configure PIP to do a silent install to avoid overly verbose output on the command line
     pip_args.append('--quiet')
 
-    # Then, redirect all output to log files for later auditing
-    pip_log_file = os.path.join(log_folder, "pip_install.log")
-    if os.path.exists(pip_log_file):
-        os.remove(pip_log_file)
-    pip_args.append('--log')
-    pip_args.append(pip_log_file)
-
     pip_error_log = os.path.join(log_folder, "pip_error.log")
     pip_args.append('--log-file')
     pip_args.append(pip_error_log)
 
+    # Enable the following to debug package installation problems
+    #pip_args.append('--no-cache')
+
     # Finally, run the installation process
     modlog.info('installing dependencies...')
     try:
-        pip.main(initial_args=pip_args)
-    except:
-        modlog.info("Error installing packages. See {0} for details.".format(pip_error_log))
+        # HACK: PyLint has a transitive dependency on 'wrapt' and this package has some bugs which
+        #       can prevent it from being installed on Windows platforms without Visual Studio
+        #       Setting this environment variable disables all native, compiled code modules from this
+        #       lib allowing it to be installed consistently.
+        os.environ["WRAPT_EXTENSIONS"] = "FALSE"
+        retval = pip.main(pip_args)
+        if retval != 0:
+            modlog.error("Error installing packages. See {0} for details.".format(pip_error_log))
+            exit(1)
+
+    except Exception as err:
+        modlog.error("Error installing packages. See {0} for details.".format(pip_error_log))
+        modlog.error(err)
         exit(1)
 
-    modlog.info("dependencies installed successfully")
+    modlog.info("All dependencies installed successfully")
 
 
 def _show_version():
@@ -161,6 +138,7 @@ def _show_version():
 def _make_package():
     """Creates the redistributable package for the PyJen project"""
     import re
+    from distutils.core import run_setup
 
     # delete any pre-existing packages
     if os.path.exists("dist"):
@@ -170,19 +148,24 @@ def _make_package():
     modlog.info("creating package...")
 
     try:
-        result = subprocess.check_output(["python", "setup.py", "bdist_wheel"],
-                                     stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as err:
-        modlog.error("Failed to generate wheel file ({0})".format(err.returncode))
-        modlog.error(err.output)
+        distobj = run_setup("setup.py", ["-q", "bdist_wheel"])
+        distobj.run_commands()
+    except Exception as err:
+        modlog.error("Failed to generate wheel file")
+        modlog.error(err)
         exit(1)
-    modlog.debug(result)
 
     # delete intermediate folders
-    shutil.rmtree("build")
-    shutil.rmtree("pyjen.egg-info")
+    if os.path.exists("build"):
+        shutil.rmtree("build")
+    if os.path.exists("pyjen.egg-info"):
+        shutil.rmtree("pyjen.egg-info")
 
     #sanity check: make sure wheel file exists
+    if not os.path.exists("dist"):
+        modlog.error("Package folder ./dist not found. Package operation must have failed.")
+        sys.exit(1)
+
     package_contents = os.listdir("dist")
     if len(package_contents) > 1:
         modlog.warning("Multiple files detected in package folder. Only one .whl file expected.")
@@ -410,6 +393,9 @@ def _configure_logger():
     All info messages and higher will be shown on the console
     All messages from all priorities will be streamed to a log file
     """
+    if not os.path.exists(log_folder):
+        os.makedirs(log_folder)
+
     global modlog
     modlog = logging.getLogger("pyjen")
     modlog.setLevel(logging.DEBUG)
@@ -466,11 +452,9 @@ def _get_args():
     return _args
 
 
-if __name__ == "__main__":
-    if not os.path.exists(log_folder):
-        os.makedirs(log_folder)
+def main():
     _configure_logger()
-    
+
     args = _get_args()
 
     if args.prep_env:
@@ -493,3 +477,6 @@ if __name__ == "__main__":
 
     if args.publish:
         _publish()
+
+if __name__ == "__main__":
+    main()
