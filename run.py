@@ -72,6 +72,33 @@ def _split_requirement(package_requirement):
     return package_name, package_version
 
 
+def _get_new_pyjen_version():
+    """Calculates new version number for the PyJen package
+
+    :returns: new version number
+    :rtype: :func:`str`
+    """
+    import pyjen
+    old_version = pyjen.__version__
+    minor_ver = old_version.split(".")[2]
+    assert minor_ver.index("dev") >= 0
+    minor_digit = minor_ver.replace("dev", "")
+
+    return old_version.replace(minor_ver, "{0}dev".format(int(minor_digit)+1))
+
+
+def _update_pyjen_version():
+    """Updates the minor version of the PyJen package in the init.py"""
+    import fileinput
+    import pyjen
+    old_version = pyjen.__version__
+    new_version = _get_new_pyjen_version()
+
+    with fileinput.FileInput("./pyjen/__init__.py", inplace=True) as file:
+        for line in file:
+            print(line.replace(old_version, new_version), end='')
+
+
 def _prepare_env():
     """Adds all PyJen dependencies to the Python runtime environment used to call this script
 
@@ -185,7 +212,7 @@ def _make_package():
         modlog.error("Expected output file (.whl) not found in ./dist folder.")
         sys.exit(1)
 
-    # todo: test package
+    # TODO: test package
     # pushd functional_tests > /dev/null
     # ./package_tests.sh
 
@@ -196,17 +223,21 @@ def _publish():
     """Publishes a PyJen release to PyPi"""
     modlog.info("publishing release...")
 
-    try:
-        result = subprocess.check_output(["python", "setup.py", "bdist_wheel", "upload"],
-                                     stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as err:
-        modlog.error("Failed to publish new PyJen release ({0})".format(err.returncode))
-        modlog.error(err.output)
-        exit(1)
-    modlog.debug(result)
+    # TODO: lay tag on release
 
-    # todo: after the publish completes, auto-update the version number
-    # todo: lay tag on release
+    from distutils.core import run_setup
+    try:
+        # NOTE: default sphinx parameters are auto-loaded from the setup.cfg file
+        distobj = run_setup("setup.py", ["bdist_wheel", "upload"])
+        distobj.run_commands()
+    except Exception as err:
+        modlog.error("Failed to upload new package to PyPI.")
+        modlog.error(err)
+        exit(1)
+
+
+    _update_pyjen_version()
+    # TODO: Commit change to init.py
     modlog.info("release published successfully")
 
 
@@ -233,6 +264,7 @@ def _code_analysis():
 
     # generate cyclomatic complexities for source files in XML format for integration with external tools
     pyjen_path = os.path.join(os.getcwd(), "pyjen")
+    # TODO: Rework this to use the radon library directly. Details TBD.
     try:
         result = subprocess.check_output(["radon", "cc", "-sa", "--xml", pyjen_path],
                                      stderr=subprocess.STDOUT, universal_newlines=True)
@@ -326,12 +358,6 @@ def _run_tests(RunFuncTests):
 def _make_docs():
     """Generates the online documentation for the project"""
     modlog.info("Generating API documentation...")
-
-    import sys
-    if (3, 0) <= sys.version_info[:2] < (3, 3):
-        p_ver = _version_tuple_to_string(sys.version_info[:3])
-        modlog.info("Sphinx documentation tool does not support Python v{0}".format(p_ver))
-        exit(1)
 
     if _get_package_version("Sphinx") < (1, 2, 3):
         modlog.error("Unsupported Sphinx version detected: " + _get_package_version("Sphinx"))
@@ -482,3 +508,4 @@ if __name__ == "__main__":
     # _prepare_env()
     # _make_package()
     # _make_docs()
+    # _publish()
