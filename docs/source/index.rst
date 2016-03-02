@@ -57,7 +57,7 @@ which should result in output that looks something like this:
 
 ::
 
-    pip 1.5.6 from C:\Users\kevin\Documents\python\pyjen\py3\lib\site-packages (python 3.4)
+    pip 8.0.2 from C:\Python34x64\lib\site-packages (python 3.4)
 
 3. Install PyJen directly from PyPI using PIP:
 
