@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PyJen'
-copyright = '2015, Kevin S. Phillips'
+copyright = '2016, Kevin S. Phillips'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
