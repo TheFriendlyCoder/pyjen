@@ -80,11 +80,9 @@ def _get_new_pyjen_version():
     """
     import pyjen
     old_version = pyjen.__version__
-    minor_ver = old_version.split(".")[2]
-    assert minor_ver.index("dev") >= 0
-    minor_digit = minor_ver.replace("dev", "")
+    old_digit = old_version.split(".")
+    return "{0}.{1}.{2}.{3}".format(old_digit[0], old_digit[1], int(old_digit[2])+1, old_digit[3])
 
-    return old_version.replace(minor_ver, "{0}dev".format(int(minor_digit)+1))
 
 
 def _update_pyjen_version():
@@ -503,9 +501,10 @@ def main():
 
 if __name__ == "__main__":
     _configure_logger()
-    #main()
+    main()
     # _show_version()
     # _prepare_env()
     # _make_package()
-    _make_docs()
+    # _make_docs()
+    # print(_get_new_pyjen_version())
     # _publish()
