@@ -364,7 +364,7 @@ def _make_docs():
         modlog.error("Please run the --prep_env operation to property configure your environment.")
         exit(1)
 
-    source_dir = os.path.join(os.getcwd(), "docs", "source")
+    source_dir = os.path.join(os.getcwd(), "docs")
 
     # TODO: Find a way to reduce the verbosity of the output
 
@@ -393,7 +393,7 @@ def _make_docs():
     from distutils.core import run_setup
     try:
         # NOTE: default sphinx parameters are auto-loaded from the setup.cfg file
-        distobj = run_setup("setup.py", ["build_sphinx"])
+        distobj = run_setup("setup.py", ["build_sphinx", "-q"])
         distobj.run_commands()
     except Exception as err:
         modlog.error("Failed to generate online documentation")
@@ -503,9 +503,9 @@ def main():
 
 if __name__ == "__main__":
     _configure_logger()
-    main()
+    #main()
     # _show_version()
     # _prepare_env()
     # _make_package()
-    # _make_docs()
+    _make_docs()
     # _publish()
