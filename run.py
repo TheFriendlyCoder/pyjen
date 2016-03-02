@@ -343,12 +343,11 @@ def _make_docs():
     # TODO: Find a way to reduce the verbosity of the output
 
     # First we make sure the API docs are up to date
-    #       -f  force overwrite of output files
-    #       -e  separate each module to its own page
     try:
-        # TODO: find out why api docs are not being overwritten. -f should take care of that
         from sphinx import apidoc
-        return_code = apidoc.main(["-f", "-e", "-o", source_dir, "pyjen"])
+        # NOTE: The first parameter to main is assumed to be the name of the executable that called
+        #       main, which in our case doesn't exist. So we give it an empty value
+        return_code = apidoc.main(["", "--force", "--separate", "-o", source_dir, "pyjen"])
         if return_code is not None and return_code != 0:
             modlog.error("Failed to generate API docs ({0}).".format(return_code))
             exit(1)
@@ -363,9 +362,6 @@ def _make_docs():
     build_dir = os.path.join(os.getcwd(), "build", "sphinx")
     if os.path.exists(build_dir):
         shutil.rmtree(build_dir)
-
-    # TODO: probably should separate the config.py file from the .rst source files in the docs folder
-    # TODO: probably should separate the non-API docs from the API docs in the docs\source folder (ie: docs\api)
 
     # Generate the full online documentation in HTML format
     from distutils.core import run_setup
@@ -385,7 +381,8 @@ def _make_docs():
     with open("pypi_homepage.html", "w") as outfile:
         outfile.write(homepage_html.decode("utf-8"))
 
-    # TODO: Find a way to do some basic verification on the documentation output
+    # TODO: Optionally open the prototype homepage in the default browser
+    # TODO: Optionally open the index.html for the online docs in default browser
     modlog.info("Documentation complete")
 
 
