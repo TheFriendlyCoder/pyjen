@@ -6,6 +6,8 @@ import logging
 import subprocess
 import shutil
 import sys
+from io import StringIO
+from contextlib import redirect_stdout
 
 # List of packages needed when building sources for pyjen
 REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
@@ -82,7 +84,6 @@ def _get_new_pyjen_version():
     old_version = pyjen.__version__
     old_digit = old_version.split(".")
     return "{0}.{1}.{2}.{3}".format(old_digit[0], old_digit[1], int(old_digit[2])+1, old_digit[3])
-
 
 
 def _update_pyjen_version():
@@ -233,97 +234,125 @@ def _publish():
         modlog.error(err)
         exit(1)
 
-
     _update_pyjen_version()
     # TODO: Commit change to init.py
     modlog.info("release published successfully")
 
 
+class redirect_stderr:
+    """Context manager for temporarily redirecting stderr to another file
+
+    based on redirect_stdout from contextlib"""
+
+    def __init__(self, new_target):
+        self._new_target = new_target
+        # We use a list of old targets to make this CM re-entrant
+        self._old_targets = []
+
+    def __enter__(self):
+        self._old_targets.append(sys.stdout)
+        sys.stderr = self._new_target
+        return self._new_target
+
+    def __exit__(self, exctype, excinst, exctb):
+        sys.stderr = self._old_targets.pop()
+
+
+def _run_pylint():
+    # PyLint code analysis
+    from pylint import lint
+    modlog.info("Running PyLint static analysis...")
+
+    # TODO: Add an optional command line switch that can flag an operation as running on CI
+    #       when set we then only generate parseable output. When not set we only generate HTML output
+
+    # setup our lint options
+    params = ["pyjen"]
+    params.extend(["-f", "html"])  # parameters for user-friendly output
+
+    pylint_report = os.path.join(os.getcwd(), "logs", "pylint_report.html")   # HTML output for humans to read
+    # pylint_report = os.path.join(os.getcwd(), "logs", "pylint_report.txt")   # plain-text output for automation
+    pylint_log = os.path.join(os.getcwd(), "logs", "pylint.log")
+
+    standard_output = StringIO()
+    error_output = StringIO()
+    with redirect_stdout(standard_output):
+        with redirect_stderr(error_output):
+            lint_obj = lint.Run(params, exit=False)
+
+    if 0 < lint_obj.linter.msg_status < 32:
+        modlog.warning("PyLint defects detected (code {0})".format(lint_obj.linter.msg_status))
+        modlog.warning("Check PyLint report in " + os.path.relpath(pylint_report))
+    elif lint_obj.linter.msg_status == 0:
+        modlog.info("PyLint analysis successful. No warnings detected.")
+    else:
+        modlog.info("PyLint analysis failed (code {0})".format(lint_obj.linter.msg_status))
+        modlog.info("See log file for details " + os.path.relpath(pylint_log))
+
+    with open(pylint_report, "w") as fh:
+        fh.write(standard_output.getvalue())
+    with open(pylint_log, "w") as fh:
+        fh.write(error_output.getvalue())
+    standard_output.close()
+    error_output.close()
+
+
+def _run_complexity_analysis():
+    # generate cyclomatic complexities for source files in XML format for integration with external tools
+    pyjen_path = os.path.join(os.getcwd(), "pyjen")
+    from radon.cli import cc
+
+    # TODO: output in XML format when running on CI
+    standard_output = StringIO()
+    with redirect_stdout(standard_output):
+        cc(paths=[pyjen_path], show_complexity=True, show_closures=True, total_average=True, xml=False)
+
+    cc_report = os.path.join(log_folder, "radon_complexity.xml")
+    with open(cc_report, "w") as fh:
+        fh.write(standard_output.getvalue())
+    standard_output.close()
+
+    modlog.info("Cyclomatic complexity analysis complete. See " + os.path.relpath(cc_report))
+
+
+def _run_raw_analysis():
+    pyjen_path = os.path.join(os.getcwd(), "pyjen")
+    from radon.cli import raw
+
+    standard_output = StringIO()
+    with redirect_stdout(standard_output):
+        raw(paths=[pyjen_path], summary=True)
+
+    raw_report = os.path.join(log_folder, "raw_stats.txt")
+    with open(raw_report, "w") as fh:
+        fh.write(standard_output.getvalue())
+    standard_output.close()
+
+    modlog.info("Raw code metrics generated successfully. See " + os.path.relpath(raw_report))
+
+
+def _run_mi_analysis():
+    pyjen_path = os.path.join(os.getcwd(), "pyjen")
+    from radon.cli import mi
+
+    standard_output = StringIO()
+    with redirect_stdout(standard_output):
+        mi(paths=[pyjen_path], show=True)
+
+    mi_report = os.path.join(log_folder, "mi_stats.txt")
+    with open(mi_report, "w") as fh:
+        fh.write(standard_output.getvalue())
+    standard_output.close()
+
+    modlog.info("MI code metrics generated successfully. See " + os.path.relpath(mi_report))
+
 def _code_analysis():
     """Generates code analysis reports and metrics on the PyJen sources"""
     modlog.info("Running code analysis tools...")
-
-    # PyLint code analysis
-    from pylint import epylint as lint
-
-    # now we generate a pylint report in HTML format
-    params = 'pyjen -f html'
-    with open(os.path.join(log_folder, "pylint.html"), "w") as std:
-        with open(os.path.join(log_folder, "pylint_html_err.log"), "w") as err:
-            lint.py_run(params, stdout=std, stderr=err, script="pylint")
-
-    # next we generate a pylint report in 'parseable' format, for use on build automation
-    params = 'pyjen'
-    with open(os.path.join(log_folder, "pylint.txt"), "w") as std:
-        with open(os.path.join(log_folder, "pylint_plain_err.log"), "w") as err:
-            lint.py_run(params, stdout=std, stderr=err, script="pylint")
-
-    modlog.info("Lint analysis can be found in ./" + os.path.relpath(log_folder, os.getcwd()) + "/pylint.html")
-
-    # generate cyclomatic complexities for source files in XML format for integration with external tools
-    pyjen_path = os.path.join(os.getcwd(), "pyjen")
-    # TODO: Rework this to use the radon library directly. Details TBD.
-    try:
-        result = subprocess.check_output(["radon", "cc", "-sa", "--xml", pyjen_path],
-                                     stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as err:
-        modlog.error("Failed to calculate cyclomatic complexity ({0})".format(err.returncode))
-        modlog.error(err.output)
-        exit(1)
-    complexity_log_filename = os.path.join(log_folder, "radon_complexity.xml")
-    with open(complexity_log_filename, "w") as complexity_log_file:
-        complexity_log_file.write(result)
-
-    # next run all code analysers against all source files
-    stats_log_filename = os.path.join(log_folder, "stats_cc.log")
-    with open(stats_log_filename, "w") as stats_log:
-        for (folder, subfolders, files) in os.walk(pyjen_path):
-            for cur_file in files:
-                if os.path.splitext(cur_file)[1] == ".py":
-                    cur_file_full_path = os.path.join(folder, cur_file)
-                    try:
-                        result = subprocess.check_output(["radon", "cc", "-sa", cur_file_full_path],
-                                                     stderr=subprocess.STDOUT, universal_newlines=True)
-                    except subprocess.CalledProcessError as err:
-                        modlog.error("Failed to calculate cyclomatic complexity ({0})".format(err.returncode))
-                        modlog.error(err.output)
-                        exit(1)
-                    modlog.debug(result)
-                    stats_log.write(result)
-
-    stats_log_filename = os.path.join(log_folder, "stats_raw.log")
-    with open(stats_log_filename, "w") as stats_log:
-        for (folder, subfolders, files) in os.walk(pyjen_path):
-            for cur_file in files:
-                if os.path.splitext(cur_file)[1] == ".py":
-                    cur_file_full_path = os.path.join(folder, cur_file)
-                    try:
-                        result = subprocess.check_output(["radon", "raw", "-s", cur_file_full_path],
-                                                     stderr=subprocess.STDOUT, universal_newlines=True)
-                    except subprocess.CalledProcessError as err:
-                        modlog.error("Failed to calculate raw code statistics ({0})".format(err.returncode))
-                        modlog.error(err.output)
-                        exit(1)
-                    modlog.debug(result)
-                    stats_log.write(result)
-
-    stats_log_filename = os.path.join(log_folder, "stats_mi.log")
-    with open(stats_log_filename, "w") as stats_log:
-        for (folder, subfolders, files) in os.walk(pyjen_path):
-            for cur_file in files:
-                if os.path.splitext(cur_file)[1] == ".py":
-                    cur_file_full_path = os.path.join(folder, cur_file)
-                    try:
-                        result = subprocess.check_output(["radon", "mi", "-s", cur_file_full_path],
-                                                     stderr=subprocess.STDOUT, universal_newlines=True)
-                    except subprocess.CalledProcessError as err:
-                        modlog.error("Failed to calculate maintainability index ({0})".format(err.returncode))
-                        modlog.error(err.output)
-                        exit(1)
-                    modlog.debug(result)
-                    stats_log.write(result)
-
-    modlog.info("Radon analysis can be found here: ./" + os.path.relpath(log_folder, os.getcwd()) + "/stats*.log")
+    _run_pylint()
+    _run_complexity_analysis()
+    _run_raw_analysis()
+    _run_mi_analysis()
     modlog.info("Code analysis complete")
 
 
@@ -508,3 +537,7 @@ if __name__ == "__main__":
     # _make_docs()
     # print(_get_new_pyjen_version())
     # _publish()
+    # _run_pylint()
+    # _run_complexity_analysis()
+    # _run_raw_analysis()
+    #_run_mi_analysis()
