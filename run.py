@@ -3,7 +3,6 @@ from __future__ import print_function
 import argparse
 import os
 import logging
-import subprocess
 import shutil
 import sys
 from io import StringIO
@@ -18,6 +17,25 @@ log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
 # Set a global logger for use by this script
 modlog = logging.getLogger('pyjen')
 modlog.addHandler(logging.NullHandler())
+
+
+class redirect_stderr:
+    """Context manager for temporarily redirecting stderr to another file
+
+    based on redirect_stdout from contextlib"""
+
+    def __init__(self, new_target):
+        self._new_target = new_target
+        # We use a list of old targets to make this CM re-entrant
+        self._old_targets = []
+
+    def __enter__(self):
+        self._old_targets.append(sys.stdout)
+        sys.stderr = self._new_target
+        return self._new_target
+
+    def __exit__(self, exctype, excinst, exctb):
+        sys.stderr = self._old_targets.pop()
 
 
 def _version_string_to_tuple(version):
@@ -170,14 +188,16 @@ def _make_package():
     import re
     from distutils.core import run_setup
 
+    modlog.info("creating package...")
+
     # delete any pre-existing packages
     if os.path.exists("dist"):
+        modlog.debug("Cleaning old package - ./dist")
         shutil.rmtree("dist")
 
     # create new package
-    modlog.info("creating package...")
-
     try:
+        modlog.debug("Building package using distutils")
         distobj = run_setup("setup.py", ["-q", "bdist_wheel"])
         distobj.run_commands()
     except Exception as err:
@@ -186,6 +206,7 @@ def _make_package():
         exit(1)
 
     # delete intermediate folders
+    modlog.debug("Purging intermediate package folders")
     if os.path.exists("build"):
         shutil.rmtree("build")
     if os.path.exists("pyjen.egg-info"):
@@ -239,45 +260,33 @@ def _publish():
     modlog.info("release published successfully")
 
 
-class redirect_stderr:
-    """Context manager for temporarily redirecting stderr to another file
+def _run_pylint(on_ci):
+    """Generates a PyLint static analysis report for the package
 
-    based on redirect_stdout from contextlib"""
-
-    def __init__(self, new_target):
-        self._new_target = new_target
-        # We use a list of old targets to make this CM re-entrant
-        self._old_targets = []
-
-    def __enter__(self):
-        self._old_targets.append(sys.stdout)
-        sys.stderr = self._new_target
-        return self._new_target
-
-    def __exit__(self, exctype, excinst, exctb):
-        sys.stderr = self._old_targets.pop()
-
-
-def _run_pylint():
+    :param bool on_ci: Indicates whether an automated tool is running this operation. Output will be customized for
+                    machine readability
+    """
     # PyLint code analysis
     from pylint import lint
     modlog.info("Running PyLint static analysis...")
 
-    # TODO: Add an optional command line switch that can flag an operation as running on CI
-    #       when set we then only generate parseable output. When not set we only generate HTML output
-
     # setup our lint options
     params = ["pyjen"]
-    params.extend(["-f", "html"])  # parameters for user-friendly output
+    if not on_ci:
+        params.extend(["-f", "html"])  # parameters for user-friendly output
 
-    pylint_report = os.path.join(os.getcwd(), "logs", "pylint_report.html")   # HTML output for humans to read
-    # pylint_report = os.path.join(os.getcwd(), "logs", "pylint_report.txt")   # plain-text output for automation
+    if on_ci:
+        pylint_report = os.path.join(os.getcwd(), "logs", "pylint_report.txt")   # plain-text output for automation
+    else:
+        pylint_report = os.path.join(os.getcwd(), "logs", "pylint_report.html")   # HTML output for humans to read
+
     pylint_log = os.path.join(os.getcwd(), "logs", "pylint.log")
 
     standard_output = StringIO()
     error_output = StringIO()
     with redirect_stdout(standard_output):
         with redirect_stderr(error_output):
+            modlog.debug("Running pylint operation")
             lint_obj = lint.Run(params, exit=False)
 
     if 0 < lint_obj.linter.msg_status < 32:
@@ -289,6 +298,7 @@ def _run_pylint():
         modlog.info("PyLint analysis failed (code {0})".format(lint_obj.linter.msg_status))
         modlog.info("See log file for details " + os.path.relpath(pylint_log))
 
+    modlog.debug("Writing log files")
     with open(pylint_report, "w") as fh:
         fh.write(standard_output.getvalue())
     with open(pylint_log, "w") as fh:
@@ -296,8 +306,18 @@ def _run_pylint():
     standard_output.close()
     error_output.close()
 
+    modlog.debug("Done running PyLint")
+    # TODO: Optionally open the generated report in the default file viewer
 
-def _run_complexity_analysis():
+
+def _run_complexity_analysis(on_ci):
+    """Generates cyclomatic complexity reports for the package
+
+    :param bool on_ci: Indicates whether an automated tool is running this operation. Output will be customized for
+                    machine readability
+    """
+    modlog.debug("Running complexity analysis")
+
     # generate cyclomatic complexities for source files in XML format for integration with external tools
     pyjen_path = os.path.join(os.getcwd(), "pyjen")
     from radon.cli import cc
@@ -305,52 +325,70 @@ def _run_complexity_analysis():
     # TODO: output in XML format when running on CI
     standard_output = StringIO()
     with redirect_stdout(standard_output):
-        cc(paths=[pyjen_path], show_complexity=True, show_closures=True, total_average=True, xml=False)
+        modlog.debug("Calling radon.cc")
+        cc(paths=[pyjen_path], show_complexity=True, show_closures=True, total_average=True, xml=on_ci)
 
+    modlog.debug("Writing report to disk")
     cc_report = os.path.join(log_folder, "radon_complexity.xml")
     with open(cc_report, "w") as fh:
         fh.write(standard_output.getvalue())
     standard_output.close()
 
     modlog.info("Cyclomatic complexity analysis complete. See " + os.path.relpath(cc_report))
+    # TODO: Optionally open the generated report in the default file viewer
 
 
 def _run_raw_analysis():
+    """Generates raw code metrics for the package"""
+    modlog.debug("Starting raw analysis")
     pyjen_path = os.path.join(os.getcwd(), "pyjen")
     from radon.cli import raw
 
     standard_output = StringIO()
     with redirect_stdout(standard_output):
+        modlog.debug("Calling radon.raw")
         raw(paths=[pyjen_path], summary=True)
 
+    modlog.debug("Writing report to disk")
     raw_report = os.path.join(log_folder, "raw_stats.txt")
     with open(raw_report, "w") as fh:
         fh.write(standard_output.getvalue())
     standard_output.close()
 
     modlog.info("Raw code metrics generated successfully. See " + os.path.relpath(raw_report))
+    # TODO: Optionally open the generated report in the default file viewer
 
 
 def _run_mi_analysis():
+    """Generates maintainability index statistics for the package"""
+    modlog.debug("Running maintainability index")
     pyjen_path = os.path.join(os.getcwd(), "pyjen")
     from radon.cli import mi
 
     standard_output = StringIO()
     with redirect_stdout(standard_output):
+        modlog.debug("Calling radon.mi")
         mi(paths=[pyjen_path], show=True)
 
+    modlog.debug("Writing report to disk")
     mi_report = os.path.join(log_folder, "mi_stats.txt")
     with open(mi_report, "w") as fh:
         fh.write(standard_output.getvalue())
     standard_output.close()
 
-    modlog.info("MI code metrics generated successfully. See " + os.path.relpath(mi_report))
+    modlog.info("Maintainability index metrics generated successfully. See " + os.path.relpath(mi_report))
+    # TODO: Optionally open the generated report in the default file viewer
 
-def _code_analysis():
-    """Generates code analysis reports and metrics on the PyJen sources"""
+
+def _code_analysis(on_ci):
+    """Generates code analysis reports and metrics on the PyJen sources
+
+    :param bool on_ci: Indicates whether an automated tool is running this operation. Output will be customized for
+                        machine readability
+    """
     modlog.info("Running code analysis tools...")
-    _run_pylint()
-    _run_complexity_analysis()
+    _run_pylint(on_ci)
+    _run_complexity_analysis(on_ci)
     _run_raw_analysis()
     _run_mi_analysis()
     modlog.info("Code analysis complete")
@@ -367,8 +405,6 @@ def _run_tests(RunFuncTests):
 
     import pytest
 
-    # TODO: Customize parameters based on user input, like verbosity level which shows all tests and reports
-    #       ie: --cov-report term-missing, -r xEXw
     test_params = ["./unit_tests"]
     if RunFuncTests:
         test_params.append("./functional_tests")
@@ -392,15 +428,21 @@ def _make_docs():
         exit(1)
 
     source_dir = os.path.join(os.getcwd(), "docs")
+    log_file = os.path.join(os.getcwd(), "logs", "sphinx.log")
 
-    # TODO: Find a way to reduce the verbosity of the output
+    standard_output = StringIO()
+    error_output = StringIO()
 
     # First we make sure the API docs are up to date
     try:
         from sphinx import apidoc
-        # NOTE: The first parameter to main is assumed to be the name of the executable that called
-        #       main, which in our case doesn't exist. So we give it an empty value
-        return_code = apidoc.main(["", "--force", "--separate", "-o", source_dir, "pyjen"])
+        with redirect_stdout(standard_output):
+            with redirect_stderr(error_output):
+                modlog.debug("Calling Sphinx to build API docs")
+                # NOTE: The first parameter to main is assumed to be the name of the executable that called
+                #       main, which in our case doesn't exist. So we give it an empty value
+                return_code = apidoc.main(["", "--force", "--separate", "-o", source_dir, "pyjen"])
+
         if return_code is not None and return_code != 0:
             modlog.error("Failed to generate API docs ({0}).".format(return_code))
             exit(1)
@@ -414,29 +456,52 @@ def _make_docs():
     # Purge any previous build artifacts
     build_dir = os.path.join(os.getcwd(), "build", "sphinx")
     if os.path.exists(build_dir):
+        modlog.debug("Purging Sphinx output folder")
         shutil.rmtree(build_dir)
+
+    modlog.debug("Creating empty build folder")
+    os.makedirs(build_dir)
 
     # Generate the full online documentation in HTML format
     from distutils.core import run_setup
     try:
-        # NOTE: default sphinx parameters are auto-loaded from the setup.cfg file
-        distobj = run_setup("setup.py", ["build_sphinx", "-q"])
-        distobj.run_commands()
+        with redirect_stdout(standard_output):
+            with redirect_stderr(error_output):
+                modlog.debug("Calling setuptools to generate online docs")
+                # NOTE: default sphinx parameters are auto-loaded from the setup.cfg file
+                distobj = run_setup("setup.py", ["build_sphinx", "-q"])
+                distobj.run_commands()
     except Exception as err:
         modlog.error("Failed to generate online documentation")
         modlog.error(err)
         exit(1)
 
+    modlog.debug("Writing logs to disk")
+    tmp_error_out = error_output.getvalue()
+    if len(tmp_error_out) > 0:
+        modlog.warning("Sphinx warnings detected. Check log file for details " + os.path.relpath(log_file, os.getcwd()))
+    with open(log_file, mode='w') as fh:
+        fh.write(standard_output.getvalue())
+        fh.write(tmp_error_out)
+
+    standard_output.close()
+    error_output.close()
+    # TODO: Optionally open the index.html for the online docs in default browser
+    modlog.info("Documentation complete")
+
+
+def _generate_homepage():
+    modlog.debug("Generating sample PyPI homepage")
     # Generate a sample of the PyPI home page from the readme.rst file
     from docutils.core import publish_string
     readme_content = open('README.rst').read()
     homepage_html = publish_string(readme_content, writer_name='html')
+
+    modlog.debug("Wriiting HTML file to disk")
     with open("pypi_homepage.html", "w") as outfile:
         outfile.write(homepage_html.decode("utf-8"))
 
     # TODO: Optionally open the prototype homepage in the default browser
-    # TODO: Optionally open the index.html for the online docs in default browser
-    modlog.info("Documentation complete")
 
 
 def _configure_logger():
@@ -468,7 +533,7 @@ def _configure_logger():
     console_logger = logging.StreamHandler()
     console_logger.setLevel(logging.INFO)
     
-    console_log_format = "%(asctime)s: %(message)s"
+    console_log_format = "%(asctime)s: (%(levelname)s) %(message)s"
     console_formatter = logging.Formatter(console_log_format)
     console_formatter.datefmt = "%H:%M"
     console_logger.setFormatter(console_formatter)
@@ -486,12 +551,13 @@ def _get_args():
     _parser.add_argument('-v', '--version', action='store_true', help='Display the PyJen version number')
     _parser.add_argument('-e', '--prep_env', action='store_true', help='Install all Python packages used by PyJen sources')
     _parser.add_argument('-p', '--package', action='store_true', help='Generate redistributable package for PyJen')
-    _parser.add_argument('-s', '--stats', action='store_true', help='Run static code analysis again PyJen sources')
+    _parser.add_argument('-s', '--stats', action='store_true', help='Run static code analysis against PyJen sources')
     _parser.add_argument('-u', '--publish', action='store_true', help='Publish release artifacts online to PyPI')
     _parser.add_argument('-t', '--test', action='store_true', help='Runs the suite of unit tests and generates metrics about the tests')
     _parser.add_argument('-f', '--functional_test', action='store_true', help='Runs the more time consuming functional test suite')
     _parser.add_argument('-d', '--docs', action='store_true', help='Generate online documentation for the project')
-    # TODO: Consider using this to invoke a function when option is specified: parser.set_defaults(function)
+    _parser.add_argument('--ci', action='store_true', help='Indicates an automated system is using the script. Output will assume machine readable format.')
+    # TODO: Add a "verbose" output option, then all data typically streamed to log files is streamed to stdout
 
     # If no command line arguments provided, display the online help and exit
     if len(sys.argv) == 1:
@@ -505,6 +571,7 @@ def _get_args():
 
 
 def main():
+    """Main entry point function"""
     args = _get_args()
 
     if args.prep_env:
@@ -521,9 +588,10 @@ def main():
 
     if args.docs:
         _make_docs()
+        _generate_homepage()
 
     if args.stats:
-        _code_analysis()
+        _code_analysis(args.ci)
 
     if args.publish:
         _publish()
