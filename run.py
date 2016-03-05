@@ -6,10 +6,11 @@ import logging
 import shutil
 import sys
 from io import StringIO
-from contextlib import redirect_stdout
+if sys.version_info >= (3, 4, 0):
+    from contextlib import redirect_stdout
 
 # List of packages needed when building sources for pyjen
-REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
+REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint', 'virtualenv']
 
 # Folder where log files will be stored
 log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
