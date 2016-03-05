@@ -6,11 +6,17 @@ import logging
 import shutil
 import sys
 from io import StringIO
+import colorama
+
 if sys.version_info >= (3, 4, 0):
     from contextlib import redirect_stdout
 
+# Make sure colored console output works on all platforms
+colorama.init()
+
 # List of packages needed when building sources for pyjen
-REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint', 'virtualenv']
+REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint',
+                'virtualenv', 'colorlog', 'colorama']
 
 # Folder where log files will be stored
 log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
@@ -533,9 +539,9 @@ def _configure_logger():
     # Secondary logger will show all 'info' class messages and below on the console
     console_logger = logging.StreamHandler()
     console_logger.setLevel(logging.INFO)
-    
-    console_log_format = "%(asctime)s: (%(levelname)s) %(message)s"
-    console_formatter = logging.Formatter(console_log_format)
+
+    from colorlog import ColoredFormatter
+    console_formatter = ColoredFormatter()
     console_formatter.datefmt = "%H:%M"
     console_logger.setFormatter(console_formatter)
 
