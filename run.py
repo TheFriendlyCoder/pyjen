@@ -6,17 +6,50 @@ import logging
 import shutil
 import sys
 from io import StringIO
-import colorama
+try:
+    # Make sure colored console output works on all platforms, but only when colorama and colorlog are installed
+    import colorama
+    from colorlog import ColoredFormatter
+    colorama.init()
+    ENABLE_COLOR = True
+except ImportError:
+    ENABLE_COLOR = False
+# todo: make script work on Pyton 2
+# todo: test scripts on Linux
+# todo: have logger prepend name of function to messages
 
 if sys.version_info >= (3, 4, 0):
     from contextlib import redirect_stdout
+else:
+    class redirect_stdout:
+        """Context manager for temporarily redirecting stdout to another file
 
-# Make sure colored console output works on all platforms
-colorama.init()
+        based on redirect_stdout from contextlib"""
+
+        def __init__(self, new_target):
+            self._new_target = new_target
+            # We use a list of old targets to make this CM re-entrant
+            self._old_targets = []
+
+        def __enter__(self):
+            self._old_targets.append(sys.stdout)
+            sys.stdout = self._new_target
+            return self._new_target
+
+        def __exit__(self, exctype, excinst, exctb):
+            sys.stdout = self._old_targets.pop()
 
 # List of packages needed when building sources for pyjen
-REQUIREMENTS = ['requests>=2.0.1', 'six', 'wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint',
-                'virtualenv', 'colorlog', 'colorama']
+# packages needed to use pyjen
+PYJEN_PACKAGES = ['requests>=2.0.1', 'six']
+# packages needed to build and test sources
+SOURCE_PACKAGES = ['wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
+# nice-to-have packages that make it easier to work with pyjen sources
+OPTIONAL_PACKAGES = ['colorlog', 'colorama', 'virtualenv']
+
+REQUIREMENTS = PYJEN_PACKAGES
+REQUIREMENTS.extend(SOURCE_PACKAGES)
+REQUIREMENTS.extend(OPTIONAL_PACKAGES)
 
 # Folder where log files will be stored
 log_folder = os.path.abspath(os.path.join(os.path.curdir, "logs"))
@@ -540,11 +573,13 @@ def _configure_logger():
     console_logger = logging.StreamHandler()
     console_logger.setLevel(logging.INFO)
 
-    from colorlog import ColoredFormatter
-    console_formatter = ColoredFormatter()
+    if ENABLE_COLOR:
+        console_formatter = ColoredFormatter()
+    else:
+        console_log_format = "%(asctime)s: (%(levelname)s) %(message)s"
+        console_formatter = logging.Formatter(console_log_format)
     console_formatter.datefmt = "%H:%M"
     console_logger.setFormatter(console_formatter)
-
     modlog.addHandler(console_logger)
 
     
