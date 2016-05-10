@@ -18,6 +18,7 @@ setup(
     long_description=open('README.rst').read(),
     url='https://github.com/TheFriendlyCoder/pyjen',
     install_requires=["requests>=2.0.1", "six"],
+    license="GPL",
     classifiers=[
                    "Development Status :: 3 - Alpha",
                    "Environment :: Console",
