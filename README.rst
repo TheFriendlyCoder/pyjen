@@ -7,21 +7,30 @@
 =============
 Overview
 =============
-.. image:: https://pypip.in/download/pyjen/badge.png
-    :target: https://pypi.python.org/pypi//pyjen/
-    :alt: Downloads
-    
-.. image:: https://pypip.in/license/pyjen/badge.png
+
+.. image:: https://img.shields.io/pypi/l/pyjen.svg
     :target: https://pypi.python.org/pypi/pyjen/
     :alt: License
     
-.. image:: https://pypip.in/wheel/pyjen/badge.png
+.. image:: https://img.shields.io/pypi/pyversions/pyjen.svg
     :target: https://pypi.python.org/pypi/pyjen/
-    :alt: Wheel Status
+    :alt: Python Versions
     
-.. image:: https://pypip.in/version/pyjen/badge.png
+.. image:: https://img.shields.io/pypi/dm/pyjen.svg
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Downloads
+    
+.. image:: https://img.shields.io/pypi/format/pyjen.svg
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Format
+
+.. image:: https://badge.fury.io/py/pyjen.svg
     :target: https://pypi.python.org/pypi/pyjen/
     :alt: Latest Version
+
+.. image:: https://api.travis-ci.org/TheFriendlyCoder/pyjen.svg?branch=master
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Build status
     
 Extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping
 the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using

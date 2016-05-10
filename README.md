@@ -7,10 +7,12 @@ http://daringfireball.net/projects/markdown/syntax
 
 Overview
 ============
-[![Downloads](https://pypip.in/download/pyjen/badge.png)](https://pypi.python.org/pypi/pyjen/)
-[![License](https://pypip.in/license/pyjen/badge.png)](https://pypi.python.org/pypi/pyjen/)
-[![Wheel Status](https://pypip.in/wheel/pyjen/badge.png)](https://pypi.python.org/pypi/pyjen/)
-[![Latest Version](https://pypip.in/version/pyjen/badge.png)](https://pypi.python.org/pypi/pyjen/)
+[![License](https://img.shields.io/pypi/l/pyjen.svg)](https://pypi.python.org/pypi/pyjen/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/pyjen.svg)](https://pypi.python.org/pypi/pyjen/)
+[![Downloads](https://img.shields.io/pypi/dm/pyjen.svg)](https://pypi.python.org/pypi/pyjen/)
+[![Format](https://img.shields.io/pypi/format/pyjen.svg)](https://pypi.python.org/pypi/pyjen/)
+[![Latest version](https://badge.fury.io/py/pyjen.svg)](https://badge.fury.io/py/pyjen)
+[![Build Status](https://api.travis-ci.org/TheFriendlyCoder/pyjen.svg?branch=master)](https://pypi.python.org/pypi/pyjen/)
 
 Extensible, user and developer friendly Python interface to the [Jenkins CI](http://jenkins-ci.org/) tool, wrapping
 the features exposed by the standard [REST API](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API) in a 
