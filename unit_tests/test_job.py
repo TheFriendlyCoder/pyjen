@@ -129,9 +129,6 @@ class job_misc_tests(unittest.TestCase):
         # Make sure the Jenkins clone job method was called, which performs the clone
         mock_jenkins._clone_job.assert_called_once_with(cur_job_name, new_job_name)
 
-        # Make sure the new job has been disabled
-        mock_new_job.disable.assert_called_once()
-
     def test_supported_types(self):
         actual = Job.supported_types()
 
