@@ -16,6 +16,7 @@ class DataRequester (object):
     """Abstraction layer encapsulate all IO requests for the Jenkins REST API"""    
 
     _text_cache = dict()
+    _api_data_cache = dict()
     _header_cache = dict()
     _configxml_cache = dict()
     _needs_flush = False
@@ -149,13 +150,24 @@ class DataRequester (object):
             with the given URL.
         :rtype: :class:`object`
         """
-        temp_url = urljoin(self._url, "api/python")
+        cache_url = urljoin(self._url, "api/python")
+        if cache_url in DataRequester._api_data_cache:
+            # NOTE: The assumption here is that the query parameters have no impact on the cached data
+            # while this may not be true in general, for most use cases intended to be supported this
+            # shouldn't be an issue
+            return DataRequester._api_data_cache[cache_url]
+
+        temp_url = cache_url
         if query_params is not None:
             temp_url += "?" + query_params
 
         txt = self._get_raw_text(temp_url)
         
-        return eval(txt)
+        retval = eval(txt)
+        if DataRequester.ENABLE_CACHING:
+            DataRequester._api_data_cache[cache_url] = retval
+
+        return retval
 
     def set_api_data(self, cached_api_data):
         """Provides pre-populated Jenkins API data to be cached in the requestor
@@ -168,9 +180,8 @@ class DataRequester (object):
         :param dict cached_api_data: dictionary of Python objects to be cached in the requestor
         """
         temp_url = urljoin(self._url, "api/python")
-        encoded_data = repr(cached_api_data)
         if DataRequester.ENABLE_CACHING:
-            DataRequester._text_cache[temp_url] = encoded_data
+            DataRequester._api_data_cache[temp_url] = cached_api_data
 
     def get_headers(self, path=None):
         """gets the HTTP header attributes from a Jenkins URL
@@ -347,6 +358,7 @@ class DataRequester (object):
         cls._configxml_cache = dict()
         cls._header_cache = dict()
         cls._text_cache = dict()
+        cls._api_data_cache = dict()
         cls._needs_flush = False
 
     def show_debug_info(self):
@@ -355,8 +367,10 @@ class DataRequester (object):
             return
         log.debug("Destroying datarequester: ")
         log.debug("\tText cache size: " + str(len(self._text_cache)))
+        log.debug("\tAPI data cache size: " + str(len(self._api_data_cache)))
         log.debug("\tHeader cache size: " + str(len(self._header_cache)))
         log.debug("\tConfig.xml cache size: " + str(len(self._configxml_cache)))
         log.debug("\tIs cache dirty?: " + str(self.is_dirty))
+
 if __name__ == "__main__":  # pragma: no cover
     pass
