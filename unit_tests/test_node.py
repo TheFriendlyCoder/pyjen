@@ -87,7 +87,7 @@ class node_misc_tests(unittest.TestCase):
         #TODO: Consider launching this method asynchronously 
         #somehow to prevent deadlocks if the wait method has bugs in it
         start_time = time.time()
-        final_is_idle_value = n.wait_for_idle(3)
+        final_is_idle_value = n.wait_for_idle(3.1)
         duration_in_seconds = time.time() - start_time
         
         self.assertGreaterEqual(duration_in_seconds, 3, "wait method should have taken at least 3 seconds to complete")        
