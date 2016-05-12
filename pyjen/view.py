@@ -91,7 +91,7 @@ class View(PluginBase):
         for j in view_jobs:
             temp_data_io = self._controller.clone(j['url'])
             temp_data_io.set_api_data(j)
-            retval.append(Job.create(temp_data_io, self._master))
+            retval.append(Job(temp_data_io, self._master))
 
         return retval
 

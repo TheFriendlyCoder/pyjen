@@ -19,6 +19,14 @@ class Job(PluginBase):
         self._controller = controller
         self._master = jenkins_master
         self._name = None
+        self._type = None
+
+    @property
+    def type(self):
+        if self._type is None:
+            node = ElementTree.fromstring(self._controller.config_xml)
+            self._type = get_plugin_name(node)
+        return self._type
 
     @staticmethod
     def create(controller, jenkins_master):
@@ -32,11 +40,20 @@ class Job(PluginBase):
         :return: An instance of the appropriate derived type for the given job
         :rtype: :class:`~.job.Job`
         """
-        plugin = init_extension_plugin(controller, jenkins_master)
+        return Job(controller, jenkins_master).derived_object
+
+    @property
+    def derived_object(self):
+        """Looks for a custom plugin supporting the specific type of job managed by this object"""
+        # check to see if we're trying to derive an object from an already derived object
+        if type(self) is not Job:
+            return self
+
+        plugin = init_extension_plugin(self._controller, self._master)
         if plugin is not None:
             return plugin
 
-        node = ElementTree.fromstring(controller.config_xml)
+        node = ElementTree.fromstring(self._controller.config_xml)
         plugin_name = get_plugin_name(node)
         raise PluginNotSupportedError("Job plugin {0} not found".format(plugin_name), plugin_name)
 
