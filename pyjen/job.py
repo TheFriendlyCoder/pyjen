@@ -216,13 +216,14 @@ class Job(PluginBase):
         :returns: a list of the most recent builds for this job
         :rtype: :class:`list` of :class:`~.build.Build` objects
         """
-        data = self._controller.get_api_data()
+        data = self._controller.get_api_data(query_params="depth=2")
 
         builds = data['builds']
 
         retval = []
         for cur_build in builds:
             temp_data_io = self._controller.clone(cur_build['url'])
+            temp_data_io.set_api_data(cur_build)
             temp_build = Build(temp_data_io)
             retval.append(temp_build)
 

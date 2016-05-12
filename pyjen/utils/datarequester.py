@@ -9,12 +9,6 @@ if sys.version_info.major < 3:
 else:
     from urllib.parse import urljoin
 
-# Indicates whether prototype caching logic should be enabled or not
-# WARNING: Do not enable this in a production environment. The caching
-# behavior has not been sufficiently tested for this to be considered
-# production ready
-ENABLE_CACHING = False
-
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
@@ -25,6 +19,8 @@ class DataRequester (object):
     _header_cache = dict()
     _configxml_cache = dict()
     _needs_flush = False
+    # Indicates whether prototype caching logic should be enabled or not
+    ENABLE_CACHING = False
 
     def __init__(self, jenkins_url):
         """
@@ -126,7 +122,7 @@ class DataRequester (object):
             log.debug("Details: " + str(req))
             req.raise_for_status()
 
-        if ENABLE_CACHING:
+        if DataRequester.ENABLE_CACHING:
             DataRequester._text_cache[url] = req.text
 
         return req.text
@@ -160,7 +156,22 @@ class DataRequester (object):
         txt = self._get_raw_text(temp_url)
         
         return eval(txt)
-    
+
+    def set_api_data(self, cached_api_data):
+        """Provides pre-populated Jenkins API data to be cached in the requestor
+
+        This method is typically used by parent objects like views and jobs which batch-load
+        data about all of the children objects they contain. This allows the parent to
+        pre-populate the data related to their children without having to query the REST API
+        for each child.
+
+        :param dict cached_api_data: dictionary of Python objects to be cached in the requestor
+        """
+        temp_url = urljoin(self._url, "api/python")
+        encoded_data = repr(cached_api_data)
+        if DataRequester.ENABLE_CACHING:
+            DataRequester._text_cache[temp_url] = encoded_data
+
     def get_headers(self, path=None):
         """gets the HTTP header attributes from a Jenkins URL
         
@@ -186,7 +197,7 @@ class DataRequester (object):
         if req.status_code != 200:
             req.raise_for_status()
 
-        if ENABLE_CACHING:
+        if DataRequester.ENABLE_CACHING:
             DataRequester._header_cache[temp_path] = req.headers
 
         return req.headers
@@ -263,7 +274,7 @@ class DataRequester (object):
         # Another potential problem here would be if calls to other methods on this class may invalidate the content of the cached
         # config.xml. For example, maybe if someone renames a job, the cached URL would be invalidated. Maybe there is no way for this
         # to be exploited in practice, but care would need to be taken to ensure this fact
-        if ENABLE_CACHING:
+        if DataRequester.ENABLE_CACHING:
             DataRequester._configxml_cache[self._url] = new_xml
             DataRequester._needs_flush = True
         else:
@@ -301,6 +312,23 @@ class DataRequester (object):
             raise JenkinsFlushFailure(failed_items)
 
     @property
+    def enable_cache(self):
+        """Enables caching of Jenkins API data
+
+        WARNING: This functionality is in early prototype stage and should not be used in production environments"""
+        DataRequester.ENABLE_CACHING = True
+        DataRequester.clear()
+
+    @property
+    def disable_cache(self):
+        """Disables caching of Jenkins API data
+
+        WARNING: This functionality is in early prototype stage and should not be used in production environments"""
+        DataRequester.ENABLE_CACHING = False
+        self.flush()
+        DataRequester.clear()
+
+    @property
     def is_dirty(self):
         """Checks to see if there are any unsynchronized changes pending on this object
 
@@ -321,18 +349,14 @@ class DataRequester (object):
         cls._text_cache = dict()
         cls._needs_flush = False
 
-    def __del__(self):
-        """Destructor
-
-        Used to simply record some state information in the output logger for debugging purposes
-        """
-        if not ENABLE_CACHING:
+    def show_debug_info(self):
+        """Record some state information in the output logger for debugging purposes"""
+        if not DataRequester.ENABLE_CACHING:
             return
         log.debug("Destroying datarequester: ")
         log.debug("\tText cache size: " + str(len(self._text_cache)))
         log.debug("\tHeader cache size: " + str(len(self._header_cache)))
         log.debug("\tConfig.xml cache size: " + str(len(self._configxml_cache)))
         log.debug("\tIs cache dirty?: " + str(self.is_dirty))
-
 if __name__ == "__main__":  # pragma: no cover
     pass

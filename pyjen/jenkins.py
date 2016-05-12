@@ -78,19 +78,25 @@ class Jenkins(object):
         http_io = DataRequester(url)
         http_io.credentials = credentials
         retval = Jenkins(http_io)
+        return retval
 
-        # Sanity check: make sure the given IO object can 
-        #    successfully query the Jenkins version number
+    @property
+    def connected(self):
+        """Checks to make sure the connection to the Jenkins REST API was successful
+
+        :returns: True if connected, false if not
+        :rtype: :class:`bool`
+        """
         try:
-            version = retval.version 
+            version = self.version
         except:
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to \
-                PyJen.Jenkins. Please check configuration.", http_io)
+            log.error("Jenkins connection failed.", self._controller)
+            return False
 
         if version is None or version == "" or version == "Unknown":
-            raise InvalidJenkinsURLError("Invalid connection parameters provided to \
-                PyJen.Jenkins. Please check configuration.", http_io)
-        return retval
+            log.error("Invalid Jenkins version detected: '{0}'".format(version))
+            return False
+        return True
 
     @property
     def version(self):
@@ -489,6 +495,20 @@ class Jenkins(object):
         except:
             return None
 
+    @property
+    def enable_cache(self):
+        """Enables caching of Jenkins API data
+
+        WARNING: This functionality is in early prototype stage and should not be used in production environments"""
+        self._controller.enable_cache
+
+    @property
+    def disable_cache(self):
+        """Disables caching of Jenkins API data
+
+        WARNING: This functionality is in early prototype stage and should not be used in production environments"""
+        self._controller.disable_cache
+
     def flush_cache(self):
         """Flushes any pending writes to the remote Jenkins server
 
@@ -508,6 +528,9 @@ class Jenkins(object):
         """
         self._controller.clear()
 
+    def show_debug_info(self):
+        """Streams data related to the caching subsystem to the package logger for debugging purposes"""
+        self._controller.show_debug_info()
 
 if __name__ == '__main__':  # pragma: no cover
     pass
