@@ -53,9 +53,7 @@ class Job(PluginBase):
         if plugin is not None:
             return plugin
 
-        node = ElementTree.fromstring(self._controller.config_xml)
-        plugin_name = get_plugin_name(node)
-        raise PluginNotSupportedError("Job plugin {0} not found".format(plugin_name), plugin_name)
+        raise PluginNotSupportedError("Job plugin {0} not found".format(self.type), self.type)
 
     @staticmethod
     def _create(controller, jenkins_master, job_name):

@@ -21,6 +21,7 @@ class View(PluginBase):
         """
         self._controller = data_io_controller
         self._master = jenkins_master
+        self._type = None
 
     @staticmethod
     def create(controller, jenkins_master):
@@ -34,13 +35,27 @@ class View(PluginBase):
         :return: An instance of the appropriate derived type for the given view
         :rtype: :class:`~.view.View`
         """
-        plugin = init_extension_plugin(controller, jenkins_master)
+        return View(controller, jenkins_master).derived_object
+
+    @property
+    def derived_object(self):
+        """Looks for a custom plugin supporting the specific type of view managed by this object"""
+        # check to see if we're trying to derive an object from an already derived object
+        if type(self) is not View:
+            return self
+
+        plugin = init_extension_plugin(self._controller, self._master)
         if plugin is not None:
             return plugin
 
-        node = ElementTree.fromstring(controller.config_xml)
-        plugin_name = get_plugin_name(node)
-        raise PluginNotSupportedError("View plugin {0} not found".format(plugin_name), plugin_name)
+        raise PluginNotSupportedError("View plugin {0} not found".format(self.type), self.type)
+
+    @property
+    def type(self):
+        if self._type is None:
+            node = ElementTree.fromstring(self._controller.config_xml)
+            self._type = get_plugin_name(node)
+        return self._type
 
     @staticmethod
     def supported_types():
