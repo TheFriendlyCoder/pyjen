@@ -526,6 +526,24 @@ class Job(PluginBase):
         jxml = JobXML(self.config_xml)
         return jxml.builders
 
+    @property
+    def build_health(self):
+        """Gets the percentage of good builds from recorded history of this job
+
+        This metric is associated with the "weather" icon that can be shown next to jobs in certain views
+        :return: percentage of good builds on record for this job
+        :rtype: :class:`int`
+        """
+        data = self._controller.get_api_data()
+
+        health_report = data['healthReport']
+
+        for cur_report in health_report:
+            if cur_report["description"].find("Build stability:") >= 0:
+                return cur_report["score"]
+
+        return 0
+
 
 if __name__ == "__main__":  # pragma: no cover
     for i in Job.supported_types():
