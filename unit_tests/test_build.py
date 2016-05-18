@@ -89,18 +89,18 @@ class build_tests(unittest.TestCase):
 
     def test_build_equality(self):
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"url":"www.someBuild.com"}
+        mock_data_io.get_api_data.return_value = {"id": "1999-01-27", "number": "456"}
         first_build = Build(mock_data_io)
         second_build = Build(mock_data_io)
         self.assertEqual(second_build, first_build, "Build objects do not match when they should")
         
     def test_build_inequality(self):
         mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"url":"www.someBuild.com"}
+        mock_data_io.get_api_data.return_value = {"id": "1999-01-27", "number": "456"}
         first_build = Build(mock_data_io)
         
         mock_data_io2 = MagicMock()
-        mock_data_io2.get_api_data.return_value = {"url":"www.someOtherBuild.com"}
+        mock_data_io2.get_api_data.return_value = {"id": "1999-01-27", "number": "457"}
         second_build = Build(mock_data_io2)
         self.assertNotEqual(second_build, first_build, "Build objects match when they should not")
         

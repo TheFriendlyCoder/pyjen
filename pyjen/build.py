@@ -26,25 +26,31 @@ class Build(object):
         self._data_io = data_io_controller
     
     def __eq__(self, obj):
-        """Overrides the default equality operation"""
-        if isinstance(obj, Build):
-            data = self._data_io.get_api_data()
-            build_url = data['url']
-            obj_data = obj._data_io.get_api_data()
-            obj_build_url = obj_data["url"]
-            return build_url == obj_build_url
-        return False
-    
+        """Equality operator"""
+        if not isinstance(obj, Build):
+            return False
+
+        if obj.id != self.id:
+            return False
+
+        if obj.number != self.number:
+            return False
+
+        return True
+
     def __ne__(self, obj):
-        """Overrides the default not equal operation"""
-        if isinstance(obj, Build):
-            data = self._data_io.get_api_data()
-            build_url = data['url']
-            obj_data = obj._data_io.get_api_data()
-            obj_build_url = obj_data["url"]
-            return build_url != obj_build_url
+        """Inequality operator"""
+        if not isinstance(obj, Build):
+            return True
+
+        if obj.id != self.id:
+            return True
+
+        if obj.number != self.number:
+            return True
+
         return False
-        
+
     @property
     def number(self):
         """Gets the sequence number of this build
