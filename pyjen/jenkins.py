@@ -431,7 +431,7 @@ class Jenkins(object):
         :rtype: :class:`~.job.Job`
         """
         new_io_obj = self._controller.clone(url)
-        return Job.create(new_io_obj, self)
+        return Job(new_io_obj, self)
 
     def get_user(self, url):
         """Establishes a connection to a Jenkins User based on an absolute URL
