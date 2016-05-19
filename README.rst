@@ -29,7 +29,7 @@ Overview
     :alt: Latest Version
 
 .. image:: https://api.travis-ci.org/TheFriendlyCoder/pyjen.svg?branch=master
-    :target: https://pypi.python.org/pypi/pyjen/
+    :target: https://travis-ci.org/TheFriendlyCoder/pyjen
     :alt: Build status
     
 Extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping
