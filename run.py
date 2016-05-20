@@ -14,7 +14,7 @@ try:
     ENABLE_COLOR = True
 except ImportError:
     ENABLE_COLOR = False
-# todo: make script work on Pyton 2
+
 # todo: test scripts on Linux
 # todo: have logger prepend name of function to messages
 
@@ -44,6 +44,10 @@ else:
 PYJEN_PACKAGES = ['requests>=2.0.1', 'six']
 # packages needed to build and test sources
 SOURCE_PACKAGES = ['wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
+
+if (3, 2, 0) <= sys.version_info < (3, 3, 0):
+    SOURCE_PACKAGES.append("coverage<4")    # hack to get unit test coverage reports to work on Python 3.2.x
+
 # nice-to-have packages that make it easier to work with pyjen sources
 OPTIONAL_PACKAGES = ['colorlog', 'colorama', 'virtualenv']
 
