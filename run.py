@@ -646,7 +646,7 @@ def main():
 
 if __name__ == "__main__":
     _configure_logger()
-    #main()
+    main()
     # _show_version()
     # _prepare_env()
     # _make_package()
@@ -657,4 +657,4 @@ if __name__ == "__main__":
     # _run_complexity_analysis()
     # _run_raw_analysis()
     #_run_mi_analysis()
-    _run_tests(False)
+    #_run_tests(False)
