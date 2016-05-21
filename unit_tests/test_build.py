@@ -53,20 +53,20 @@ class build_tests(unittest.TestCase):
 
     def test_get_build_time(self):
         mock_data_io = MagicMock()
-        #Build date: 12:03:17am Nov. 30, 2013
-        mock_data_io.get_api_data.return_value = {"timestamp":1385784197000}
+        import time
+        from datetime import datetime
+        epoch_time = time.time()
+        expected_time = datetime.fromtimestamp(epoch_time)
+
+        # Jenkins timestamps are stored in milliseconds
+        time_in_milliseconds = epoch_time * 1000
+        mock_data_io.get_api_data.return_value = {"timestamp": time_in_milliseconds}
         
         b = Build(mock_data_io)
         build_time = b.start_time
-        
-        self.assertEqual(build_time.day, 30)
-        self.assertEqual(build_time.month, 11)
-        self.assertEqual(build_time.year, 2013)
-        
-        self.assertEqual(build_time.hour, 0)
-        self.assertEqual(build_time.minute, 3)
-        self.assertEqual(build_time.second, 17)
-        
+
+        self.assertEqual(expected_time, build_time)
+
     def test_get_changeset_svn_type(self):
         expected_scm_type = "svn"
         mock_data_io = MagicMock()

@@ -539,21 +539,21 @@ class job_build_methods_tests(unittest.TestCase):
     
     def test_get_builds_in_time_range_one_match(self):
         expected_build_number = 123
-        # Timestamp for Jan. 21, 2013 @12:30:00
-        # NOTE: We hard code these time stamps here because the timestamp() method on the datetime
-        #     object is not available on Python 2.7 and there is no easy way to generate time stamps
-        #     for that Python version. 
-        timestamp = 1358785800000
+        import time
+        from datetime import datetime
+        epoch_time = time.time()
+
+        # Jenkins timestamps are stored in milliseconds
+        time_in_milliseconds = epoch_time * 1000
         mock_build1_data_io = MagicMock()
-        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":timestamp}
+        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":time_in_milliseconds}
         
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
         mock_data_io.clone.return_value = mock_build1_data_io
-        
- 
-        start_time = datetime(2013, 1, 21, 12, 0, 0)
-        end_time = datetime(2013, 1, 21, 13, 0, 0)  
+
+        start_time = datetime.fromtimestamp(epoch_time - 1000)
+        end_time = datetime.fromtimestamp(epoch_time + 1000)
         j = vJob (mock_data_io, None)
         builds = j.get_builds_in_time_range(start_time, end_time)
         
@@ -562,18 +562,22 @@ class job_build_methods_tests(unittest.TestCase):
         
     def test_get_builds_in_time_range_inverted_parameters(self):
         expected_build_number = 123
-        # Timestamp for Jan. 21, 2013 @12:30:00
-        timestamp = 1358785800000
+        import time
+        from datetime import datetime
+        epoch_time = time.time()
+
+        # Jenkins timestamps are stored in milliseconds
+        time_in_milliseconds = epoch_time * 1000
         mock_build1_data_io = MagicMock()
-        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":timestamp}
+        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":time_in_milliseconds}
         
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
         mock_data_io.clone.return_value = mock_build1_data_io
         
  
-        start_time = datetime(2013, 1, 21, 12, 0, 0)
-        end_time = datetime(2013, 1, 21, 13, 0, 0)  
+        start_time = datetime.fromtimestamp(epoch_time + 1000)
+        end_time = datetime.fromtimestamp(epoch_time - 1000)
         j = vJob (mock_data_io, None)
         builds = j.get_builds_in_time_range(end_time, start_time)
         
@@ -581,14 +585,19 @@ class job_build_methods_tests(unittest.TestCase):
         self.assertEqual(builds[0].number, expected_build_number)
         
     def test_get_builds_in_time_range_lower_bound(self):
-        start_time = datetime(2013, 1, 21, 12, 0, 0)
-        # Timestamp for Jan. 21 2013, 12:00:00
-        start_time_timestamp = 1358784000000
-        end_time = datetime(2013, 1, 21, 13, 0, 0)  
+        import time
+        from datetime import datetime
+        epoch_time = time.time()
+
+        # Jenkins timestamps are stored in milliseconds
+        start_time_in_milliseconds = epoch_time * 1000
+
+        start_time = datetime.fromtimestamp(epoch_time)
+        end_time = datetime.fromtimestamp(epoch_time + 1000)
 
         expected_build_number = 123
         mock_build1_data_io = MagicMock()
-        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":start_time_timestamp}
+        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":start_time_in_milliseconds}
         
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
@@ -602,13 +611,18 @@ class job_build_methods_tests(unittest.TestCase):
         self.assertEqual(builds[0].number, expected_build_number)
         
     def test_get_builds_in_time_range_upper_bound(self):
-        start_time = datetime(2013, 1, 21, 12, 0, 0)
-        end_time = datetime(2013, 1, 21, 13, 0, 0)
-        # Timestamp for Jan. 21, 2013 13:00:00  
-        end_time_timestamp = 1358787600000
+        import time
+        from datetime import datetime
+        epoch_time = time.time()
+
+        # Jenkins timestamps are stored in milliseconds
+        end_time_in_milliseconds = epoch_time * 1000
+
+        start_time = datetime.fromtimestamp(epoch_time - 1000)
+        end_time = datetime.fromtimestamp(epoch_time)
         expected_build_number = 123
         mock_build1_data_io = MagicMock()
-        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":end_time_timestamp}
+        mock_build1_data_io.get_api_data.return_value = {"number":expected_build_number, "timestamp":end_time_in_milliseconds}
         
         mock_data_io = MagicMock()
         mock_data_io.get_api_data.return_value = {"allBuilds":[{"url":"http://localhost:8080/job/j1/" + str(expected_build_number)}]}
