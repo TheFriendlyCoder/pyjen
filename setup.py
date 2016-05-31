@@ -1,16 +1,22 @@
 from setuptools import setup
-import pyjen
 import pkgutil
 import os
+from distutils.util import convert_path
 
 pyjen_packages = []
 for loader, module_name, is_pkg in pkgutil.walk_packages(os.path.join(os.path.curdir, "pyjen")):
     if is_pkg and module_name.startswith("pyjen"):
         pyjen_packages.append(module_name)
 
+# Import package version
+version_ns = {}
+ver_path = convert_path('pyjen/version.py')
+with open(ver_path) as ver_file:
+    exec(ver_file.read(), version_ns)
+
 setup(
     name='pyjen',
-    version=pyjen.__version__,
+    version=version_ns['__version__'],
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     packages=pyjen_packages,

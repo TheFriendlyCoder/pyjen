@@ -6,6 +6,8 @@ import logging
 import shutil
 import sys
 from io import StringIO
+from distutils.util import convert_path
+
 try:
     # Make sure colored console output works on all platforms, but only when colorama and colorlog are installed
     import colorama
@@ -41,6 +43,8 @@ else:
 
 # List of packages needed when building sources for pyjen
 # packages needed to use pyjen
+# TODO: Move these dependencies out into a requirements.txt file in the root folder
+# TODO: Synchronize these dependencies with those used by the setup.py file
 PYJEN_PACKAGES = ['requests>=2.0.1', 'six']
 # packages needed to build and test sources
 SOURCE_PACKAGES = ['wheel', 'sphinx>=1.2.3', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint']
@@ -223,8 +227,12 @@ def _prepare_env():
 
 def _show_version():
     """Shows the PyJen version number"""
-    from pyjen import __version__
-    modlog.info("PyJen Version " + __version__)
+    version_ns = {}
+    ver_path = convert_path('pyjen/version.py')
+    with open(ver_path) as ver_file:
+        exec(ver_file.read(), version_ns)
+
+    modlog.info("PyJen Version " + version_ns['__version__'])
 
 
 def _make_package():
