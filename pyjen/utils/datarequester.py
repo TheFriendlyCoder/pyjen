@@ -322,15 +322,14 @@ class DataRequester (object):
         if len(failed_items) > 0:
             raise JenkinsFlushFailure(failed_items)
 
-    @property
-    def enable_cache(self):
+    @staticmethod
+    def enable_cache():
         """Enables caching of Jenkins API data
 
         WARNING: This functionality is in early prototype stage and should not be used in production environments"""
         DataRequester.ENABLE_CACHING = True
         DataRequester.clear()
 
-    @property
     def disable_cache(self):
         """Disables caching of Jenkins API data
 

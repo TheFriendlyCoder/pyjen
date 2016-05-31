@@ -495,19 +495,17 @@ class Jenkins(object):
         except:
             return None
 
-    @property
     def enable_cache(self):
         """Enables caching of Jenkins API data
 
         WARNING: This functionality is in early prototype stage and should not be used in production environments"""
-        self._controller.enable_cache
+        self._controller.enable_cache()
 
-    @property
     def disable_cache(self):
         """Disables caching of Jenkins API data
 
         WARNING: This functionality is in early prototype stage and should not be used in production environments"""
-        self._controller.disable_cache
+        self._controller.disable_cache()
 
     def flush_cache(self):
         """Flushes any pending writes to the remote Jenkins server
