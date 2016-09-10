@@ -17,3 +17,6 @@ test_results.xml
 /docs/build
 /.idea/workspace.xml
 /.idea/pyjen.iml
+/venv
+/venv2
+/venv3

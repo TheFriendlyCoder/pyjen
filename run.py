@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #Version-safe import of the 'print()' function
 from __future__ import print_function
 import argparse
