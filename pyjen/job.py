@@ -21,6 +21,18 @@ class Job(PluginBase):
         self._name = None
         self._type = None
 
+    def __eq__(self, other):
+        """equality operator"""
+        if not isinstance(other, Job):
+            return False
+        return other.name == self.name
+
+    def __ne__(self, other):
+        """inequality operator"""
+        if not isinstance(other, Job):
+            return True
+        return other.name != self.name
+
     @property
     def type(self):
         if self._type is None:
