@@ -51,6 +51,10 @@ class Build(object):
 
         return False
 
+    def __hash__(self):
+        """Hashing function, allowing object to be serialized and compared"""
+        return hash(self.id)
+
     @property
     def number(self):
         """Gets the sequence number of this build

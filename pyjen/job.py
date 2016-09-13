@@ -33,6 +33,10 @@ class Job(PluginBase):
             return True
         return other.name != self.name
 
+    def __hash__(self):
+        """Hashing function, allowing object to be serialized and compared"""
+        return hash(self.name)
+
     @property
     def type(self):
         if self._type is None:
