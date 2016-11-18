@@ -4,6 +4,7 @@ from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
 from pyjen.user import User
+from pyjen.plugin_manager import PluginManager
 from pyjen.utils.datarequester import DataRequester
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.exceptions import InvalidJenkinsURLError
@@ -495,6 +496,21 @@ class Jenkins(object):
         try:
             retval = Node(new_io_obj)
             assert retval.name == nodename
+            return retval
+        except:
+            return None
+
+    @property
+    def plugin_manager(self):
+        """Gets object which manages the plugins installed on the current Jenkins instance
+
+        :returns: reference to Jenkins object that manages plugins on this instance
+        :rtype: :class:`~.plugin_manager.PluginManager`
+        """
+        new_url = self._controller.url + '/pluginManager'
+        new_io_obj = self._controller.clone(new_url)
+        try:
+            retval = PluginManager(new_io_obj)
             return retval
         except:
             return None
