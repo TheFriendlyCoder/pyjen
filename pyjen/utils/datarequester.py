@@ -23,19 +23,19 @@ class DataRequester (object):
     # Indicates whether prototype caching logic should be enabled or not
     ENABLE_CACHING = False
 
-    def __init__(self, jenkins_url):
+    def __init__(self, jenkins_url, sslVerify=False):
         """
         :param str jenkins_url: 
             HTTP URL to use for all subsequent IO operations performed on this object.
-        :param str username:
-            Jenkins user name to use for authentication. May be set to None for anonymous access.
-        :param str password:
-            Password for the given Jenkins user, to use for authentication. May be set to None
-            for anonymous access.
+        :param bool sslVerify:
+            Indicates whether SSL certificates should be checked when connecting using HTTPS.
         """
 
         self._url = jenkins_url.rstrip("/\\") + "/"
         self._credentials = None
+        self._sslVerify = sslVerify
+        if not sslVerify:
+            requests.packages.urllib3.disable_warnings()
 
     @property
     def credentials(self):
@@ -77,7 +77,7 @@ class DataRequester (object):
         else:
             clone_url = self._url
 
-        retval = DataRequester(clone_url)
+        retval = DataRequester(clone_url, self._sslVerify)
 
         if self._credentials:
             retval.credentials = self._credentials
@@ -112,7 +112,7 @@ class DataRequester (object):
 
         log.debug("Text cache miss: " + url)
 
-        req = requests.get(url, auth=self._credentials)
+        req = requests.get(url, auth=self._credentials, verify=self._sslVerify)
         
         if req.status_code != 200:
             log.debug("Error getting raw text from URL: " + url)
@@ -236,9 +236,9 @@ class DataRequester (object):
             temp_path = urljoin(temp_path, path.lstrip("/\\"))
               
         if args is not None:
-            req = requests.post(temp_path, auth=self._credentials, **args)
+            req = requests.post(temp_path, auth=self._credentials, verify=self._sslVerify,  **args)
         else:
-            req = requests.post(temp_path, auth=self._credentials)
+            req = requests.post(temp_path, auth=self._credentials, verify=self._sslVerify)
 
         if req.status_code != 200:
             log.debug("Failed posting Jenkins data to " + temp_path)

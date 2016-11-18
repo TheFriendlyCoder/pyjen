@@ -55,7 +55,7 @@ class Jenkins(object):
         self._controller = data_io_controller
             
     @staticmethod
-    def easy_connect(url, credentials=None):
+    def easy_connect(url, credentials=None, sslVerify=False):
         """Factory method to simplify creating connections to Jenkins servers
         
         :param str url:
@@ -65,6 +65,10 @@ class Jenkins(object):
             A 2-element tuple with the username and password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
+        :param bool sslVerify:
+            Indicates whether the SSL certificate of the Jenkins instance should be checked upon connection.
+            For Jenkins instances hosted behind HTTPS using self-signed certificates this may cause connection
+            errors when enabled. Defaults to disabled (False)
         :returns:
             Jenkins object, pre-configured with the appropriate credentials and connection parameters for the given URL.
         :rtype: :class:`.Jenkins`
@@ -75,7 +79,7 @@ class Jenkins(object):
             config.read(JenkinsConfigParser.get_default_configfiles())
             credentials = config.get_credentials(url)
 
-        http_io = DataRequester(url)
+        http_io = DataRequester(url, sslVerify)
         http_io.credentials = credentials
         retval = Jenkins(http_io)
         return retval
