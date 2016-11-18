@@ -226,7 +226,8 @@ class DataRequester (object):
             supported keys are as follows:
             
             * 'headers' - dictionary of HTTP header properties and their associated values
-            * 'data' - dictionary of assorted / misc data properties and their values 
+            * 'data' - dictionary of assorted / misc data properties and their values
+            * 'files' - dictionary of file names and handles to be uploaded to the target URL
         """
 
         #TODO: If the cache is currently dirty, flush it

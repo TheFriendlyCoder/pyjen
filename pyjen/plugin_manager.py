@@ -1,5 +1,4 @@
 """Interfaces for managing plugins for a particular Jenkins instance"""
-
 from pyjen.plugin import Plugin
 
 
@@ -32,6 +31,24 @@ class PluginManager(object):
             retval.append(tmp_plugin)
 
         return retval
+
+    def install_plugin(self, plugin_file):
+        """Installs a new plugin on the selected Jenkins instance
+
+        NOTE: If using this method to batch-install many plugins at once you may want to add
+        a short wait / sleep between calls so as to not overwhelm the target server with
+        upload requests. Ad-hoc tests show that Jenkins will refuse connections if too many
+        uploads are running in parallel.
+
+        :param str plugin_file: path to the HPI/JPI file to install
+        :returns: True if the installation succeeded, false if not"""
+        try:
+            with open(plugin_file, 'rb') as handle:
+                files = {'file': handle}
+                self._data_io.post('/uploadPlugin', files=files)
+            return True
+        except:
+            return False
 
 if __name__ == "__main__":
     pass
