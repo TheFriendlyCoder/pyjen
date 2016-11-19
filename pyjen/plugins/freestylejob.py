@@ -24,7 +24,6 @@ class FreestyleJob(Job):
         """
         super(FreestyleJob, self).__init__(controller, jenkins_master)
 
-
     @property
     def scm(self):
         """Gets the object that manages the source code management configuration for a job
@@ -36,7 +35,7 @@ class FreestyleJob(Job):
         """
         xml = self.config_xml
         jobxml = JobXML(xml)
-        return jobxml.scm()
+        return jobxml.scm
 
     @property
     def custom_workspace(self):
@@ -60,7 +59,7 @@ class FreestyleJob(Job):
         jobxml = JobXML(xml)
         jobxml.custom_workspace = path
 
-        self.config_xml = jobxml.XML
+        self.config_xml = jobxml.xml
 
     @staticmethod
     def template_config_xml():

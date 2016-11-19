@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/pyjen.iml" filepath="$PROJECT_DIR$/.idea/pyjen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../python_template/.idea/python_template.iml" filepath="$PROJECT_DIR$/../python_template/.idea/python_template.iml" />
     </modules>
   </component>
 </project>

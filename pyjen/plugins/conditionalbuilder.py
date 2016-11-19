@@ -1,9 +1,6 @@
 """Primitives for operating on Jenkins job builder of type 'Conditional Builder'"""
-from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
-import xml.etree.ElementTree as ElementTree
 import logging
-
-log = logging.getLogger(__name__)  # pylint: disable=C0103
+from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
 class ConditionalBuilder(PluginBase):
@@ -16,6 +13,7 @@ class ConditionalBuilder(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+        self._log = logging.getLogger(__name__)
 
     @property
     def builders(self):
@@ -33,10 +31,9 @@ class ConditionalBuilder(PluginBase):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                log.warning("Builder plugin {0} used by conditional builder not found".format(get_plugin_name(node)))
+                self._log.warning("Builder plugin %s used by conditional builder not found", get_plugin_name(node))
 
         return retval
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-

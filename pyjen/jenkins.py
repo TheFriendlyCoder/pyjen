@@ -1,5 +1,7 @@
 """Primitives for interacting with the main Jenkins dashboard"""
 import json
+import logging
+from requests.exceptions import RequestException
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
@@ -7,7 +9,6 @@ from pyjen.user import User
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.datarequester import DataRequester
 from pyjen.utils.user_params import JenkinsConfigParser
-from pyjen.exceptions import InvalidJenkinsURLError
 
 
 class Jenkins(object):
@@ -35,30 +36,31 @@ class Jenkins(object):
             print ('job ' + job.name + ' found')
 
     **Example:** find the build number of the last good build of the first job on the default view ::
-    
+
         j = pyjen.Jenkins.easy_connect('http://localhost:8080/')
         v = j.get_default_view()
         jobs = v.get_jobs()
         lgb = jobs[0].get_last_good_build()
         print ('last good build of the first job in the default view is ' + lgb.get_build_number())
     """
-    
+
     def __init__(self, data_io_controller):
         """
         To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
-        
+
         :param data_io_controller:
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
         :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         """
         self._controller = data_io_controller
-            
+        self._log = logging.getLogger(__name__)
+
     @staticmethod
-    def easy_connect(url, credentials=None, sslVerify=False):
+    def easy_connect(url, credentials=None, ssl_verify=False):
         """Factory method to simplify creating connections to Jenkins servers
-        
+
         :param str url:
             Full URL of the Jenkins instance to connect to. Must be
             a valid running Jenkins instance.
@@ -66,7 +68,7 @@ class Jenkins(object):
             A 2-element tuple with the username and password for authenticating to the URL
             If omitted, credentials will be loaded from any pyjen config files found on the system
             If no credentials can be found, anonymous access will be used
-        :param bool sslVerify:
+        :param bool ssl_verify:
             Indicates whether the SSL certificate of the Jenkins instance should be checked upon connection.
             For Jenkins instances hosted behind HTTPS using self-signed certificates this may cause connection
             errors when enabled. Defaults to disabled (False)
@@ -80,7 +82,7 @@ class Jenkins(object):
             config.read(JenkinsConfigParser.get_default_configfiles())
             credentials = config.get_credentials(url)
 
-        http_io = DataRequester(url, sslVerify)
+        http_io = DataRequester(url, ssl_verify)
         http_io.credentials = credentials
         retval = Jenkins(http_io)
         return retval
@@ -94,54 +96,52 @@ class Jenkins(object):
         """
         try:
             version = self.version
-        except:
-            log.error("Jenkins connection failed.", self._controller)
+        except RequestException as err:
+            self._log.error("Jenkins connection failed: %s.", err)
             return False
 
         if version is None or version == "" or version == "Unknown":
-            log.error("Invalid Jenkins version detected: '{0}'".format(version))
+            self._log.error("Invalid Jenkins version detected: '%s'", version)
             return False
         return True
 
     @property
     def version(self):
         """Gets the version of Jenkins pointed to by this object
-        
+
         :return: Version number of the currently running Jenkins instance
         :rtype: :class:`str`
-            
         """
         headers = self._controller.get_headers('/api/python')
-        
-        if not 'x-jenkins' in headers:
+
+        if 'x-jenkins' not in headers:
             return "Unknown"
         else:
             return headers['x-jenkins']
-        
+
     @property
     def is_shutting_down(self):
         """checks to see whether the Jenkins master is in the process of shutting down.
-        
+
         :returns:
             If the Jenkins master is preparing to shutdown
             (ie: in quiet down state), return True, otherwise returns False.
         :rtype: :class:`bool`
-            
         """
         data = self._controller.get_api_data()
-        
+
         return data['quietingDown']
-    
+
     @property
     def nodes(self):
         """gets the list of nodes (aka: agents) managed by this Jenkins master
-        
-        :returns: list of 0 or more Node objects managed by this Jenkins master 
+
+        :returns: list of 0 or more Node objects managed by this Jenkins master
         :rtype: :class:`list` of :class:`~.node.Node` objects
         """
         tmp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/computer")
         data = tmp_data_io.get_api_data()
-                
+
         nodes = data['computer']
         retval = []
         for cur_node in nodes:
@@ -149,29 +149,28 @@ class Jenkins(object):
                 node_url = self._controller.url.rstrip("/") + '/computer/(master)'
             else:
                 node_url = self._controller.url.rstrip("/") + '/computer/' + cur_node['displayName']
-            
+
             node_data_io = self._controller.clone(node_url)
             retval.append(Node(node_data_io))
-                        
+
         return retval
-    
+
     @property
     def default_view(self):
         """returns a reference to the primary / default Jenkins view
-        
+
         The default view is the one displayed when navigating to
         the main URL. Typically this will be the "All" view.
-        
+
         :returns: object that manages the default Jenkins view
         :rtype: :class:`~.view.View`
-        """        
+        """
         data = self._controller.get_api_data()
 
         default_view = data['primaryView']
-        new_io_obj = self._controller.clone(default_view['url'].rstrip("/") +\
-                                          "/view/" + default_view['name'])
+        new_io_obj = self._controller.clone(default_view['url'].rstrip("/") + "/view/" + default_view['name'])
         return View.create(new_io_obj, self)
-    
+
     @property
     def views(self):
         """Gets a list of all views directly managed by the Jenkins dashboard
@@ -179,12 +178,11 @@ class Jenkins(object):
         To retrieve all views managed by this Jenkins instance, including recursing into
         views that support sub-views, see the :py:meth:`.all_views` property
 
-        :returns: list of one or more views defined on this Jenkins instance. 
+        :returns: list of one or more views defined on this Jenkins instance.
         :rtype: :class:`list` of :class:`~.view.View` objects
-            
         """
         data = self._controller.get_api_data()
-        
+
         raw_views = data['views']
         retval = []
 
@@ -194,11 +192,11 @@ class Jenkins(object):
             turl = cur_view['url']
             if turl.find('view') == -1:
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
-                
+
             new_io_obj = self._controller.clone(turl)
             tview = View.create(new_io_obj, self)
             retval.append(tview)
-            
+
         return retval
 
     @property
@@ -216,21 +214,21 @@ class Jenkins(object):
             retval.append(cur_view['name'])
 
         return retval
-    
+
     def prepare_shutdown(self):
         """Sends a shutdown signal to the Jenkins master preventing new builds from executing
-        
+
         Analogous to the "Prepare for Shutdown" link on the Manage Jenkins configuration page
-        
-        You can cancel a previous requested shutdown using the 
+
+        You can cancel a previous requested shutdown using the
         :py:meth:`.cancel_shutdown` method
         """
         self._controller.post('/quietDown')
-        
+
     def cancel_shutdown(self):
         """Cancels a previous scheduled shutdown sequence
-        
-        Cancels a shutdown operation initiated by the 
+
+        Cancels a shutdown operation initiated by the
         :py:meth:`.prepare_shutdown` method
         """
         self._controller.post('/cancelQuietDown')
@@ -247,12 +245,12 @@ class Jenkins(object):
         """
         data = self._controller.get_api_data()
         tjobs = data['jobs']
-    
+
         for tjob in tjobs:
             if tjob['name'] == job_name:
                 new_io_obj = self._controller.clone(tjob['url'])
                 return Job.create(new_io_obj, self)
-        
+
         return None
 
     @property
@@ -267,7 +265,7 @@ class Jenkins(object):
             retval.append(tjob['name'])
 
         return retval
-    
+
     def find_view(self, view_name):
         """Searches views directly managed by this Jenkins instance for a specific view
 
@@ -280,7 +278,7 @@ class Jenkins(object):
         :rtype: :class:`~.view.View`
         """
         data = self._controller.get_api_data()
-        
+
         raw_views = data['views']
 
         for cur_view in raw_views:
@@ -291,12 +289,12 @@ class Jenkins(object):
 
                 new_io_obj = self._controller.clone(turl)
                 return View.create(new_io_obj, self)
-                        
+
         return None
 
     def create_view(self, view_name, view_type):
         """Creates a new view on the Jenkins dashboard
-        
+
         :param str view_name:
             the name for this new view
             This name should be unique, different from any other views
@@ -317,16 +315,16 @@ class Jenkins(object):
             "Submit": "OK",
             "json": json.dumps({"name": view_name, "mode": view_type})
         }
-        
+
         args = {}
         args['data'] = data
         args['headers'] = headers
 
         self._controller.post('/createView', args)
-        
+
         retval = self.find_view(view_name)
         assert retval is not None
-        return retval       
+        return retval
 
     def create_job(self, job_name, job_type):
         """Creates a new job on this Jenkins instance
@@ -380,11 +378,11 @@ class Jenkins(object):
         return View.supported_types()
 
     def _clone_job(self, source_job_name, new_job_name):
-        """Makes a copy of this job on the dashboard with a new name        
-        
+        """Makes a copy of this job on the dashboard with a new name
+
         :param str source_job_name:
             The name of the existing Jenkins job which is to have it's configuration cloned to create a new job.
-            A job of this name must exist on this Jenkins instance. 
+            A job of this name must exist on this Jenkins instance.
         :param str new_job_name:
             the name of the newly created job whose settings will
             be an exact copy of the source job. There must be no existing
@@ -394,18 +392,18 @@ class Jenkins(object):
                   'mode': 'copy',
                   'from': source_job_name}
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    
+
         args = {}
         args['params'] = params
         args['data'] = ''
         args['headers'] = headers
-        
+
         self._controller.post("createItem", args)
 
         temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + new_job_name)
         new_job = Job._create(temp_data_io, self, new_job_name)
-        
-        #disable the newly created job so it doesn't accidentally start running
+
+        # disable the newly created job so it doesn't accidentally start running
         new_job.disable()
 
     def get_view(self, url):
@@ -466,7 +464,7 @@ class Jenkins(object):
             retval = User(new_io_obj)
             assert retval.user_id == username
             return retval
-        except:
+        except RequestException:
             return None
 
     def get_node(self, url):
@@ -497,7 +495,7 @@ class Jenkins(object):
             retval = Node(new_io_obj)
             assert retval.name == nodename
             return retval
-        except:
+        except RequestException:
             return None
 
     @property
@@ -509,11 +507,8 @@ class Jenkins(object):
         """
         new_url = self._controller.url + '/pluginManager'
         new_io_obj = self._controller.clone(new_url)
-        try:
-            retval = PluginManager(new_io_obj)
-            return retval
-        except:
-            return None
+        retval = PluginManager(new_io_obj)
+        return retval
 
     def enable_cache(self):
         """Enables caching of Jenkins API data

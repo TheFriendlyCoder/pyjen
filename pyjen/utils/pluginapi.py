@@ -7,7 +7,6 @@ from pyjen.utils.plugin_base import PluginBase
 # Path where all PyJen plugins are stored
 PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
 
-log = logging.getLogger(__name__)
 
 class PluginXML(object):
     """Class used to process XML configuration information associated with Jenkins plugins"""
@@ -17,6 +16,7 @@ class PluginXML(object):
         :type xml_node: :class:`xml.etree.ElementTree`
         """
         self._root = xml_node
+        self._log = logging.getLogger(__name__)
 
     def get_module_name(self):
         """Gets the name of the plugin
@@ -157,10 +157,10 @@ def _get_plugin_classes(module):
     """
     import inspect
     retval = []
-    for name, obj in inspect.getmembers(module, inspect.isclass):
-        if obj.__module__.startswith("pyjen.plugins."):
-            if issubclass(obj, PluginBase):
-                retval.append(obj)
+    for cur_member in inspect.getmembers(module, inspect.isclass):
+        if cur_member[1].__module__.startswith("pyjen.plugins."):
+            if issubclass(cur_member[1], PluginBase):
+                retval.append(cur_member[1])
 
     return retval
 
@@ -191,17 +191,18 @@ def _load_modules(path):
             # TODO: Consider whether we need to consider re-loading plugins in certain cases
 
     # If not, then lets walk all modules in the plugin path and load them all
-    for loader, name, ispkg in pkgutil.iter_modules([path], package_prefix):
-        if not ispkg:
-            cur_mod = importlib.import_module(name)
+    for pkg_module in pkgutil.iter_modules([path], package_prefix):
+        if not pkg_module[2]:
+            cur_mod = importlib.import_module(pkg_module[1])
 
             if not cur_mod in retval:
                 retval.append(cur_mod)
 
-    # TODO: See whether we need to consider loading newly added plugins that may not have existed the first time this function is called
+    # TODO: See whether we need to consider loading newly added plugins that may not have existed the first time
+    #       this function is called
     return retval
 
 if __name__ == "__main__":  # pragma: no cover
-    for i in get_plugins():
-        print(i.type)
+    #for i in get_plugins():
+    #    print(i.type)
     pass

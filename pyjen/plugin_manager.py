@@ -41,14 +41,10 @@ class PluginManager(object):
         uploads are running in parallel.
 
         :param str plugin_file: path to the HPI/JPI file to install
-        :returns: True if the installation succeeded, false if not"""
-        try:
-            with open(plugin_file, 'rb') as handle:
-                files = {'file': handle}
-                self._data_io.post('/uploadPlugin', files=files)
-            return True
-        except:
-            return False
+        """
+        with open(plugin_file, 'rb') as handle:
+            files = {'file': handle}
+            self._data_io.post('/uploadPlugin', files=files)
 
 if __name__ == "__main__":
     pass

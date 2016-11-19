@@ -1,10 +1,6 @@
 """Declarations for the abstraction of a Jenkins build agent"""
 import time
-import sys
-if sys.version_info.major < 3:
-    from urllib import quote as url_quote
-else:
-    from urllib.parse import quote as url_quote
+from six.moves import urllib_parse
 
 
 class Node(object):
@@ -60,7 +56,7 @@ class Node(object):
         """
         data = self._data_io.get_api_data()
         return data['idle']
-    
+
     def toggle_offline(self, message=None):
         """Toggles the online status of this Node
 
@@ -73,7 +69,7 @@ class Node(object):
             the reason this node has been taken offline.
         """
         if message is not None:
-            post_cmd = "/toggleOffline?offlineMessage=" + url_quote(message)
+            post_cmd = "/toggleOffline?offlineMessage=" + urllib_parse.quote(message)
         else:
             post_cmd = "/toggleOffline"
 

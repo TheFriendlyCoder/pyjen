@@ -1,6 +1,6 @@
 """Declaration for abstract base class to be used by all PyJen plugins"""
-from six import add_metaclass
 from abc import ABCMeta, abstractproperty
+from six import add_metaclass
 
 
 @add_metaclass(ABCMeta)

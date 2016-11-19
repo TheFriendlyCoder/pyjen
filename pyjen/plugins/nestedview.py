@@ -1,8 +1,8 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
+import json
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
 from pyjen.exceptions import NestedViewCreationError
-import json
 
 
 class NestedView(View):
@@ -140,7 +140,7 @@ class NestedView(View):
             if cur_view['name'] == view_name:
                 new_io_obj = self._controller.clone(cur_view['url'])
                 return View.create(new_io_obj, self._master)
-                
+
         raise NestedViewCreationError("Failed to create nested view " + view_name + " under " + self.name)
 
     def clone_subview(self, existing_view, new_view_name):
@@ -155,7 +155,7 @@ class NestedView(View):
         retval = self.create_view(new_view_name, existing_view.type)
         vxml = ViewXML(existing_view.config_xml)
         vxml.rename(new_view_name)
-        retval.config_xml = vxml.XML
+        retval.config_xml = vxml.xml
         return retval
 
     def move_view(self, existing_view):
@@ -172,9 +172,9 @@ class NestedView(View):
         existing_view.delete()
         return new_view
 
-    #TODO: Disable the get/set config_xml operations here to prevent bugs when interacting with this plugin on live servers
-    #       rationale: there is abug in this plugin that causes the XML retrieved from the REST API to be incomplete, so if you pull the
-    #       XML then re-post it it'll essentially corrupt the view - not good.
+    #TODO: Disable the get/set config_xml operations here to prevent bugs when interacting with this plugin on live
+    #      servers rationale: there is a bug in this plugin that causes the XML retrieved from the REST API to be
+    #      incomplete, so if you pull the XML then re-post it it'll essentially corrupt the view - not good.
 
 
 if __name__ == "__main__":  # pragma: no cover

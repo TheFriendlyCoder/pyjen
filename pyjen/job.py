@@ -1,9 +1,9 @@
 """Primitives for interacting with Jenkins jobs"""
+import xml.etree.ElementTree as ElementTree
 from pyjen.build import Build
 from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, find_plugin, init_extension_plugin
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
-import xml.etree.ElementTree as ElementTree
 
 
 class Job(PluginBase):
@@ -62,7 +62,7 @@ class Job(PluginBase):
     def derived_object(self):
         """Looks for a custom plugin supporting the specific type of job managed by this object"""
         # check to see if we're trying to derive an object from an already derived object
-        if type(self) is not Job:
+        if not isinstance(self, Job):
             return self
 
         plugin = init_extension_plugin(self._controller, self._master)
@@ -86,12 +86,18 @@ class Job(PluginBase):
         :rtype: :class:`~.job.Job`
         """
         class PartialJob(Job):
-            def __init__(self, local_controller, local_master):
-                super(PartialJob, self).__init__(local_controller, local_master)
+            """Temp class used to instantiate abstract base class"""
             type = "Undefined"
 
+            def __init__(self, local_controller, local_master):
+                super(PartialJob, self).__init__(local_controller, local_master)
+
+            def set_name(self, new_name):
+                """gives the abstract job a name"""
+                self._name = new_name
+
         retval = PartialJob(controller, jenkins_master)
-        retval._name = job_name
+        retval.set_name(job_name)
         return retval
 
     @staticmethod
@@ -137,7 +143,7 @@ class Job(PluginBase):
 
         data = self._controller.get_api_data()
         return data['name']
-        
+
     @property
     def url(self):
         """Returns the URL to the job
@@ -562,6 +568,6 @@ class Job(PluginBase):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    for i in Job.supported_types():
-        print(i)
+    #for i in Job.supported_types():
+    #    print(i)
     pass

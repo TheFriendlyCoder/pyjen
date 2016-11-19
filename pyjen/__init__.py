@@ -4,4 +4,3 @@ from the Python scripting environment.
 """
 
 from pyjen.version import __version__
-

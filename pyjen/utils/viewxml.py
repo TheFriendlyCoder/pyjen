@@ -12,11 +12,10 @@ class ViewXML(object):
         """
         :param str xml: Raw XML character string extracted from a Jenkins job.
         """
-        
         self._root = ElementTree.fromstring(xml)
 
     @property
-    def XML(self):
+    def xml(self):
         """Extracts the processed XML for export to a Jenkins job
 
         :returns:

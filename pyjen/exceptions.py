@@ -1,13 +1,13 @@
 """All PyJen specific exception declarations"""
 
 
-class PyJenError (Exception):
+class PyJenError(Exception):
     """Base class for all PyJen related exceptions"""
     def __init__(self):
         super(PyJenError, self).__init__()
 
 
-class InvalidUserParamsError (PyJenError):
+class InvalidUserParamsError(PyJenError):
     """Exception caused by invalid parameters in the user configuration file"""
     def __init__(self, msg):
         """constructor
@@ -21,10 +21,10 @@ class InvalidUserParamsError (PyJenError):
         return "Error parsing config file: " + self.__msg
 
 
-class InvalidJenkinsURLError (PyJenError):
+class InvalidJenkinsURLError(PyJenError):
     """Exception raised when attempting to connect to a URL that doesn't point
     to a valid Jenkins REST API"""
-    def __init__ (self, msg, url):
+    def __init__(self, msg, url):
         """constructor
 
         :param str msg: Descriptive message associated with this exception
@@ -35,7 +35,7 @@ class InvalidJenkinsURLError (PyJenError):
         self.__msg = msg
         self.__url = url
 
-    def __str__ (self):
+    def __str__(self):
         return "Error connecting to Jenkins API via " + self.__url + ": \n\t" +\
             self.__msg
 
@@ -44,7 +44,7 @@ class InvalidParameterError(PyJenError):
     """Exception raised when the caller provides an invalid value as an input
         parameter to a PyJen method call"""
 
-    def __init__ (self, msg):
+    def __init__(self, msg):
         """Constructor
 
         :param str msg: Descriptive message associated with this exception
@@ -96,10 +96,12 @@ class PluginNotSupportedError(NotImplementedError):
 
     @property
     def message(self):
+        """Descriptive message for the error"""
         return self._message
 
     @property
     def plugin_name(self):
+        """Name of the unsupported plugin"""
         return self._plugin_name
 
 
@@ -111,6 +113,7 @@ class JenkinsFlushFailure(PyJenError):
 
     @property
     def failed_items(self):
+        """List of items not flushed from the cache"""
         return self._failed_items
 
     def __str__(self):

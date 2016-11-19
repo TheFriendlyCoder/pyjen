@@ -1,10 +1,7 @@
 """Primitives for interacting with Jenkins builds"""
-
-from pyjen.changeset import Changeset
 from datetime import datetime
 import logging
-
-log = logging.getLogger(__name__)
+from pyjen.changeset import Changeset
 
 
 class Build(object):
@@ -24,7 +21,8 @@ class Build(object):
         :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         """
         self._data_io = data_io_controller
-    
+        self._log = logging.getLogger(__name__)
+
     def __eq__(self, obj):
         """Equality operator"""
         if not isinstance(obj, Build):
@@ -112,7 +110,7 @@ class Build(object):
         data = self._data_io.get_api_data()
 
         return data['result']
-    
+
     @property
     def changeset(self):
         """Gets the list of SCM changes associated with this build
@@ -138,7 +136,7 @@ class Build(object):
         return retval
 
     @property
-    def id(self):
+    def id(self):  # pylint: disable=invalid-name
         """Gets the unique identifier associated with this build
 
         :rtype: :class:`str`

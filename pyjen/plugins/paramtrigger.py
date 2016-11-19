@@ -1,14 +1,15 @@
 """Primitives for operating on Jenkins post-build publisher of type Parameterized Build Trigger"""
-from pyjen.utils.pluginapi import PluginBase
-import xml.etree.ElementTree as ElementTree
 import logging
-
-log = logging.getLogger(__name__)
+import xml.etree.ElementTree as ElementTree
+from pyjen.utils.pluginapi import PluginBase
 
 
 class BuildTriggerConfig(object):
+    """Abstraction around a basic parameterized build trigger"""
     def __init__(self, node):
+        """:param node: configuration node loaded from the Jenkins API for this object"""
         self._root = node
+        self._log = logging.getLogger(__name__)
 
     @property
     def job_names(self):
@@ -18,7 +19,7 @@ class BuildTriggerConfig(object):
         :rtype: :class:`list` of :class:`str`
         """
         projects_node = self._root.find('projects')
-        log.info(projects_node.text)
+        self._log.info(projects_node.text)
         retval = projects_node.text.split(",")
 
         # To simplify post-processing, lets make sure to exclude any superfluous white space from the list items
@@ -60,4 +61,3 @@ class ParameterizedBuildTrigger(PluginBase):
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-

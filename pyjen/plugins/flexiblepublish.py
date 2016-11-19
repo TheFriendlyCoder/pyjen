@@ -1,9 +1,6 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
-from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
-import xml.etree.ElementTree as ElementTree
 import logging
-
-log = logging.getLogger(__name__)  # pylint: disable=C0103
+from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
 class FlexiblePublisher(PluginBase):
@@ -16,6 +13,7 @@ class FlexiblePublisher(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+        self._log = logging.getLogger(__name__)
 
     @property
     def actions(self):
@@ -32,8 +30,7 @@ class FlexiblePublisher(PluginBase):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                log.warning("Flexible publisher plugin {0} not found".format(
-                    get_plugin_name(node)))
+                self._log.warning("Flexible publisher plugin %s not found", get_plugin_name(node))
 
         return retval
 
@@ -48,6 +45,7 @@ class ConditionalPublisher(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+        self._log = logging.getLogger(__name__)
 
     @property
     def publisher(self):
@@ -61,8 +59,7 @@ class ConditionalPublisher(PluginBase):
         plugin = create_xml_plugin(node)
 
         if plugin is None:
-            log.warning("Publisher plugin {0} referenced by Flexible Publisher not found".format(
-                get_plugin_name(node)))
+            self._log.warning("Publisher plugin %s referenced by Flexible Publisher not found", get_plugin_name(node))
 
         return plugin
 

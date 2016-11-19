@@ -13,23 +13,23 @@ class Subversion(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert (self._root.tag == "scm")
-        assert (self._root.attrib['class'] == "hudson.scm.SubversionSCM")
+        assert self._root.tag == "scm"
+        assert self._root.attrib['class'] == "hudson.scm.SubversionSCM"
 
     @property
     def locations(self):
         """Gets the list of SVN URLs associated with this plugin instance
-        
+
         :returns:
             set of 0 or more ModuleLocation objects describing the SVN parameters for this module.
         :rtype: :class:`list` of :class:`ModuleLocation` objects
         """
         retval = []
-        
+
         locations_node = self._root.find("locations")
         for loc in locations_node:
             retval.append(ModuleLocation(loc))
-            
+
         return retval
 
     @property

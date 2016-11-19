@@ -1,12 +1,10 @@
 """Primitives for interacting with Jenkins views"""
+import logging
+import xml.etree.ElementTree as ElementTree
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, init_extension_plugin
 from pyjen.utils.viewxml import ViewXML
-import logging
-import xml.etree.ElementTree as ElementTree
-
-log = logging.getLogger(__name__)
 
 
 class View(PluginBase):
@@ -22,6 +20,7 @@ class View(PluginBase):
         self._controller = data_io_controller
         self._master = jenkins_master
         self._type = None
+        self._log = logging.getLogger(__name__)
 
     @staticmethod
     def create(controller, jenkins_master):
@@ -41,7 +40,7 @@ class View(PluginBase):
     def derived_object(self):
         """Looks for a custom plugin supporting the specific type of view managed by this object"""
         # check to see if we're trying to derive an object from an already derived object
-        if type(self) is not View:
+        if not isinstance(self, View):
             return self
 
         plugin = init_extension_plugin(self._controller, self._master)
@@ -207,19 +206,19 @@ class View(PluginBase):
         # TODO: Apply this same pattern to other similar batch methods like disable_all_jobs
 
         for j in self._light_jobs:
-            log.debug("Deleting job " + j.name)
+            self._log.debug("Deleting job " + j.name)
             j.delete()
 
     def disable_all_jobs(self):
         """Batch method that allows caller to bulk-disable all jobs found in this view"""
         for j in self._light_jobs:
-            log.debug("Disabling job " + j.name)
+            self._log.debug("Disabling job " + j.name)
             j.disable()
 
     def enable_all_jobs(self):
         """Batch method that allows caller to bulk-enable all jobs found in this view"""
         for j in self._light_jobs:
-            log.debug("Enabling job " + j.name)
+            self._log.debug("Enabling job " + j.name)
             j.enable()
 
     def clone_all_jobs(self, source_job_name_pattern, new_job_substring):
@@ -238,7 +237,7 @@ class View(PluginBase):
             job_map[j] = j.replace(source_job_name_pattern, new_job_substring)
 
         for j in job_map:
-            log.debug("Cloning job {0} to {1}".format(j, job_map[j]))
+            self._log.debug("Cloning job %s to %s", j, job_map[j])
             self._master._clone_job(j, job_map[j])
 
     def clone(self, new_view_name):
@@ -248,11 +247,11 @@ class View(PluginBase):
         :return: reference to the View object that manages the new, cloned view
         :rtype: :class:`~.view.View`
         """
-        v = self._master.create_view(new_view_name, self.type)
+        new_view = self._master.create_view(new_view_name, self.type)
         vxml = ViewXML(self.config_xml)
         vxml.rename(new_view_name)
-        v.config_xml = vxml.XML
-        return v
+        new_view.config_xml = vxml.xml
+        return new_view
 
     def rename(self, new_name):
         """Rename this view
@@ -262,10 +261,10 @@ class View(PluginBase):
         new_view = self.clone(new_name)
         self.delete()
         self._controller = new_view._controller
-        
+
     def view_metrics(self):
         """Composes a report on the jobs contained within the view
-                
+
         :return: Dictionary containing metrics about the view
         :rtype: :class:`dict`
         """
@@ -301,7 +300,6 @@ class View(PluginBase):
                 "disabled_jobs": disabled_jobs}
 
 if __name__ == "__main__":  # pragma: no cover
-
-    for i in View.supported_types():
-        print(i)
+    #for i in View.supported_types():
+    #    print(i)
     pass

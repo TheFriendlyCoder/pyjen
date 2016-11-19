@@ -1,11 +1,9 @@
 """Primitives for working on Jenkins views of type 'SectionedView'"""
+import logging
+import xml.etree.ElementTree as ElementTree
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
-import xml.etree.ElementTree as ElementTree
-import logging
-
-log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 class SectionedView(View):
@@ -26,6 +24,7 @@ class SectionedView(View):
             this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`        """
         super(SectionedView, self).__init__(controller, jenkins_master)
+        self._log = logging.getLogger(__name__)
 
     @property
     def sections(self):
@@ -94,6 +93,7 @@ class SectionedViewXML(ViewXML):
         :param str xml: XML string describing a sectioned view
         """
         super(SectionedViewXML, self).__init__(xml)
+        self._log = logging.getLogger(__name__)
 
     @property
     def sections(self):
@@ -109,13 +109,10 @@ class SectionedViewXML(ViewXML):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                log.warning("Sectioned view plugin {0} not found".format(get_plugin_name(node)))
+                self._log.warning("Sectioned view plugin %s not found", get_plugin_name(node))
 
         return retval
 
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-
-
-

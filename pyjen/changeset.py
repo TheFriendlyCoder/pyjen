@@ -2,7 +2,7 @@
 from pyjen.user import User
 
 
-class Changeset (object):
+class Changeset(object):
     """manages the interpretation of the "changeSet" properties of a Jenkins build
 
     .. seealso:: :class:`~.build.Build`
@@ -23,9 +23,9 @@ class Changeset (object):
         :type controller: :class:`~.utils.datarequester.DataRequester`
         """
 
-        assert('items' in data.keys())
-        assert('kind' in data.keys())
-    
+        assert 'items' in data.keys()
+        assert 'kind' in data.keys()
+
         self._data = data
         self._controller = controller
 
@@ -42,33 +42,30 @@ class Changeset (object):
             retval.append(ChangesetItem(item, self._controller))
 
         return retval
-    
-    def __str__(self):    
-        outStr = ""    
+
+    def __str__(self):
+        retval = ""
         changes = self.affected_items
         if len(changes) > 0:
             for change in changes:
-                outStr += str(change)
+                retval += str(change)
         else:
-            outStr = "No Changes\n"
-        return outStr
+            retval = "No Changes\n"
+        return retval
 
     @property
     def has_changes(self):
         """Checks whether or not there are any SCM changes
-        
+
         :returns: True if changes have been found, False if not
         :rtype: :class:`bool`
         """
-        if (self._data['items']):
-            return True
-        else:
-            return False
+        return bool(self._data['items'])
 
     @property
     def scm_type(self):
         """Gets the name of the SCM tool associated with this change
-        
+
         :returns: Name of the SCM tool associated with this change
         :rtype: :class:`str`
         """
@@ -107,16 +104,16 @@ class ChangesetItem(object):
         return self._data['msg']
 
     def __str__(self):
-        outStr = "Author: {0}\nMessage: {1}\nRevision: {2}\n".format(
+        retval = "Author: {0}\nMessage: {1}\nRevision: {2}\n".format(
             self._data['author'],
             self._data['msg'],
             self._data['commitId']
         )
-        outStr += "\nTouched Files:\n"
+        retval += "\nTouched Files:\n"
         for path in self._data['changes']:
-            outStr += path['file'] + "\n"
+            retval += path['file'] + "\n"
 
-        return outStr
+        return retval
 
 if __name__ == "__main__":  # pragma: no cover
     pass

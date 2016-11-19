@@ -31,9 +31,9 @@ def find_view(jenkins_url, credentials, view_name):
     if parent_view is not None:
         return parent_view
 
-    for v in jen.views:
-        if v.type == NestedView.type:
-            sub_view = v.find_view(view_name)
+    for cur_view in jen.views:
+        if cur_view.type == NestedView.type:
+            sub_view = cur_view.find_view(view_name)
             if sub_view is not None:
                 return sub_view
 

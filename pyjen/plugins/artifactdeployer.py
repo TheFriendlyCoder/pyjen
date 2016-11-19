@@ -1,7 +1,6 @@
 """Primitives for operating on properties of the 'artifact deployer' publishing plugin"""
 from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 from pyjen.exceptions import PluginNotSupportedError
-import xml.etree.ElementTree as ElementTree
 
 
 class ArtifactDeployer(PluginBase):
@@ -59,4 +58,3 @@ class ArtifactDeployerEntry(PluginBase):
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-

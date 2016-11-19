@@ -1,35 +1,32 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
+import logging
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.pluginapi import create_xml_plugin, get_plugin_name
 from pyjen.exceptions import PluginNotSupportedError
-import logging
-
-log = logging.getLogger(__name__)
 
 
 class JobXML(object):
     """ Wrapper around the config.xml for a Jenkins job
-    
+
     The source xml can be loaded from nearly any URL by
     appending "/config.xml" to it, as in "http://server/jobs/job1/config.xml"
-     
     """
     def __init__(self, xml):
         """
         :param str xml: Raw XML character string extracted from a Jenkins job.
         """
-        
-        self._root = ElementTree.fromstring(xml)
 
+        self._root = ElementTree.fromstring(xml)
+        self._log = logging.getLogger(__name__)
         assert self._root.tag == "project"
 
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
-        
+
         If the job is not currently using a custom workspace this method will do nothing
         """
         node = self._root.find('customWorkspace')
-        
+
         if node is not None:
             self._root.remove(node)
 
@@ -87,14 +84,14 @@ class JobXML(object):
         node.text = node_label
 
     @property
-    def XML(self):
+    def xml(self):
         """Extracts the processed XML for export to a Jenkins job
-        
+
         :returns:
             Raw XML containing any and all customizations applied in
             previous operations against this object. This character
             string can be imported into Jenkins to configure a job.
-        
+
         :rtype: :class:`str`
         """
         retval = ElementTree.tostring(self._root, "UTF-8")
@@ -103,18 +100,18 @@ class JobXML(object):
     @property
     def scm(self):
         """Retrieves the appropriate plugin for the SCM portion of a job
-        
+
         Detects which source code management tool is being used by this
         job, locates the appropriate plugin for that tool, and returns
         an instance of the wrapper for that plugin pre-configured with
         the settings found in the relevant XML subtree.
-        
-        :returns: 
+
+        :returns:
             One of any number of plugin objects responsible for providing
             extensions to the source code management portion of a job
-        
+
             Examples: :class:`~pyjen.plugins.subversion.Subversion`
-        
+
         :rtype: :class:`~.pluginapi.PluginBase`
         """
         node = self._root.find('scm')
@@ -139,7 +136,7 @@ class JobXML(object):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                log.warning("Unsupported job 'property' plugin: " + get_plugin_name(node))
+                self._log.warning("Unsupported job 'property' plugin: " + get_plugin_name(node))
         return retval
 
     @property
@@ -156,7 +153,7 @@ class JobXML(object):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                log.warning("Unsupported job 'publisher' plugin: " + get_plugin_name(node))
+                self._log.warning("Unsupported job 'publisher' plugin: " + get_plugin_name(node))
         return retval
 
     @property
@@ -173,7 +170,7 @@ class JobXML(object):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                log.warning("Unsupported job 'builder' plugin: " + get_plugin_name(node))
+                self._log.warning("Unsupported job 'builder' plugin: " + get_plugin_name(node))
 
         return retval
 
