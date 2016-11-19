@@ -1,0 +1,25 @@
+[run]
+# Include branch detection in coverage scan
+branch = True
+
+[report]
+# fail the build if less than 0% of the code is covered by tests
+fail_under = 0
+
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+    def debug_
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
