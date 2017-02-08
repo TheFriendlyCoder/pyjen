@@ -29,12 +29,12 @@ class job_xml_basic_config_tests(xml_test_case):
     def test_no_op(self):
         
         j = JobXML(self.__test_config)
-        actual_xml = j.XML
+        actual_xml = j.xml
         
         self.assertEqualXML(self.__test_config, actual_xml)
     def test_get_xml_return_type(self):
         j = JobXML(self.__test_config)
-        actual_xml = j.XML
+        actual_xml = j.xml
 
         # In python2 unicode strings are of type 'unicode'
         # but in python3 'unicode' was deprecated because all strings are unicode
@@ -48,7 +48,7 @@ class job_xml_basic_config_tests(xml_test_case):
         
         j = JobXML(self.__test_config)
         j.custom_workspace = custom_workspace_path
-        actual_xml = j.XML
+        actual_xml = j.xml
         
         self.assertTrue("<customWorkspace>" + custom_workspace_path + "</customWorkspace>" in actual_xml)
         
@@ -58,7 +58,7 @@ class job_xml_basic_config_tests(xml_test_case):
         # make sure disabling custom workspace when none exists doesn't fail
         j.disable_custom_workspace()
         
-        actual_xml = j.XML
+        actual_xml = j.xml
         
         self.assertTrue("<customWorkspace>" not in actual_xml)
         
@@ -85,7 +85,7 @@ class job_xml_basic_config_tests(xml_test_case):
         new_custom_workspace = "some/new/path"
         j = JobXML(sample_xml)
         j.custom_workspace = new_custom_workspace
-        actual_xml = j.XML
+        actual_xml = j.xml
         
         self.assertTrue("<customWorkspace>" + new_custom_workspace + "</customWorkspace>" in actual_xml)
         
@@ -111,7 +111,7 @@ class job_xml_basic_config_tests(xml_test_case):
         
         j = JobXML(sample_xml)
         j.disable_custom_workspace()
-        actual_xml = j.XML
+        actual_xml = j.xml
         
         self.assertTrue("<customWorkspace>" not in actual_xml)
     

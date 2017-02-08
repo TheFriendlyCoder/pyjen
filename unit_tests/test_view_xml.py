@@ -11,7 +11,7 @@ class view_xml_tests(unittest.TestCase):
 
         vxml = ViewXML(orig_xml)
         vxml.rename(new_name)
-        self.assertIn(expected_xml, vxml.XML)
+        self.assertIn(expected_xml, vxml.xml)
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
