@@ -96,3 +96,5 @@ ENV/
 # pycharm config files
 /.idea/workspace.xml
 /.idea/tasks.xml
+logs/
+py?/
