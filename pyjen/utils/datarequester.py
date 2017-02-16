@@ -56,6 +56,15 @@ class DataRequester(object):
         """
         return self._url
 
+    @property
+    def ssl_verify_enabled(self):
+        """Checks to see if SSL verification is enabled for REST API transactions or not
+
+        :return: True if transactions are verifying the SSL certificate, False if not
+        :rtype: :class:`bool`
+        """
+        return self._ssl_verify
+
     def clone(self, new_url=None):
         """create a copy of this connection object
 

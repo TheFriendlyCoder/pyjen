@@ -2,25 +2,33 @@
 from datetime import datetime
 import logging
 from pyjen.changeset import Changeset
+from pyjen.utils.jenkins_api import JenkinsAPI
+from pyjen.utils.datarequester import DataRequester
 
 
-class Build(object):
+class Build(JenkinsAPI):
     """Class that encapsulates information about a single build / run of a :class:`~.job.Job`
 
     Builds are executions of jobs and thus instances of this class are
     typically generated from the :class:`~.job.Job` class.
 
     .. seealso:: :class:`~.job.Job`
+
+    :param str url:
+        Full URL of the Jenkins instance to connect to. Must be
+        a valid running Jenkins instance.
+    :param tuple credentials:
+        A 2-element tuple with the username and password for authenticating to the URL
+        If omitted, credentials will be loaded from any pyjen config files found on the system
+        If no credentials can be found, anonymous access will be used
+    :param bool ssl_verify:
+        Indicates whether the SSL certificate of the Jenkins instance should be checked upon connection.
+        For Jenkins instances hosted behind HTTPS using self-signed certificates this may cause connection
+        errors when enabled. Defaults to disabled (False)
     """
 
-    def __init__(self, data_io_controller):
-        """
-        :param data_io_controller:
-            class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API
-        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
-        """
-        self._data_io = data_io_controller
+    def __init__(self, url, credentials=None, ssl_verify=False):
+        super(Build, self).__init__(url, credentials, ssl_verify)
         self._log = logging.getLogger(__name__)
 
     def __eq__(self, obj):
@@ -61,7 +69,7 @@ class Build(object):
         :rtype: :class:`int`
         """
 
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
 
         return data['number']
 
@@ -74,7 +82,7 @@ class Build(object):
 
         """
 
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
 
         time_in_seconds = data['timestamp'] * 0.001
 
@@ -87,7 +95,7 @@ class Build(object):
         :returns: True if the build is executing otherwise False
         :rtype: :class:`bool`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
 
         return data['building']
 
@@ -98,7 +106,7 @@ class Build(object):
         :returns: Raw console output from this build, in plain text format
         :rtype: :class:`str`
         """
-        return self._data_io.get_text("/consoleText")
+        return self.get_text("/consoleText")
 
     @property
     def result(self):
@@ -107,7 +115,7 @@ class Build(object):
         :return: the status of this build. Typically "SUCCESS" or "FAILURE" but may also be "UNSTABLE"
         :rtype: `func`:str
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
 
         return data['result']
 
@@ -119,9 +127,10 @@ class Build(object):
             If no changesets are found, returns None
         :rtype: :class:`~.changeset.Changeset`
         """
-        data = self._data_io.get_api_data()
-
-        return Changeset(data['changeSet'], self._data_io)
+        data = self.get_api_data()
+        http_io = DataRequester(self.url, self._ssl_verify)
+        http_io.credentials = self._creds
+        return Changeset(data['changeSet'], http_io)
 
     @property
     def description(self):
@@ -129,7 +138,7 @@ class Build(object):
 
         :rtype: :class:`str`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
         retval = data["description"]
         if retval is None:
             return ""
@@ -142,7 +151,7 @@ class Build(object):
         :rtype: :class:`str`
         """
 
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
         return data["id"]
 
     @property
@@ -151,12 +160,12 @@ class Build(object):
 
         :rtype: :class:`list` of :class:`str`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
         artifacts_node = data['artifacts']
         retval = []
 
         for node in artifacts_node:
-            url = self._data_io.url + "artifact/" + node['fileName']
+            url = self.url + "artifact/" + node['fileName']
             retval.append(url)
 
         return retval
@@ -173,7 +182,7 @@ class Build(object):
             * "FAILED"
         :rtype: :class:`str`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
 
         return data['result']
 

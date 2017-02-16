@@ -259,9 +259,9 @@ class Job(PluginBase):
 
         retval = []
         for cur_build in builds:
-            temp_data_io = self._controller.clone(cur_build['url'])
-            temp_data_io.set_api_data(cur_build)
-            temp_build = Build(temp_data_io)
+            # TODO: Figure out a new way to pre-populate build data upon object construction
+            # temp_data_io.set_api_data(cur_build)
+            temp_build = Build(cur_build['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
             retval.append(temp_build)
 
         return retval
@@ -279,8 +279,7 @@ class Job(PluginBase):
 
         retval = []
         for cur_build in builds:
-            temp_data_io = self._controller.clone(cur_build['url'])
-            temp_build = Build(temp_data_io)
+            temp_build = Build(cur_build['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
             retval.append(temp_build)
 
         return retval
@@ -305,8 +304,7 @@ class Job(PluginBase):
         if lgb is None:
             return None
 
-        temp_data_io = self._controller.clone(lgb['url'])
-        return Build(temp_data_io)
+        return Build(lgb['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
 
     @property
     def last_build(self):
@@ -327,8 +325,7 @@ class Job(PluginBase):
         if last_build is None:
             return None
 
-        temp_data_io = self._controller.clone(last_build['url'])
-        return Build(temp_data_io)
+        return Build(last_build['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
 
     @property
     def last_failed_build(self):
@@ -348,8 +345,7 @@ class Job(PluginBase):
         if bld is None:
             return None
 
-        temp_data_io = self._controller.clone(bld['url'])
-        return Build(temp_data_io)
+        return Build(bld['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
 
     @property
     def last_stable_build(self):
@@ -370,8 +366,7 @@ class Job(PluginBase):
         if bld is None:
             return None
 
-        temp_data_io = self._controller.clone(bld['url'])
-        return Build(temp_data_io)
+        return Build(bld['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
 
     @property
     def last_unsuccessful_build(self):
@@ -391,8 +386,7 @@ class Job(PluginBase):
         if bld is None:
             return None
 
-        temp_data_io = self._controller.clone(bld['url'])
-        return Build(temp_data_io)
+        return Build(bld['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
 
     @property
     def downstream_jobs(self):
@@ -489,7 +483,8 @@ class Job(PluginBase):
             If such a build does not exist, returns None
         :rtype: :class:`~.build.Build`
         """
-        temp_data_io = self._controller.clone(self._controller.url + str(build_number))
+        temp_url = self._controller.url + str(build_number)
+        temp_data_io = self._controller.clone(temp_url)
 
         # Lets try loading data from the given URL to see if it is valid.
         # If it's not valid we'll assume a build with the given number doesn't exist
@@ -498,7 +493,7 @@ class Job(PluginBase):
         except AssertionError:
             return None
 
-        return Build(temp_data_io)
+        return Build(temp_url, self._controller.credentials, self._controller.ssl_verify_enabled)
 
     def get_builds_in_time_range(self, start_time, end_time):
         """ Returns a list of all of the builds for a job that
