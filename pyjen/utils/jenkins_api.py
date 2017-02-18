@@ -12,10 +12,16 @@ class JenkinsAPI(object):
     functionality should simply derive from this base class so they can make calls directly to the helpers,
     while the base class maintains the connection parameters and state information for optimizing IO against
     the remote Jenkins service."""
-    def __init__(self, url, credentials, ssl_verify):
+
+    # Credentials to use when authenticating to the Jenkins REST API
+    creds = ()
+
+    # Indicates whether SSL encryption certificates should be verified when connecting to secure servers
+    # Can cause connection problems when enabled if Jenkins is using a self-signed SSL certificate
+    ssl_verify_enabled = False
+
+    def __init__(self, url):
         self._url = url.rstrip("/\\") + "/"
-        self._creds = credentials
-        self._ssl_verify = ssl_verify
 
         # NOTE: Here we configure a private logging object, which should sufficiently obfuscate the member
         #       so derived classes can have their own logging interface.
@@ -67,15 +73,16 @@ class JenkinsAPI(object):
         :returns:  Text returned from the given URL
         :rtype: :class:`str`
         """
-        req = requests.get(url, auth=self._creds, verify=self._ssl_verify)
+        req = requests.get(url, auth=JenkinsAPI.creds, verify=JenkinsAPI.ssl_verify_enabled)
 
         if req.status_code != 200:
             self.__log.debug("Error getting raw text from URL: " + url)
-            if self._creds is None:
-                self.__log.debug("Not using authenticated access")
-            else:
-                self.__log.debug("Authenticating as user: " + self._creds[0])
+            if JenkinsAPI.creds:
+                self.__log.debug("Authenticating as user: " + JenkinsAPI.creds[0])
                 self.__log.debug("Details: " + str(req))
+            else:
+                self.__log.debug("Not using authenticated access")
+
             req.raise_for_status()
 
         return req.text

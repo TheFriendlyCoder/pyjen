@@ -18,18 +18,10 @@ class Build(JenkinsAPI):
     :param str url:
         Full URL of the Jenkins instance to connect to. Must be
         a valid running Jenkins instance.
-    :param tuple credentials:
-        A 2-element tuple with the username and password for authenticating to the URL
-        If omitted, credentials will be loaded from any pyjen config files found on the system
-        If no credentials can be found, anonymous access will be used
-    :param bool ssl_verify:
-        Indicates whether the SSL certificate of the Jenkins instance should be checked upon connection.
-        For Jenkins instances hosted behind HTTPS using self-signed certificates this may cause connection
-        errors when enabled. Defaults to disabled (False)
     """
 
-    def __init__(self, url, credentials=None, ssl_verify=False):
-        super(Build, self).__init__(url, credentials, ssl_verify)
+    def __init__(self, url):
+        super(Build, self).__init__(url)
         self._log = logging.getLogger(__name__)
 
     def __eq__(self, obj):
@@ -134,8 +126,8 @@ class Build(JenkinsAPI):
         :rtype: :class:`~.changeset.Changeset`
         """
         data = self.get_api_data()
-        http_io = DataRequester(self.url, self._ssl_verify)
-        http_io.credentials = self._creds
+        http_io = DataRequester(self.url, JenkinsAPI.ssl_verify_enabled)
+        http_io.credentials = JenkinsAPI.creds
         return Changeset(data['changeSet'], http_io)
 
     @property
