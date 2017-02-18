@@ -1,7 +1,7 @@
-from pyjen.node import Node
-import pytest
 import time
-
+from mock import MagicMock
+import pytest
+from pyjen.node import Node
 
 # This dictionary represents a "typical" dataset returned by the Jenkins REST API
 # when querying information about a node. This is used to fake output from the REST API
@@ -29,36 +29,35 @@ def test_is_offline(patch_node_api):
     assert n.is_offline is True
 
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-def test_toggle_offline():
-    mock_data_io = MagicMock()
-
-    n = Node(mock_data_io)
+def test_toggle_offline(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Node, "post", mock_post)
+    n = Node("http://localhost:8080/computer/agent1")
     n.toggle_offline()
 
-    mock_data_io.post.assert_called_once_with("/toggleOffline")
+    mock_post.assert_called_once_with("/toggleOffline")
 
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-def test_toggle_offline_with_message():
-    mock_data_io = MagicMock()
+def test_toggle_offline_with_message(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Node, "post", mock_post)
 
-    n = Node(mock_data_io)
+    n = Node("http://localhost:8080/computer/agent1")
     offline_message = "Description"
     n.toggle_offline(offline_message)
 
-    mock_data_io.post.assert_called_once_with("/toggleOffline?offlineMessage=" + offline_message)
+    mock_post.assert_called_once_with("/toggleOffline?offlineMessage=" + offline_message)
 
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-def test_toggle_offline_with_message_with_spaces():
-    mock_data_io = MagicMock()
+def test_toggle_offline_with_message_with_spaces(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Node, "post", mock_post)
 
-    n = Node(mock_data_io)
+    n = Node("http://localhost:8080/computer/agent1")
     offline_message = "Descriptive text goes here"
     n.toggle_offline(offline_message)
 
-    mock_data_io.post.assert_called_once_with("/toggleOffline?offlineMessage=Descriptive%20text%20goes%20here")
+    mock_post.assert_called_once_with("/toggleOffline?offlineMessage=" + offline_message.replace(" ", "%20"))
 
 
 def test_is_idle(patch_node_api):
@@ -67,41 +66,40 @@ def test_is_idle(patch_node_api):
     assert n.is_idle is True
 
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-def test_wait_for_idle():
-    mock_data_io = MagicMock()
+def test_wait_for_idle(monkeypatch):
+    mock_get_api_data = MagicMock()
 
-    def mock_get_api_data():
-        if not hasattr(mock_get_api_data, "is_called"):
-            mock_get_api_data.is_called = True
-            return {'idle':False}
+    def mock_get_api_data_fn():
+        if not hasattr(mock_get_api_data_fn, "is_called"):
+            mock_get_api_data_fn.is_called = True
+            return {'idle': False}
 
-        return {'idle':True}
+        return {'idle': True}
 
-    mock_data_io.get_api_data.side_effect = mock_get_api_data
+    mock_get_api_data.side_effect = mock_get_api_data_fn
+    monkeypatch.setattr(Node, "get_api_data", mock_get_api_data)
 
-    n = Node(mock_data_io)
+    n = Node("http://localhost:8080/computer/agent1")
     final_is_idle_value = n.wait_for_idle()
 
-    self.assertTrue(final_is_idle_value)
-    self.assertGreaterEqual(mock_data_io.get_api_data.call_count, 2, "Mock dataio object should have been called at least twice.")
+    assert final_is_idle_value is True
+    assert mock_get_api_data.call_count >= 2
 
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-def test_wait_for_idle_timeout():
-    mock_data_io = MagicMock()
-    mock_data_io.get_api_data.return_value = {'idle':False}
+def test_wait_for_idle_timeout(monkeypatch):
+    monkeypatch.setattr(Node, "get_api_data", lambda s: {'idle': False})
 
-    n = Node(mock_data_io)
+    n = Node("http://localhost:8080/computer/agent1")
 
-    #TODO: Consider launching this method asynchronously
-    #somehow to prevent deadlocks if the wait method has bugs in it
+    #TODO: Consider launching this method asynchronously somehow to prevent deadlocks if the wait method has bugs in it
+    expected_idle_time_in_seconds = 2
     start_time = time.time()
-    final_is_idle_value = n.wait_for_idle(3.1)
+    final_is_idle_value = n.wait_for_idle(expected_idle_time_in_seconds)
     duration_in_seconds = time.time() - start_time
 
-    self.assertGreaterEqual(duration_in_seconds, 3, "wait method should have taken at least 3 seconds to complete")
-    self.assertFalse(final_is_idle_value)
+    assert final_is_idle_value is False
+    assert duration_in_seconds >= expected_idle_time_in_seconds
+
         
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

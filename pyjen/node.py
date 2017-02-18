@@ -63,8 +63,7 @@ class Node(JenkinsAPI):
         """Blocks execution until this Node enters an idle state
 
         :param int max_timeout:
-            The maximum amount of time, in seconds, to wait for
-            an idle state. If this value is undefined, this method
+            The maximum amount of time, in seconds, to wait for an idle state. If this value is undefined, this method
             will block indefinitely.
 
         :returns: True if the Node has entered idle state before returning otherwise returns False
