@@ -345,6 +345,7 @@ class job_dependencies_tests(unittest.TestCase):
         self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a transient dependency")
         self.assertTrue(upstream_job_name3 in names, "Mock job #3 should be returned as a direct dependency")
 
+@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
 class job_build_methods_tests(unittest.TestCase):
     """Tests for build related methods exposed by the 'Job' API"""
     def test_get_no_recent_builds(self):

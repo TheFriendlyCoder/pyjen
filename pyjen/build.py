@@ -4,6 +4,7 @@ import logging
 from pyjen.changeset import Changeset
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.datarequester import DataRequester
+from six.moves import urllib_parse
 
 
 class Build(JenkinsAPI):
@@ -110,10 +111,15 @@ class Build(JenkinsAPI):
 
     @property
     def result(self):
-        """Gets the final status of this build
+        """Gets the status of the build
 
-        :return: the status of this build. Typically "SUCCESS" or "FAILURE" but may also be "UNSTABLE"
-        :rtype: `func`:str
+        :returns:
+            Result state of the associated job upon completion of this build. Typically one of the following:
+
+            * "SUCCESS"
+            * "UNSTABLE"
+            * "FAILED"
+        :rtype: :class:`str`
         """
         data = self.get_api_data()
 
@@ -165,26 +171,10 @@ class Build(JenkinsAPI):
         retval = []
 
         for node in artifacts_node:
-            url = self.url + "artifact/" + node['fileName']
+            url = urllib_parse.urljoin(self.url, "artifact/" + node['fileName'])
             retval.append(url)
 
         return retval
-
-    @property
-    def status(self):
-        """Gets the status of the build
-
-        :returns:
-            Result state of the associated job upon completion of this build. Typically one of the following:
-
-            * "SUCCESS"
-            * "UNSTABLE"
-            * "FAILED"
-        :rtype: :class:`str`
-        """
-        data = self.get_api_data()
-
-        return data['result']
 
 
 if __name__ == "__main__":  # pragma: no cover

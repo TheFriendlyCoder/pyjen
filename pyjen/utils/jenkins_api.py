@@ -4,7 +4,7 @@ import requests
 from six.moves import urllib_parse
 
 
-class JenkinsAPI (object):
+class JenkinsAPI(object):
     """Base class for all objects that interact with the Jenkins REST API
 
     This class provides methods for interacting with the Jenkins REST API in various ways such as querying
@@ -13,7 +13,7 @@ class JenkinsAPI (object):
     while the base class maintains the connection parameters and state information for optimizing IO against
     the remote Jenkins service."""
     def __init__(self, url, credentials, ssl_verify):
-        self._url = url
+        self._url = url.rstrip("/\\") + "/"
         self._creds = credentials
         self._ssl_verify = ssl_verify
 
@@ -79,4 +79,3 @@ class JenkinsAPI (object):
             req.raise_for_status()
 
         return req.text
-
