@@ -1,7 +1,5 @@
 """Primitives for interacting with SCM changesets"""
 from pyjen.user import User
-from pyjen.utils.jenkins_api import JenkinsAPI
-from pyjen.utils.datarequester import DataRequester
 
 
 class Changeset(object):
@@ -92,9 +90,7 @@ class ChangesetItem(object):
         :returns: Person who committed this change to the associated SCM
         :rtype: :class:`~.user.User`
         """
-        http_io = DataRequester(self._data['author']['absoluteUrl'], JenkinsAPI.ssl_verify_enabled)
-        http_io.credentials = JenkinsAPI.creds
-        return User(http_io)
+        return User(self._data['author']['absoluteUrl'])
 
     @property
     def message(self):

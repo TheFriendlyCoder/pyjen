@@ -448,8 +448,7 @@ class Jenkins(object):
         :return: A user object allowing interaction with the given user's settings and information
         :rtype: :class:`~.user.User`
         """
-        new_io_obj = self._controller.clone(url)
-        return User(new_io_obj)
+        return User(url)
 
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance
@@ -459,9 +458,8 @@ class Jenkins(object):
         :rtype: :class:`~.user.User` or None if user not found
         """
         new_url = self._controller.url + "/user/" + username
-        new_io_obj = self._controller.clone(new_url)
         try:
-            retval = User(new_io_obj)
+            retval = User(new_url)
             assert retval.user_id == username
             return retval
         except RequestException:

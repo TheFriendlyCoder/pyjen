@@ -1,25 +1,19 @@
 """Primitives for interacting with Jenkins users"""
+from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class User(object):
+class User(JenkinsAPI):
     """Interface to all primitives associated with a Jenkins user
 
     Instances of this class are typically created using one of the user
     methods on the Jenkins class, such as :py:meth:`~.jenkins.Jenkins.find_user`
     """
 
-    def __init__(self, data_io_controller):
+    def __init__(self, url):
         """
-        :param data_io_controller:
-            class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API
-        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
+        :param str url: Full URL of the Jenkins REST API endpoint containing information about a particular user
         """
-        self._data_io = data_io_controller
-
-    @property
-    def url(self):
-        return self._data_io.url
+        super(User, self).__init__(url)
 
     @property
     def user_id(self):
@@ -28,7 +22,7 @@ class User(object):
         :returns: unique identifier for this user
         :rtype: :class:`str`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
         return data['id']
 
     @property
@@ -38,7 +32,7 @@ class User(object):
         :returns: this users' full name
         :rtype: :class:`str`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
         return data['fullName']
 
     @property
@@ -49,8 +43,8 @@ class User(object):
             May be None if no description found
         :rtype: :class:`str`
         """
-        data = self._data_io.get_api_data()
-        return data['description']
+        data = self.get_api_data()
+        return data['description'] if data['description'] is not None else ''
 
     @property
     def email(self):
@@ -59,7 +53,7 @@ class User(object):
         :returns: email address of this user
         :rtype: :class:`str`
         """
-        data = self._data_io.get_api_data()
+        data = self.get_api_data()
         for prop in data['property']:
             if 'address' in prop:
                 return prop['address']

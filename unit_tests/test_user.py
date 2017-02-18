@@ -1,52 +1,53 @@
 from pyjen.user import User
-import unittest
-from mock import MagicMock
 import pytest
 
-class user_tests(unittest.TestCase):
-    def test_get_user_id(self):
-        expected_id = "myuserid"
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"id":expected_id}
-        
-        u = User(mock_data_io)
-        
-        self.assertEqual(u.user_id, expected_id)
-    
-    def test_get_full_username(self):
-        expected_name = "John Doe"
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"fullName":expected_name}
-        
-        u = User(mock_data_io)
-        
-        self.assertEqual(u.full_name, expected_name)
-        
-    def test_get_description(self):
-        expected_desc = "This user has some sort of role"
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"description":expected_desc}
-        
-        u = User(mock_data_io)
-        
-        self.assertEqual(u.description, expected_desc)
-        
-    def test_get_no_description(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"description":None}
-        
-        u = User(mock_data_io)
-        
-        self.assertEqual(u.description, None)
-            
-    def test_get_email(self):
-        expected_email = "john.doe@foo.bar.com"
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"property":[{"address":expected_email}]}
-        
-        u = User(mock_data_io)
-        
-        self.assertEqual(u.email, expected_email)
+sample_email = "john.doe@foo.bar.com"
+fake_user_data = {
+    "id": "myuserid",
+    "fullName": "John Doe",
+    "description": "Here is where I'd describe myself",
+    "property": [{"address": sample_email}]
+}
+
+
+@pytest.fixture
+def patch_user_api(monkeypatch):
+    monkeypatch.setattr(User, "get_api_data", lambda s: fake_user_data)
+
+
+def test_get_user_id(patch_user_api):
+    u = User("http://localhost:8080/user/johnd")
+
+    assert u.user_id == fake_user_data["id"]
+
+
+def test_get_full_username(patch_user_api):
+    u = User("http://localhost:8080/user/johnd")
+
+    assert u.full_name == fake_user_data["fullName"]
+
+
+def test_get_description(patch_user_api):
+    u = User("http://localhost:8080/user/johnd")
+
+    assert u.description == fake_user_data["description"]
+
+
+def test_get_no_description(monkeypatch):
+    tmp_data = fake_user_data.copy()
+    tmp_data["description"] = None
+    monkeypatch.setattr(User, "get_api_data", lambda x: tmp_data)
+
+    u = User("http://localhost:8080/user/johnd")
+
+    assert u.description == ""
+
+
+def test_get_email(patch_user_api):
+
+    u = User("http://localhost:8080/user/johnd")
+
+    assert u.email == sample_email
     
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
