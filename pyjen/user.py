@@ -18,6 +18,10 @@ class User(object):
         self._data_io = data_io_controller
 
     @property
+    def url(self):
+        return self._data_io.url
+
+    @property
     def user_id(self):
         """Gets the unique identifier for this user
 

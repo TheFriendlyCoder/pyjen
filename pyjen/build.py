@@ -3,7 +3,6 @@ from datetime import datetime
 import logging
 from pyjen.changeset import Changeset
 from pyjen.utils.jenkins_api import JenkinsAPI
-from pyjen.utils.datarequester import DataRequester
 from six.moves import urllib_parse
 
 
@@ -126,9 +125,8 @@ class Build(JenkinsAPI):
         :rtype: :class:`~.changeset.Changeset`
         """
         data = self.get_api_data()
-        http_io = DataRequester(self.url, JenkinsAPI.ssl_verify_enabled)
-        http_io.credentials = JenkinsAPI.creds
-        return Changeset(data['changeSet'], http_io)
+
+        return Changeset(data['changeSet'])
 
     @property
     def description(self):

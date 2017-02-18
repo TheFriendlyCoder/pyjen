@@ -1,5 +1,7 @@
 """Primitives for interacting with SCM changesets"""
 from pyjen.user import User
+from pyjen.utils.jenkins_api import JenkinsAPI
+from pyjen.utils.datarequester import DataRequester
 
 
 class Changeset(object):
@@ -9,7 +11,7 @@ class Changeset(object):
 
     """
 
-    def __init__(self, data, controller):
+    def __init__(self, data):
         """
         :param dict data:
             Dictionary of data elements typically parsed from the "changeSet" node
@@ -27,7 +29,6 @@ class Changeset(object):
         assert 'kind' in data.keys()
 
         self._data = data
-        self._controller = controller
 
     @property
     def affected_items(self):
@@ -39,7 +40,7 @@ class Changeset(object):
         retval = []
 
         for item in self._data['items']:
-            retval.append(ChangesetItem(item, self._controller))
+            retval.append(ChangesetItem(item))
 
         return retval
 
@@ -78,13 +79,12 @@ class ChangesetItem(object):
     .. seealso:: :class:`Changeset`
     """
 
-    def __init__(self, data, controller):
+    def __init__(self, data):
         """
         :param dict data: Dictionary of attributes describing this single changeset
         :param controller: Interface to the Jenkins API
         :type controller: :class:`~.utils.datarequester.DataRequester`"""
         self._data = data
-        self._controller = controller
 
     @property
     def author(self):
@@ -92,8 +92,9 @@ class ChangesetItem(object):
         :returns: Person who committed this change to the associated SCM
         :rtype: :class:`~.user.User`
         """
-        temp_data_io = self._controller.clone(self._data['author']['absoluteUrl'])
-        return User(temp_data_io)
+        http_io = DataRequester(self._data['author']['absoluteUrl'], JenkinsAPI.ssl_verify_enabled)
+        http_io.credentials = JenkinsAPI.creds
+        return User(http_io)
 
     @property
     def message(self):

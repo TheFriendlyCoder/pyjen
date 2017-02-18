@@ -117,11 +117,12 @@ class DataRequester(object):
 
         if req.status_code != 200:
             self._log.debug("Error getting raw text from URL: " + url)
-            if self._credentials is None:
-                self._log.debug("Not using authenticated access")
-            else:
+            if self._credentials:
                 self._log.debug("Authenticating as user: " + self._credentials[0])
                 self._log.debug("Details: " + str(req))
+            else:
+                self._log.debug("Not using authenticated access")
+
             req.raise_for_status()
 
         if DataRequester.ENABLE_CACHING:
