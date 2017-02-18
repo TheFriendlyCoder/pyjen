@@ -241,6 +241,7 @@ class jenkins_view_tests(unittest.TestCase):
         
         self.assertEqual(v.name, new_view_name)
 
+@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
 class jenkins_nodes_tests(unittest.TestCase):
     """Unit tests for the node-related methods of the Jenkins class"""
     

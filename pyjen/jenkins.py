@@ -150,8 +150,7 @@ class Jenkins(object):
             else:
                 node_url = self._controller.url.rstrip("/") + '/computer/' + cur_node['displayName']
 
-            node_data_io = self._controller.clone(node_url)
-            retval.append(Node(node_data_io))
+            retval.append(Node(node_url))
 
         return retval
 
@@ -436,20 +435,6 @@ class Jenkins(object):
         new_io_obj = self._controller.clone(url)
         return Job(new_io_obj, self)
 
-    def get_user(self, url):
-        """Establishes a connection to a Jenkins User based on an absolute URL
-
-        This method may be a bit less convenient to use in certain situations but it
-        has better performance than :py:meth:`.find_user`
-
-        .. seealso: :py:meth:`.find_user`
-
-        :param str url: absolute URL of the user to load
-        :return: A user object allowing interaction with the given user's settings and information
-        :rtype: :class:`~.user.User`
-        """
-        return User(url)
-
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance
 
@@ -465,21 +450,6 @@ class Jenkins(object):
         except RequestException:
             return None
 
-    def get_node(self, url):
-        """Loads data for a Jenkins build agent based on an absolute URL
-
-        This method may be a bit less convenient to use in certain situations but it
-        has better performance than :py:meth:`.find_node`
-
-        .. seealso: :py:meth:`.find_node`
-
-        :param str url: absolute URL of the node data to load
-        :return: A node object allowing interaction with the given node's settings and information
-        :rtype: :class:`~.node.Node`
-        """
-        new_io_obj = self._controller.clone(url)
-        return Node(new_io_obj)
-
     def find_node(self, nodename):
         """Locates a Jenkins build agent with the given name on this Jenkins instance
 
@@ -488,9 +458,8 @@ class Jenkins(object):
         :rtype: :class:`~.node.Node` or None if node not found
         """
         new_url = self._controller.url + "/computer/" + nodename
-        new_io_obj = self._controller.clone(new_url)
         try:
-            retval = Node(new_io_obj)
+            retval = Node(new_url)
             assert retval.name == nodename
             return retval
         except RequestException:

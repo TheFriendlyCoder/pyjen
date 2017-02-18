@@ -41,15 +41,12 @@ class JenkinsAPI(object):
             with the given URL.
         :rtype: :class:`object`
         """
-        temp_url = urllib_parse.urljoin(self._url, "api/python")
+        temp_url = urllib_parse.urljoin(self._url, "api/json")
 
         if query_params is not None:
             temp_url += "?" + query_params
 
-        txt = self._get_raw_text(temp_url)
-
-        retval = eval(txt)  # pylint: disable=eval-used
-        return retval
+        return self._get_with_check(temp_url).json()
 
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
@@ -64,9 +61,9 @@ class JenkinsAPI(object):
         if path is not None:
             tmp = urllib_parse.urljoin(tmp, path.lstrip("/\\"))
 
-        return self._get_raw_text(tmp)
+        return self._get_with_check(tmp).text
 
-    def _get_raw_text(self, url):
+    def _get_with_check(self, url):
         """retrieves the raw text output from a specified HTTP URL
 
         :param str url: the full HTTP URL to be polled
@@ -75,7 +72,7 @@ class JenkinsAPI(object):
         """
         req = requests.get(url, auth=JenkinsAPI.creds, verify=JenkinsAPI.ssl_verify_enabled)
 
-        if req.status_code != 200:
+        if req.status_code != requests.codes.ok:
             self.__log.debug("Error getting raw text from URL: " + url)
             if JenkinsAPI.creds:
                 self.__log.debug("Authenticating as user: " + JenkinsAPI.creds[0])
@@ -85,4 +82,40 @@ class JenkinsAPI(object):
 
             req.raise_for_status()
 
-        return req.text
+        return req
+
+    def post(self, path=None, args=None):
+        """sends data to or triggers an operation via a Jenkins URL
+
+        :param str path:
+            optional extension path to append to the root URL managed by this object when performing the post operation
+
+        :param dict args:
+            optional set of data arguments to be sent with the post operation.  Supported keys are as follows:
+
+            * 'headers' - dictionary of HTTP header properties and their associated values
+            * 'data' - dictionary of assorted / misc data properties and their values
+            * 'files' - dictionary of file names and handles to be uploaded to the target URL
+        """
+
+        temp_path = self._url
+        if path is not None:
+            temp_path = urllib_parse.urljoin(temp_path, path.lstrip("/\\"))
+
+        if args is not None:
+            req = requests.post(temp_path, auth=JenkinsAPI.creds, verify=JenkinsAPI.ssl_verify_enabled, **args)
+        else:
+            req = requests.post(temp_path, auth=JenkinsAPI.creds, verify=JenkinsAPI.ssl_verify_enabled)
+
+        if req.status_code != requests.codes.ok:
+            self.__log.debug("Failed posting Jenkins data to " + temp_path)
+            if JenkinsAPI.creds:
+                self.__log.debug("Authenticating as user: " + JenkinsAPI.creds[0])
+            else:
+                self.__log.debug("Not using authenticated access")
+
+            if args is not None:
+                self.__log.debug("Using custom post data: " + str(args))
+
+            self.__log.debug("Details: " + str(req))
+            req.raise_for_status()
