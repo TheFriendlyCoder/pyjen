@@ -14,9 +14,7 @@ class Build(JenkinsAPI):
 
     .. seealso:: :class:`~.job.Job`
 
-    :param str url:
-        Full URL of the Jenkins instance to connect to. Must be
-        a valid running Jenkins instance.
+    :param str url: Full URL of one particular build of a Jenkins job
     """
 
     def __init__(self, url):
@@ -121,7 +119,6 @@ class Build(JenkinsAPI):
         """Gets the list of SCM changes associated with this build
 
         :returns: 0 or more SCM changesets associated with / included in this build.
-            If no changesets are found, returns None
         :rtype: :class:`~.changeset.Changeset`
         """
         data = self.get_api_data()
@@ -130,7 +127,7 @@ class Build(JenkinsAPI):
 
     @property
     def description(self):
-        """Gets the descriptive test associated with this build
+        """Gets the descriptive text associated with this build. May be an empty string if no description given.
 
         :rtype: :class:`str`
         """
@@ -146,13 +143,12 @@ class Build(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-
         data = self.get_api_data()
         return data["id"]
 
     @property
     def artifact_urls(self):
-        """Gets a list of URLs which can be used to download the published build artifacts for this build
+        """Gets a list of 0 or more URLs which can be used to download the published build artifacts for this build
 
         :rtype: :class:`list` of :class:`str`
         """

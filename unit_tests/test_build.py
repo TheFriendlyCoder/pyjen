@@ -5,15 +5,25 @@ import pytest
 
 epoch_time = time.time()
 artifact_filename = "MyFile.txt"
+changeset_message = "Here's my commit message"
 
+# This dictionary represents a "typical" dataset returned by the Jenkins REST API
+# when querying information about a build. This is used to fake output from the REST API
+# for tests below.
 fake_build_data = {
     "number": 3,
-    "timestamp": epoch_time * 1000,
+    "timestamp": epoch_time * 1000,  # Jenkins stores timestamps in milliseconds instead of seconds
     "building": True,
     "result": "SUCCESS",
     "description": "Description of my build",
     "id": 3,
-    "artifacts": [{"fileName": artifact_filename}]
+    "artifacts": [{"fileName": artifact_filename}],
+    "changeSet": {
+        "items": [
+            {"msg": changeset_message}
+            ],
+        "kind": "git"
+    }
 }
 
 fake_build_text = {
@@ -119,6 +129,17 @@ def test_build_inequality(monkeypatch):
 
     assert bld1 != bld2
     assert not bld1 == bld2
+
+
+def test_build_changesets(patch_build_api):
+
+    bld1 = Build('http://localhost:8080/job/MyJob/3')
+    changes = bld1.changeset
+
+    assert changes.has_changes is True
+    assert changes.scm_type == "git"
+    assert len(changes.affected_items) == 1
+    assert changes.affected_items[0].message == changeset_message
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

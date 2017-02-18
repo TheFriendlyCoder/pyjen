@@ -3,28 +3,22 @@ from pyjen.user import User
 
 
 class Changeset(object):
-    """manages the interpretation of the "changeSet" properties of a Jenkins build
+    """Represents a set of changes associated with a build of a Jenkins job
 
     .. seealso:: :class:`~.build.Build`
 
+    :param dict data:
+        Dictionary of data elements typically parsed from the "changeSet" node
+        of a builds source data as provided by the Jenkins REST API. Should have
+        at least the following keys:
+
+        * **'kind'** - string describing the SCM tool associated with this set of changes.
+        * **'items'** - list of 0 or more SCM revisions associated with this change
     """
 
     def __init__(self, data):
-        """
-        :param dict data:
-            Dictionary of data elements typically parsed from the "changeSet" node
-            of a builds source data as provided by the Jenkins REST API. Should have
-            at least the following keys:
-
-            * **'kind'** - string describing the SCM tool associated with this change all changes reported by this
-              object are expected to be stored in the same SCM tool
-            * **'items'** - list of 0 or more actual changesets included in the associated build
-        :param controller: object controlling access to Jenkins API
-        :type controller: :class:`~.utils.datarequester.DataRequester`
-        """
-
-        assert 'items' in data.keys()
-        assert 'kind' in data.keys()
+        assert 'items' in data
+        assert 'kind' in data
 
         self._data = data
 
@@ -32,7 +26,7 @@ class Changeset(object):
     def affected_items(self):
         """gets details of the changes associated with the parent build
 
-        :returns: list of 0 or more items detailing each change associated with this Changeset
+        :returns: list of 0 or more revisions detailing each change associated with this Changeset
         :rtype: :class:`list` of :class:`ChangesetItem` objects
         """
         retval = []
@@ -42,14 +36,14 @@ class Changeset(object):
 
         return retval
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         retval = ""
         changes = self.affected_items
         if len(changes) > 0:
             for change in changes:
                 retval += str(change)
         else:
-            retval = "No Changes\n"
+            retval = "No Changes"
         return retval
 
     @property
@@ -72,16 +66,20 @@ class Changeset(object):
 
 
 class ChangesetItem(object):
-    """Encapsulates all info related to a single change in a Changeset
+    """Represents the details of each SCM revision associated with a given :class:`Changeset`
 
     .. seealso:: :class:`Changeset`
+
+    :param dict data:
+        Dictionary of attributes describing this revision. Required keys are as follows:
+
+        * author: :class:`dict` describing the Jenkins user who committed this change
+        * msg: :class:`str` representing the commit messages from the SCM tool associated with this change
+        * commitId: :class:`str` representing the revision number of the change provided by the SCM tool
+        * changes: :class:`list` of :class:`dict` describing the files modified by this change
     """
 
     def __init__(self, data):
-        """
-        :param dict data: Dictionary of attributes describing this single changeset
-        :param controller: Interface to the Jenkins API
-        :type controller: :class:`~.utils.datarequester.DataRequester`"""
         self._data = data
 
     @property
@@ -100,7 +98,7 @@ class ChangesetItem(object):
         """
         return self._data['msg']
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         retval = "Author: {0}\nMessage: {1}\nRevision: {2}\n".format(
             self._data['author'],
             self._data['msg'],
