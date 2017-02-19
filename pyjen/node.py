@@ -53,7 +53,7 @@ class Node(JenkinsAPI):
 
         :param str message: optional descriptive message explaining the reason this node has been taken offline.
         """
-        post_cmd = "/toggleOffline"
+        post_cmd = self.url + "toggleOffline"
         if message is not None:
             post_cmd += "?offlineMessage=" + urllib_parse.quote(message)
 

@@ -137,12 +137,10 @@ class JenkinsAPI(object):
 
         return req.text
 
-    def post(self, path=None, args=None):
+    def post(self, target_url, args=None):
         """sends data to or triggers an operation via a Jenkins URL
 
-        :param str path:
-            optional extension path to append to the root URL managed by this object when performing the post operation
-
+        :param str target_url: Full URL to sent post request to
         :param dict args:
             optional set of data arguments to be sent with the post operation.  Supported keys are as follows:
 
@@ -150,17 +148,12 @@ class JenkinsAPI(object):
             * 'data' - dictionary of assorted / misc data properties and their values
             * 'files' - dictionary of file names and handles to be uploaded to the target URL
         """
-
-        temp_path = self.url
-        if path is not None:
-            temp_path = urllib_parse.urljoin(temp_path, path.lstrip("/\\"))
-
         temp_headers = dict()
         if self.jenkins_version >= (2, 0, 0):
             temp_headers.update(self.crumb)
 
         req = requests.post(
-            temp_path,
+            target_url,
             auth=JenkinsAPI.creds,
             verify=JenkinsAPI.ssl_verify_enabled,
             headers=temp_headers,

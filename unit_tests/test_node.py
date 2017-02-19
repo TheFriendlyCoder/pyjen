@@ -32,32 +32,34 @@ def test_is_offline(patch_node_api):
 def test_toggle_offline(monkeypatch):
     mock_post = MagicMock()
     monkeypatch.setattr(Node, "post", mock_post)
-    n = Node("http://localhost:8080/computer/agent1")
+    node_url = "http://localhost:8080/computer/agent1"
+    n = Node(node_url)
     n.toggle_offline()
 
-    mock_post.assert_called_once_with("/toggleOffline")
+    mock_post.assert_called_once_with(node_url + "/toggleOffline")
 
 
 def test_toggle_offline_with_message(monkeypatch):
     mock_post = MagicMock()
     monkeypatch.setattr(Node, "post", mock_post)
-
-    n = Node("http://localhost:8080/computer/agent1")
+    node_url = "http://localhost:8080/computer/agent1"
+    n = Node(node_url)
     offline_message = "Description"
     n.toggle_offline(offline_message)
 
-    mock_post.assert_called_once_with("/toggleOffline?offlineMessage=" + offline_message)
+    mock_post.assert_called_once_with(node_url + "/toggleOffline?offlineMessage=" + offline_message)
 
 
 def test_toggle_offline_with_message_with_spaces(monkeypatch):
     mock_post = MagicMock()
     monkeypatch.setattr(Node, "post", mock_post)
 
-    n = Node("http://localhost:8080/computer/agent1")
+    node_url = "http://localhost:8080/computer/agent1"
+    n = Node(node_url)
     offline_message = "Descriptive text goes here"
     n.toggle_offline(offline_message)
 
-    mock_post.assert_called_once_with("/toggleOffline?offlineMessage=" + offline_message.replace(" ", "%20"))
+    mock_post.assert_called_once_with(node_url + "/toggleOffline?offlineMessage=" + offline_message.replace(" ", "%20"))
 
 
 def test_is_idle(patch_node_api):

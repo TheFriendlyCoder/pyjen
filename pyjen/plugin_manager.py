@@ -42,7 +42,7 @@ class PluginManager(JenkinsAPI):
         """
         with open(plugin_file, 'rb') as handle:
             files = {'file': handle}
-            self.post('/uploadPlugin', {"files": files})
+            self.post(self.url + 'uploadPlugin', {"files": files})
 
 if __name__ == "__main__":
     pass
