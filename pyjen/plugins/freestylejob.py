@@ -4,25 +4,14 @@ from pyjen.utils.jobxml import JobXML
 
 
 class FreestyleJob(Job):
-    """Jenkins job of type 'freestyle' """
+    """Jenkins job of type 'freestyle'
+
+    :param str url: Full URL of a job on a Jenkins master
+    """
     type = "project"
 
-    def __init__(self, controller, jenkins_master):
-        """
-        To instantiate an instance of this class using auto-generated
-        configuration parameters, see the :py:func:`easy_connect` method
-
-        :param data_io_controller:
-            class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API
-        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
-        :param jenkins_master:
-            Reference to Jenkins object associated with the master instance managing
-            this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-
-        """
-        super(FreestyleJob, self).__init__(controller, jenkins_master)
+    def __init__(self, url):
+        super(FreestyleJob, self).__init__(url)
 
     @property
     def scm(self):
@@ -62,12 +51,13 @@ class FreestyleJob(Job):
         self.config_xml = jobxml.xml
 
     @staticmethod
-    def template_config_xml():
+    def template_config_xml(job_type):
         """Gets a basic XML configuration template for use when instantiating jobs of this type
 
         :returns: a basic XML configuration template for use when instantiating jobs of this type
         :rtype: :class:`str`
         """
+        assert job_type == FreestyleJob.type
         xml = """<project>
             <actions/>
             <description/>

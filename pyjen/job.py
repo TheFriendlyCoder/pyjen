@@ -4,22 +4,18 @@ from pyjen.build import Build
 from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, find_plugin, init_extension_plugin
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
+from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class Job(PluginBase):
-    """ 'Abstract' base class used by all job classes, providing functionality common to them all"""
+class Job(PluginBase, JenkinsAPI):
+    """ Generic job interface providing abstraction to operations common to all job types on Jenkins
 
-    def __init__(self, controller, jenkins_master):
-        """
-        :param controller: IO interface which manages interaction with the live Jenkins job
-        :type controller: :class:`~.datarequester.DataRequester`
-        :param jenkins_master: Jenkins instance containing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        """
-        self._controller = controller
-        self._master = jenkins_master
-        self._name = None
-        self._type = None
+    :param str url: Full URL of a job on a Jenkins master
+    """
+
+    def __init__(self, url):
+        super(Job, self).__init__(url)
+        self._type = None   # TODO: Consider whether we should name this class Freestyle or not
 
     def __eq__(self, other):
         """equality operator"""
@@ -40,23 +36,9 @@ class Job(PluginBase):
     @property
     def type(self):
         if self._type is None:
-            node = ElementTree.fromstring(self._controller.config_xml)
+            node = ElementTree.fromstring(self.config_xml)
             self._type = get_plugin_name(node)
         return self._type
-
-    @staticmethod
-    def create(controller, jenkins_master):
-        """Factory method used to instantiate the appropriate job type for a given configuration
-
-        :param controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
-            with the connection parameters for the job to be processed.
-        :type controller: :class:`~.datarequester.DataRequester`
-        :param jenkins_master: Jenkins instance containing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        :return: An instance of the appropriate derived type for the given job
-        :rtype: :class:`~.job.Job`
-        """
-        return Job(controller, jenkins_master).derived_object
 
     @property
     def derived_object(self):
@@ -65,40 +47,11 @@ class Job(PluginBase):
         if not isinstance(self, Job):
             return self
 
-        plugin = init_extension_plugin(self._controller, self._master)
+        plugin = init_extension_plugin(self.config_xml, self.url)
         if plugin is not None:
             return plugin
 
         raise PluginNotSupportedError("Job plugin {0} not found".format(self.type), self.type)
-
-    @staticmethod
-    def _create(controller, jenkins_master, job_name):
-        """Private helper method for use by other classes in the PyJen API, allowing the instantiation of this
-        abstract base class for internal optimizations
-
-        :param controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
-            with the connection parameters for the job to be processed.
-        :type controller: :class:`~.datarequester.DataRequester`
-        :param jenkins_master: Jenkins instance containing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        :param str job_name: The unique descriptive name for the newly created job
-        :return: An instance of the appropriate derived type for the given job
-        :rtype: :class:`~.job.Job`
-        """
-        class PartialJob(Job):
-            """Temp class used to instantiate abstract base class"""
-            type = "Undefined"
-
-            def __init__(self, local_controller, local_master):
-                super(PartialJob, self).__init__(local_controller, local_master)
-
-            def set_name(self, new_name):
-                """gives the abstract job a name"""
-                self._name = new_name
-
-        retval = PartialJob(controller, jenkins_master)
-        retval.set_name(job_name)
-        return retval
 
     @staticmethod
     def template_config_xml(job_type):
@@ -138,20 +91,8 @@ class Job(PluginBase):
         :returns: The name of the job
         :rtype: :class:`str`
         """
-        if self._name is not None:
-            return self._name
-
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
         return data['name']
-
-    @property
-    def url(self):
-        """Returns the URL to the job
-
-        :returns: The URL of the job
-        :rtype: :class:'str'
-        """
-        return self._controller.url
 
     @property
     def is_disabled(self):
@@ -160,7 +101,7 @@ class Job(PluginBase):
         :returns: True if the job is disabled, otherwise False
         :rtype: :class:`bool`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         return data['color'] == "disabled"
 
@@ -172,7 +113,7 @@ class Job(PluginBase):
         :rtype: :class:`bool`
         """
 
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         return data['color'] != "notbuilt"
 
@@ -185,7 +126,7 @@ class Job(PluginBase):
         :returns: the full XML tree describing this jobs configuration
         :rtype: :class:`str`
         """
-        return self._controller.config_xml
+        return self.get_text("/config.xml")
 
     @config_xml.setter
     def config_xml(self, new_xml):
@@ -197,7 +138,11 @@ class Job(PluginBase):
 
         :param str new_xml: A complete XML tree compatible with the Jenkins API
         """
-        self._controller.config_xml = new_xml
+        args = {
+            'data': new_xml,
+            'headers': {'Content-Type': 'text/xml'}
+        }
+        self.post(self.url + "config.xml", args)
 
     @property
     def upstream_jobs(self):
@@ -206,15 +151,14 @@ class Job(PluginBase):
         :returns: A list of 0 or more jobs that this job depends on
         :rtype: :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         jobs = data['upstreamProjects']
 
         retval = []
 
         for j in jobs:
-            temp_data_io = self._controller.clone(j['url'])
-            temp_job = Job.create(temp_data_io, self._master)
+            temp_job = Job(j['url'])
             retval.append(temp_job)
 
         return retval
@@ -229,13 +173,12 @@ class Job(PluginBase):
         :returns: A list of 0 or more jobs this job depend on
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
         jobs = data['upstreamProjects']
         retval = []
 
         for j in jobs:
-            temp_data_io = self._controller.clone(j['url'])
-            temp_job = Job.create(temp_data_io, self._master)
+            temp_job = Job(j['url'])
             retval.append(temp_job)
             retval.extend(temp_job.all_upstream_jobs)
 
@@ -253,7 +196,7 @@ class Job(PluginBase):
         :returns: a list of the most recent builds for this job
         :rtype: :class:`list` of :class:`~.build.Build` objects
         """
-        data = self._controller.get_api_data(query_params="depth=2")
+        data = self.get_api_data(query_params="depth=2")
 
         builds = data['builds']
 
@@ -261,7 +204,7 @@ class Job(PluginBase):
         for cur_build in builds:
             # TODO: Figure out a new way to pre-populate build data upon object construction
             # temp_data_io.set_api_data(cur_build)
-            temp_build = Build(cur_build['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+            temp_build = Build(cur_build['url'])
             retval.append(temp_build)
 
         return retval
@@ -273,13 +216,13 @@ class Job(PluginBase):
         :returns: all recorded builds for this job
         :rtype: :class:`list` of :class:`~.build.Build` objects
         """
-        data = self._controller.get_api_data(query_params="tree=allBuilds[url]")
+        data = self.get_api_data(query_params="tree=allBuilds[url]")
 
         builds = data['allBuilds']
 
         retval = []
         for cur_build in builds:
-            temp_build = Build(cur_build['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+            temp_build = Build(cur_build['url'])
             retval.append(temp_build)
 
         return retval
@@ -297,14 +240,14 @@ class Job(PluginBase):
             If there are no such builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         lgb = data['lastSuccessfulBuild']
 
         if lgb is None:
             return None
 
-        return Build(lgb['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+        return Build(lgb['url'])
 
     @property
     def last_build(self):
@@ -318,14 +261,14 @@ class Job(PluginBase):
             If there are no such builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         last_build = data['lastBuild']
 
         if last_build is None:
             return None
 
-        return Build(last_build['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+        return Build(last_build['url'])
 
     @property
     def last_failed_build(self):
@@ -338,14 +281,14 @@ class Job(PluginBase):
             If there are no such builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         bld = data['lastFailedBuild']
 
         if bld is None:
             return None
 
-        return Build(bld['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+        return Build(bld['url'])
 
     @property
     def last_stable_build(self):
@@ -359,14 +302,14 @@ class Job(PluginBase):
             If there are no such builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         bld = data['lastCompletedBuild']
 
         if bld is None:
             return None
 
-        return Build(bld['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+        return Build(bld['url'])
 
     @property
     def last_unsuccessful_build(self):
@@ -379,14 +322,14 @@ class Job(PluginBase):
             If there are no such builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         bld = data['lastUnsuccessfulBuild']
 
         if bld is None:
             return None
 
-        return Build(bld['url'], self._controller.credentials, self._controller.ssl_verify_enabled)
+        return Build(bld['url'])
 
     @property
     def downstream_jobs(self):
@@ -395,15 +338,14 @@ class Job(PluginBase):
         :returns: A list of 0 or more jobs which depend on this one
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         jobs = data['downstreamProjects']
 
         retval = []
 
         for j in jobs:
-            temp_data_io = self._controller.clone(j['url'])
-            temp_job = Job.create(temp_data_io, self._master)
+            temp_job = Job(j['url'])
             retval.append(temp_job)
 
         return retval
@@ -418,15 +360,14 @@ class Job(PluginBase):
         :returns: A list of 0 or more jobs which depend on this one
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         jobs = data['downstreamProjects']
 
         retval = []
 
         for j in jobs:
-            temp_data_io = self._controller.clone(j['url'])
-            temp_job = Job.create(temp_data_io, self._master)
+            temp_job = Job(j['url'])
             retval.append(temp_job)
             retval.extend(temp_job.all_downstream_jobs)
 
@@ -441,7 +382,7 @@ class Job(PluginBase):
         Use in conjunction with :py:meth:`.enable` and :py:attr:`.is_disabled`
         to control the state of the job.
         """
-        self._controller.post("/disable")
+        self.post(self.url + "disable")
 
     def enable(self):
         """Enables this job
@@ -456,11 +397,11 @@ class Job(PluginBase):
         Use in conjunction with :py:meth:`.disable` and :py:attr:`.is_disabled`
         to control the state of the job
         """
-        self._controller.post("/enable")
+        self.post(self.url + "enable")
 
     def delete(self):
         """Deletes this job from the Jenkins dashboard"""
-        self._controller.post("/doDelete")
+        self.post(self.url + "doDelete")
 
     def start_build(self):
         """Forces a build of this job
@@ -470,7 +411,7 @@ class Job(PluginBase):
         appropriate build queue where it will be scheduled
         for execution on the next available agent + executor.
         """
-        self._controller.post("/build")
+        self.post(self.url + "build")
 
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
@@ -483,17 +424,20 @@ class Job(PluginBase):
             If such a build does not exist, returns None
         :rtype: :class:`~.build.Build`
         """
-        temp_url = self._controller.url + str(build_number)
-        temp_data_io = self._controller.clone(temp_url)
+        # Generate URL where the specified build "should" be
+        # TODO: Find some way to efficiently search through all builds to locate the one with the correct number
+        #       this would still require 1 hit to the REST API but would be more robust than trying to "guess"
+        #       the correct URL endpoint
+        temp_url = self.url + str(build_number)
+        retval = Build(temp_url)
 
-        # Lets try loading data from the given URL to see if it is valid.
-        # If it's not valid we'll assume a build with the given number doesn't exist
+        # query the REST API to make sure the URL is correct and that it returns the correct build number
         try:
-            temp_data_io.get_api_data()
-        except AssertionError:
+            assert retval.number == build_number
+        except:  # pylint: disable=broad-except,bare-except
             return None
 
-        return Build(temp_url, self._controller.credentials, self._controller.ssl_verify_enabled)
+        return retval
 
     def get_builds_in_time_range(self, start_time, end_time):
         """ Returns a list of all of the builds for a job that
@@ -523,7 +467,26 @@ class Job(PluginBase):
 
         :param str new_job_name: Name of the new job to be created
         """
-        self._master._clone_job(self.name, new_job_name)
+        params = {'name': new_job_name,
+                  'mode': 'copy',
+                  'from': self.name}
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        args = {
+            'params': params,
+            'data': '',
+            'headers': headers
+        }
+
+        self.post(self.root_url + "createItem", args)
+
+        # TODO: Figure out how to prepopulate name field here
+        # new_job = Job._create(temp_data_io, self, new_job_name)
+        new_job = Job(self.root_url + "job/" + new_job_name)
+
+        # disable the newly created job so it doesn't accidentally start running
+        new_job.disable()
+        return new_job
 
     @property
     def publishers(self):
@@ -551,7 +514,7 @@ class Job(PluginBase):
         :return: percentage of good builds on record for this job
         :rtype: :class:`int`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         health_report = data['healthReport']
 
@@ -563,6 +526,6 @@ class Job(PluginBase):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    #for i in Job.supported_types():
-    #    print(i)
     pass
+    # TODO: adhoc test all methods and properties before committing
+    # TODO next: run all unit tests and fix errors

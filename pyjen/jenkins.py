@@ -247,8 +247,7 @@ class Jenkins(object):
 
         for tjob in tjobs:
             if tjob['name'] == job_name:
-                new_io_obj = self._controller.clone(tjob['url'])
-                return Job.create(new_io_obj, self)
+                return Job(tjob['url'])
 
         return None
 
@@ -345,8 +344,7 @@ class Jenkins(object):
 
         self._controller.post("createItem", args)
 
-        temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + job_name)
-        new_job = Job.create(temp_data_io, self)
+        new_job = Job(self._controller.url.rstrip("/") + "/job/" + job_name)
 
         # Sanity check - make sure the job actually exists by checking its name
         assert new_job.name == job_name
@@ -399,8 +397,9 @@ class Jenkins(object):
 
         self._controller.post("createItem", args)
 
-        temp_data_io = self._controller.clone(self._controller.url.rstrip("/") + "/job/" + new_job_name)
-        new_job = Job._create(temp_data_io, self, new_job_name)
+        # TODO: Figure out how to prepopulate name field here
+        # new_job = Job._create(temp_data_io, self, new_job_name)
+        new_job = Job(self._controller.url.rstrip("/") + "/job/" + new_job_name)
 
         # disable the newly created job so it doesn't accidentally start running
         new_job.disable()
@@ -432,8 +431,7 @@ class Jenkins(object):
         :return: an instance of the appropriate Job subclass for the given job
         :rtype: :class:`~.job.Job`
         """
-        new_io_obj = self._controller.clone(url)
-        return Job(new_io_obj, self)
+        return Job(url, self)
 
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance

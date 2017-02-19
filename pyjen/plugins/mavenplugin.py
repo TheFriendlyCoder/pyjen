@@ -3,23 +3,25 @@ from pyjen.job import Job
 
 
 class MavenPlugin(Job):
-    """Custom Maven job type"""
+    """Custom Maven job type
+
+    :param str url: Full URL of a job on a Jenkins master
+    """
     type = "maven2-moduleset"
 
-    def __init__(self, controller, jenkins_master):
-        """
-        :param controller: data processing object to manage interaction with Jenkins API
-        :type controller: :class:`~.utils.datarequester.DataRequester`
-        """
-        super(MavenPlugin, self).__init__(controller, jenkins_master)
+    def __init__(self, url):
+        super(MavenPlugin, self).__init__(url)
 
     @staticmethod
-    def template_config_xml():
+    def template_config_xml(job_type):
         """Gets a basic XML configuration template for use when instantiating jobs of this type
 
         :returns: a basic XML configuration template for use when instantiating jobs of this type
         :rtype: :class:`str`
         """
+
+        assert job_type == MavenPlugin.type
+
         xml = """<maven2-moduleset plugin="maven-plugin@2.6">
         <actions/>
         <description/>

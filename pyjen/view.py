@@ -43,7 +43,7 @@ class View(PluginBase):
         if not isinstance(self, View):
             return self
 
-        plugin = init_extension_plugin(self._controller, self._master)
+        plugin = init_extension_plugin(self.url, self._master)
         if plugin is not None:
             return plugin
 
@@ -103,9 +103,9 @@ class View(PluginBase):
 
         retval = []
         for j in view_jobs:
-            temp_data_io = self._controller.clone(j['url'])
-            temp_data_io.set_api_data(j)
-            retval.append(Job(temp_data_io, self._master))
+            # TODO: Find a way to prepoulate api data
+            # temp_data_io.set_api_data(j)
+            retval.append(Job(j['url'], self._master))
 
         return retval
 
@@ -119,8 +119,10 @@ class View(PluginBase):
         data = self._controller.get_api_data()
         retval = []
         for j in data['jobs']:
-            temp_data_io = self._controller.clone(j['url'])
-            retval.append(Job._create(temp_data_io, self._master, j['name']))
+
+            # TODO: Figure out how to prepopulate name field here
+            # retval.append(Job._create(temp_data_io, self._master, j['name']))
+            retval.append(Job(j['url']))
 
         return retval
 
@@ -279,8 +281,9 @@ class View(PluginBase):
 
         for job in data["jobs"]:
 
-            temp_data_io = self._controller.clone(job['url'])
-            temp_job = Job._create(temp_data_io, self._master, job['name'])
+            # TODO: Figure out how to prepopulate name field here
+            #temp_job = Job._create(temp_data_io, self._master, job['name'])
+            temp_job = Job(job['url'])
 
             if job["color"] == "red":
                 broken_job_count += 1

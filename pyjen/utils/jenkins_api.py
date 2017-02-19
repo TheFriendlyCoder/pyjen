@@ -98,7 +98,6 @@ class JenkinsAPI(object):
         :rtype: :class:`tuple`"""
         if 'x-jenkins' not in self.jenkins_headers:
             raise ConnectionError("Jenkins header has no x-jenkins metadata attached to it. Can not load version info.")
-
         return tuple([int(i) for i in self.jenkins_headers['x-jenkins'].split(".")])
 
     def get_api_data(self, query_params=None):
@@ -148,7 +147,12 @@ class JenkinsAPI(object):
             * 'data' - dictionary of assorted / misc data properties and their values
             * 'files' - dictionary of file names and handles to be uploaded to the target URL
         """
-        temp_headers = dict()
+        if args and "headers" in args:
+            temp_headers = args["headers"]
+            del args["headers"]
+        else:
+            temp_headers = dict()
+
         if self.jenkins_version >= (2, 0, 0):
             temp_headers.update(self.crumb)
 
