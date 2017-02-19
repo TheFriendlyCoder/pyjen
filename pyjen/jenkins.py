@@ -473,9 +473,7 @@ class Jenkins(object):
         :rtype: :class:`~.plugin_manager.PluginManager`
         """
         new_url = self._controller.url + '/pluginManager'
-        new_io_obj = self._controller.clone(new_url)
-        retval = PluginManager(new_io_obj)
-        return retval
+        return PluginManager(new_url)
 
     def enable_cache(self):
         """Enables caching of Jenkins API data
