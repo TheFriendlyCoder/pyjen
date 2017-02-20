@@ -277,8 +277,8 @@ class Job(PluginBase, JenkinsAPI):
         Synonymous with the "Last failed build" permalink on the jobs' main status page
 
         :returns:
-            Most recent build with a status of 'failed'
-            If there are no such builds in the build history, this method returns None
+            Most recent build with a status of 'failed'. If there are no such builds in the build history,
+            this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -298,8 +298,8 @@ class Job(PluginBase, JenkinsAPI):
 
 
         :returns:
-            Most recent build with a status of 'stable'
-            If there are no such builds in the build history, this method returns None
+            Most recent build with a status of 'stable'. If there are no such builds in the build history,
+            this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -318,8 +318,8 @@ class Job(PluginBase, JenkinsAPI):
         Synonymous with the "Last unsuccessful build" permalink on the jobs' main status page
 
         :returns:
-            Most recent build with a status of 'unstable'
-            If there are no such builds in the build history, this method returns None
+            Most recent build with a status of 'unstable' If there are no such builds in the build history,
+            this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -527,5 +527,3 @@ class Job(PluginBase, JenkinsAPI):
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-    # TODO: adhoc test all methods and properties before committing
-    # TODO next: run all unit tests and fix errors

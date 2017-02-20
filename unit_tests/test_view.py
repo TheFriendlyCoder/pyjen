@@ -6,7 +6,7 @@ from mock import MagicMock, PropertyMock
 class vView(View):
     type = ""
 
-
+@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
 class view_tests(unittest.TestCase):
     
     def test_get_name(self):

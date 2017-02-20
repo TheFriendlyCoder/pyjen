@@ -1,349 +1,278 @@
 import unittest
 from pyjen.job import Job
-from mock import MagicMock, PropertyMock
+from mock import MagicMock
 import pytest
 from datetime import datetime
 
+# This dictionary represents a "typical" dataset returned by the Jenkins REST API
+# when querying information about a job. This is used to fake output from the REST API
+# for tests below.
+
+fake_job_data = {
+    "name": "MyJob1",
+    "color": "blue",
+    "downstreamProjects": [],   # no downstream jobs
+    "upstreamProjects": []      # no upstream jobs
+}
+
+@pytest.fixture
+def patch_job_api(monkeypatch):
+    monkeypatch.setattr(Job, "get_api_data", lambda s: fake_job_data)
+
+
+def test_get_name(patch_job_api):
+    j = Job("http://localhost:8080/job/MyJob1")
+    assert j.name == fake_job_data["name"]
+
+
+def test_start_build(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Job, "post", mock_post)
+
+    job_url = "http://localhost:8080/job/MyJob1"
+    j = Job(job_url)
+    j.start_build()
+
+    mock_post.assert_called_once_with(job_url + "/build")
+
+
+def test_disable(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Job, "post", mock_post)
+
+    job_url = "http://localhost:8080/job/MyJob1"
+    j = Job(job_url)
+    j.disable()
+
+    mock_post.assert_called_once_with(job_url + "/disable")
+
+
+def test_enable(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Job, "post", mock_post)
+
+    job_url = "http://localhost:8080/job/MyJob1"
+    j = Job(job_url)
+    j.enable()
+
+    mock_post.assert_called_once_with(job_url + "/enable")
+
+
+def test_is_enabled(patch_job_api):
+    j = Job("http://localhost:8080/job/MyJob1")
+    assert j.is_disabled is False
+
+
+def test_is_disabled(monkeypatch):
+    tmp_data = fake_job_data.copy()
+    tmp_data["color"] = "disabled"
+    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
+
+    j = Job("http://localhost:8080/job/MyJob1")
+    assert j.is_disabled is True
+
+
+def test_delete(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Job, "post", mock_post)
+
+    job_url = "http://localhost:8080/job/MyJob1"
+    j = Job(job_url)
+    j.delete()
+
+    mock_post.assert_called_once_with(job_url + "/doDelete")
+
+
+def test_has_not_been_built(monkeypatch):
+    tmp_data = fake_job_data.copy()
+    tmp_data["color"] = "notbuilt"
+    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
+
+    j = Job("http://localhost:8080/job/MyJob1")
+    assert j.has_been_built is False
+
+
+def test_has_been_built(patch_job_api):
+    j = Job("http://localhost:8080/job/MyJob1")
+    assert j.has_been_built is True
+
+
+def test_get_config_xml(monkeypatch):
+    expected_config_xml = "<Sample Config XML/>"
+    mock_get_text = MagicMock()
+    mock_get_text.return_value = expected_config_xml
+    monkeypatch.setattr(Job, "get_text", mock_get_text)
+
+    job_url = "http://localhost:8080/job/MyJob1"
+    j = Job(job_url)
+
+    assert j.config_xml == expected_config_xml
+    mock_get_text.assert_called_once_with("/config.xml")
+
+
+def test_set_config_xml(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Job, "post", mock_post)
+
+    expected_config_xml = "<Sample Config XML/>"
+
+    job_url = "http://localhost:8080/job/MyJob1"
+    j = Job(job_url)
+    j.config_xml = expected_config_xml
+
+    # Make sure our post operation was structured as expected
+    assert mock_post.call_count == 1
+    assert len(mock_post.call_args) == 2
+    assert mock_post.call_args[0][0] == job_url + "/config.xml"
+    assert 'data' in mock_post.call_args[0][1]
+    assert mock_post.call_args[0][1]['data'] == expected_config_xml
+
+
+def test_clone(monkeypatch):
+    new_job_name = "MyNewJob"
+    mock_post = MagicMock()
+    monkeypatch.setattr(Job, "post", mock_post)
+    monkeypatch.setattr(Job, "get_api_data", lambda s: fake_job_data)
+
+    jenkins_url = "http://localhost:8080"
+    j = Job(jenkins_url + "/job/MyJob1")
+    newjob = j.clone(new_job_name)
+
+    # Make sure our resulting object is of the correct type
+    assert isinstance(newjob, Job)
+
+    # Make sure our post calls have been correctly structured
+    assert mock_post.call_count == 2
+    first_call = mock_post.call_args_list[0]
+    second_call = mock_post.call_args_list[1]
+
+    # The first call should have been made to clone the job
+    assert first_call[0][0] == jenkins_url + "/createItem"
+
+    assert 'params' in first_call[0][1]
+    assert 'name' in first_call[0][1]['params']
+    assert first_call[0][1]['params']['name'] == new_job_name
+
+    assert 'mode' in first_call[0][1]['params']
+    assert first_call[0][1]['params']['mode'] == 'copy'
+
+    assert 'from' in first_call[0][1]['params']
+    assert first_call[0][1]['params']['from'] == fake_job_data['name']
+
+    # The second call should have been made to disable the newly generated job
+    assert second_call[0][0] == "http://localhost:8080/job/" + new_job_name + "/disable"
+
+
+def test_supported_types():
+    supported_types = Job.supported_types()
+
+    assert "project" in supported_types
+    assert len(supported_types) >= 1
+
+
+def test_no_downstream_jobs(patch_job_api):
+    j = Job("http://localhost:8080/job/MyJob1")
+    dependencies = j.downstream_jobs
+
+    assert len(dependencies) == 0
+
+
+def test_one_downstream_job(monkeypatch):
+    tmp_data = fake_job_data.copy()
+    downstream_url = "http://localhost:8080/job/AnotherJob"
+    tmp_data['downstreamProjects'] = [{"url": downstream_url}]
+    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
+
+    j = Job("http://localhost:8080/job/MyJob1")
+    dependencies = j.downstream_jobs
+
+    assert len(dependencies) == 1
+    assert isinstance(dependencies[0], Job)
+    assert dependencies[0].url == downstream_url + "/"   # the API should append a trailing slash to our URL
+
+
+def test_multiple_downstream_jobs_recursive(monkeypatch):
+    downstream_job1_url = "http://localhost:8080/job/Downstream1/"
+    downstream_job2_url = "http://localhost:8080/job/Downstream2/"
+
+    root_job = fake_job_data.copy()
+    root_job['downstreamProjects'] = [{"url": downstream_job1_url}]
+
+    downstream_job1 = fake_job_data.copy()
+    downstream_job1['downstreamProjects'] = [{"url": downstream_job2_url}]
+
+    downstream_job2 = fake_job_data.copy()  # our fake job has no downstreams so the cycle ends here
+
+    mock_get_api_data = MagicMock()
+    mock_get_api_data.side_effect = [root_job, downstream_job1, downstream_job2]
+
+    monkeypatch.setattr(Job, "get_api_data", mock_get_api_data)
+
+    # code under test
+    j = Job("http://localhost:8080/job/MyJob1")
+    dependencies = j.all_downstream_jobs
+
+    # validation
+    assert len(dependencies) == 2
+    for dep in dependencies:
+        assert isinstance(dep, Job)
+    assert dependencies[0].url == downstream_job1_url
+    assert dependencies[1].url == downstream_job2_url
+
+
+def test_no_upstream_jobs(patch_job_api):
+
+    j = Job("http://localhost:8080/job/MyJob1")
+    dependencies = j.upstream_jobs
+
+    assert len(dependencies) == 0
+
+
+def test_one_upstream_job(monkeypatch):
+    tmp_data = fake_job_data.copy()
+    upstream_url = "http://localhost:8080/job/AnotherJob"
+    tmp_data['upstreamProjects'] = [{"url": upstream_url}]
+    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
+
+    j = Job("http://localhost:8080/job/MyJob1")
+    dependencies = j.upstream_jobs
+
+    assert len(dependencies) == 1
+    assert isinstance(dependencies[0], Job)
+    assert dependencies[0].url == upstream_url + "/"   # the API should append a trailing slash to our URL
+
+
+def test_multiple_upstream_jobs_recursive(monkeypatch):
+    upstream_job1_url = "http://localhost:8080/job/Upstream1/"
+    upstream_job2_url = "http://localhost:8080/job/Upstream2/"
+
+    root_job = fake_job_data.copy()
+    root_job['upstreamProjects'] = [{"url": upstream_job1_url}]
+
+    upstream_job1 = fake_job_data.copy()
+    upstream_job1['upstreamProjects'] = [{"url": upstream_job2_url}]
+
+    upstream_job2 = fake_job_data.copy()  # our fake job has no upstreams so the cycle ends here
+
+    mock_get_api_data = MagicMock()
+    mock_get_api_data.side_effect = [root_job, upstream_job1, upstream_job2]
+
+    monkeypatch.setattr(Job, "get_api_data", mock_get_api_data)
+
+    # code under test
+    j = Job("http://localhost:8080/job/MyJob1")
+    dependencies = j.all_upstream_jobs
+
+    # validation
+    assert len(dependencies) == 2
+    for dep in dependencies:
+        assert isinstance(dep, Job)
+    assert dependencies[0].url == upstream_job1_url
+    assert dependencies[1].url == upstream_job2_url
 
 class vJob(Job):
     type = ""
 
-
-class job_misc_tests(unittest.TestCase):
-    """Tests for remaining utility methods of the Job class not tested by other cases"""
-    def test_get_name(self):
-        expected_name = "MyJob1"
-        
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {'name':expected_name}
-        
-        j = vJob(mock_data_io, None)
-        actual_name = j.name
-
-        self.assertEqual(expected_name, actual_name)
-        self.assertEqual(mock_data_io.get_api_data.call_count, 1, 
-                                "get_api_data method should have been called one time")
-
-    def test_start_build(self):
-        mock_data_io = MagicMock()
-        
-        j = vJob (mock_data_io, None)
-        j.start_build()
-        
-        mock_data_io.post.assert_called_once_with("/build")
-        
-    def test_disable(self):
-        mock_data_io = MagicMock()
-        
-        j = vJob (mock_data_io, None)
-        j.disable()
-        
-        mock_data_io.post.assert_called_once_with("/disable")
-
-    def test_enable(self):
-        mock_data_io = MagicMock()
-        
-        j = vJob (mock_data_io, None)
-        j.enable()
-        
-        mock_data_io.post.assert_called_once_with("/enable")
-        
-    def test_is_disabled_true(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"color":"disabled"}
-        
-        j = vJob (mock_data_io, None)
-        self.assertTrue(j.is_disabled, "Job should indicate that it is in a disabled state")
-        
-    def test_is_disabled_false(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"color":"blue"}
-        
-        j = vJob (mock_data_io, None)
-        self.assertFalse(j.is_disabled, "Job should indicate that it is in an enabled state")
-        
-    def test_delete(self):
-        mock_data_io = MagicMock()
-        
-        j = vJob (mock_data_io, None)
-        j.delete()
-        
-        mock_data_io.post.assert_called_once_with("/doDelete")
-    
-    def test_has_been_built_true(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"color":"notbuilt"}
-        
-        j = vJob (mock_data_io, None)
-        self.assertFalse(j.has_been_built, "Job should indicate that it has never been built")    
-
-    def test_has_been_built_false(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"color":"blue"}
-        
-        j = vJob (mock_data_io, None)
-        self.assertTrue(j.has_been_built, "Job should indicate that it has been built")
-        
-    def test_get_config_xml(self):
-        expected_config_xml = "<Sample Config XML/>"
-        p = PropertyMock(return_value=expected_config_xml)
-        mock_data_io = MagicMock()
-        type(mock_data_io).config_xml = p
-
-        j = vJob (mock_data_io, None)
-        
-        self.assertEqual(j.config_xml, expected_config_xml)
-        p.assert_called_with()
-
-    def test_set_config_xml(self):
-        expected_config_xml = "<Sample Config XML/>"
-        p = PropertyMock(return_value=expected_config_xml)
-        mock_data_io = MagicMock()
-        type(mock_data_io).config_xml = p
-
-        j = vJob(mock_data_io, None)
-        j.config_xml = expected_config_xml
-        
-        self.assertEqual(p.call_count, 1)
-        p.assert_called_once_with(expected_config_xml)
-
-    def test_clone(self):
-        new_job_name = "ClonedJob"
-        cur_job_name = "OriginalJob"
-
-        # Mock jenkins interface with mocked methods used by clone method
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"name":cur_job_name}
-
-        # Mock for new job generated by the clone method
-        mock_new_job = MagicMock()
-        mock_new_job.name = new_job_name
-
-        # Mock Jenkins object, which is used by the 'clone' method to perform the actual action
-        mock_jenkins = MagicMock()
-        mock_jenkins._clone_job.return_value = mock_new_job
-
-        jb = vJob(mock_data_io, mock_jenkins)
-        newjob = jb.clone(new_job_name)
-
-        # Make sure the Jenkins clone job method was called, which performs the clone
-        mock_jenkins._clone_job.assert_called_once_with(cur_job_name, new_job_name)
-
-    def test_supported_types(self):
-        actual = Job.supported_types()
-
-        self.assertIn("project", actual)
-        self.assertGreater(len(actual), 1)
-
-class job_dependencies_tests(unittest.TestCase):
-    """Unit tests related to upstream and downstream dependency methods"""
-    def test_no_downstream_jobs (self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"downstreamProjects":[]}
-        
-        j = vJob (mock_data_io, None)
-        dependencies = j.downstream_jobs
-        
-        self.assertEqual(len(dependencies), 0, "Test job should not have any downstream dependencies")
-    
-    def test_one_downstream_job(self):
-        # this one mock job depends on our job under test
-        downstream_job_name = "j1"
-        mock_dependent_job_data_io = MagicMock()
-        mock_dependent_job_data_io.get_api_data.return_value = {"name":downstream_job_name}
-        mock_dependent_job_data_io.config_xml = "<project></project>"
-
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"downstreamProjects":[{"url":"http://localhost:8080/job/" + downstream_job_name}]}
-        mock_data_io.clone.return_value = mock_dependent_job_data_io
-        
-        j = vJob (mock_data_io, None)
-        dependencies = j.downstream_jobs
-        
-        self.assertEqual(len(dependencies), 1, "Test job should have one downstream dependency")
-        self.assertEqual(dependencies[0].name, downstream_job_name)
-        
-    def test_multiple_downstream_jobs(self):
-        
-        # both jobs depend on the job under test
-        downstream_job_name1 = "j1"
-        downstream_job_url1 = "http://localhost:8080/job/" + downstream_job_name1
-        downstream_job_name2 = "j2"
-        downstream_job_url2 = "http://localhost:8080/job/" + downstream_job_name2
-
-        def mock_clone(url):
-            mock_dependent_job_data_io = MagicMock()
-            if url == downstream_job_url1:
-                mock_dependent_job_data_io.get_api_data.return_value = {"name":downstream_job_name1}
-            elif url == downstream_job_url2:
-                mock_dependent_job_data_io.get_api_data.return_value = {"name":downstream_job_name2}
-            else:
-                self.fail("unexpected input value given to mock clone function: " + url)
-
-            mock_dependent_job_data_io.config_xml = "<project></project>"
-            return mock_dependent_job_data_io
-        
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"downstreamProjects":[{"url":downstream_job_url1},{"url":downstream_job_url2}]}
-        mock_data_io.clone = mock_clone
-                
-        j = vJob(mock_data_io, None)
-        dependencies = j.downstream_jobs
-        
-        self.assertEqual(len(dependencies), 2, "Test job should have two downstream dependencies")
-        names = []
-        names.append(dependencies[0].name)
-        names.append(dependencies[1].name)
-        self.assertTrue(downstream_job_name1 in names, "Mock job #1 should be returned as a direct dependency")
-        self.assertTrue(downstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
-       
-    def test_multiple_downstream_jobs_recursive(self):
-        
-        # job j1 has no downstream dependencies
-        downstream_job_name1 = "j1"
-        downstream_job_url1 = "http://localhost:8080/job/" + downstream_job_name1
-        mock_job1_data_io = MagicMock()
-        mock_job1_data_io.get_api_data.return_value = {"name":downstream_job_name1, "downstreamProjects":[]}
-        mock_job1_data_io.config_xml = "<project></project>"
-
-        # job j2 triggers job j1
-        downstream_job_name2 = "j2"
-        downstream_job_url2 = "http://localhost:8080/job/" + downstream_job_name2 
-        mock_job2_data_io = MagicMock()
-        mock_job2_data_io.get_api_data.return_value = {"name":downstream_job_name2,"downstreamProjects":[{"url":downstream_job_url1}]}
-        mock_job2_data_io.clone.return_value = mock_job1_data_io
-        mock_job2_data_io.config_xml = "<project></project>"
-
-        # job j3 triggers job j2
-        downstream_job_name3 = "j3"
-        downstream_job_url3 = "http://localhost:8080/job/" + downstream_job_name3
-        mock_job3_data_io = MagicMock()
-        mock_job3_data_io.get_api_data.return_value = {"name": downstream_job_name3, "downstreamProjects": [{"url": downstream_job_url2}]}
-        mock_job3_data_io.clone.return_value = mock_job2_data_io
-        mock_job3_data_io.config_xml = "<project></project>"
-
-        # our main job triggers job j3
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"downstreamProjects": [{"url": downstream_job_url3}]}
-        mock_data_io.clone.return_value = mock_job3_data_io
-                
-        # code under test 
-        j = vJob(mock_data_io, None)
-        dependencies = j.all_downstream_jobs
-        
-        # validation
-        self.assertEqual(len(dependencies), 3, "Test job should have three downstream dependencies")
-        names = []
-        names.append(dependencies[0].name)
-        names.append(dependencies[1].name)
-        names.append(dependencies[2].name)
-        self.assertTrue(downstream_job_name1 in names, "Mock job #1 should be returned as a transient dependency")
-        self.assertTrue(downstream_job_name2 in names, "Mock job #2 should be returned as a transient dependency")
-        self.assertTrue(downstream_job_name3 in names, "Mock job #3 should be returned as a direct dependency")
-
-    def test_no_upstream_jobs (self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"upstreamProjects":[]}
-        
-        j = vJob (mock_data_io, None)
-        dependencies = j.upstream_jobs
-        
-        self.assertEqual(len(dependencies), 0, "Test job should not have any upstream dependencies")
-    
-    def test_one_upstream_job(self):
-        # our job under test depends directly on this one mock job
-        upstream_job_name = "j1"
-        mock_dependent_job_data_io = MagicMock()
-        mock_dependent_job_data_io.get_api_data.return_value = {"name":upstream_job_name}
-        mock_dependent_job_data_io.config_xml = "<project></project>"
-
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"upstreamProjects":[{"url":"http://localhost:8080/job/" + upstream_job_name}]}
-        mock_data_io.clone.return_value = mock_dependent_job_data_io
-        
-        j = vJob (mock_data_io, None)
-        dependencies = j.upstream_jobs
-        
-        self.assertEqual(len(dependencies), 1, "Test job should have one upstream dependency")
-        self.assertEqual(dependencies[0].name, upstream_job_name)
-        
-    def test_multiple_upstream_jobs(self):
-        
-        # our job under test directly depends on both of these jobs
-        upstream_job_name1 = "j1"
-        upstream_job_url1 = "http://localhost:8080/job/" + upstream_job_name1
-        upstream_job_name2 = "j2"
-        upstream_job_url2 = "http://localhost:8080/job/" + upstream_job_name2
-
-        def mock_clone(url):
-            mock_dependent_job_data_io = MagicMock()
-            if url == upstream_job_url1:
-                mock_dependent_job_data_io.get_api_data.return_value = {"name":upstream_job_name1}
-            elif url == upstream_job_url2:
-                mock_dependent_job_data_io.get_api_data.return_value = {"name":upstream_job_name2}
-            else:
-                self.fail("unexpected input value given to mock clone function: " + url)
-            mock_dependent_job_data_io.config_xml = "<project></project>"
-            return mock_dependent_job_data_io
-        
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"upstreamProjects":[{"url":upstream_job_url1},{"url":upstream_job_url2}]}
-        mock_data_io.clone = mock_clone
-                
-        j = vJob (mock_data_io, None)
-        dependencies = j.upstream_jobs
-        
-        self.assertEqual(len(dependencies), 2, "Test job should have two upstream dependencies")
-        names = []
-        names.append(dependencies[0].name)
-        names.append(dependencies[1].name)
-        self.assertTrue(upstream_job_name1 in names, "Mock job #1 should be returned as a direct dependency")
-        self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a direct dependency")
-       
-    def test_multiple_upstream_jobs_recursive(self):
-        
-        # job j1 has no upstream dependencies
-        upstream_job_name1 = "j1"
-        upstream_job_url1 = "http://localhost:8080/job/" + upstream_job_name1
-        mock_job1_data_io = MagicMock()
-        mock_job1_data_io.get_api_data.return_value = {"name": upstream_job_name1, "upstreamProjects": []}
-        mock_job1_data_io.config_xml = "<project></project>"
-
-        # job j1 triggers job j2
-        upstream_job_name2 = "j2"
-        upstream_job_url2 = "http://localhost:8080/job/" + upstream_job_name2 
-        mock_job2_data_io = MagicMock()
-        mock_job2_data_io.get_api_data.return_value = {"name": upstream_job_name2, "upstreamProjects": [{"url": upstream_job_url1}]}
-        mock_job2_data_io.clone.return_value = mock_job1_data_io
-        mock_job2_data_io.config_xml = "<project></project>"
-
-        # job j3 triggers job j2
-        upstream_job_name3 = "j3"
-        upstream_job_url3 = "http://localhost:8080/job/" + upstream_job_name3
-        mock_job3_data_io = MagicMock()
-        mock_job3_data_io.get_api_data.return_value = {"name": upstream_job_name3, "upstreamProjects": [{"url": upstream_job_url2}]}
-        mock_job3_data_io.clone.return_value = mock_job2_data_io
-        mock_job3_data_io.config_xml = "<project></project>"
-
-        # job j2 triggers our main job
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"upstreamProjects": [{"url": upstream_job_url3}]}
-        mock_data_io.clone.return_value = mock_job3_data_io
-        mock_data_io.config_xml = "<project></project>"
-
-        # code under test 
-        j = vJob(mock_data_io, None)
-        dependencies = j.all_upstream_jobs
-        
-        # validation
-        self.assertEqual(len(dependencies), 3, "Test job should have three upstream dependencies")
-        names = []
-        names.append(dependencies[0].name)
-        names.append(dependencies[1].name)
-        names.append(dependencies[2].name)
-        self.assertTrue(upstream_job_name1 in names, "Mock job #1 should be returned as a transient dependency")
-        self.assertTrue(upstream_job_name2 in names, "Mock job #2 should be returned as a transient dependency")
-        self.assertTrue(upstream_job_name3 in names, "Mock job #3 should be returned as a direct dependency")
 
 @pytest.mark.skip(reason="To be refactored to use pytest fixtures")
 class job_build_methods_tests(unittest.TestCase):

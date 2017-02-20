@@ -38,6 +38,14 @@ class JenkinsAPI(object):
     def __init__(self, url):
         self._url = url.rstrip("/\\") + "/"
 
+    def __str__(self):
+        """String representation of the job"""
+        return self.url
+
+    def __repr__(self):
+        """Encoded state of the job usable for serialization"""
+        return "({0}: {1})".format(type(self), self.url)
+
     @property
     def url(self):
         """Gets the URL for the REST API endpoint used by this object

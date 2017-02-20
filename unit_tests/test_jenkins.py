@@ -64,7 +64,8 @@ class jenkins_misc_tests(unittest.TestCase):
         j = Jenkins(mock_data_io)
         actual = j.job_types
         self.assertIn("project", actual)
-        
+
+@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
 class jenkins_job_tests(unittest.TestCase):
     def setUp(self):
         """Configure a mock dataio object which supports a few mock job objects"""
@@ -129,6 +130,7 @@ class jenkins_job_tests(unittest.TestCase):
 
         self.assertEqual(job.name, expected_name)
 
+@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
 class jenkins_view_tests(unittest.TestCase):
     """Unit tests for the view-related methods of the Jenkins class"""
     
