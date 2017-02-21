@@ -44,8 +44,7 @@ class NestedView(View):
         retval = []
 
         for cur_view in raw_views:
-            new_io_obj = self._controller.clone(cur_view['url'])
-            tview = View.create(new_io_obj, self._master)
+            tview = View(cur_view['url'])
             retval.append(tview)
 
         return retval
@@ -64,12 +63,10 @@ class NestedView(View):
 
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
-                new_io_obj = self._controller.clone(cur_view['url'])
-                return View.create(new_io_obj, self._master)
+                return View(cur_view['url'])
 
         for cur_view in raw_views:
-            new_io_obj = self._controller.clone(cur_view['url'])
-            temp_view = View.create(new_io_obj, self._master)
+            temp_view = View(cur_view['url'])
             if temp_view.type == NestedView.type:
                 sub_view = temp_view.find_view(view_name)
                 if sub_view is not None:
@@ -138,8 +135,7 @@ class NestedView(View):
 
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
-                new_io_obj = self._controller.clone(cur_view['url'])
-                return View.create(new_io_obj, self._master)
+                return View(cur_view['url'])
 
         raise NestedViewCreationError("Failed to create nested view " + view_name + " under " + self.name)
 

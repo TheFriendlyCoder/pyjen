@@ -5,36 +5,19 @@ from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, init_extension_plugin
 from pyjen.utils.viewxml import ViewXML
+from pyjen.utils.jenkins_api import JenkinsAPI
+import json
 
 
-class View(PluginBase):
-    """ 'Abstract' base class used by all view classes, providing functionality common to them all"""
+class View(PluginBase, JenkinsAPI):
+    """ Abstraction for generic Jenkins views providing interfaces common to all view types
 
-    def __init__(self, data_io_controller, jenkins_master):
-        """
-        :param data_io_controller: IO interface which manages interaction with the live Jenkins view
-        :type data_io_controller: :class:`~.datarequester.DataRequester`
-        :param jenkins_master: Jenkins instance containing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        """
-        self._controller = data_io_controller
-        self._master = jenkins_master
+    :param str url: Full URL of a view on a Jenkins master
+    """
+    def __init__(self, url):
+        super(View, self).__init__(url)
         self._type = None
         self._log = logging.getLogger(__name__)
-
-    @staticmethod
-    def create(controller, jenkins_master):
-        """Factory method used to instantiate the appropriate view type for a given configuration
-
-        :param controller: IO interface to the Jenkins API. This object is expected to be pre-initialized
-            with the connection parameters for the view to be processed.
-        :type controller: :class:`~.datarequester.DataRequester`
-        :param jenkins_master: Jenkins instance containing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        :return: An instance of the appropriate derived type for the given view
-        :rtype: :class:`~.view.View`
-        """
-        return View(controller, jenkins_master).derived_object
 
     @property
     def derived_object(self):
@@ -82,7 +65,7 @@ class View(PluginBase):
         :returns: the name of the view
         :rtype: :class:`str`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
         return data['name']
 
     @property
@@ -97,7 +80,7 @@ class View(PluginBase):
         :returns: list of 0 or more jobs that are included in this view
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._controller.get_api_data(query_params="depth=2")
+        data = self.get_api_data(query_params="depth=2")
 
         view_jobs = data['jobs']
 
@@ -110,30 +93,13 @@ class View(PluginBase):
         return retval
 
     @property
-    def _light_jobs(self):
-        """Private helper method used to instantiate partial job classes for improved performance
-
-        :returns: list of abstract jobs contained within this view
-        :rtype: :class:`list` of :class:`~.job.Job` objects
-        """
-        data = self._controller.get_api_data()
-        retval = []
-        for j in data['jobs']:
-
-            # TODO: Figure out how to prepopulate name field here
-            # retval.append(Job._create(temp_data_io, self._master, j['name']))
-            retval.append(Job(j['url']))
-
-        return retval
-
-    @property
     def job_count(self):
         """Gets the number of jobs contained under this view
 
         :returns: number of jobs contained under this view
         :rtype: :class:`int`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         return len(data['jobs'])
 
@@ -144,23 +110,10 @@ class View(PluginBase):
         :returns: the list of names of all jobs contained within this view
         :rtype: :class:`list` of :class:`str`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
         retval = []
         for j in data['jobs']:
             retval.append(j['name'])
-        return retval
-
-    @property
-    def _job_urls(self):
-        """Gets the list of URLs for all jobs contained by this view
-
-        :returns: the list of URLs for all jobs contained by this view
-        :rtype: :class:`list` of :class:`str`
-        """
-        data = self._controller.get_api_data()
-        retval = []
-        for j in data['jobs']:
-            retval.append(j['url'])
         return retval
 
     @property
@@ -178,7 +131,7 @@ class View(PluginBase):
             a plain text string format
         :rtype: :class:`str`
         """
-        return self._controller.config_xml
+        return self.get_text("/config.xml")
 
     @config_xml.setter
     def config_xml(self, new_xml):
@@ -191,11 +144,15 @@ class View(PluginBase):
             NOTE: It is assumed that this input text meets the schema
             requirements for a Jenkins view.
         """
-        self._controller.config_xml = new_xml
+        args = {
+            'data': new_xml,
+            'headers': {'Content-Type': 'text/xml'}
+        }
+        self.post(self.url + "config.xml", args)
 
     def delete(self):
         """Deletes this view from the dashboard"""
-        self._controller.post("/doDelete")
+        self.post(self.url + "doDelete")
 
     def delete_all_jobs(self):
         """Batch method that allows callers to do bulk deletes of all jobs found in this view"""
@@ -207,19 +164,19 @@ class View(PluginBase):
         #       to make an extra hit on the server for each job just to pull back the config.xml)
         # TODO: Apply this same pattern to other similar batch methods like disable_all_jobs
 
-        for j in self._light_jobs:
+        for j in self.jobs:
             self._log.debug("Deleting job " + j.name)
             j.delete()
 
     def disable_all_jobs(self):
         """Batch method that allows caller to bulk-disable all jobs found in this view"""
-        for j in self._light_jobs:
+        for j in self.jobs:
             self._log.debug("Disabling job " + j.name)
             j.disable()
 
     def enable_all_jobs(self):
         """Batch method that allows caller to bulk-enable all jobs found in this view"""
-        for j in self._light_jobs:
+        for j in self.jobs:
             self._log.debug("Enabling job " + j.name)
             j.enable()
 
@@ -234,13 +191,12 @@ class View(PluginBase):
             of an existing job that matches the given regex will be replaced by this new string to create the
             new job name for it's cloned counterpart.
         """
-        job_map = {}
-        for j in self.job_names:
-            job_map[j] = j.replace(source_job_name_pattern, new_job_substring)
-
-        for j in job_map:
-            self._log.debug("Cloning job %s to %s", j, job_map[j])
-            self._master._clone_job(j, job_map[j])
+        retval = []
+        for cur_job in self.jobs:
+            new_name = cur_job.name.replace(source_job_name_pattern, new_job_substring)
+            new_job = cur_job.clone(new_name)
+            retval.append(new_job)
+        return retval
 
     def clone(self, new_view_name):
         """Make a copy of this view with the specified name
@@ -249,7 +205,26 @@ class View(PluginBase):
         :return: reference to the View object that manages the new, cloned view
         :rtype: :class:`~.view.View`
         """
-        new_view = self._master.create_view(new_view_name, self.type)
+
+        view_type = self.type
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        data = {
+            "name": new_view_name,
+            "mode": view_type,
+            "Submit": "OK",
+            "json": json.dumps({"name": new_view_name, "mode": view_type}) # TODO: See if this is necessary
+        }
+
+        args = {
+            'data': data,
+            'headers': headers
+        }
+
+        self.post(self.url + 'createView', args)
+
+        new_url = self.url.replace(self.name, new_view_name)
+        new_view = View(new_url)
+
         vxml = ViewXML(self.config_xml)
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml
@@ -262,7 +237,7 @@ class View(PluginBase):
         """
         new_view = self.clone(new_name)
         self.delete()
-        self._controller = new_view._controller
+        return new_view
 
     def view_metrics(self):
         """Composes a report on the jobs contained within the view
@@ -270,7 +245,7 @@ class View(PluginBase):
         :return: Dictionary containing metrics about the view
         :rtype: :class:`dict`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         broken_jobs = []
         disabled_jobs = []

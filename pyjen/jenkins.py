@@ -167,8 +167,10 @@ class Jenkins(object):
         data = self._controller.get_api_data()
 
         default_view = data['primaryView']
-        new_io_obj = self._controller.clone(default_view['url'].rstrip("/") + "/view/" + default_view['name'])
-        return View.create(new_io_obj, self)
+
+        # TODO: Add 'verify' method to job and view classes so callers can choose if they want
+        #       to ensure their returned objects actually exist (ie; have a valid rest api endpoint)
+        return View(default_view['url'].rstrip("/") + "/view/" + default_view['name'])
 
     @property
     def views(self):
@@ -192,8 +194,7 @@ class Jenkins(object):
             if turl.find('view') == -1:
                 turl = turl.rstrip("/") + "/view/" + cur_view['name']
 
-            new_io_obj = self._controller.clone(turl)
-            tview = View.create(new_io_obj, self)
+            tview = View(turl)
             retval.append(tview)
 
         return retval
@@ -285,8 +286,7 @@ class Jenkins(object):
                 if turl.find('view') == -1:
                     turl = turl.rstrip("/") + "/view/" + cur_view['name']
 
-                new_io_obj = self._controller.clone(turl)
-                return View.create(new_io_obj, self)
+                return View(turl)
 
         return None
 
@@ -373,51 +373,6 @@ class Jenkins(object):
         :rtype: :class:`list` of :class:`str`
         """
         return View.supported_types()
-
-    def _clone_job(self, source_job_name, new_job_name):
-        """Makes a copy of this job on the dashboard with a new name
-
-        :param str source_job_name:
-            The name of the existing Jenkins job which is to have it's configuration cloned to create a new job.
-            A job of this name must exist on this Jenkins instance.
-        :param str new_job_name:
-            the name of the newly created job whose settings will
-            be an exact copy of the source job. There must be no existing
-            jobs on the Jenkins dashboard with this same name.
-        """
-        params = {'name': new_job_name,
-                  'mode': 'copy',
-                  'from': source_job_name}
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-
-        args = {}
-        args['params'] = params
-        args['data'] = ''
-        args['headers'] = headers
-
-        self._controller.post("createItem", args)
-
-        # TODO: Figure out how to prepopulate name field here
-        # new_job = Job._create(temp_data_io, self, new_job_name)
-        new_job = Job(self._controller.url.rstrip("/") + "/job/" + new_job_name)
-
-        # disable the newly created job so it doesn't accidentally start running
-        new_job.disable()
-
-    def get_view(self, url):
-        """Establishes a connection to a View based on an absolute URL
-
-        This method may be a bit less convenient to use in certain situations but it
-        has better performance than :py:meth:`.find_view`
-
-        .. seealso: :py:meth:`.find_view`
-
-        :param str url: absolute URL of the view to load
-        :return: an instance of the appropriate View subclass for the given view
-        :rtype: :class:`~.view.View`
-        """
-        new_io_obj = self._controller.clone(url)
-        return View.create(new_io_obj, self)
 
     def get_job(self, url):
         """Establishes a connection to a Job based on an absolute URL
