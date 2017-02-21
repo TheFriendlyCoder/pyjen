@@ -105,7 +105,7 @@ class JenkinsAPI(object):
 
         :rtype: :class:`tuple`"""
         if 'x-jenkins' not in self.jenkins_headers:
-            raise ConnectionError("Jenkins header has no x-jenkins metadata attached to it. Can not load version info.")
+            raise requests.ConnectionError("Jenkins header has no x-jenkins metadata attached to it. Can not load version info.")
         return tuple([int(i) for i in self.jenkins_headers['x-jenkins'].split(".")])
 
     def get_api_data(self, query_params=None):

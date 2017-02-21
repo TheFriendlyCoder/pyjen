@@ -489,19 +489,19 @@ class Job(PluginBase, JenkinsAPI):
         return new_job
 
     @property
-    def publishers(self):
+    def publishers(self):  # pragma: no cover
         """Gets all plugins configured as 'publishers' for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.publishers
 
     @property
-    def properties(self):
+    def properties(self):  # pragma: no cover
         """Gets all plugins configured as extra configuration properties for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.properties
 
     @property
-    def builders(self):
+    def builders(self):  # pragma: no cover
         """Gets all plugins configured as 'builders' for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.builders
@@ -519,7 +519,7 @@ class Job(PluginBase, JenkinsAPI):
         health_report = data['healthReport']
 
         for cur_report in health_report:
-            if cur_report["description"].find("Build stability:") >= 0:
+            if "Build stability:" in cur_report["description"]:
                 return cur_report["score"]
 
         return 0
