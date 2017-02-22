@@ -1,12 +1,11 @@
 """Primitives for interacting with Jenkins views"""
-import logging
+import json
 import xml.etree.ElementTree as ElementTree
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, init_extension_plugin
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.jenkins_api import JenkinsAPI
-import json
 
 
 class View(PluginBase, JenkinsAPI):
@@ -17,7 +16,6 @@ class View(PluginBase, JenkinsAPI):
     def __init__(self, url):
         super(View, self).__init__(url)
         self._type = None
-        self._log = logging.getLogger(__name__)
 
     @property
     def derived_object(self):
@@ -26,7 +24,7 @@ class View(PluginBase, JenkinsAPI):
         if not isinstance(self, View):
             return self
 
-        plugin = init_extension_plugin(self.url, self._master)
+        plugin = init_extension_plugin(self.config_xml, self.url)
         if plugin is not None:
             return plugin
 
@@ -35,7 +33,7 @@ class View(PluginBase, JenkinsAPI):
     @property
     def type(self):
         if self._type is None:
-            node = ElementTree.fromstring(self._controller.config_xml)
+            node = ElementTree.fromstring(self.config_xml)
             self._type = get_plugin_name(node)
         return self._type
 
@@ -88,7 +86,7 @@ class View(PluginBase, JenkinsAPI):
         for j in view_jobs:
             # TODO: Find a way to prepoulate api data
             # temp_data_io.set_api_data(j)
-            retval.append(Job(j['url'], self._master))
+            retval.append(Job(j['url']))
 
         return retval
 
@@ -156,28 +154,17 @@ class View(PluginBase, JenkinsAPI):
 
     def delete_all_jobs(self):
         """Batch method that allows callers to do bulk deletes of all jobs found in this view"""
-
-        # TODO: Find a way to leverage the job URLs contained within the View API data to accelerate this process
-        #   Maybe we could expose some static methods on the job() base class for doing deletes using an absolute URL
-        #   Or maybe we could allow the instantiation of the job() base class for performing basic operations through
-        #       the abstract interface, without needing to know the derived class we're using (and hence, avoid having
-        #       to make an extra hit on the server for each job just to pull back the config.xml)
-        # TODO: Apply this same pattern to other similar batch methods like disable_all_jobs
-
         for j in self.jobs:
-            self._log.debug("Deleting job " + j.name)
             j.delete()
 
     def disable_all_jobs(self):
         """Batch method that allows caller to bulk-disable all jobs found in this view"""
         for j in self.jobs:
-            self._log.debug("Disabling job " + j.name)
             j.disable()
 
     def enable_all_jobs(self):
         """Batch method that allows caller to bulk-enable all jobs found in this view"""
         for j in self.jobs:
-            self._log.debug("Enabling job " + j.name)
             j.enable()
 
     def clone_all_jobs(self, source_job_name_pattern, new_job_substring):

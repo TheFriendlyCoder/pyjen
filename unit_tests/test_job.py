@@ -1,4 +1,3 @@
-import unittest
 from pyjen.job import Job
 from pyjen.build import Build
 from mock import MagicMock
@@ -516,7 +515,7 @@ def test_get_builds_in_time_range_lower_bound(monkeypatch):
     monkeypatch.setattr(Build, "get_api_data", mock_build_data)
 
     start_time = datetime.fromtimestamp(epoch_time)
-    end_time = datetime.fromtimestamp(epoch_time + 1000)
+    end_time = datetime.fromtimestamp(epoch_time + 10000)
 
     j = Job("http://localhost:8080/job/MyJob1")
     builds = j.get_builds_in_time_range(end_time, start_time)
@@ -532,13 +531,12 @@ def test_get_builds_in_time_range_upper_bound(monkeypatch):
     # Jenkins timestamps are stored in milliseconds
     time_in_milliseconds = epoch_time * 1000
     build_url = "http://localhost:8080/job/MyJob1/3/"
-    monkeypatch.setattr(Job, "get_api_data",
-                        get_mock_api_data("allBuilds", [{"url": build_url}]))
+    monkeypatch.setattr(Job, "get_api_data", get_mock_api_data("allBuilds", [{"url": build_url}]))
     mock_build_data = MagicMock()
     mock_build_data.return_value = {"timestamp": time_in_milliseconds}
     monkeypatch.setattr(Build, "get_api_data", mock_build_data)
 
-    start_time = datetime.fromtimestamp(epoch_time - 1000)
+    start_time = datetime.fromtimestamp(epoch_time - 10000)
     end_time = datetime.fromtimestamp(epoch_time)
 
     j = Job("http://localhost:8080/job/MyJob1")
