@@ -1,299 +1,226 @@
-import unittest
 from pyjen.jenkins import Jenkins
-from pyjen.exceptions import InvalidParameterError
 from mock import MagicMock
 import pytest
+from mock import PropertyMock
+from pytest import raises
+from pyjen.job import Job
+from pyjen.view import View
+from pyjen.exceptions import PluginNotSupportedError
 
-class jenkins_misc_tests(unittest.TestCase):
-    """Tests for remaining utility methods of the Jenkins class not tested by other cases"""
-    def test_get_version(self):
-        expected_version = "1.2.3"
-        
-        mock_data_io = MagicMock()
-        mock_data_io.get_headers.return_value = {'x-jenkins':expected_version}
-        
-        j = Jenkins(mock_data_io)
 
-        self.assertEqual(expected_version, j.version)
-        self.assertEqual("call('/api/python')", str(mock_data_io.get_headers.call_args), 
-                         "get_version method should have attempted to load HTTP header info from the api/python URL")
-        self.assertEqual(mock_data_io.get_headers.call_count, 1, 
-                                "get_headers method should have been called one time")
-        
-    def test_get_unknown_version(self):
-        expected_version = "Unknown"
-        
-        mock_data_io = MagicMock()
-        mock_data_io.get_headers.return_value = {}
-        
-        j = Jenkins(mock_data_io)
 
-        self.assertEqual(expected_version, j.version)
-        self.assertEqual("call('/api/python')", str(mock_data_io.get_headers.call_args), 
-                         "get_version method should have attempted to load HTTP header info from the api/python URL")
-        self.assertEqual(mock_data_io.get_headers.call_count, 1, 
-                                "get_headers method should have been called one time")
-        
-    def test_prepare_shutdown(self):
-        mock_data_io = MagicMock()
-        
-        j = Jenkins(mock_data_io)
-        j.prepare_shutdown()
-        
-        self.assertEqual("call('/quietDown')", str(mock_data_io.post.call_args))
-        self.assertEqual(mock_data_io.post.call_count, 1, "post method should have only been called once")
-    
-    def test_cancel_shutdown(self):
-        mock_data_io = MagicMock()
-        
-        j = Jenkins(mock_data_io)
-        j.cancel_shutdown()
-        
-        self.assertEqual("call('/cancelQuietDown')", str(mock_data_io.post.call_args))
-        self.assertEqual(mock_data_io.post.call_count, 1, "post method should have only been called once")
-    
-    def test_is_shutting_down(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {"quietingDown":True}
-        
-        j = Jenkins(mock_data_io)
-        self.assertTrue(j.is_shutting_down, "Object should be preparing for shutdown")
+fake_jenkins_url = "http://localhost:8080/"
+fake_default_view_name = "MyPrimaryView"
+fake_default_view_url = fake_jenkins_url + "view/" + fake_default_view_name + "/"
+fake_second_view_name = "MySecondView"
+fake_second_view_url = fake_jenkins_url + "view/" + fake_second_view_name + "/"
 
-    def test_job_types(self):
-        mock_data_io = MagicMock()
-        j = Jenkins(mock_data_io)
-        actual = j.job_types
-        self.assertIn("project", actual)
+fake_jenkins_data = {
+    "quietingDown": True,
+    "jobs": [],
+    "primaryView": {
+        "name": fake_default_view_name,
+        "url": fake_jenkins_url
+    },
+    "views": [
+        {"name": fake_default_view_name, "url": fake_jenkins_url},
+        {"name": fake_second_view_name, "url": fake_second_view_url}
+    ]
+}
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-class jenkins_job_tests(unittest.TestCase):
-    def setUp(self):
-        """Configure a mock dataio object which supports a few mock job objects"""
-        self.job1_name = 'MyFirstJob'
-        self.job1_url = 'http://localhost:8080/job/MyFirstJob'
-        self.job2_name = 'SecondJob'
-        self.job2_url = 'http://localhost:8080/job/SecondJob'
-            
-        # io objects used by the two views managed by our mock Jenkins instance
-        self.job1_mock_data_io = MagicMock()
-        self.job1_mock_data_io.get_api_data.return_value = {'name':self.job1_name}
-        self.job1_mock_data_io.config_xml = "<project></project>"
-        self.job2_mock_data_io = MagicMock()
-        self.job2_mock_data_io.get_api_data.return_value = {'name':self.job2_name}
-        self.job2_mock_data_io.config_xml = "<project></project>"
-        
-        # mock jenkins instance which exposes 2 views
-        self.mock_jenkins_data_io = MagicMock()
-        mock_jobs = []
-        mock_jobs.append({'url':self.job1_url,'name':self.job1_name})
-        mock_jobs.append({'url':self.job2_url,'name':self.job2_name})
-        self.mock_jenkins_data_io.get_api_data.return_value = {'jobs':mock_jobs}
-        self.mock_jenkins_data_io.clone.side_effect = self.mock_clone
-        self.mock_jenkins_data_io.url.return_value = "http://localhost:8080"
-        
-        
-    def mock_clone(self, url):
-        """Function used to mock the clone() method of the mock_jenkins_data_io object"""
-        if url == self.job1_url:
-            return self.job1_mock_data_io
-        if url == self.job2_url:
-            return self.job2_mock_data_io
-                
-        self.fail("Unexpected URL parameter to dataio clone method: " + url)
+fake_jenkins_headers = {
+    "x-jenkins": "2.0.0"
+}
 
-    def test_find_job_no_jobs(self):
-        mock_data_io = MagicMock()
-        mock_data_io.get_api_data.return_value = {'jobs':{}}
-        
-        j = Jenkins(mock_data_io)
-        njob = j.find_job("MyJob")
-        self.assertEqual(njob, None, "No jobs should be found by the search method")
-        
-    def test_find_job_success(self):
-        j = Jenkins(self.mock_jenkins_data_io)
-        job = j.find_job(self.job2_name)
-        
-        self.assertNotEqual(job, None, "find_job should have returned a valid job object")
-        self.mock_jenkins_data_io.clone.assert_called_with(self.job2_url)
+@pytest.fixture
+def patch_jenkins_api(monkeypatch):
+    mock_api_data = MagicMock()
+    mock_api_data.return_value = fake_jenkins_data
+    monkeypatch.setattr(Jenkins, "get_api_data", mock_api_data)
 
-    def test_create_job(self):
-        expected_name = "TestJob"
-        jenkins_data_io = MagicMock()
+    mock_headers = PropertyMock()
+    mock_headers.return_value = fake_jenkins_headers
+    monkeypatch.setattr(Jenkins, "jenkins_headers", mock_headers)
 
-        job_data_io = MagicMock()
-        job_data_io.config_xml = "<project></project>"
-        job_data_io.get_api_data.return_value = {"name": expected_name}
-        jenkins_data_io.clone.return_value = job_data_io
+    #mock_api_text = MagicMock()
+    #mock_api_text.return_value = fake_config_xml
+    #monkeypatch.setattr(View, "get_text", mock_api_text)
 
-        j = Jenkins(jenkins_data_io)
-        job = j.create_job(expected_name, "project")
 
-        self.assertEqual(job.name, expected_name)
+def get_mock_api_data(field, data):
+    tmp_data = fake_jenkins_data.copy()
+    tmp_data[field] = data
+    mock_api_data = MagicMock()
+    mock_api_data.return_value = tmp_data
+    return mock_api_data
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-class jenkins_view_tests(unittest.TestCase):
-    """Unit tests for the view-related methods of the Jenkins class"""
-    
-    def setUp(self):
-        """Configure a mock dataio object which supports a few mock view objects"""
-        self.primary_view_name = 'main'
-        jenkins_root_url = 'http://localhost:8080/'
-        self.primary_view_url = jenkins_root_url + "view/" + self.primary_view_name
-        self.view2_name = 'secondView'
-        self.view2_url = 'http://localhost:8080/view/secondView'
-        
-        self.view2_job1_url = 'http://localhost:8080/job/j1'
-        self.view2_job1_name = 'j1'
-        mock_job1_dataio = MagicMock()
-        mock_job1_dataio.get_api_data.return_value = {"name":self.view2_job1_name}
-        mock_job1_dataio.config_xml = "<project></project>"
 
-        # io objects used by the two views managed by our mock Jenkins instance
-        self.mock_primary_view_data_io = MagicMock()
-        self.mock_primary_view_data_io.get_api_data.return_value = {'name':self.primary_view_name}
-        # TODO: double check to make sure this is the corrrect view type
-        self.mock_primary_view_data_io.config_xml = "<hudson.model.ListView/>"
-        self.mock_view2_data_io = MagicMock()
-        self.mock_view2_data_io.get_api_data.return_value = {'name':self.view2_name, 'jobs':[{'url':self.view2_job1_url}]}
-        self.mock_view2_data_io.clone.side_effect = self.mock_clone
-        self.mock_view2_data_io.config_xml = "<hudson.model.ListView/>"
+def test_get_version(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
 
-        # mock jenkins instance which exposes 2 views
-        self.mock_jenkins_data_io = MagicMock()
-        mock_views = []
-        mock_views.append({'url':self.view2_url,'name':self.view2_name})
-        mock_views.append({'url':jenkins_root_url,'name':self.primary_view_name})
-        self.mock_jenkins_data_io.get_api_data.return_value = {'views':mock_views,'primaryView':mock_views[1]}
-        self.mock_jenkins_data_io.url = jenkins_root_url
-        
-        # construct mock 'clone' method such that views created by
-        # these unit tests will behave correctly
-        self.mock_jenkins_data_io.clone.side_effect = self.mock_clone
-        self.clone_map = {}
-        self.clone_map[self.primary_view_url] = self.mock_primary_view_data_io
-        self.clone_map[self.view2_url] = self.mock_view2_data_io
-        self.clone_map[self.view2_job1_url] = mock_job1_dataio
+    assert j.version == (2, 0, 0)
 
-        
-    def mock_clone(self, url):
-        """Function used to mock the clone() method of the mock_jenkins_data_io object"""
-        if not url in self.clone_map:
-            self.fail("Unexpected URL parameter to dataio clone method: " + url)
-        return self.clone_map[url]
 
-    
-    def test_get_default_view(self):        
-        # test logic
-        j = Jenkins(self.mock_jenkins_data_io)
-        v = j.default_view
-        actual_view_name = v.name
-        
-        # verification
-        self.assertEqual(actual_view_name, self.primary_view_name)
-        self.mock_jenkins_data_io.clone.assert_called_with(self.primary_view_url)
-    
-    def test_get_multiple_views(self):
-        # test logic
-        j = Jenkins(self.mock_jenkins_data_io)
-        views = j.views
-        
-        # verification
-        self.assertEqual(len(views), 2)
-        self.assertEqual(views[0].name, self.view2_name)
-        self.assertEqual(views[1].name, self.primary_view_name)
-    
-    def test_find_view(self):
-        # test logic
-        j = Jenkins(self.mock_jenkins_data_io)
-        View = j.find_view(self.view2_name)
-        
-        # verification
-        self.assertNotEqual(View, None, "code should return a valid pyjen.view object")
-        self.assertEqual(View.name, self.view2_name, "incorrect view returned by jenkins object")
-        self.mock_jenkins_data_io.clone.assert_called_once_with(self.view2_url)
-        
-    def test_find_view_primary_view(self):        
-        # test logic
-        j = Jenkins(self.mock_jenkins_data_io)
-        View = j.find_view(self.primary_view_name)
-        
-        # verification
-        self.assertNotEqual(View, None, "code should return a valid pyjen.view object")
-        self.assertEqual(View.name, self.primary_view_name, "incorrect view returned by jenkins object")
-        self.mock_jenkins_data_io.clone.assert_called_once_with(self.primary_view_url)
-    
-    def test_find_missing_view(self):
-        # test logic
-        j = Jenkins(self.mock_jenkins_data_io)
-        View = j.find_view("DoesNotExist")
-    
-        # verification
-        self.assertEqual(View, None, "No valid view should have been found.")
-        
-    def test_create_view(self):
-        new_view_url = "http://localhost:8080/view/MyView"
-        new_view_name = "MyView"
-        new_view_dataio = MagicMock()
-        new_view_dataio.get_api_data.return_value = {'name':new_view_name}
-        new_view_dataio.config_xml = "<hudson.model.ListView/>"
-        self.mock_jenkins_data_io.get_api_data.return_value['views'].append({'url':new_view_url,'name':new_view_name})
-        self.clone_map[new_view_url] = new_view_dataio
-        j = Jenkins(self.mock_jenkins_data_io)
-        v = j.create_view(new_view_name, "ListView")
-        
-        self.assertEqual(v.name, new_view_name)
+def test_get_unknown_version(monkeypatch):
+    from requests import ConnectionError
+    mock_header = PropertyMock()
+    mock_header.return_value = {}   # no version info in the header
+    monkeypatch.setattr(Jenkins, "jenkins_headers", mock_header)
+    j = Jenkins("http://localhost:8080")
 
-@pytest.mark.skip(reason="To be refactored to use pytest fixtures")
-class jenkins_nodes_tests(unittest.TestCase):
-    """Unit tests for the node-related methods of the Jenkins class"""
-    
-    def setUp(self):
-        """Configure a mock dataio object which supports a few mock node objects"""
-        jenkins_root_url = 'http://localhost:8080'
-        self.root_computer_url = jenkins_root_url + "/computer"
-        self.master_node_name = "master"
-        self.master_node_url = self.root_computer_url + "/(master)"
-        self.second_node_name = "OtherNode"
-        self.second_node_url = self.root_computer_url + "/OtherNode"
-        
-        # io objects used by the two nodes managed by our mock Jenkins instance
-        self.mock_root_node_data_io = MagicMock()
-        mock_nodes = []
-        mock_nodes.append({"displayName":self.master_node_name})
-        mock_nodes.append({"displayName":self.second_node_name})
-        self.mock_root_node_data_io.get_api_data.return_value = {"computer":mock_nodes}
-        
-        self.mock_master_node_data_io = MagicMock()
-        self.mock_master_node_data_io.get_api_data.return_value = {'displayName':self.master_node_name}
-        self.mock_second_node_data_io = MagicMock()
-        self.mock_second_node_data_io.get_api_data.return_value = {'displayName':self.second_node_name}
-        
-        # mock jenkins instance which exposes 2 nodes
-        self.mock_jenkins_data_io = MagicMock()
-        self.mock_jenkins_data_io.url = jenkins_root_url        
-        self.mock_jenkins_data_io.clone.side_effect = self.mock_clone
-        
-        
-    def mock_clone(self, url):
-        """Function used to mock the clone() method of the mock_jenkins_data_io object"""
-        
-        if url == self.master_node_url:
-            return self.mock_master_node_data_io
-        if url == self.second_node_url:
-            return self.mock_second_node_data_io
-        if url == self.root_computer_url:
-            return self.mock_root_node_data_io
-        
-        self.fail("Unexpected URL parameter to dataio clone method: " + url)
-    
-    def test_get_multiple_nodes(self):
-        j = Jenkins(self.mock_jenkins_data_io)
-        nodes = j.nodes
-        
-        self.assertNotEqual(nodes, None)
-        self.assertEqual(2, len(nodes), "Mock jenkins instance should expose 2 connected nodes.")
-        self.assertEqual(self.master_node_name, nodes[0].name)
-        self.assertEqual(self.second_node_name, nodes[1].name)
-    
+    with raises(ConnectionError):
+        j.version
+
+
+def test_prepare_shutdown(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Jenkins, "post", mock_post)
+
+    jenkins_url = "http://localhost:8080"
+    j = Jenkins(jenkins_url)
+    j.prepare_shutdown()
+
+    mock_post.assert_called_once_with(jenkins_url + "/quietDown")
+
+
+def test_cancel_shutdown(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Jenkins, "post", mock_post)
+
+    jenkins_url = "http://localhost:8080"
+    j = Jenkins(jenkins_url)
+    j.cancel_shutdown()
+
+    mock_post.assert_called_once_with(jenkins_url + "/cancelQuietDown")
+
+
+def test_is_shutting_down(patch_jenkins_api):
+
+    j = Jenkins("http://localhost:8080")
+    assert j.is_shutting_down is True
+
+
+def test_find_non_existent_job(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
+    jb = j.find_job("MyJob")
+    assert jb is None
+
+
+def test_find_job_success(monkeypatch):
+    job_name = "MyJob"
+    job_url = "http://localhost:8080/job/MyJob/"
+    monkeypatch.setattr(Jenkins, "get_api_data", get_mock_api_data("jobs", [{"name": job_name, "url": job_url}]))
+
+    j = Jenkins("http://localhost:8080")
+    jb = j.find_job("MyJob")
+
+    assert isinstance(jb, Job)
+    assert jb.url == job_url
+
+
+def test_create_job(monkeypatch):
+    expected_name = "MyJob2"
+    expected_url = "http://localhost:8080/job/MyJob2/"
+
+    mock_post = MagicMock()
+    monkeypatch.setattr(Jenkins, "post", mock_post)
+
+    j = Jenkins("http://localhost:8080")
+    jb = j.create_job(expected_name, "project")
+
+    assert isinstance(jb, Job)
+    assert jb.url == expected_url
+    assert mock_post.call_count == 1
+
+
+def test_create_unsupported_job_type(monkeypatch):
+    mock_post = MagicMock()
+    monkeypatch.setattr(Jenkins, "post", mock_post)
+
+    j = Jenkins("http://localhost:8080")
+    with raises(PluginNotSupportedError):
+        jb = j.create_job("SomeNewJob", "FuBarType")
+
+
+def test_get_default_view(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
+    v = j.default_view
+
+    assert v.url == fake_jenkins_url + "view/" + fake_default_view_name + "/"
+
+
+def test_get_multiple_views(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
+    views = j.views
+
+    assert len(views) == 2
+    for cur_view in views:
+        assert cur_view.url in [fake_second_view_url, fake_default_view_url]
+    assert views[0].url != views[1].url
+
+
+def test_find_view(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
+    v = j.find_view(fake_second_view_name)
+
+    assert isinstance(v, View)
+    assert v.url == fake_second_view_url
+
+
+def test_find_missing_view(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
+    v = j.find_view("DoesNotExist")
+
+    assert v is None
+
+
+def test_find_view_primary_view(patch_jenkins_api):
+    j = Jenkins("http://localhost:8080")
+    v = j.find_view(fake_default_view_name)
+
+    assert isinstance(v, View)
+    assert v.url == fake_default_view_url
+
+
+def test_create_view(monkeypatch):
+    new_view_name = "MyNewView"
+    expected_view_url = fake_jenkins_url + "view/" + new_view_name + "/"
+    expected_view_type = "ListView"
+    mock_post = MagicMock()
+    monkeypatch.setattr(Jenkins, "post", mock_post)
+    monkeypatch.setattr(Jenkins, "get_api_data", get_mock_api_data("views", [{"name": new_view_name, "url": expected_view_url}]))
+    j = Jenkins(fake_jenkins_url)
+    v = j.create_view(new_view_name, expected_view_type)
+
+    assert isinstance(v, View)
+    assert v.url == expected_view_url
+    assert mock_post.call_count == 1
+    assert mock_post.call_args[0][0] == fake_jenkins_url + "createView"
+    assert mock_post.call_args[0][1]['data']['name'] == new_view_name
+    assert mock_post.call_args[0][1]['data']['mode'] == expected_view_type
+
+
+def test_get_multiple_nodes(monkeypatch):
+    mock_api_data = MagicMock()
+    fake_node1_url = fake_jenkins_url + "computer/(master)/"
+    fake_node2_url = fake_jenkins_url + "computer/remoteNode1/"
+
+    fake_api_data = {
+        "computer": [
+            {"displayName": "master"},
+            {"displayName": "remoteNode1"}
+        ]
+    }
+    mock_api_data.return_value = fake_api_data
+    monkeypatch.setattr(Jenkins, "get_api_data", mock_api_data)
+
+    j = Jenkins("http://localhost:8080")
+    nodes = j.nodes
+
+    assert len(nodes) == 2
+    for cur_node in nodes:
+        assert cur_node.url in [fake_node1_url, fake_node2_url]
+    assert nodes[0].url != nodes[1].url
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

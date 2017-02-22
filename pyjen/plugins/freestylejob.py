@@ -51,13 +51,12 @@ class FreestyleJob(Job):
         self.config_xml = jobxml.xml
 
     @staticmethod
-    def template_config_xml(job_type):
+    def template_config_xml():
         """Gets a basic XML configuration template for use when instantiating jobs of this type
 
         :returns: a basic XML configuration template for use when instantiating jobs of this type
         :rtype: :class:`str`
         """
-        assert job_type == FreestyleJob.type
         xml = """<project>
             <actions/>
             <description/>

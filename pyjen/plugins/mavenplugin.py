@@ -13,15 +13,12 @@ class MavenPlugin(Job):
         super(MavenPlugin, self).__init__(url)
 
     @staticmethod
-    def template_config_xml(job_type):
+    def template_config_xml():
         """Gets a basic XML configuration template for use when instantiating jobs of this type
 
         :returns: a basic XML configuration template for use when instantiating jobs of this type
         :rtype: :class:`str`
         """
-
-        assert job_type == MavenPlugin.type
-
         xml = """<maven2-moduleset plugin="maven-plugin@2.6">
         <actions/>
         <description/>

@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins jobs"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, find_plugin, init_extension_plugin
+from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, init_extension_plugin
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.jenkins_api import JenkinsAPI
@@ -52,21 +52,6 @@ class Job(PluginBase, JenkinsAPI):
             return plugin
 
         raise PluginNotSupportedError("Job plugin {0} not found".format(self.type), self.type)
-
-    @staticmethod
-    def template_config_xml(job_type):
-        """Generates a generic configuration file for use when creating a new job on the live Jenkins instance
-
-        :param str job_type: the type descriptor of the job being created
-            For valid values see the :py:meth:`.supported_types` method
-        :return: XML configuration data for the specified job type
-        :rtype: :class:`str`
-        """
-        plugin = find_plugin(job_type)
-        if plugin is not None:
-            return plugin.template_config_xml()
-
-        raise PluginNotSupportedError("Job plugin {0} not found".format(job_type), job_type)
 
     @staticmethod
     def supported_types():
