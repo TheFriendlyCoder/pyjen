@@ -20,7 +20,7 @@ class PluginManager(JenkinsAPI):
 
         :returns: list of 0 or more plugins installed on the Jenkins instance
         :rtype: List of 0 or more :class:`~.plugin.Plugin` objects"""
-        res = self.get_api_data('depth=2')
+        res = self.get_api_data(query_params='depth=2')
 
         retval = []
 

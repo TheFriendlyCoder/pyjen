@@ -226,6 +226,7 @@ class View(PluginBase, JenkinsAPI):
         self.delete()
         return new_view
 
+    @property
     def view_metrics(self):
         """Composes a report on the jobs contained within the view
 

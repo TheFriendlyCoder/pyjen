@@ -155,7 +155,7 @@ def test_view_metrics(monkeypatch):
     mock_api_data.return_value = fake_data
     monkeypatch.setattr(View, 'get_api_data', mock_api_data)
     v = View("http://localhost:8080/MyView")
-    result = v.view_metrics()
+    result = v.view_metrics
 
     assert result['broken_jobs_count'] == 2
     assert result['disabled_jobs_count'] == 1

@@ -108,16 +108,21 @@ class JenkinsAPI(object):
             raise requests.ConnectionError("Jenkins header has no x-jenkins metadata attached to it. Can not load version info.")
         return tuple([int(i) for i in self.jenkins_headers['x-jenkins'].split(".")])
 
-    def get_api_data(self, query_params=None):
+    def get_api_data(self, target_url=None, query_params=None):
         """Convenience method that retrieves the Jenkins API specific data from the specified URL
 
+        :param str target_url: Full URL to the REST API endpoint to be queried. If not provided, data will be loaded
+                                from the default 'url' for this object
         :param str query_params: optional set of query parameters to customize the returned data
         :returns:
             The set of Jenkins attributes, converted to Python objects, associated
             with the given URL.
         :rtype: :class:`object`
         """
-        temp_url = urllib_parse.urljoin(self.url, "api/json")
+        if target_url is None:
+            target_url = self.url
+
+        temp_url = urllib_parse.urljoin(target_url, "api/json")
 
         if query_params is not None:
             temp_url += "?" + query_params
