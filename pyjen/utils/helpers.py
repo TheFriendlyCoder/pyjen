@@ -25,7 +25,7 @@ def find_view(jenkins_url, credentials, view_name):
     :rtype: :class:`~.view.View`
     """
     from pyjen.plugins.nestedview import NestedView
-    jen = Jenkins.easy_connect(jenkins_url, credentials)
+    jen = Jenkins(jenkins_url, credentials)
 
     parent_view = jen.find_view(view_name)
     if parent_view is not None:

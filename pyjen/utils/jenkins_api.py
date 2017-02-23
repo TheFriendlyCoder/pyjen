@@ -1,5 +1,7 @@
 """Base class for all objects that interact directly with the Jenkins REST API"""
+import json
 import requests
+from requests.exceptions import InvalidHeader
 from six.moves import urllib_parse
 
 
@@ -105,7 +107,7 @@ class JenkinsAPI(object):
 
         :rtype: :class:`tuple`"""
         if 'x-jenkins' not in self.jenkins_headers:
-            raise requests.ConnectionError("Jenkins header has no x-jenkins metadata attached to it. Can not load version info.")
+            raise InvalidHeader("Jenkins header has no x-jenkins metadata attached to it. Can not load version info.")
         return tuple([int(i) for i in self.jenkins_headers['x-jenkins'].split(".")])
 
     def get_api_data(self, target_url=None, query_params=None):
@@ -204,6 +206,36 @@ class JenkinsAPI(object):
             JenkinsAPI.crumb_cache = {data['crumbRequestField']: data['crumb']}
 
         return JenkinsAPI.crumb_cache
+
+    def _create_view(self, view_name, view_type):
+        """Helper method used to create a new Jenkins view
+
+        NOTE: This base-class helper is here to prevent code duplication between the pyjen.View and pyjen.Jenkins
+        classes. See :py:meth:`~.jenkins.Jenkins.create_view` and :py:meth:`~.view.View.clone`
+
+        :param str view_name:
+            the name for this new view
+            This name should be unique, different from any other views currently managed by the Jenkins instance
+        :param str view_type:
+            type of view to create
+            must match one or more of the available view types supported by this Jenkins instance.
+            See :py:meth:`~.view.View.supported_types` for a list of supported view types.
+        """
+        view_type = view_type.replace("__", "_")
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        data = {
+            "name": view_name,
+            "mode": view_type,
+            "Submit": "OK",
+            "json": json.dumps({"name": view_name, "mode": view_type})
+        }
+
+        args = {
+            'data': data,
+            'headers': headers
+        }
+
+        self.post(self.jenkins_root_url + 'createView', args)
 
 
 if __name__ == "__main__":

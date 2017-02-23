@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins jobs"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, get_job_plugins, get_plugin_name, init_extension_plugin
+from pyjen.utils.pluginapi import PluginBase, get_plugins, get_plugin_name, init_extension_plugin
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.jenkins_api import JenkinsAPI
@@ -64,9 +64,9 @@ class Job(PluginBase, JenkinsAPI):
         :rtype: :class:`str`
         """
         retval = []
-        for plugin in get_job_plugins():
-            retval.append(plugin.type)
-
+        for plugin in get_plugins():
+            if issubclass(plugin, Job):
+                retval.append(plugin.type)
         return retval
 
     @property
@@ -123,10 +123,7 @@ class Job(PluginBase, JenkinsAPI):
 
         :param str new_xml: A complete XML tree compatible with the Jenkins API
         """
-        args = {
-            'data': new_xml,
-            'headers': {'Content-Type': 'text/xml'}
-        }
+        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
         self.post(self.url + "config.xml", args)
 
     @property

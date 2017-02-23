@@ -64,35 +64,6 @@ def get_plugins():
     return retval
 
 
-def get_view_plugins():
-    """Returns a list of plugins that extend the default Jenkins View type
-
-    :returns: list of plugins that extend the default Jenkins View type
-    :rtype: :class:`list` of :class:`~.utils.plugin_base.PluginBase` derived classes
-    """
-    from pyjen.view import View
-    retval = []
-    for plugin in get_plugins():
-        if issubclass(plugin, View):
-            retval.append(plugin)
-
-    return retval
-
-
-def get_job_plugins():
-    """Returns a list of plugins that extend the default Jenkins Job type
-
-    :returns: list of plugins that extend the default Jenkins Job type
-    :rtype: :class:`list` of :class:`~.utils.plugin_base.PluginBase` derived classes
-    """
-    from pyjen.job import Job
-    retval = []
-    for plugin in get_plugins():
-        if issubclass(plugin, Job):
-            retval.append(plugin)
-    return retval
-
-
 def create_xml_plugin(xml_node):
     """Instantiates the appropriate XML-compatible PyJen plugin
 

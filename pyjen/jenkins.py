@@ -1,5 +1,4 @@
 """Primitives for interacting with the main Jenkins dashboard"""
-import json
 import logging
 from requests.exceptions import RequestException
 from pyjen.view import View
@@ -245,33 +244,16 @@ class Jenkins(JenkinsAPI):
 
         :param str view_name:
             the name for this new view
-            This name should be unique, different from any other views
-            currently managed by the Jenkins instance
+            This name should be unique, different from any other views currently managed by the Jenkins instance
         :param str view_type:
             type of view to create
-            must match one or more of the available view types supported
-            by this Jenkins instance. See :py:meth:`.view_types`
-            for a list of supported view types.
+            must match one or more of the available view types supported by this Jenkins instance.
+            See :py:meth:`~.view.View.supported_types` for a list of supported view types.
         :returns: An object to manage the newly created view
         :rtype: :class:`~.view.View`
         """
-        view_type = view_type.replace("__", "_")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": view_name, "mode": view_type})
-        }
+        self._create_view(view_name, view_type)
 
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self.post(self.url + 'createView', args)
-
-        # TODO: See if there's any reason why we can't just return the view object with a statically defined URL
         retval = self.find_view(view_name)
         assert retval is not None
         return retval
@@ -361,5 +343,4 @@ class Jenkins(JenkinsAPI):
 
 
 if __name__ == '__main__':  # pragma: no cover
-    print(json.dumps({"name": "myname", "mode": "mymode"}))
     pass

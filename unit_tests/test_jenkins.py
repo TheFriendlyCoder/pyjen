@@ -73,13 +73,13 @@ def test_get_version(patch_jenkins_api):
 
 
 def test_get_unknown_version(monkeypatch):
-    from requests import ConnectionError
+    from requests.exceptions import InvalidHeader
     mock_header = PropertyMock()
     mock_header.return_value = {}   # no version info in the header
     monkeypatch.setattr(Jenkins, "jenkins_headers", mock_header)
     j = Jenkins("http://localhost:8080")
 
-    with raises(ConnectionError):
+    with raises(InvalidHeader):
         j.version
 
 

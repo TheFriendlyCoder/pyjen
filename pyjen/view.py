@@ -1,9 +1,8 @@
 """Primitives for interacting with Jenkins views"""
-import json
 import xml.etree.ElementTree as ElementTree
 from pyjen.job import Job
 from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.pluginapi import PluginBase, get_view_plugins, get_plugin_name, init_extension_plugin
+from pyjen.utils.pluginapi import PluginBase, get_plugins, get_plugin_name, init_extension_plugin
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.jenkins_api import JenkinsAPI
 
@@ -48,8 +47,9 @@ class View(PluginBase, JenkinsAPI):
         :rtype: :class:`list` of :class:`str`
         """
         retval = []
-        for plugin in get_view_plugins():
-            retval.append(plugin.type)
+        for plugin in get_plugins():
+            if issubclass(plugin, View):
+                retval.append(plugin.type)
 
         return retval
 
@@ -142,10 +142,7 @@ class View(PluginBase, JenkinsAPI):
             NOTE: It is assumed that this input text meets the schema
             requirements for a Jenkins view.
         """
-        args = {
-            'data': new_xml,
-            'headers': {'Content-Type': 'text/xml'}
-        }
+        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
         self.post(self.url + "config.xml", args)
 
     def delete(self):
@@ -193,23 +190,11 @@ class View(PluginBase, JenkinsAPI):
         :rtype: :class:`~.view.View`
         """
 
-        view_type = self.type
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": new_view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": new_view_name, "mode": view_type}) # TODO: See if this is necessary
-        }
-
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self.post(self.url + 'createView', args)
+        self._create_view(new_view_name, self.type)
 
         new_url = self.url.replace(self.name, new_view_name)
+        # TODO: Find the plugin associated with the specified view type and return an object of that type
+        #       instead of the generic base class
         new_view = View(new_url)
 
         vxml = ViewXML(self.config_xml)
@@ -220,7 +205,11 @@ class View(PluginBase, JenkinsAPI):
     def rename(self, new_name):
         """Rename this view
 
+        Since Jenkins doesn't currently support renaming views, this method destroys the current view and creates
+        a new one with the same configuration. As such, once this method completes this object will become invalidated
+
         :param str new_name: new name for this view
+        :returns: reference to the newly create view
         """
         new_view = self.clone(new_name)
         self.delete()
