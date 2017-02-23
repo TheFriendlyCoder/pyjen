@@ -133,30 +133,6 @@ def test_find_job(monkeypatch):
     assert jb.url == expected_job_url
 
 
-def test_create_job(monkeypatch):
-    expected_name = "MyJob2"
-    expected_url = "http://localhost:8080/job/MyJob2/"
-
-    mock_post = MagicMock()
-    monkeypatch.setattr(Jenkins, "post", mock_post)
-
-    j = Jenkins("http://localhost:8080")
-    jb = j.create_job(expected_name, "project")
-
-    assert isinstance(jb, Job)
-    assert jb.url == expected_url
-    assert mock_post.call_count == 1
-
-
-def test_create_unsupported_job_type(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Jenkins, "post", mock_post)
-
-    j = Jenkins("http://localhost:8080")
-    with raises(PluginNotSupportedError):
-        jb = j.create_job("SomeNewJob", "FuBarType")
-
-
 def test_get_default_view(patch_jenkins_api):
     j = Jenkins("http://localhost:8080")
     v = j.default_view

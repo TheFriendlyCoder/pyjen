@@ -117,7 +117,7 @@ class Jenkins(JenkinsAPI):
         :returns: list of 0 or more Node objects managed by this Jenkins master
         :rtype: :class:`list` of :class:`~.node.Node` objects
         """
-        data = self.get_api_data(target_url=self.url + "computer")
+        data = self.get_api_data(target_url=self.url + "computer/")
         nodes = data['computer']
         retval = []
         for cur_node in nodes:
@@ -258,31 +258,6 @@ class Jenkins(JenkinsAPI):
         assert retval is not None
         return retval
 
-    def create_job(self, job_name, job_type):
-        """Creates a new job on this Jenkins instance
-
-        :param str job_name:
-            The name for the job to be created.
-            expected to be universally unique on this instance of Jenkins
-        :param str job_type:
-            descriptive type for the base configuration of this new job
-            for a list of currently supported job types see :meth:`.job_types`
-        """
-        params = {'name': job_name}
-        headers = {'Content-Type': 'text/xml'}
-
-        args = {
-            'params': params,
-            'headers': headers,
-            'data': Jenkins.get_plugin_template(job_type)
-        }
-
-        self.post(self.url + "createItem", args)
-
-        new_job = Job(self.url + "job/" + job_name)
-
-        return new_job
-
     @staticmethod
     def get_plugin_template(plugin_type):
         """Helper method that retrieves a default XML template for constructing an object from a specific plugin
@@ -319,12 +294,16 @@ class Jenkins(JenkinsAPI):
         :returns: reference to Jenkins object that manages this node's information.
         :rtype: :class:`~.node.Node` or None if node not found
         """
+        if nodename == "master":
+            temp_nodename = "(master)"
+        else:
+            temp_nodename = nodename
 
         # TODO: Rework 'nodes' property to cache the node name for all nodes in one query, so we can rework
         #       this implementation to simply call self.nodess then iterate through them all to find the one
         #       we're looking for. Then we don't have to guess the URL.
 
-        new_url = self.url + "computer/" + nodename
+        new_url = self.url + "computer/" + temp_nodename
         try:
             retval = Node(new_url)
             assert retval.name == nodename
