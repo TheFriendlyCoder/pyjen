@@ -6,7 +6,7 @@ from pytest import raises
 from pyjen.job import Job
 from pyjen.view import View
 from pyjen.exceptions import PluginNotSupportedError
-
+from pyjen.utils.jenkins_api import JenkinsAPI
 
 
 fake_jenkins_url = "http://localhost:8080/"
@@ -42,10 +42,6 @@ def patch_jenkins_api(monkeypatch):
     mock_headers.return_value = fake_jenkins_headers
     monkeypatch.setattr(Jenkins, "jenkins_headers", mock_headers)
 
-    #mock_api_text = MagicMock()
-    #mock_api_text.return_value = fake_config_xml
-    #monkeypatch.setattr(View, "get_text", mock_api_text)
-
 
 def get_mock_api_data(field, data):
     tmp_data = fake_jenkins_data.copy()
@@ -53,6 +49,21 @@ def get_mock_api_data(field, data):
     mock_api_data = MagicMock()
     mock_api_data.return_value = tmp_data
     return mock_api_data
+
+
+def test_init():
+    jenkins_url = "http://localhost:8080"
+    jenkins_user = "MyUser"
+    jenkins_pw = "MyPass"
+    jenkins_creds = (jenkins_user, jenkins_pw)
+    j = Jenkins(jenkins_url, jenkins_creds, True)
+
+    assert j.url == jenkins_url + "/"       # The API should append a slash to the URL for consistency
+
+    # Constructor should initialize our global state as well
+    assert JenkinsAPI.creds == jenkins_creds
+    assert JenkinsAPI.jenkins_root_url == j.url
+    assert JenkinsAPI.ssl_verify_enabled is True
 
 
 def test_get_version(patch_jenkins_api):
@@ -102,20 +113,24 @@ def test_is_shutting_down(patch_jenkins_api):
 
 def test_find_non_existent_job(patch_jenkins_api):
     j = Jenkins("http://localhost:8080")
-    jb = j.find_job("MyJob")
+    jb = j.find_job("DoesNotExistJob")
     assert jb is None
 
 
-def test_find_job_success(monkeypatch):
-    job_name = "MyJob"
-    job_url = "http://localhost:8080/job/MyJob/"
-    monkeypatch.setattr(Jenkins, "get_api_data", get_mock_api_data("jobs", [{"name": job_name, "url": job_url}]))
+def test_find_job(monkeypatch):
+    expected_job_name = "MyJob"
+    expected_job_url = "http://localhost:8080/job/MyJob/"
+    fake_jobs = [
+        {"name": "AnotherJob", "url": "http://localhost:8080/job/AnotherJob"},
+        {"name": expected_job_name, "url": expected_job_url}
+    ]
+    monkeypatch.setattr(Jenkins, "get_api_data", get_mock_api_data("jobs", fake_jobs))
 
     j = Jenkins("http://localhost:8080")
     jb = j.find_job("MyJob")
 
     assert isinstance(jb, Job)
-    assert jb.url == job_url
+    assert jb.url == expected_job_url
 
 
 def test_create_job(monkeypatch):
