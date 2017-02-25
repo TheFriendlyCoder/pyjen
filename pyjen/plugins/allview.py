@@ -10,14 +10,14 @@ class AllView(View):
     """
     type = "hudson.model.AllView"
 
-    def __init__(self, data_io_controller, jenkins_master):
+    def __init__(self, url):
         """
         :param data_io_controller: IO interface to the Jenkins API
         :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         :param jenkins_master: Reference to Jenkins master interface
         :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
-        super(AllView, self).__init__(data_io_controller, jenkins_master)
+        super(AllView, self).__init__(url)
 
 
 if __name__ == "__main__":  # pragma: no cover

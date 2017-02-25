@@ -52,11 +52,6 @@ def test_supported_types():
     assert len(actual_types) >= 3
 
 
-def test_job_count(patch_view_api):
-    v = View("http://localhost:8080/MyView")
-    assert v.job_count == 1
-
-
 def test_get_jobs(patch_view_api):
     v = View("http://localhost:8080/MyView")
     jobs = v.jobs

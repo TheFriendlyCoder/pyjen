@@ -91,30 +91,6 @@ class View(PluginBase, JenkinsAPI):
         return retval
 
     @property
-    def job_count(self):
-        """Gets the number of jobs contained under this view
-
-        :returns: number of jobs contained under this view
-        :rtype: :class:`int`
-        """
-        data = self.get_api_data()
-
-        return len(data['jobs'])
-
-    @property
-    def job_names(self):
-        """Gets the list of names of all jobs contained within this view
-
-        :returns: the list of names of all jobs contained within this view
-        :rtype: :class:`list` of :class:`str`
-        """
-        data = self.get_api_data()
-        retval = []
-        for j in data['jobs']:
-            retval.append(j['name'])
-        return retval
-
-    @property
     def config_xml(self):
         """Gets the raw configuration data in XML format
 

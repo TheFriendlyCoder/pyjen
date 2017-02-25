@@ -5,7 +5,6 @@ from mock import PropertyMock
 from pytest import raises
 from pyjen.job import Job
 from pyjen.view import View
-from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jenkins_api import JenkinsAPI
 
 
