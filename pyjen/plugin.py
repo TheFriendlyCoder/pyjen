@@ -52,9 +52,10 @@ class Plugin(object):
         retval = []
         for cur_dep in self._config['dependencies']:
             if not cur_dep['optional']:
-                tmp = {}
-                tmp['shortName'] = cur_dep['shortName']
-                tmp['version'] = cur_dep['version']
+                tmp = {
+                    'shortName': cur_dep['shortName'],
+                    'version': cur_dep['version']
+                }
                 retval.append(tmp)
         return retval
 

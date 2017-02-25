@@ -64,35 +64,6 @@ def get_plugins():
     return retval
 
 
-def get_view_plugins():
-    """Returns a list of plugins that extend the default Jenkins View type
-
-    :returns: list of plugins that extend the default Jenkins View type
-    :rtype: :class:`list` of :class:`~.utils.plugin_base.PluginBase` derived classes
-    """
-    from pyjen.view import View
-    retval = []
-    for plugin in get_plugins():
-        if issubclass(plugin, View):
-            retval.append(plugin)
-
-    return retval
-
-
-def get_job_plugins():
-    """Returns a list of plugins that extend the default Jenkins Job type
-
-    :returns: list of plugins that extend the default Jenkins Job type
-    :rtype: :class:`list` of :class:`~.utils.plugin_base.PluginBase` derived classes
-    """
-    from pyjen.job import Job
-    retval = []
-    for plugin in get_plugins():
-        if issubclass(plugin, Job):
-            retval.append(plugin)
-    return retval
-
-
 def create_xml_plugin(xml_node):
     """Instantiates the appropriate XML-compatible PyJen plugin
 
@@ -121,19 +92,17 @@ def find_plugin(plugin_type):
     return None
 
 
-def init_extension_plugin(dataio, jenkins_master):
+def init_extension_plugin(config_xml, url):
     """Instantiates a plugin that extends one of the Jenkins native objects such as a view or job
 
-    :param dataio: Jenkins REST API interface, initialized with the connection parameters of the new object
-    :param jenkins_master: Instance of the Jenkins master object that manages this entity
-    :returns: PyJen plugin pre-initialized with the source data, or None if no compatible plugin could be found
-    :rtype: :class:`~.utils.pluginbase.PluginBase` derived object
+    :param str config_xml: raw XML of the object to be encapsulated by a plugin
+    :param str url: full REST API endpoint of the Jenkins object associated with the XML
     """
-    pluginxml = PluginXML(ElementTree.fromstring(dataio.config_xml))
+    pluginxml = PluginXML(ElementTree.fromstring(config_xml))
     all_plugins = get_plugins()
     for plugin in all_plugins:
         if plugin.type == pluginxml.get_class_name():
-            return plugin(dataio, jenkins_master)
+            return plugin(url)
     return None
 
 

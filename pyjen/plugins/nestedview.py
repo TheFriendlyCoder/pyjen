@@ -13,7 +13,7 @@ class NestedView(View):
 
     type = "hudson.plugins.nested__view.NestedView"
 
-    def __init__(self, controller, jenkins_master):
+    def __init__(self, url):
         """
         To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
@@ -27,7 +27,7 @@ class NestedView(View):
             this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
-        super(NestedView, self).__init__(controller, jenkins_master)
+        super(NestedView, self).__init__(url)
 
     @property
     def views(self):
@@ -38,14 +38,13 @@ class NestedView(View):
         :returns: list of all views contained within this view
         :rtype: :class:`list`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         raw_views = data['views']
         retval = []
 
         for cur_view in raw_views:
-            new_io_obj = self._controller.clone(cur_view['url'])
-            tview = View.create(new_io_obj, self._master)
+            tview = View(cur_view['url'])
             retval.append(tview)
 
         return retval
@@ -58,20 +57,18 @@ class NestedView(View):
         :rtype: Object derived from :class:`~.view.View`
         """
 
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         raw_views = data['views']
 
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
-                new_io_obj = self._controller.clone(cur_view['url'])
-                return View.create(new_io_obj, self._master)
+                return View(cur_view['url'])
 
         for cur_view in raw_views:
-            new_io_obj = self._controller.clone(cur_view['url'])
-            temp_view = View.create(new_io_obj, self._master)
-            if temp_view.type == NestedView.type:
-                sub_view = temp_view.find_view(view_name)
+            temp_view = View(cur_view['url'])
+            if isinstance(temp_view.derived_object, NestedView):
+                sub_view = temp_view.derived_object.find_view(view_name)  # pylint: disable=no-member
                 if sub_view is not None:
                     return sub_view
 
@@ -84,7 +81,7 @@ class NestedView(View):
         :returns: True if a view with that name already exists, otherwise false
         :rtype: :class:`bool`
         """
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         raw_views = data['views']
 
@@ -125,21 +122,21 @@ class NestedView(View):
             "json": json.dumps({"name": view_name, "mode": view_type})
         }
 
-        args = {}
-        args['data'] = data
-        args['headers'] = headers
+        args = {
+            'data': data,
+            'headers': headers
+        }
 
-        self._controller.post('/createView', args)
+        self.post(self.url + 'createView', args)
 
         # Load a pyjen.View object with the new view
-        data = self._controller.get_api_data()
+        data = self.get_api_data()
 
         raw_views = data['views']
 
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
-                new_io_obj = self._controller.clone(cur_view['url'])
-                return View.create(new_io_obj, self._master)
+                return View(cur_view['url'])
 
         raise NestedViewCreationError("Failed to create nested view " + view_name + " under " + self.name)
 
