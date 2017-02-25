@@ -5,4 +5,4 @@
 # packages as it is safer to not import any modules from the modules you are packaging.  (ie: importing a module may
 # fail if the import depends on other modules being installed, which may or may not exist on the system generating
 # the package)
-__version__ = "0.0.12dev0"
+__version__ = "1.0.0"
