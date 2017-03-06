@@ -138,17 +138,27 @@ def test_enable_all_jobs(monkeypatch):
 
 
 def test_view_metrics(monkeypatch):
-    mock_api_data = MagicMock()
+    mock_view_api_data = MagicMock()
     fake_data = fake_view_data.copy()
     fake_data['jobs'] = [
-        {'url': 'http://fake/job/a', 'name': 'a', 'color': 'blue'},
-        {'url': 'http://fake/job/b', 'name': 'b', 'color': 'red'},
-        {'url': 'http://fake/job/c', 'name': 'c', 'color': 'yellow'},
-        {'url': 'http://fake/job/d', 'name': 'd', 'color': 'disabled'},
-        {'url': 'http://fake/job/e', 'name': 'e', 'color': 'red'}
+        {'url': 'http://fake/job/a'},
+        {'url': 'http://fake/job/b'},
+        {'url': 'http://fake/job/c'},
+        {'url': 'http://fake/job/d'},
+        {'url': 'http://fake/job/e'}
     ]
-    mock_api_data.return_value = fake_data
-    monkeypatch.setattr(View, 'get_api_data', mock_api_data)
+    mock_view_api_data.return_value = fake_data
+    monkeypatch.setattr(View, 'get_api_data', mock_view_api_data)
+
+    mock_job_api_data = MagicMock()
+    mock_job_api_data.side_effect = [
+        {'color': 'blue'}, {'color': 'blue'}, {'color': 'blue'},
+        {'color': 'red'},
+        {'color': 'yellow'}, {'color': 'yellow'}, {'color': 'yellow'},
+        {'color': 'disabled'}, {'color': 'disabled'},
+        {'color': 'red'}
+    ]
+    monkeypatch.setattr(Job, 'get_api_data', mock_job_api_data)
     v = View("http://localhost:8080/MyView")
     result = v.view_metrics
 

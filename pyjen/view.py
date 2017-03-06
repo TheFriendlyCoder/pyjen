@@ -213,13 +213,13 @@ class View(PluginBase, JenkinsAPI):
             #temp_job = Job._create(temp_data_io, self._master, job['name'])
             temp_job = Job(job['url'])
 
-            if job["color"] == "red":
+            if temp_job.is_failing:
                 broken_job_count += 1
                 broken_jobs.append(temp_job)
-            elif job["color"] == "disabled":
+            elif temp_job.is_disabled:
                 disabled_jobs_count += 1
                 disabled_jobs.append(temp_job)
-            elif job["color"] == "yellow":
+            elif temp_job.is_unstable:
                 unstable_job_count += 1
                 unstable_jobs.append(temp_job)
 
