@@ -20,6 +20,8 @@ Submodules
    pyjen.jenkins
    pyjen.job
    pyjen.node
+   pyjen.plugin
+   pyjen.plugin_manager
    pyjen.user
    pyjen.view
 
