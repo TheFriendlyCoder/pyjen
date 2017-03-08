@@ -6,21 +6,30 @@
 PyJen - Jenkins CI Python library
 =================================
 
-.. image:: https://pypip.in/download/pyjen/badge.png
-    :target: https://pypi.python.org/pypi//pyjen/
-    :alt: Downloads
-
-.. image:: https://pypip.in/license/pyjen/badge.png
+.. image:: https://img.shields.io/pypi/l/pyjen.svg
     :target: https://pypi.python.org/pypi/pyjen/
     :alt: License
 
-.. image:: https://pypip.in/wheel/pyjen/badge.png
+.. image:: https://img.shields.io/pypi/pyversions/pyjen.svg
     :target: https://pypi.python.org/pypi/pyjen/
-    :alt: Wheel Status
+    :alt: Python Versions
 
-.. image:: https://pypip.in/version/pyjen/badge.png
+.. image:: https://img.shields.io/pypi/dm/pyjen.svg
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Downloads
+
+.. image:: https://img.shields.io/pypi/format/pyjen.svg
+    :target: https://pypi.python.org/pypi/pyjen/
+    :alt: Format
+
+.. image:: https://badge.fury.io/py/pyjen.svg
     :target: https://pypi.python.org/pypi/pyjen/
     :alt: Latest Version
+
+.. image:: https://api.travis-ci.org/TheFriendlyCoder/pyjen.svg?branch=master
+    :target: https://travis-ci.org/TheFriendlyCoder/pyjen
+    :alt: Build status
+
 
 Table of Contents
 =================
@@ -36,7 +45,7 @@ Table of Contents
 Overview
 =============
 
-PyJen is an extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using Pythonic objects and functions. Used in production in at least one major software development company (`CARIS <http://www.caris.com/>`_), tested against the latest 2.x and 3.x versions of CPython and the latest trunk and LTS editions of the Jenkins REST API, we endeavor to provide a stable, reliable tool for a variety of users.
+PyJen is an extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of CPython and the latest trunk and LTS editions of the Jenkins REST API, we endeavor to provide a stable, reliable tool for a variety of users.
 
 With an intuitive and well thought out interface, PyJen offers anyone familiar with the Python programming language an easy way to manage Jenkins dashboards from a simple command prompt. All core primitives of Jenkins, including views, jobs and builds are easily accessible and can be loaded, analyzed and even modified or created via simple Python commands.
 
