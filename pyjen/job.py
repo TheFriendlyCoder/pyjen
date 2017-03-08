@@ -91,6 +91,27 @@ class Job(PluginBase, JenkinsAPI):
         return data['color'] == "disabled"
 
     @property
+    def is_unstable(self):
+        """Indicates whether the current state of this job is 'unstable'
+
+        :returns: True if the latest build of the job is unsable, otherwise False
+        :rtype: :class:`bool`
+        """
+        data = self.get_api_data()
+
+        return data['color'] == "yellow"
+
+    @property
+    def is_failing(self):
+        """Indicates whether the current state of the job is 'failed'
+
+        :returns: True if the latest build of the job is a failure, otherwise False
+        :rtype: :class:`bool`
+        """
+        data = self.get_api_data()
+        return data['color'] == "red"
+
+    @property
     def has_been_built(self):
         """Checks to see whether this job has ever been built or not
 
