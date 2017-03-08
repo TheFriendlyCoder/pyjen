@@ -56,7 +56,7 @@ Quick Start Guide
 
 1. First, and most obviously, you must have Python installed on your system. For details specific to your OS we recommend seeing `Python's website <http://www.python.com/>`_. We recommend using the latest version of Python 2.x / 3.x for best results.
 
-2. Next, we recommend that you install the pip package manager as described `here <http://www.pip-installer.org/en/latest/installing.html>`_. If you are using newer editions of Python (3.x), or if you are using certain Linux distributionss / packages you likely already have this tool installed. You can confirm this by running the following command:
+2. Next, we recommend that you install the pip package manager as described `here <http://www.pip-installer.org/en/latest/installing.html>`_. If you are using newer editions of Python (3.x), or if you are using certain Linux distributions / packages you likely already have this tool installed. You can confirm this by running the following command:
 
 ::
 
@@ -72,14 +72,14 @@ which should result in output that looks something like this:
 
 ::
 
-    # pip install pyjen --pre
+    # pip install pyjen
 
 4. import the pyjen module and start scripting! Here is a short example that shows how you can get the name of the default view from a Jenkins instance:
 ::
 
     >>> from pyjen.jenkins import Jenkins
-    >>> jenkins_obj=Jenkins.easy_connect("http://localhost:8080")
-    >>> default_view=jenkins_obj.default_view
+    >>> jenkins_obj = Jenkins("http://localhost:8080", ('username', 'passwd'))
+    >>> default_view = jenkins_obj.default_view
     >>> print(default_view.name)
 
 
