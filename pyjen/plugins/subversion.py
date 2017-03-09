@@ -1,11 +1,9 @@
 """Module defining the interfaces for interacting with Subversion properties
 associated with a :py:mod:`pyjen.job.Job`"""
-from pyjen.utils.pluginapi import PluginBase
 
 
-class Subversion(PluginBase):
+class Subversion:
     """Subversion SCM job plugin"""
-    type = "hudson.scm.SubversionSCM"
 
     def __init__(self, node):
         """

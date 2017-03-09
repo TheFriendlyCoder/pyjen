@@ -3,7 +3,6 @@ import logging
 import xml.etree.ElementTree as ElementTree
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
-from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
 class SectionedView(View):
@@ -11,9 +10,8 @@ class SectionedView(View):
 
      Views of this type support groupings of jobs into 'sections'
      which each have their own filters"""
-    type = "hudson.plugins.sectioned__view.SectionedView"
 
-    def __init__(self, controller, jenkins_master):
+    def __init__(self, url):
         """
         :param controller:
             class capable of handling common HTTP IO requests sent by this
@@ -23,7 +21,7 @@ class SectionedView(View):
             Reference to Jenkins object associated with the master instance managing
             this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`        """
-        super(SectionedView, self).__init__(controller, jenkins_master)
+        super(SectionedView, self).__init__(url)
         self._log = logging.getLogger(__name__)
 
     @property
@@ -36,11 +34,10 @@ class SectionedView(View):
         return vxml.sections
 
 
-class ListViewSection(PluginBase):
+class ListViewSection:
     """One of several 'section' types defined for a sectioned view
 
     Represents sections of type 'ListView'"""
-    type = "hudson.plugins.sectioned__view.ListViewSection"
 
     def __init__(self, node):
         """
@@ -72,12 +69,10 @@ class ListViewSection(PluginBase):
         regex_node.text = new_regex
 
 
-class TextSection(PluginBase):
+class TextSection:
     """One of several 'section' types defined for a sectioned view
 
     Sections of this type contain simple descriptive text"""
-    type = "hudson.plugins.sectioned__view.TextSection"
-
     def __init__(self, node):
         """
         :param node: XML node defining the settings for a ListView section

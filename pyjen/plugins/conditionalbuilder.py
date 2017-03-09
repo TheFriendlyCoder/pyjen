@@ -3,9 +3,8 @@ import logging
 from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
-class ConditionalBuilder(PluginBase):
+class ConditionalBuilder:
     """Jenkins job builder plugin capable of conditionally executing a build operation"""
-    type = "org.jenkinsci.plugins.conditionalbuildstep.ConditionalBuilder"
 
     def __init__(self, node):
         """

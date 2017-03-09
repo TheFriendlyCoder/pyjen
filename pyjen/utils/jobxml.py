@@ -1,7 +1,7 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
 import logging
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.pluginapi import create_xml_plugin, get_plugin_name
+from pyjen.utils.pluginapi import init_plugin
 from pyjen.exceptions import PluginNotSupportedError
 
 
@@ -115,12 +115,11 @@ class JobXML(object):
         :rtype: :class:`~.pluginapi.PluginBase`
         """
         node = self._root.find('scm')
-        plugin = create_xml_plugin(node)
+        plugin = init_plugin(node)
         if plugin is not None:
             return plugin
 
-        raise PluginNotSupportedError("Job XML plugin {0} not found".format(get_plugin_name(node)),
-                                      get_plugin_name(node))
+        raise PluginNotSupportedError("SCM XML plugin not found", "scm")
 
     @property
     def properties(self):
@@ -132,11 +131,11 @@ class JobXML(object):
         retval = []
         nodes = self._root.find('properties')
         for node in nodes:
-            plugin = create_xml_plugin(node)
+            plugin = init_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
-                self._log.warning("Unsupported job 'property' plugin: " + get_plugin_name(node))
+                self._log.warning("Unsupported job 'property' plugin.")
         return retval
 
     @property
@@ -149,11 +148,11 @@ class JobXML(object):
         retval = []
         nodes = self._root.find('publishers')
         for node in nodes:
-            plugin = create_xml_plugin(node)
+            plugin = init_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
-                self._log.warning("Unsupported job 'publisher' plugin: " + get_plugin_name(node))
+                self._log.warning("Unsupported job 'publisher' plugin")
         return retval
 
     @property
@@ -166,11 +165,11 @@ class JobXML(object):
         retval = []
         nodes = self._root.find('builders')
         for node in nodes:
-            plugin = create_xml_plugin(node)
+            plugin = init_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
-                self._log.warning("Unsupported job 'builder' plugin: " + get_plugin_name(node))
+                self._log.warning("Unsupported job 'builder' plugin")
 
         return retval
 

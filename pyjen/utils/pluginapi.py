@@ -1,34 +1,57 @@
 """Primitives for interacting with the PyJen plugin API"""
-import os
 import logging
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.plugin_base import PluginBase
-
-# Path where all PyJen plugins are stored
-PYJEN_PLUGIN_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "plugins"))
+from pkg_resources import iter_entry_points
+from pyjen.exceptions import PluginNotSupportedError
 
 
-class PluginXML(object):
-    """Class used to process XML configuration information associated with Jenkins plugins"""
-    def __init__(self, xml_node):
-        """
-        :param xml_node: the XML sub-tree defining the properties of this plugin
-        :type xml_node: :class:`xml.etree.ElementTree`
-        """
-        self._root = xml_node
+class PluginAPI(object):
+    """Base class for all PyJen extensions wrapping specific Jenkins plugins
+
+    Plugins are defined by an XML node with attributes describing the plugin associated with the XML and 0 or more
+    child elements containing the parameters used by the plugin. The XML representation of a plugin is expected
+    to conform to one of the following patterns:
+
+    * <com.tikal.jenkins.plugins.multijob.MultiJobProject plugin="jenkins-multijob-plugin@1.20">
+    * <logRotator class="hudson.tasks.LogRotator">
+    * <hudson.model.ListView>
+
+    The first example defines the "friendly" name of the plugin and it's associated version number using the pattern
+    "plugin_name@version". The second example stores the Java class name associated with the Jenkins plugin itself.
+    The last example illustrates how some of the built-in types are defined by naming the root tag with the full
+    Java class name, which appears to be analogous to the 'class' attribute from example 2.
+
+    :param str config_xml: Plain text XML of the plugin to be instantiated
+    :param str url:
+        full REST API endpoint of the Jenkins object associated with the XML
+        may be omitted for nested XML-based plugins with no explicit REST API endpoint
+
+    """
+    def __init__(self, config_xml, url=None):
+        self._root = ElementTree.fromstring(config_xml)
         self._log = logging.getLogger(__name__)
+        self._url = url
 
-    def get_module_name(self):
+    @property
+    def plugin_name(self):
         """Gets the name of the plugin
 
-        :returns: the plugin name
+        :returns: the plugin name if one is defined, otherwise None
         :rtype: :class:`str`
         """
+        if 'plugin' not in self._root.attrib:
+            return None
+
         attr = self._root.attrib['plugin']
+        if '@' not in attr:
+            raise ValueError('Jenkins plugin attributes are expected to be of the form "name@version": {0}'.format(attr))
+
         parts = attr.split('@')
+
         return parts[0]
 
-    def get_class_name(self):
+    @property
+    def class_name(self):
         """Gets the Java class name of the plugin
 
         :returns: the Java class name
@@ -40,138 +63,67 @@ class PluginXML(object):
         else:
             return self._root.tag
 
-    def get_version(self):
+    @property
+    def version(self):
         """Gets the version of the plugin
 
         :returns: the plugin version
         :rtype: :class:`str`
         """
+        if 'plugin' not in self._root.attrib:
+            return None
+
         attr = self._root.attrib['plugin']
+        if '@' not in attr:
+            raise ValueError('Jenkins plugin attributes are expected to be of the form "name@version": {0}'.format(attr))
+
         parts = attr.split('@')
         return parts[1]
 
+    def _find_plugin(self):
+        """Locates a PyJen plugin of the given type
 
-def get_plugins():
-    """Returns list of classes for all plugins supported by PyJen
+        :param str plugin_type: the descriptive type-name for the plugin to find
+        :returns: reference to the plugin class for the specified type, or None if a compatible plugin could not be found
+        """
+        entry_point_name = self.plugin_name or self.class_name
+        if entry_point_name is None:
+            raise Exception("Parsing error: no valid Jenkins plugin name could be parsed from provided XML")
 
-    :returns: list of classes for all PyJen plugins
-    :rtype: :class:`list` of :class:`~.PluginBase` derived objects
-    """
-    all_modules = _load_modules(PYJEN_PLUGIN_FOLDER)
-    retval = []
-    for module in all_modules:
-        retval.extend(_get_plugin_classes(module))
-    return retval
+        tmp_log = logging.getLogger(__name__)
+        supported_plugins = []
+        for entry_point in iter_entry_points(group='pyjen.plugins', name=entry_point_name):
+            supported_plugins.append(entry_point.load())
 
+        if len(supported_plugins) == 0:
+            raise PluginNotSupportedError("Plugin not supported: " + entry_point_name)
 
-def create_xml_plugin(xml_node):
-    """Instantiates the appropriate XML-compatible PyJen plugin
+        if len(supported_plugins) > 1:
+            tmp_log.warning("multiple plugins detected for specified Jenkins object: %s. Using first match.",
+                            entry_point_name)
 
-    :param xml_node: the node of the XML configuration defining the plugin configuration
-    :type xml_node: xml.etree.ElementTree
-    :returns: a pre-initialized plugin of the appropriate type, or None if no supported plugin can be found
-    :rtype: :class:`~.utils.plugin_base.PluginBase` derived class
-    """
-    pluginxml = PluginXML(xml_node)
-    plugin = find_plugin(pluginxml.get_class_name())
-    if plugin is None:
-        return None
+        return supported_plugins[0]
 
-    return plugin(xml_node)
+    def init_plugin(self):
+        """Instantiates a PyJen plugin that wraps a particular Jenkins plugin"""
 
+        plugin_class = self._find_plugin()
 
-def find_plugin(plugin_type):
-    """Locates a PyJen plugin of the given type
+        if self._url:
+            return plugin_class(self._url)
+        else:
+            return plugin_class(self.config_xml)
 
-    :param str plugin_type: the descriptive type-name for the plugin to find
-    :returns: reference to the plugin class for the specified type, or None if a compatible plugin could not be found
-    """
-    for plugin in get_plugins():
-        if plugin.type == plugin_type:
-            return plugin
-    return None
-
-
-def init_extension_plugin(config_xml, url):
-    """Instantiates a plugin that extends one of the Jenkins native objects such as a view or job
-
-    :param str config_xml: raw XML of the object to be encapsulated by a plugin
-    :param str url: full REST API endpoint of the Jenkins object associated with the XML
-    """
-    pluginxml = PluginXML(ElementTree.fromstring(config_xml))
-    all_plugins = get_plugins()
-    for plugin in all_plugins:
-        if plugin.type == pluginxml.get_class_name():
-            return plugin(url)
-    return None
-
-
-def get_plugin_name(xml_node):
-    """Extracts the name of a plugin from an XML snippet
-
-    :param xml_node: the node of the XML configuration defining the plugin configuration
-    :type xml_node: xml.etree.ElementTree
-    :returns: Name of the plugin this snippet is generated by
-    :rtype: :class:`str`
-    """
-    return PluginXML(xml_node).get_class_name()
-
-
-def _get_plugin_classes(module):
-    """Gets a list of all PyJen plugins from a given Python module
-
-    :param module: A Python module object to be processed
-    :returns: list of classes found within the given module that implement PyJen plugin interfaces
-    :rtype: :class:`list` of :class:`~.PluginBase` objects
-    """
-    import inspect
-    retval = []
-    for cur_member in inspect.getmembers(module, inspect.isclass):
-        if cur_member[1].__module__.startswith("pyjen.plugins."):
-            if issubclass(cur_member[1], PluginBase):
-                retval.append(cur_member[1])
-
-    return retval
-
-
-def _load_modules(path):
-    """Gets a list of all modules found in a given path
-
-    :param str path: path containing Python modules to be loaded
-    :return: :class:`list` of objects of type 'module' found in the specified folder
-    :rtype: :class:`list` of Python modules
-    """
-    import pkgutil
-    import importlib
-    # TODO: Consider how we should customize this prefix in case we want to load plugins from multiple paths / packages
-    package_prefix = "pyjen.plugins."
-    retval = []
-
-    # First, check to see if any plugins have already been loaded
-    import sys
-    for cur_module_name in sys.modules:
-        if cur_module_name.startswith(package_prefix):
-            cur_module = sys.modules[cur_module_name]
-
-            # Make sure to exclude 'package initialization' modules
-            if cur_module is not None and not cur_module.__file__.endswith("__init__.py"):
-                retval.append(cur_module)
-
-            # TODO: Consider whether we need to consider re-loading plugins in certain cases
-
-    # If not, then lets walk all modules in the plugin path and load them all
-    for pkg_module in pkgutil.iter_modules([path], package_prefix):
-        if not pkg_module[2]:
-            cur_mod = importlib.import_module(pkg_module[1])
-
-            if not cur_mod in retval:
-                retval.append(cur_mod)
-
-    # TODO: See whether we need to consider loading newly added plugins that may not have existed the first time
-    #       this function is called
-    return retval
+    @staticmethod
+    def get_installed_plugins():
+        retval = []
+        for ep in iter_entry_points(group='pyjen.plugins', name=None):
+            retval.append(ep.name)
+        return retval
 
 if __name__ == "__main__":  # pragma: no cover
-    #for i in get_plugins():
-    #    print(i.type)
+    # print a list of all installed PyJen plugins
+    # plugins = PluginAPI.get_installed_plugins()
+    # for p in plugins:
+    #       print (p)
     pass

@@ -1,13 +1,11 @@
 """Primitives for interacting with Jenkins views"""
-import xml.etree.ElementTree as ElementTree
 from pyjen.job import Job
-from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.pluginapi import PluginBase, get_plugins, get_plugin_name, init_extension_plugin
+from pyjen.utils.pluginapi import init_plugin
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class View(PluginBase, JenkinsAPI):
+class View(JenkinsAPI):
     """ Abstraction for generic Jenkins views providing interfaces common to all view types
 
     :param str url: Full URL of a view on a Jenkins master
@@ -23,35 +21,7 @@ class View(PluginBase, JenkinsAPI):
         if not isinstance(self, View):
             return self
 
-        plugin = init_extension_plugin(self.config_xml, self.url)
-        if plugin is not None:
-            return plugin
-
-        raise PluginNotSupportedError("View plugin {0} not found".format(self.type), self.type)
-
-    @property
-    def type(self):
-        if self._type is None:
-            node = ElementTree.fromstring(self.config_xml)
-            self._type = get_plugin_name(node)
-        return self._type
-
-    @staticmethod
-    def supported_types():
-        """Returns a list of all view types supported by this instance of PyJen
-
-        These view types can be used in such methods as :py:meth:`~.jenkins.Jenkins.create_view`, which take as input
-        a view type classifier
-
-        :return: list of all view types supported by this instance of PyJen, including those supported by plugins
-        :rtype: :class:`list` of :class:`str`
-        """
-        retval = []
-        for plugin in get_plugins():
-            if issubclass(plugin, View):
-                retval.append(plugin.type)
-
-        return retval
+        return init_plugin(self.config_xml, self.url)
 
     @property
     def name(self):

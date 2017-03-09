@@ -7,8 +7,6 @@ class MavenPlugin(Job):
 
     :param str url: Full URL of a job on a Jenkins master
     """
-    type = "maven2-moduleset"
-
     def __init__(self, url):
         super(MavenPlugin, self).__init__(url)
 

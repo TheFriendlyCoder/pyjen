@@ -1,11 +1,9 @@
 """Interfaces for interacting with Build Blockers job property plugin"""
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.pluginapi import PluginBase
 
 
-class BuildBlockerProperty(PluginBase):
+class BuildBlockerProperty:
     """Wrapper for Build Blocker job properties"""
-    type = "hudson.plugins.buildblocker.BuildBlockerProperty"
 
     def __init__(self, node):
         """

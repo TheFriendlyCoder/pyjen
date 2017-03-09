@@ -8,14 +8,10 @@ class AllView(View):
     Instances of this class are typically instantiated directly or indirectly through
     :py:meth:`~.view.View.create`
     """
-    type = "hudson.model.AllView"
 
     def __init__(self, url):
         """
-        :param data_io_controller: IO interface to the Jenkins API
-        :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
-        :param jenkins_master: Reference to Jenkins master interface
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
+        :param str url: REST API endpoint for this Jenkins view
         """
         super(AllView, self).__init__(url)
 

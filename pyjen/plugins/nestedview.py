@@ -11,8 +11,6 @@ class NestedView(View):
     Views of this type contain other views as sub-views
     """
 
-    type = "hudson.plugins.nested__view.NestedView"
-
     def __init__(self, url):
         """
         To instantiate an instance of this class using auto-generated
@@ -99,6 +97,7 @@ class NestedView(View):
         """
         temp = self.views
 
+        # TODO: Rework this to leverage the new plugin API
         retval = []
         for cur_view in temp:
             if cur_view.type == self.type:
