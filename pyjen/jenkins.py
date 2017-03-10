@@ -6,10 +6,10 @@ from pyjen.node import Node
 from pyjen.job import Job
 from pyjen.user import User
 from pyjen.plugin_manager import PluginManager
-from pyjen.utils.pluginapi import find_plugin
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.configxml import ConfigXML
 
 
 class Jenkins(JenkinsAPI):
@@ -263,7 +263,7 @@ class Jenkins(JenkinsAPI):
         """Helper method that retrieves a default XML template for constructing an object from a specific plugin
 
         :param str plugin_type: name of a specific plugin to load the template configuration for"""
-        plugin = find_plugin(plugin_type)
+        plugin = ConfigXML.find_plugin(plugin_type)
         if plugin is not None:
             return plugin.template_config_xml()
 

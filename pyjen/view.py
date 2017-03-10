@@ -1,6 +1,5 @@
 """Primitives for interacting with Jenkins views"""
 from pyjen.job import Job
-from pyjen.utils.pluginapi import init_plugin
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.jenkins_api import JenkinsAPI
 
@@ -21,7 +20,9 @@ class View(JenkinsAPI):
         if not isinstance(self, View):
             return self
 
-        return init_plugin(self.config_xml, self.url)
+        xml_obj = ViewXML(self.config_xml)
+
+        return xml_obj.derived_object()
 
     @property
     def name(self):
@@ -135,15 +136,12 @@ class View(JenkinsAPI):
         :return: reference to the View object that manages the new, cloned view
         :rtype: :class:`~.view.View`
         """
-
-        self._create_view(new_view_name, self.type)
+        vxml = ViewXML(self.config_xml)
+        self._create_view(new_view_name, vxml.plugin_name() or vxml.plugin_class_name())
 
         new_url = self.url.replace(self.name, new_view_name)
-        # TODO: Find the plugin associated with the specified view type and return an object of that type
-        #       instead of the generic base class
         new_view = View(new_url)
 
-        vxml = ViewXML(self.config_xml)
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml
         return new_view
@@ -199,6 +197,8 @@ class View(JenkinsAPI):
                 "broken_jobs": broken_jobs,
                 "unstable_jobs": unstable_jobs,
                 "disabled_jobs": disabled_jobs}
+
+    # TODO: Add a supported_types static method for returning all plugins which extend the View data type
 
 if __name__ == "__main__":  # pragma: no cover
     #for i in View.supported_types():

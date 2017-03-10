@@ -1,9 +1,7 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
-from pyjen.utils.pluginapi import init_plugin
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.jenkins_api import JenkinsAPI
-from pyjen.utils.pluginapi import PluginAPI
 
 
 class Job(JenkinsAPI):
@@ -39,7 +37,8 @@ class Job(JenkinsAPI):
         if not isinstance(self, Job):
             return self
 
-        return init_plugin(self.config_xml, self.url)
+        obj_xml = JobXML(self.config_xml)
+        return obj_xml.derived_object(self.url)
 
     @property
     def name(self):
@@ -499,6 +498,7 @@ class Job(JenkinsAPI):
 
         return 0
 
+    # TODO: Add a supported_types static method for returning all plugins which extend the Job data type
 
 if __name__ == "__main__":  # pragma: no cover
     pass
