@@ -4,6 +4,7 @@ import pytest
 from pyjen.plugins.subversion import Subversion
 import sys
 
+
 class job_xml_basic_config_tests(xml_test_case):
     """Tests for the JobXML class that use a trivial job configuration as input"""
     def setUp(self):
@@ -148,8 +149,8 @@ class job_xml_basic_config_tests(xml_test_case):
 
         # TODO: Figure out why this doesn't work
         #self.assertIsInstance(scm, abc)
-
-        self.assertEqual(scm.type, Subversion.type)
+        from pyjen.plugins.subversion import Subversion
+        self.assertTrue(isinstance(scm, Subversion))
 
 if __name__ == '__main__':
     pytest.main([__file__, "-v", "-s"])

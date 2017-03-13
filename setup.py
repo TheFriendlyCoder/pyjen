@@ -77,7 +77,10 @@ setup(
     url='https://github.com/TheFriendlyCoder/' + project_name,
     keywords=project_keywords,
     entry_points={
-        'console_scripts': load_console_scripts(project_name)
+        'console_scripts': load_console_scripts(project_name),
+        'pyjen.plugins': [
+            'Subversion=pyjen.plugins.subversion:Subversion'
+        ]
     },
     install_requires=project_dependencies,
     extras_require={

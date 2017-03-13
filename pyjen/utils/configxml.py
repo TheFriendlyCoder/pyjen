@@ -46,6 +46,10 @@ class ConfigXML(object):
         if xml_node is None:
             xml_node = self._root
 
+        return ConfigXML._get_plugin_name_from_node(xml_node)
+
+    @staticmethod
+    def _get_plugin_name_from_node(xml_node):
         if 'plugin' not in xml_node.attrib:
             return None
 
@@ -68,6 +72,10 @@ class ConfigXML(object):
         if xml_node is None:
             xml_node = self._root
 
+        return ConfigXML._get_plugin_class_name_from_node(xml_node)
+
+    @staticmethod
+    def _get_plugin_class_name_from_node(xml_node):
         if "class" in xml_node.attrib:
             return xml_node.attrib['class']
         else:
@@ -83,7 +91,10 @@ class ConfigXML(object):
         """
         if xml_node is None:
             xml_node = self._root
+        ConfigXML._get_plugin_version_from_node(xml_node)
 
+    @staticmethod
+    def _get_plugin_version_from_node(xml_node):
         if 'plugin' not in xml_node.attrib:
             return None
 
@@ -117,7 +128,8 @@ class ConfigXML(object):
             jenkins objects like jobs, views and the like.
         :returns: Instantiated PyJen object encapsulating the Jenkins plugin associated with the given XML
         """
-        entry_point_name = ConfigXML.plugin_name(xml_node) or ConfigXML.plugin_class_name(xml_node)
+        entry_point_name = \
+            ConfigXML._get_plugin_name_from_node(xml_node) or ConfigXML._get_plugin_class_name_from_node(xml_node)
         if entry_point_name is None:
             raise Exception("Parsing error: no valid Jenkins plugin name could be parsed from provided XML")
 
