@@ -4,7 +4,10 @@ from pyjen.exceptions import PluginNotSupportedError
 
 
 class ArtifactDeployer:
-    """Interface to the Jenkins 'artifact deployer' publishing plugin"""
+    """Interface to the Jenkins 'artifact deployer' publishing plugin
+
+    https://wiki.jenkins-ci.org/display/JENKINS/ArtifactDeployer+Plugin
+    """
 
     def __init__(self, node):
         """
@@ -12,6 +15,8 @@ class ArtifactDeployer:
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+        assert 'plugin' in self._root.attrib
+        assert self._root.attrib['plugin'].startswith('artifactdeployer')
 
     @property
     def entries(self):

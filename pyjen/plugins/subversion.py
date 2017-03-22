@@ -3,7 +3,10 @@ associated with a :py:mod:`pyjen.job.Job`"""
 
 
 class Subversion:
-    """Subversion SCM job plugin"""
+    """Subversion SCM job plugin
+
+    https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin
+    """
 
     def __init__(self, node):
         """
@@ -11,8 +14,8 @@ class Subversion:
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert self._root.tag == "scm"
-        assert self._root.attrib['class'] == "hudson.scm.SubversionSCM"
+        assert 'plugin' in self._root.attrib
+        assert self._root.attrib['plugin'].startswith('subversion')
 
     @property
     def locations(self):

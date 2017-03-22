@@ -3,13 +3,18 @@ import xml.etree.ElementTree as ElementTree
 
 
 class BuildBlockerProperty:
-    """Wrapper for Build Blocker job properties"""
+    """Wrapper for Build Blocker job properties
+
+    https://wiki.jenkins-ci.org/display/JENKINS/Build+Blocker+Plugin
+    """
 
     def __init__(self, node):
         """
         :param node: ElementTree node initialized with the XML from the Jenkins job
         """
         self._root = node
+        assert 'plugin' in self._root.attrib
+        assert self._root.attrib['plugin'].startswith('build-blocker-plugin')
 
     @property
     def blockers(self):
