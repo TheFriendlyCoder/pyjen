@@ -79,7 +79,7 @@ setup(
     entry_points={
         'console_scripts': load_console_scripts(project_name),
         'pyjen.plugins': [
-            'Subversion=pyjen.plugins.subversion:Subversion'
+            'subversion=pyjen.plugins.subversion:Subversion'
         ]
     },
     install_requires=project_dependencies,

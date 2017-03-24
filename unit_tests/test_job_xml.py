@@ -119,7 +119,7 @@ class job_xml_basic_config_tests(xml_test_case):
     def test_get_svn_scm(self):
         sample_xml = """
         <project>
-            <scm class="hudson.scm.SubversionSCM" plugin="Subversion@1.53">
+            <scm class="hudson.scm.SubversionSCM" plugin="subversion@1.53">
                 <locations>
                     <hudson.scm.SubversionSCM_-ModuleLocation>
                         <remote>http://repository/project/trunk</remote>
@@ -147,9 +147,6 @@ class job_xml_basic_config_tests(xml_test_case):
         #print(Subversion.__class__.__module__)
         #self.assertEqual(scm.__class__, Subversion)
 
-        # TODO: Figure out why this doesn't work
-        #self.assertIsInstance(scm, abc)
-        from pyjen.plugins.subversion import Subversion
         self.assertTrue(isinstance(scm, Subversion))
 
 if __name__ == '__main__':
