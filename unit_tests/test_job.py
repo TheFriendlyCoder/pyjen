@@ -187,13 +187,6 @@ def test_clone(monkeypatch):
     assert second_call[0][0] == "http://localhost:8080/job/" + new_job_name + "/disable"
 
 
-def test_supported_types():
-    supported_types = Job.supported_types()
-
-    assert "project" in supported_types
-    assert len(supported_types) >= 1
-
-
 def test_no_downstream_jobs(patch_job_api):
     j = Job("http://localhost:8080/job/MyJob1")
     dependencies = j.downstream_jobs

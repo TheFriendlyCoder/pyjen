@@ -42,16 +42,6 @@ def test_get_name(patch_view_api):
     assert v.name == fake_view_data['name']
 
 
-def test_supported_types():
-    actual_types = View.supported_types()
-
-    assert "hudson.model.ListView" in actual_types
-    assert "hudson.model.AllView"in actual_types
-    assert "hudson.model.MyView" in actual_types
-
-    assert len(actual_types) >= 3
-
-
 def test_get_jobs(patch_view_api):
     v = View("http://localhost:8080/MyView")
     jobs = v.jobs

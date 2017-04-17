@@ -1,8 +1,8 @@
 """Abstractions for managing the raw config.xml for a Jenkins view"""
-import xml.etree.ElementTree as ElementTree
+from pyjen.utils.configxml import ConfigXML
 
 
-class ViewXML(object):
+class ViewXML(ConfigXML):
     """ Wrapper around the config.xml for a Jenkins view
 
     The source xml can be loaded from nearly any URL by
@@ -12,21 +12,7 @@ class ViewXML(object):
         """
         :param str xml: Raw XML character string extracted from a Jenkins job.
         """
-        self._root = ElementTree.fromstring(xml)
-
-    @property
-    def xml(self):
-        """Extracts the processed XML for export to a Jenkins job
-
-        :returns:
-            Raw XML containing any and all customizations applied in
-            previous operations against this object. This character
-            string can be imported into Jenkins to configure a job.
-
-        :rtype: :class:`str`
-        """
-        retval = ElementTree.tostring(self._root, "UTF-8")
-        return retval.decode("utf-8")
+        super(ViewXML, self).__init__(xml)
 
     def rename(self, new_name):
         """Changes the name of the view

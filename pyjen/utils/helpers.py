@@ -32,7 +32,7 @@ def find_view(jenkins_url, credentials, view_name):
         return parent_view
 
     for cur_view in jen.views:
-        if cur_view.type == NestedView.type:
+        if cur_view.type == NestedView.plugin_name:
             sub_view = cur_view.find_view(view_name)
             if sub_view is not None:
                 return sub_view

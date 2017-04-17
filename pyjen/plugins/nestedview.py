@@ -10,8 +10,7 @@ class NestedView(View):
 
     Views of this type contain other views as sub-views
     """
-
-    type = "hudson.plugins.nested__view.NestedView"
+    plugin_name = "hudson.nestedview"
 
     def __init__(self, url):
         """
@@ -99,9 +98,10 @@ class NestedView(View):
         """
         temp = self.views
 
+        # TODO: Rework this to leverage the new plugin API
         retval = []
         for cur_view in temp:
-            if cur_view.type == self.type:
+            if cur_view.type == NestedView.plugin_name:
                 retval.extend(cur_view.all_views)
 
         retval.extend(temp)

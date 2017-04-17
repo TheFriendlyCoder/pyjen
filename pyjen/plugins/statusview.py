@@ -4,9 +4,8 @@ from pyjen.view import View
 
 class StatusView(View):
     """Interface to Jenkins views of type 'StatusView'"""
-    type = "hudson.plugins.status__view.StatusView"
 
-    def __init__(self, controller, jenkins_master):
+    def __init__(self, url):
         """
         :param controller:
             class capable of handling common HTTP IO requests sent by this
@@ -17,7 +16,7 @@ class StatusView(View):
             this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
-        super(StatusView, self).__init__(controller, jenkins_master)
+        super(StatusView, self).__init__(url)
 
 
 if __name__ == "__main__":  # pragma: no cover

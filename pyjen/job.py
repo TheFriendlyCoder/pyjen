@@ -1,13 +1,10 @@
 """Primitives for interacting with Jenkins jobs"""
-import xml.etree.ElementTree as ElementTree
 from pyjen.build import Build
-from pyjen.utils.pluginapi import PluginBase, get_plugins, get_plugin_name, init_extension_plugin
-from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class Job(PluginBase, JenkinsAPI):
+class Job(JenkinsAPI):
     """ Generic job interface providing abstraction to operations common to all job types on Jenkins
 
     :param str url: Full URL of a job on a Jenkins master
@@ -34,40 +31,14 @@ class Job(PluginBase, JenkinsAPI):
         return hash(self.name)
 
     @property
-    def type(self):
-        if self._type is None:
-            node = ElementTree.fromstring(self.config_xml)
-            self._type = get_plugin_name(node)
-        return self._type
-
-    @property
     def derived_object(self):
         """Looks for a custom plugin supporting the specific type of job managed by this object"""
         # check to see if we're trying to derive an object from an already derived object
         if not isinstance(self, Job):
             return self
 
-        plugin = init_extension_plugin(self.config_xml, self.url)
-        if plugin is not None:
-            return plugin
-
-        raise PluginNotSupportedError("Job plugin {0} not found".format(self.type), self.type)
-
-    @staticmethod
-    def supported_types():
-        """Returns a list of all job types supported by this instance of PyJen
-
-        These job types can be used in such methods as :py:meth:`~.jenkins.Jenkins.create_job`, which take as input
-        a job type classifier
-
-        :return: list of all job types supported by this instance of PyJen, including those supported by plugins
-        :rtype: :class:`str`
-        """
-        retval = []
-        for plugin in get_plugins():
-            if issubclass(plugin, Job):
-                retval.append(plugin.type)
-        return retval
+        obj_xml = JobXML(self.config_xml)
+        return obj_xml.derived_object(self.url)
 
     @property
     def name(self):
@@ -527,6 +498,7 @@ class Job(PluginBase, JenkinsAPI):
 
         return 0
 
+    # TODO: Add a supported_types static method for returning all plugins which extend the Job data type
 
 if __name__ == "__main__":  # pragma: no cover
     pass

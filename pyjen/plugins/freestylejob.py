@@ -8,7 +8,6 @@ class FreestyleJob(Job):
 
     :param str url: Full URL of a job on a Jenkins master
     """
-    type = "project"
 
     def __init__(self, url):
         super(FreestyleJob, self).__init__(url)

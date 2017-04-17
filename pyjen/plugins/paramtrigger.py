@@ -1,7 +1,6 @@
 """Primitives for operating on Jenkins post-build publisher of type Parameterized Build Trigger"""
 import logging
 import xml.etree.ElementTree as ElementTree
-from pyjen.utils.pluginapi import PluginBase
 
 
 class BuildTriggerConfig(object):
@@ -35,9 +34,8 @@ class BuildTriggerConfig(object):
         node.text = ",".join(triggered_jobs)
 
 
-class ParameterizedBuildTrigger(PluginBase):
+class ParameterizedBuildTrigger:
     """SCM plugin for Jobs with no source control configurations"""
-    type = "hudson.plugins.parameterizedtrigger.BuildTrigger"
 
     def __init__(self, node):
         """

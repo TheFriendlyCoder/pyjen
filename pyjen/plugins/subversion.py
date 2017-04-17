@@ -1,11 +1,12 @@
 """Module defining the interfaces for interacting with Subversion properties
 associated with a :py:mod:`pyjen.job.Job`"""
-from pyjen.utils.pluginapi import PluginBase
 
 
-class Subversion(PluginBase):
-    """Subversion SCM job plugin"""
-    type = "hudson.scm.SubversionSCM"
+class Subversion:
+    """Subversion SCM job plugin
+
+    https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin
+    """
 
     def __init__(self, node):
         """
@@ -13,8 +14,8 @@ class Subversion(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert self._root.tag == "scm"
-        assert self._root.attrib['class'] == "hudson.scm.SubversionSCM"
+        assert 'plugin' in self._root.attrib
+        assert self._root.attrib['plugin'].startswith('subversion')
 
     @property
     def locations(self):

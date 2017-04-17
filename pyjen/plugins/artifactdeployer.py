@@ -1,11 +1,13 @@
 """Primitives for operating on properties of the 'artifact deployer' publishing plugin"""
-from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
+from pyjen.utils.pluginapi import init_plugin
 from pyjen.exceptions import PluginNotSupportedError
 
 
-class ArtifactDeployer(PluginBase):
-    """Interface to the Jenkins 'artifact deployer' publishing plugin"""
-    type = "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher"
+class ArtifactDeployer:
+    """Interface to the Jenkins 'artifact deployer' publishing plugin
+
+    https://wiki.jenkins-ci.org/display/JENKINS/ArtifactDeployer+Plugin
+    """
 
     def __init__(self, node):
         """
@@ -13,6 +15,8 @@ class ArtifactDeployer(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+        assert 'plugin' in self._root.attrib
+        assert self._root.attrib['plugin'].startswith('artifactdeployer')
 
     @property
     def entries(self):
@@ -26,20 +30,17 @@ class ArtifactDeployer(PluginBase):
 
         retval = []
         for node in nodes:
-            plugin = create_xml_plugin(node)
+            plugin = init_plugin(node)
             if plugin is not None:
                 retval.append(plugin)
             else:
-                raise PluginNotSupportedError("Artifact deployer configuration plugin {0} not found".format(
-                    get_plugin_name(node)), get_plugin_name(node))
+                raise PluginNotSupportedError("Artifact deployer configuration plugin not found", 'entries')
 
         return retval
 
 
-class ArtifactDeployerEntry(PluginBase):
+class ArtifactDeployerEntry:
     """Interface to a single configuration of artifacts to be deployed by an Artifact Deployer instance"""
-    type = "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry"
-
     def __init__(self, node):
         """
         :param node: XML node defining the settings for a this plugin

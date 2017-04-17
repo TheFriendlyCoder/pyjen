@@ -7,9 +7,8 @@ class ListView(View):
 
     Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
     """
-    type = "hudson.model.ListView"
 
-    def __init__(self, data_io_controller, jenkins_master):
+    def __init__(self, url):
         """constructor
 
         To instantiate an instance of this class using auto-generated
@@ -19,7 +18,7 @@ class ListView(View):
             class capable of handling common HTTP IO requests sent by this
             object to the Jenkins REST API
         """
-        super(ListView, self).__init__(data_io_controller, jenkins_master)
+        super(ListView, self).__init__(url)
 
 
 if __name__ == "__main__":  # pragma: no cover

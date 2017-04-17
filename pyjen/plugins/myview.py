@@ -7,9 +7,8 @@ class MyView(View):
 
     Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
     """
-    type = "hudson.model.MyView"
 
-    def __init__(self, data_io_controller, jenkins_master):
+    def __init__(self, url):
         """To instantiate an instance of this class using auto-generated
         configuration parameters, see the :py:func:`easy_connect` method
 
@@ -22,7 +21,7 @@ class MyView(View):
             this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
-        super(MyView, self).__init__(data_io_controller, jenkins_master)
+        super(MyView, self).__init__(url)
 
 
 if __name__ == "__main__":  # pragma: no cover

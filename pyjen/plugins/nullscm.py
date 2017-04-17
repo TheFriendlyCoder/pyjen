@@ -1,10 +1,8 @@
 """Primitives for operating on SCM properties of Jenkins jobs with no source control configuration"""
-from pyjen.utils.pluginapi import PluginBase
 
 
-class NullSCM(PluginBase):
+class NullSCM:
     """SCM plugin for Jobs with no source control configurations"""
-    type = "hudson.scm.NullSCM"
 
     def __init__(self, node):
         """
@@ -12,6 +10,8 @@ class NullSCM(PluginBase):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+        assert 'class' in self._root.attrib
+        assert self._root.attrib['class'] == 'hudson.scm.NullSCM'
 
 
 if __name__ == "__main__":  # pragma: no cover
