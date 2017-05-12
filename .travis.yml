@@ -5,9 +5,8 @@ python:
   - "3.5"
 
 script:
-  - 'pip install tox twine'
+  - 'pip install tox twine wheel'
   - 'tox'
-  - 'printenv'
-  - 'ls dist'
+  - 'python setup.py bdist_wheel'
   # TODO: Figure out how to deploy after tests for both Python 2 and 3 complete successfully
   - 'if [[ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
