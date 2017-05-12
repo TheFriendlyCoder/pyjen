@@ -81,7 +81,7 @@ def get_version_number():
     """Retrieves the version number for a project"""
 
     # If we are building from a tag using Travis-CI, set our version number to the tag name
-    if 'TRAVIS_TAG' in os.environ:
+    if 'TRAVIS_TAG' in os.environ and not os.environ['TRAVIS_TAG'] == '':
         if not check_tag_name(os.environ['TRAVIS_TAG']):
             raise Exception("Invalid tag name {0}. Must be of the form 'X.Y.Z'".format(os.environ['TRAVIS_TAG']))
         return os.environ['TRAVIS_TAG']
