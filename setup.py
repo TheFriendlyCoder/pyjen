@@ -7,7 +7,7 @@ from distutils.util import convert_path
 # project specific parameters
 # coverage<4 - needed in python 3.2 development environments
 project_name = 'pyjen'
-project_dependencies = ['requests>=2.0.1', 'six']
+project_dependencies = ['requests[security]>=2.0.1', 'six', 'tqdm']
 project_dev_dependencies = ['wheel', 'twine', 'pytest', 'pytest-cov', 'mock', 'radon', 'pylint', 'sphinx>=1.2.3', 'tox']
 project_description = 'Python wrapper for the Jenkins CI REST API'
 project_keywords = 'jenkins jenkins-ci api wrapper library'
