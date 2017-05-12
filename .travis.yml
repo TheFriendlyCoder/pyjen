@@ -7,5 +7,7 @@ python:
 script:
   - 'pip install tox twine'
   - 'tox'
-  - 'echo Deploy user is "$DEPLOY_USER"'
+  - 'set'
+  - 'printenv'
+  # TODO: Figure out how to deploy after tests for both Python 2 and 3 complete successfully
   - 'if [[ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
