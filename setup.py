@@ -88,12 +88,17 @@ def get_version_number():
 
     # if we get here we know we're building a pre-release version
     # so we set a fake version as a place holder
-    retval = "0.0.0"
+    retval = "0.0"
 
     # If we are building from a branch using Travis-CI, append the build number so we know where the
     # package came from
     if 'TRAVIS_BUILD_NUMBER' in os.environ:
-        retval += ".dev{0}".format(os.environ['TRAVIS_BUILD_NUMBER'])
+        retval += "." + os.environ['TRAVIS_BUILD_NUMBER']
+    else:
+        retval += ".0"
+
+    # Pre release versions need a non-numeric suffix on the version number
+    retval += ".dev0"
 
     return retval
 
