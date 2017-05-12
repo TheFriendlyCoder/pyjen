@@ -7,3 +7,4 @@ python:
 script:
   - 'pip install tox'
   - 'tox'
+  - 'if [ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
