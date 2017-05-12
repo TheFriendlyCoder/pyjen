@@ -99,16 +99,11 @@ def get_version_number():
 
 project_packages = find_packages(where='.', include=project_name)
 
-# Import package version
-version_ns = {}
-ver_path = convert_path(os.path.join(project_name, 'version.py'))
-with open(ver_path) as ver_file:
-    exec(ver_file.read(), version_ns)
 
 # Execute packaging logic
 setup(
     name=project_name,
-    version=version_ns['__version__'],
+    version=get_version_number(),
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     packages=project_packages,
