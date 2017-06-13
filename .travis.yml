@@ -8,10 +8,12 @@ jobs:
   include:
     - stage: test
       python: 2.7
+      install: tox
       script:
         - 'pip install tox'
         - 'tox -e py2'
     - python: 3.5
+      install: tox
       script:
         - 'pip install tox'
         - 'tox -e py3'
