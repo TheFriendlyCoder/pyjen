@@ -228,12 +228,9 @@ def _prepare_env():
 
 def _show_version():
     """Shows the PyJen version number"""
-    version_ns = {}
-    ver_path = convert_path('pyjen/version.py')
-    with open(ver_path) as ver_file:
-        exec(ver_file.read(), version_ns)
+    from pyjen import __version__
 
-    modlog.info("PyJen Version " + version_ns['__version__'])
+    modlog.info("PyJen Version " + __version__)
 
 
 def _make_package():

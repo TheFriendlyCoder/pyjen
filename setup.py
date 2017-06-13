@@ -102,7 +102,7 @@ def get_version_number():
 
     return retval
 
-project_packages = find_packages(where='.', include=project_name)
+project_packages = find_packages()
 
 
 # Execute packaging logic
