@@ -4,9 +4,18 @@ python:
   - "2.7"
   - "3.5"
 
-script:
-  - 'pip install tox twine wheel'
-  - 'tox -c ./tox.ini'
-  - 'python setup.py bdist_wheel'
-  # TODO: Figure out how to deploy after tests for both Python 2 and 3 complete successfully
-  - 'if [[ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
+jobs:
+  include:
+    - stage: test
+      script:
+        - 'pip install tox'
+        - 'tox -e py2'
+    - script:
+      - 'pip install tox'
+      - 'tox -e py3'
+    - stage: publish
+      python: 3.5
+      script:
+        - 'pip install twine wheel'
+        - 'python setup.py bdist_wheel
+        - 'if [[ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
