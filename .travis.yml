@@ -17,5 +17,5 @@ jobs:
       python: 3.5
       script:
         - 'pip install twine wheel'
-        - 'python setup.py bdist_wheel
+        - 'python setup.py bdist_wheel'
         - 'if [[ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
