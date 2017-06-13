@@ -7,12 +7,14 @@ python:
 jobs:
   include:
     - stage: test
+      python: 2.7
       script:
         - 'pip install tox'
         - 'tox -e py2'
-    - script:
-      - 'pip install tox'
-      - 'tox -e py3'
+    - python: 3.5
+      script:
+        - 'pip install tox'
+        - 'tox -e py3'
     - stage: publish
       python: 3.5
       script:
