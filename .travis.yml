@@ -7,7 +7,11 @@ python:
 install:
   - pip install tox twine wheel
 
-script: tox
+script:
+  - echo $TRAVIS_PYTHON_VERSION
+  - set
+  - printenv
+  - tox
 
 #script:
 #- 'pip install twine wheel'
