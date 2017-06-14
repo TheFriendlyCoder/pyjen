@@ -7,13 +7,14 @@ python:
 install:
   - pip install tox twine wheel
 
-script:
-  - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1`
-  - echo $PYVER
-  - tox -e py$PYVER
-
 jobs:
   include:
+    - stage: test
+      script:
+        - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1`
+        - echo $PYVER
+        - tox -e py$PYVER
+        
     - stage: package
       python: 3.5
       script:
