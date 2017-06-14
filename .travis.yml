@@ -12,6 +12,10 @@ script:
   - echo $PYVER
   - tox -e py$PYVER
 
-after_success:
-  - python setup.py bdist_wheel
-  - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
+jobs:
+  include:
+    - stage: package
+      python: 3.5
+      script:
+      - python setup.py bdist_wheel
+      - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
