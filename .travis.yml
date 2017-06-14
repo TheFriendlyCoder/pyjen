@@ -8,10 +8,9 @@ install:
   - pip install tox twine wheel
 
 script:
-  - echo $TRAVIS_PYTHON_VERSION
-  - set
-  - printenv
-  - tox
+  - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1`
+  - echo $PYVER
+  - tox -e py$PYVER
 
 #script:
 #- 'pip install twine wheel'
