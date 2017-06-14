@@ -12,7 +12,6 @@ script:
   - echo $PYVER
   - tox -e py$PYVER
 
-#script:
-#- 'pip install twine wheel'
-#- 'python setup.py bdist_wheel'
-#- 'if [[ "$DEPLOY_USER" != "" && "$DEPLOY_PASS" != "" ]]; then twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS; fi'
+after_success:
+  - python setup.py bdist_wheel
+  - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
