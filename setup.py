@@ -102,8 +102,8 @@ def get_version_number():
 
     return retval
 
-project_packages = find_packages()
 
+project_packages = find_packages(exclude=['tests', 'tests.*'])
 
 # Execute packaging logic
 setup(
