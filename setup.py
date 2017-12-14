@@ -70,7 +70,7 @@ def check_tag_name(tag_name):
     if len(parts) != 3:
         return False
 
-    for cur_digit in parts:
+    for cur_digit in parts[:-1]:
         if not cur_digit.isdigit():
             return False
 
