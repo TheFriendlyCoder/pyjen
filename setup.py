@@ -57,18 +57,58 @@ def load_console_scripts(project):
 
     return retval
 
-project_packages = find_packages(where='.', include=project_name)
 
-# Import package version
-version_ns = {}
-ver_path = convert_path(os.path.join(project_name, 'version.py'))
-with open(ver_path) as ver_file:
-    exec(ver_file.read(), version_ns)
+def check_tag_name(tag_name):
+    """Ensures the name of the current SCM tag is correctly formatted
+
+    Tag should represent a version number of the form X.Y.Z
+    
+    :returns: True if the tag name satisfies the expected format, false if not
+    """
+
+    parts = tag_name.split(".")
+    if len(parts) != 3:
+        return False
+
+    for cur_digit in parts:
+        if not cur_digit.isdigit():
+            return False
+
+    return True
+
+
+def get_version_number():
+    """Retrieves the version number for a project"""
+
+    # If we are building from a tag using Travis-CI, set our version number to the tag name
+    if 'TRAVIS_TAG' in os.environ and not os.environ['TRAVIS_TAG'] == '':
+        if not check_tag_name(os.environ['TRAVIS_TAG']):
+            raise Exception("Invalid tag name {0}. Must be of the form 'X.Y.Z'".format(os.environ['TRAVIS_TAG']))
+        return os.environ['TRAVIS_TAG']
+
+    # if we get here we know we're building a pre-release version
+    # so we set a fake version as a place holder
+    retval = "0.0"
+
+    # If we are building from a branch using Travis-CI, append the build number so we know where the
+    # package came from
+    if 'TRAVIS_BUILD_NUMBER' in os.environ:
+        retval += "." + os.environ['TRAVIS_BUILD_NUMBER']
+    else:
+        retval += ".0"
+
+    # Pre release versions need a non-numeric suffix on the version number
+    retval += ".dev0"
+
+    return retval
+
+project_packages = find_packages()
+
 
 # Execute packaging logic
 setup(
     name=project_name,
-    version=version_ns['__version__'],
+    version=get_version_number(),
     author='Kevin S. Phillips',
     author_email='kevin@thefriendlycoder.com',
     packages=project_packages,

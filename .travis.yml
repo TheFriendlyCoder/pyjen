@@ -2,8 +2,22 @@ language: python
 
 python:
   - "2.7"
+  - "3.4"
   - "3.5"
+  - "3.6"
+
+install:
+  - pip install tox twine wheel
 
 script:
-  - 'pip install tox'
-  - 'tox'
+  - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1`
+  - echo $PYVER
+  - tox -e py$PYVER
+
+jobs:
+  include:
+    - stage: package
+      python: 3.5
+      script:
+      - python setup.py bdist_wheel
+      - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
