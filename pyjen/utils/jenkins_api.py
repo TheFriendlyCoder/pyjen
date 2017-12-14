@@ -168,7 +168,7 @@ class JenkinsAPI(object):
         else:
             temp_headers = dict()
 
-        if self.jenkins_version >= (2, 0, 0):
+        if self.jenkins_version >= (2, 0, 0) and self.crumb:
             temp_headers.update(self.crumb)
 
         req = requests.post(
@@ -198,12 +198,17 @@ class JenkinsAPI(object):
                 self.root_url + 'crumbIssuer/api/json',
                 auth=JenkinsAPI.creds,
                 verify=JenkinsAPI.ssl_verify_enabled)
-            req.raise_for_status()
-            data = req.json()
 
-            # Seeing as how the crumb for a given Jenkins instance is static, we cache the results locally
-            # to prevent having to hit the API unnecessarily
-            JenkinsAPI.crumb_cache = {data['crumbRequestField']: data['crumb']}
+            if req.status_code == 404:
+                # If we get a 404 error, endpoint not found, assume the Cross Site Scripting support has been disabled
+                JenkinsAPI.crumb_cache = ''
+            else:
+                req.raise_for_status()
+                data = req.json()
+
+                # Seeing as how the crumb for a given Jenkins instance is static, we cache the results locally
+                # to prevent having to hit the API unnecessarily
+                JenkinsAPI.crumb_cache = {data['crumbRequestField']: data['crumb']}
 
         return JenkinsAPI.crumb_cache
 
