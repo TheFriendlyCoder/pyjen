@@ -12,7 +12,7 @@ install:
 script:
   - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1`
   - echo $PYVER
-  # - tox -e py$PYVER
+  - tox -e py$PYVER
 
 jobs:
   include:
