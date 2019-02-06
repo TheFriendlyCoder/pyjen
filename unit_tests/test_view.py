@@ -27,6 +27,7 @@ def patch_view_api(monkeypatch):
 
     monkeypatch.setattr(View, "get_api_data", mock_api_data)
     monkeypatch.setattr(View, "get_text", mock_api_text)
+    return monkeypatch
 
 
 def get_mock_api_data(field, data):
@@ -90,11 +91,10 @@ def test_set_config_xml(monkeypatch):
     assert mock_post.call_args[0][1]['data'] == fake_config_xml
 
 
-def test_delete_all_jobs(monkeypatch):
-    patch_view_api(monkeypatch)
+def test_delete_all_jobs(patch_view_api):
 
     mock_job_post = MagicMock()
-    monkeypatch.setattr(Job, 'post', mock_job_post)
+    patch_view_api.setattr(Job, 'post', mock_job_post)
 
     v = View("http://localhost:8080/MyView")
     v.delete_all_jobs()
@@ -102,11 +102,10 @@ def test_delete_all_jobs(monkeypatch):
     mock_job_post.assert_called_once_with(fake_job_url + "/doDelete")
 
 
-def test_disable_all_jobs(monkeypatch):
-    patch_view_api(monkeypatch)
+def test_disable_all_jobs(patch_view_api):
 
     mock_job_post = MagicMock()
-    monkeypatch.setattr(Job, 'post', mock_job_post)
+    patch_view_api.setattr(Job, 'post', mock_job_post)
 
     v = View("http://localhost:8080/MyView")
     v.disable_all_jobs()
@@ -114,11 +113,9 @@ def test_disable_all_jobs(monkeypatch):
     mock_job_post.assert_called_once_with(fake_job_url + "/disable")
 
 
-def test_enable_all_jobs(monkeypatch):
-    patch_view_api(monkeypatch)
-
+def test_enable_all_jobs(patch_view_api):
     mock_job_post = MagicMock()
-    monkeypatch.setattr(Job, 'post', mock_job_post)
+    patch_view_api.setattr(Job, 'post', mock_job_post)
 
     v = View("http://localhost:8080/MyView")
     v.enable_all_jobs()
@@ -164,11 +161,10 @@ def test_view_metrics(monkeypatch):
     assert result['disabled_jobs'][0].url == 'http://fake/job/d/'
 
 
-def test_clone_all_jobs(monkeypatch):
-    patch_view_api(monkeypatch)
+def test_clone_all_jobs(patch_view_api):
     mock_job_post = MagicMock()
-    monkeypatch.setattr(Job, 'post', mock_job_post)
-    monkeypatch.setattr(Job, 'get_api_data', lambda s: {'name': fake_job_name})
+    patch_view_api.setattr(Job, 'post', mock_job_post)
+    patch_view_api.setattr(Job, 'get_api_data', lambda s: {'name': fake_job_name})
 
     new_job_name = "NewJob"
     jenkins_url = "http://localhost:8080/"
