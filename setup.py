@@ -62,7 +62,7 @@ def check_tag_name(tag_name):
     """Ensures the name of the current SCM tag is correctly formatted
 
     Tag should represent a version number of the form X.Y.Z
-    
+
     :returns: True if the tag name satisfies the expected format, false if not
     """
 
@@ -76,32 +76,44 @@ def check_tag_name(tag_name):
 
     return True
 
+def _src_version():
+    """Loads the version number from the source project"""
+    version_file = os.path.join(
+        os.path.abspath(os.path.dirname(__file__)),
+        "pyjen",
+        "version.py")
+
+    # parse our version script
+    symbols = dict()
+    with open(version_file) as file_handle:
+        exec(file_handle.read(), symbols)  # pylint: disable=exec-used
+
+    # Extract just the version number
+    assert '__version__' in symbols
+    return symbols['__version__']
 
 def get_version_number():
     """Retrieves the version number for a project"""
 
-    # If we are building from a tag using Travis-CI, set our version number to the tag name
+    retval = _src_version()
+
     if 'TRAVIS_TAG' in os.environ and not os.environ['TRAVIS_TAG'] == '':
-        if not check_tag_name(os.environ['TRAVIS_TAG']):
-            raise Exception("Invalid tag name {0}. Must be of the form 'X.Y.Z'".format(os.environ['TRAVIS_TAG']))
-        return os.environ['TRAVIS_TAG']
+        # make sure the tag name matches our version number
+        if not os.environ['TRAVIS_TAG'] == retval:
+            raise Exception("Tag {0} is expected to be {1}".format(
+                os.environ['TRAVIS_TAG'],
+                retval
+            ))
+        # If we build from a tag, just use the version number verbatim
+        return retval
 
-    # if we get here we know we're building a pre-release version
-    # so we set a fake version as a place holder
-    retval = "0.0"
-
-    # If we are building from a branch using Travis-CI, append the build number so we know where the
-    # package came from
     if 'TRAVIS_BUILD_NUMBER' in os.environ:
         retval += "." + os.environ['TRAVIS_BUILD_NUMBER']
-    else:
-        retval += ".0"
 
     # Pre release versions need a non-numeric suffix on the version number
     retval += ".dev0"
 
     return retval
-
 
 project_packages = find_packages(exclude=['tests', 'tests.*'])
 
