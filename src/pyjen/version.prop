@@ -1,0 +1,6 @@
+# Unlike a typical Python script, this file is a properties file. It may
+# only contain comments and a single Python literal declaration representing
+# the version number of the project. This makes the property easy to parse
+# from various tools, including Python using the "ast" library. See
+# "ast.literal_eval()" for details.
+"0.0.15"

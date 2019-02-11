@@ -1,23 +1,41 @@
 language: python
 
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
+  - pypy
+  - pypy3.5
 
 install:
-  - pip install tox twine wheel
+  - pip install tox twine wheel python-coveralls
 
 script:
-  - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1`
+  - echo $TRAVIS_PYTHON_VERSION
+  - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1 | sed 's/^py//'`
   - echo $PYVER
   - tox -e py$PYVER
 
+# Deploy to test.pypi.org for branches
+# Deploy to pypi.org for tags
+# NOTE: You can not replace builds published to pypi, even if you delete one
+#       so you must make sure your versions are always unique
 jobs:
   include:
-    - stage: package
-      python: 3.5
+    - stage: deploy-release
+      python: 3.6
       script:
-      - python setup.py bdist_wheel
-      - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
+        - python setup.py bdist_wheel
+        - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
+      if: tag IS true
+    - stage: deploy-snapshot
+      python: 3.6
+      script:
+        - python setup.py bdist_wheel
+        - twine upload --repository-url https://test.pypi.org/legacy/
+            dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
+      if: tag IS NOT true
+
+after_success:
+  - coveralls
