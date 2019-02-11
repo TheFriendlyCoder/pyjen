@@ -1,5 +1,5 @@
-pyjen.utils.jenkins_api module
-==============================
+pyjen.utils.jenkins\_api module
+===============================
 
 .. automodule:: pyjen.utils.jenkins_api
     :members:
