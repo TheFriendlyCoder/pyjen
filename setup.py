@@ -86,7 +86,8 @@ def _src_version(project):
     ver_path = os.path.join(os.getcwd(), 'src', project, 'version.prop')
     assert os.path.exists(ver_path)
 
-    data = open(ver_path).read()
+    with open(ver_path) as fh:
+        data = fh.read()
     retval = ast.literal_eval(data)
 
     assert retval is not None
@@ -217,7 +218,8 @@ def generate_readme(project, repo=None, version=None):
             cur_header["image"], cur_header["target"], cur_header["text"])
         retval += "\n"
 
-    retval += open('README.rst').read()
+    with open('README.rst') as fh:
+        retval += fh.read()
 
     return retval
 
@@ -230,7 +232,8 @@ def load_project_properties():
     """
     cur_file = os.path.realpath(__file__)
     cur_path = os.path.split(cur_file)[0]
-    props = open(os.path.join(cur_path, 'project.prop')).read()
+    with open(os.path.join(cur_path, 'project.prop')) as fh:
+        props = fh.read()
     return ast.literal_eval(props)
 
 

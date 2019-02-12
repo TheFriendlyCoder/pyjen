@@ -53,8 +53,8 @@ master_doc = 'index'
 copyright = '2019, Kevin S. Phillips'
 author = 'Kevin S. Phillips'
 _proj_props = ast.literal_eval(open('../project.prop').read())
-_proj_props["VERSION"] = \
-    ast.literal_eval(open("../src/" + _proj_props["NAME"] + "/version.prop").read())
+with open("../src/" + _proj_props["NAME"] + "/version.prop") as fh:
+    _proj_props["VERSION"] = ast.literal_eval(fh.read())
 project = _proj_props["NAME"]
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
