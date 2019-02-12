@@ -14,11 +14,11 @@ class FreestyleJob(Job):
 
     @property
     def scm(self):
-        """Gets the object that manages the source code management configuration for a job
+        """source code management configuration for a job
 
         :returns:
-            One of several possible plugin objects which exposes the relevant set
-            of properties supported by a given source code management tool.
+            One of several possible plugin objects which exposes the relevant
+            set of properties supported by a given source code management tool.
         :rtype: :class:`~.utils.pluginapi.PluginBase`
         """
         xml = self.config_xml
@@ -51,27 +51,29 @@ class FreestyleJob(Job):
 
     @staticmethod
     def template_config_xml():
-        """Gets a basic XML configuration template for use when instantiating jobs of this type
+        """XML configuration template for  instantiating jobs of this type
 
-        :returns: a basic XML configuration template for use when instantiating jobs of this type
+        :returns:
+            a basic XML configuration template for use when instantiating
+            jobs of this type
         :rtype: :class:`str`
         """
         xml = """<project>
-            <actions/>
-            <description/>
-            <keepDependencies>false</keepDependencies>
-            <properties/>
-            <scm class="hudson.scm.NullSCM"/>
-            <canRoam>true</canRoam>
-            <disabled>false</disabled>
-            <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-            <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-            <triggers/>
-            <concurrentBuild>false</concurrentBuild>
-            <builders/>
-            <publishers/>
-            <buildWrappers/>
-            </project>"""
+<actions/>
+<description/>
+<keepDependencies>false</keepDependencies>
+<properties/>
+<scm class="hudson.scm.NullSCM"/>
+<canRoam>true</canRoam>
+<disabled>false</disabled>
+<blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+<triggers/>
+<concurrentBuild>false</concurrentBuild>
+<builders/>
+<publishers/>
+<buildWrappers/>
+</project>"""
         return xml
 
 

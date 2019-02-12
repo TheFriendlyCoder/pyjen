@@ -3,9 +3,10 @@ from pyjen.view import View
 
 
 class ListView(View):
-    """Class that encapsulates all Jenkins related 'view' information for views of type ListView
+    """all Jenkins related 'view' information for views of type ListView
 
-    Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
+    Instances of this class are typically instantiated directly or indirectly
+    through :py:meth:`pyjen.View.create`
     """
 
     def __init__(self, url):

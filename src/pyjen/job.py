@@ -5,14 +5,15 @@ from pyjen.utils.jenkins_api import JenkinsAPI
 
 
 class Job(JenkinsAPI):
-    """ Generic job interface providing abstraction to operations common to all job types on Jenkins
+    """Abstraction for operations common to all job types on Jenkins
 
     :param str url: Full URL of a job on a Jenkins master
     """
 
     def __init__(self, url):
         super(Job, self).__init__(url)
-        self._type = None   # TODO: Consider whether we should name this class Freestyle or not
+        self._type = None
+        # TODO: Consider whether we should name this class Freestyle or not
 
     def __eq__(self, other):
         """equality operator"""
@@ -32,8 +33,9 @@ class Job(JenkinsAPI):
 
     @property
     def derived_object(self):
-        """Looks for a custom plugin supporting the specific type of job managed by this object"""
-        # check to see if we're trying to derive an object from an already derived object
+        """custom plugin supporting this job type"""
+        # check to see if we're trying to derive an object from an already
+        # derived object
         if not isinstance(self, Job):
             return self
 
@@ -65,7 +67,8 @@ class Job(JenkinsAPI):
     def is_unstable(self):
         """Indicates whether the current state of this job is 'unstable'
 
-        :returns: True if the latest build of the job is unsable, otherwise False
+        :returns:
+            True if the latest build of the job is unsable, otherwise False
         :rtype: :class:`bool`
         """
         data = self.get_api_data()
@@ -76,7 +79,8 @@ class Job(JenkinsAPI):
     def is_failing(self):
         """Indicates whether the current state of the job is 'failed'
 
-        :returns: True if the latest build of the job is a failure, otherwise False
+        :returns:
+            True if the latest build of the job is a failure, otherwise False
         :rtype: :class:`bool`
         """
         data = self.get_api_data()
@@ -139,7 +143,7 @@ class Job(JenkinsAPI):
 
     @property
     def all_upstream_jobs(self):
-        """Gets the list of all jobs that this job depends on, including all indirect descendants
+        """list of all jobs that this job depends on, recursively
 
         Includes jobs that trigger this job, and all jobs trigger those
         jobs, recursively for all upstream dependencies
@@ -176,7 +180,8 @@ class Job(JenkinsAPI):
 
         retval = []
         for cur_build in builds:
-            # TODO: Figure out a new way to pre-populate build data upon object construction
+            # TODO: Figure out a new way to pre-populate build data upon
+            #       object construction
             # temp_data_io.set_api_data(cur_build)
             temp_build = Build(cur_build['url'])
             retval.append(temp_build)
@@ -205,13 +210,14 @@ class Job(JenkinsAPI):
     def last_good_build(self):
         """Gets the most recent successful build of this job
 
-        Synonymous with the "Last successful build" permalink on the jobs' main status page
-
+        Synonymous with the "Last successful build" permalink on the
+        jobs' main status page
 
         :returns:
             object that provides information and control for the
             last build which completed with a status of 'success'
-            If there are no such builds in the build history, this method returns None
+            If there are no such builds in the build history,
+            this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -227,12 +233,14 @@ class Job(JenkinsAPI):
     def last_build(self):
         """Returns a reference to the most recent build of this job
 
-        Synonymous with the "Last Build" permalink on the jobs' main status page
+        Synonymous with the "Last Build" permalink on the jobs'
+        main status page
 
         :returns:
             object that provides information and control for the
             most recent build of this job.
-            If there are no such builds in the build history, this method returns None
+            If there are no such builds in the build history,
+            this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -246,13 +254,14 @@ class Job(JenkinsAPI):
 
     @property
     def last_failed_build(self):
-        """Returns a reference to the most recent build of this job with a status of "failed"
+        """the most recent build of this job with a status of "failed"
 
-        Synonymous with the "Last failed build" permalink on the jobs' main status page
+        Synonymous with the "Last failed build" permalink on the jobs'
+        main status page
 
         :returns:
-            Most recent build with a status of 'failed'. If there are no such builds in the build history,
-            this method returns None
+            Most recent build with a status of 'failed'. If there are no such
+            builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -266,14 +275,14 @@ class Job(JenkinsAPI):
 
     @property
     def last_stable_build(self):
-        """Returns a reference to the most recent build of this job with a status of "stable"
+        """the most recent build of this job with a status of "stable"
 
-        Synonymous with the "Last stable build" permalink on the jobs' main status page
-
+        Synonymous with the "Last stable build" permalink on the jobs'
+        main status page
 
         :returns:
-            Most recent build with a status of 'stable'. If there are no such builds in the build history,
-            this method returns None
+            Most recent build with a status of 'stable'. If there are no such
+            builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -287,13 +296,14 @@ class Job(JenkinsAPI):
 
     @property
     def last_unsuccessful_build(self):
-        """Returns a reference to the most recent build of this job with a status of "unstable"
+        """the most recent build of this job with a status of "unstable"
 
-        Synonymous with the "Last unsuccessful build" permalink on the jobs' main status page
+        Synonymous with the "Last unsuccessful build" permalink on the jobs'
+        main status page
 
         :returns:
-            Most recent build with a status of 'unstable' If there are no such builds in the build history,
-            this method returns None
+            Most recent build with a status of 'unstable' If there are no such
+            builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
         data = self.get_api_data()
@@ -326,7 +336,7 @@ class Job(JenkinsAPI):
 
     @property
     def all_downstream_jobs(self):
-        """Gets the list of all jobs that depend on this job, including all indirect descendants
+        """list of all jobs that depend on this job, recursively
 
         Includes jobs triggered by this job, and all jobs triggered by those
         jobs, recursively for all downstream dependencies
@@ -399,13 +409,15 @@ class Job(JenkinsAPI):
         :rtype: :class:`~.build.Build`
         """
         # Generate URL where the specified build "should" be
-        # TODO: Find some way to efficiently search through all builds to locate the one with the correct number
-        #       this would still require 1 hit to the REST API but would be more robust than trying to "guess"
-        #       the correct URL endpoint
+        # TODO: Find some way to efficiently search through all builds to
+        #       locate the one with the correct number this would still
+        #       require 1 hit to the REST API but would be more robust than
+        #       trying to "guess" the correct URL endpoint
         temp_url = self.url + str(build_number)
         retval = Build(temp_url)
 
-        # query the REST API to make sure the URL is correct and that it returns the correct build number
+        # query the REST API to make sure the URL is correct and that it
+        # returns the correct build number
         try:
             assert retval.number == build_number
         except:  # pylint: disable=broad-except,bare-except
@@ -417,8 +429,10 @@ class Job(JenkinsAPI):
         """ Returns a list of all of the builds for a job that
             occurred between the specified start and end times
 
-            :param datetime start_time: starting time index for range of builds to find
-            :param datetime end_time: ending time index for range of builds to find
+            :param datetime start_time:
+                starting time index for range of builds to find
+            :param datetime end_time:
+                ending time index for range of builds to find
             :returns: a list of 0 or more builds
             :rtype: :class:`list` of :class:`~.build.Build` objects
         """
@@ -470,7 +484,7 @@ class Job(JenkinsAPI):
 
     @property
     def properties(self):  # pragma: no cover
-        """Gets all plugins configured as extra configuration properties for this job"""
+        """all plugins configured as extra configuration properties"""
         jxml = JobXML(self.config_xml)
         return jxml.properties
 
@@ -484,7 +498,9 @@ class Job(JenkinsAPI):
     def build_health(self):
         """Gets the percentage of good builds from recorded history of this job
 
-        This metric is associated with the "weather" icon that can be shown next to jobs in certain views
+        This metric is associated with the "weather" icon that can be shown
+        next to jobs in certain views
+
         :return: percentage of good builds on record for this job
         :rtype: :class:`int`
         """
@@ -498,7 +514,8 @@ class Job(JenkinsAPI):
 
         return 0
 
-    # TODO: Add a supported_types static method for returning all plugins which extend the Job data type
+    # TODO: Add a supported_types static method for returning all plugins
+    #       which extend the Job data type
 
 if __name__ == "__main__":  # pragma: no cover
     pass

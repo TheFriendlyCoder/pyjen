@@ -25,17 +25,22 @@ class JenkinsConfigParser(configparser.ConfigParser):  # pylint: disable=too-man
             username=
             password=
 
-        For more details on the general format of the config file see these links:
+        For more details on the general format of the config file see these
+        links:
             https://wiki.python.org/moin/ConfigParserExamples
             https://docs.python.org/2/library/configparser.html
         """
     def get_credentials(self, jenkins_url):
         """Gets the authentication credentials for a given Jenkins URL
 
-        :param str jenkins_url: arbitrary URL to the Jenkins REST API to retrieve credentials for
-            URL may point to any arbitrary artifact on the Jenkins REST API. The credentials
-            will be matched based on the section headers in any of the associated config files
-        :returns: username and password for the given URL. Will return None if no credentials found.
+        :param str jenkins_url:
+            arbitrary URL to the Jenkins REST API to retrieve credentials for
+            URL may point to any arbitrary artifact on the Jenkins REST API.
+            The credentials will be matched based on the section headers in any
+            of the associated config files
+        :returns:
+            username and password for the given URL.
+            Will return None if no credentials found.
         :rtype: :func:`tuple`
         """
         section_name = None
@@ -58,14 +63,17 @@ class JenkinsConfigParser(configparser.ConfigParser):  # pylint: disable=too-man
             return None
 
         if not temp_username:
-            raise InvalidUserParamsError("No username specified for password under " + section_name)
+            raise InvalidUserParamsError(
+                "No username specified for password under " + section_name)
         if not temp_password:
-            raise InvalidUserParamsError("No password specified for user " + temp_username + " under " + section_name)
+            raise InvalidUserParamsError("No password specified for user " +
+                                         temp_username + " under " +
+                                         section_name)
         return temp_username, temp_password
 
     @staticmethod
     def get_default_configfiles():
-        """Gets a list of potential locations where PyJen config files may be found
+        """list of potential locations where PyJen config files may be found
 
         :returns: list of paths to be searched
         :rtype: :class:`list`

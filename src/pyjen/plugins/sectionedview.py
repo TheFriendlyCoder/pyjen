@@ -18,9 +18,10 @@ class SectionedView(View):
             object to the Jenkins REST API
         :type controller: :class:`~.utils.datarequester.DataRequester`
         :param jenkins_master:
-            Reference to Jenkins object associated with the master instance managing
-            this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`        """
+            Reference to Jenkins object associated with the master instance
+            managing this job
+        :type jenkins_master: :class:`~.jenkins.Jenkins`
+        """
         super(SectionedView, self).__init__(url)
         self._log = logging.getLogger(__name__)
 
@@ -82,7 +83,7 @@ class TextSection:
 
 
 class SectionedViewXML(ViewXML):
-    """Abstraction for operating on raw config.xml data for a Jenkins view of type 'Sectioned View'"""
+    """raw config.xml parser for a Jenkins view of type 'Sectioned View'"""
     def __init__(self, xml):
         """
         :param str xml: XML string describing a sectioned view
@@ -104,7 +105,8 @@ class SectionedViewXML(ViewXML):
             if plugin is not None:
                 retval.append(plugin)
             else:
-                self._log.warning("Sectioned view plugin %s not found", get_plugin_name(node))
+                self._log.warning("Sectioned view plugin %s not found",
+                                  get_plugin_name(node))
 
         return retval
 

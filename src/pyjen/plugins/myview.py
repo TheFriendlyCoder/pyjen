@@ -5,7 +5,8 @@ from pyjen.view import View
 class MyView(View):
     """Interface to a view associated with a specific user
 
-    Instances of this class are typically instantiated directly or indirectly through :py:meth:`pyjen.View.create`
+    Instances of this class are typically instantiated directly or indirectly
+    through :py:meth:`pyjen.View.create`
     """
 
     def __init__(self, url):
@@ -17,8 +18,8 @@ class MyView(View):
             object to the Jenkins REST API
         :type data_io_controller: :class:`~.utils.datarequester.DataRequester`
         :param jenkins_master:
-            Reference to Jenkins object associated with the master instance managing
-            this job
+            Reference to Jenkins object associated with the master instance
+            managing this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
         super(MyView, self).__init__(url)

@@ -80,12 +80,13 @@ class NotYetImplementedError(PyJenError):
 
 
 class PluginNotSupportedError(NotImplementedError):
-    """Basic extension to the NotImplementedError with details about which plugin was not found"""
+    """Error with details about a plugin that was not found"""
     def __init__(self, message, plugin_name):
         """Constructor
 
         :param str message: description of the error
-        :param str plugin_name: the class name / type of the plugin that was not found
+        :param str plugin_name:
+            the class name / type of the plugin that was not found
         """
         super(PluginNotSupportedError, self).__init__()
         self._message = message
@@ -106,7 +107,7 @@ class PluginNotSupportedError(NotImplementedError):
 
 
 class JenkinsFlushFailure(PyJenError):
-    """Exception raised when flushing cached Jenkins data to the remote server fails"""
+    """Error flushing cached Jenkins data to the remote server fails"""
     def __init__(self, failed_items):
         super(JenkinsFlushFailure, self).__init__()
         self._failed_items = failed_items

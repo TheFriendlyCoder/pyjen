@@ -22,7 +22,8 @@ class JobXML(ConfigXML):
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
 
-        If the job is not currently using a custom workspace this method will do nothing
+        If the job is not currently using a custom workspace this method will
+        do nothing
         """
         node = self._root.find('customWorkspace')
 
@@ -33,7 +34,8 @@ class JobXML(ConfigXML):
     def custom_workspace(self):
         """Gets the local path for the custom workspace associated with this job
 
-        :returns: the local path for the custom workspace associated with this job
+        :returns:
+            the local path for the custom workspace associated with this job
         :rtype: :class:`str`
         """
         node = self._root.find('customWorkspace')
@@ -45,8 +47,9 @@ class JobXML(ConfigXML):
     def custom_workspace(self, path):
         """Defines a new or modified custom workspace for a job
 
-        If the job already has a custom workspace it will be replaced with the given path
-        If not then a new custom workspace will be created with the given path
+        If the job already has a custom workspace it will be replaced with the
+        given path. If not then a new custom workspace will be created with the
+        given path
 
         :param str path: path of the new or modified custom workspace
         """
@@ -73,7 +76,8 @@ class JobXML(ConfigXML):
     def assigned_node(self, node_label):
         """Sets the build agent label this job is associated with
 
-        :param str node_label: the new build agent label to associate with this job
+        :param str node_label:
+        the new build agent label to associate with this job
         """
         node = self._root.find('assignedNode')
 
@@ -125,7 +129,7 @@ class JobXML(ConfigXML):
 
     @property
     def publishers(self):
-        """Gets a list of 0 or more post-build publisher objects associated with this job
+        """list of 0 or more post-build publishers associated with this job
 
         :returns: a list of post-build publishers associated with this job
         :rtype: :class:`list` of publisher plugins supported by this job

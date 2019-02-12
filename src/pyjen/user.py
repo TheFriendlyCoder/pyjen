@@ -8,7 +8,9 @@ class User(JenkinsAPI):
     .. seealso:: :py:meth:`~.changeset.ChangesetItem.author`
     .. seealso:: :py:meth:`~.jenkins.Jenkins.find_user`
 
-    :param str url: Full URL of the Jenkins REST API endpoint containing information about a particular user
+    :param str url:
+        Full URL of the Jenkins REST API endpoint containing information about
+        a particular user
     """
 
     def __init__(self, url):
@@ -25,7 +27,7 @@ class User(JenkinsAPI):
 
     @property
     def full_name(self):
-        """Gets the users full name, typically first and last names separated by a space
+        """the users first and last names separated by a space
 
         :rtype: :class:`str`
         """
@@ -34,7 +36,9 @@ class User(JenkinsAPI):
 
     @property
     def description(self):
-        """Gets some descriptive text associated with the user. May be an empty string if no description found.
+        """descriptive text associated with the user.
+
+        May be an empty string if no description found.
 
         :rtype: :class:`str`
         """
@@ -43,7 +47,9 @@ class User(JenkinsAPI):
 
     @property
     def email(self):
-        """Gets this users' email address as reported by Jenkins. May be None if no email on record for user.
+        """Gets this users' email address as reported by Jenkins.
+
+        May be None if no email on record for user.
 
         :rtype: :class:`str`
         """

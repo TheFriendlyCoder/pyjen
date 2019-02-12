@@ -2,16 +2,19 @@
 import logging
 from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
-# TODO: Have a separate entry point for these plugins, and instantiate different classes
-#       depending on whether we have a single conditional build step or a multiple conditional build step
-#       the ConditionalBuilder class would map to the latter from the looks of it
+# TODO: Have a separate entry point for these plugins, and instantiate different
+#       classes depending on whether we have a single conditional build step or
+#       a multiple conditional build step the ConditionalBuilder class would
+#       map to the latter from the looks of it
 
-# TODO: Consider having most of these XML based plugins derive from ConfigXML class
-#       so they can use methods like plugin_name, plugin_version, etc.
+# TODO: Consider having most of these XML based plugins derive from ConfigXML
+#       class so they can use methods like plugin_name, plugin_version, etc.
 
 
 class ConditionalBuilder:
-    """Jenkins job builder plugin capable of conditionally executing a build operation
+    """Jenkins job builder plugin
+
+    capable of conditionally executing a build operation
 
     https://wiki.jenkins-ci.org/display/JENKINS/Conditional+BuildStep+Plugin
     """
@@ -28,11 +31,11 @@ class ConditionalBuilder:
 
     @property
     def builders(self):
-        """Gets a list of the build operators that will be executed if the conditions on this
-        builder are satisfied
+        """list of the build operators that will be executed if the conditions
+        on this builder are satisfied
 
         :returns: list of build operators
-        :rtype: :class:`list` of PyJen plugins that support the Jenkins builder operations
+        :rtype: :class:`list` of PyJen plugins
         """
         nodes = self._root.find("conditionalbuilders")
 
@@ -42,7 +45,8 @@ class ConditionalBuilder:
             if plugin is not None:
                 retval.append(plugin)
             else:
-                self._log.warning("Builder plugin %s used by conditional builder not found", get_plugin_name(node))
+                self._log.warning("Builder plugin %s used by conditional "
+                                  "builder not found", get_plugin_name(node))
 
         return retval
 

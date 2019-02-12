@@ -12,8 +12,8 @@ class StatusView(View):
             object to the Jenkins REST API
         :type controller: :class:`~.utils.datarequester.DataRequester`
         :param jenkins_master:
-            Reference to Jenkins object associated with the master instance managing
-            this job
+            Reference to Jenkins object associated with the master instance
+            managing this job
         :type jenkins_master: :class:`~.jenkins.Jenkins`
         """
         super(StatusView, self).__init__(url)
