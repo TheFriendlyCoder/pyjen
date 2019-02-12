@@ -89,7 +89,8 @@ class JenkinsAPI(object):
 
         # Sanity check: make sure our root URL ends with a slash character.
         #               This check should only potentially fail if someone
-        #               overloads the data member directly and sets it incorrectly
+        #               overloads the data member directly and sets it
+        #               incorrectly
         assert JenkinsAPI.jenkins_root_url[-1] == "/"
 
         return JenkinsAPI.jenkins_root_url

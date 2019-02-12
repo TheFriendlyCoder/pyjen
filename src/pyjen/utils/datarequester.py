@@ -1,8 +1,8 @@
 """Primitives for handling direct IO with the Jenkins REST API"""
 import logging
-from pyjen.exceptions import JenkinsFlushFailure
 import requests
 from six.moves import urllib_parse
+from pyjen.exceptions import JenkinsFlushFailure
 
 
 class DataRequester(object):
@@ -119,16 +119,16 @@ class DataRequester(object):
         if url in DataRequester._text_cache:
             return DataRequester._text_cache[url]
 
-        self._log.debug("Text cache miss: " + url)
+        self._log.debug("Text cache miss: %s", url)
 
         req = requests.get(url, auth=self._credentials, verify=self._ssl_verify)
 
         if req.status_code != 200:
-            self._log.debug("Error getting raw text from URL: " + url)
+            self._log.debug("Error getting raw text from URL: %s", url)
             if self._credentials:
-                self._log.debug("Authenticating as user: " +
+                self._log.debug("Authenticating as user: %s",
                                 self._credentials[0])
-                self._log.debug("Details: " + str(req))
+                self._log.debug("Details: %s", str(req))
             else:
                 self._log.debug("Not using authenticated access")
 
@@ -216,7 +216,7 @@ class DataRequester(object):
         if temp_path in DataRequester._header_cache:
             return DataRequester._header_cache[temp_path]
 
-        self._log.debug("Header cache miss: " + temp_path)
+        self._log.debug("Header cache miss: %s", temp_path)
 
         req = requests.get(temp_path, auth=self._credentials)
 
@@ -267,15 +267,16 @@ class DataRequester(object):
                 temp_path, auth=self._credentials, verify=self._ssl_verify)
 
         if req.status_code != 200:
-            self._log.debug("Failed posting Jenkins data to " + temp_path)
+            self._log.debug("Failed posting Jenkins data to %s", temp_path)
             if self._credentials is None:
                 self._log.debug("Not using authenticated access")
             else:
-                self._log.debug("Authenticating as user: " + self._credentials[0])
+                self._log.debug("Authenticating as user: %s",
+                                self._credentials[0])
             if args is not None:
-                self._log.debug("Using custom post data: " + str(args))
+                self._log.debug("Using custom post data: %s", str(args))
 
-            self._log.debug("Details: " + str(req))
+            self._log.debug("Details: %s", req)
             req.raise_for_status()
 
     @property
@@ -289,7 +290,7 @@ class DataRequester(object):
         #       file exists in the 'modified' configxml cache, and it it does
         #       we use it from there rather than polling the server
         if self._url in DataRequester._configxml_cache:
-            self._log.debug("Config.xml read cache hit: " + self._url)
+            self._log.debug("Config.xml read cache hit: %s", self._url)
             return DataRequester._configxml_cache[self._url]
 
         retval = self.get_text("/config.xml")
@@ -356,7 +357,7 @@ class DataRequester(object):
         # TODO: After flushing the configxml cache, move those entities over
         #  to the textcache for future reference
 
-        if len(failed_items) > 0:
+        if not failed_items:
             raise JenkinsFlushFailure(failed_items)
 
     @staticmethod
@@ -411,16 +412,13 @@ class DataRequester(object):
         if not DataRequester.ENABLE_CACHING:
             return
         self._log.debug("Destroying datarequester: ")
-        self._log.debug("\tText cache size: " +
-                        str(len(self._text_cache)))
-        self._log.debug("\tAPI data cache size: " +
-                        str(len(self._api_data_cache)))
-        self._log.debug("\tHeader cache size: " +
-                        str(len(self._header_cache)))
-        self._log.debug("\tConfig.xml cache size: " +
-                        str(len(self._configxml_cache)))
-        self._log.debug("\tIs cache dirty?: " +
-                        str(self.is_dirty))
+        self._log.debug("\tText cache size: %s", len(self._text_cache))
+        self._log.debug("\tAPI data cache size: %s", len(self._api_data_cache))
+        self._log.debug("\tHeader cache size: %s", len(self._header_cache))
+        self._log.debug("\tConfig.xml cache size: %s",
+                        len(self._configxml_cache))
+        self._log.debug("\tIs cache dirty?: %s",
+                        self.is_dirty)
 
 if __name__ == "__main__":  # pragma: no cover
     pass

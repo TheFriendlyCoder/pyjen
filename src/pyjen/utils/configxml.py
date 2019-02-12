@@ -1,4 +1,5 @@
-"""Common functionality for parsing and processing Jenkins raw configuration XML for various REST API objects"""
+"""parsing and processing heleprs configuration XML for various REST API objects
+"""
 import logging
 import xml.etree.ElementTree as ElementTree
 from pkg_resources import iter_entry_points
@@ -88,8 +89,7 @@ class ConfigXML(object):
     def _get_plugin_class_name_from_node(xml_node):
         if "class" in xml_node.attrib:
             return xml_node.attrib['class']
-        else:
-            return xml_node.tag
+        return xml_node.tag
 
     def plugin_version(self, xml_node=None):
         """version of a Jenkins plugin associated with a specific XML node
@@ -159,8 +159,8 @@ class ConfigXML(object):
 
         if obj_url:
             return plugin_class(obj_url)
-        else:
-            return plugin_class(xml_node)
+
+        return plugin_class(xml_node)
 
     @staticmethod
     def get_installed_plugins():
@@ -191,7 +191,7 @@ class ConfigXML(object):
                 group='pyjen.plugins', name=plugin_name):
             supported_plugins.append(entry_point.load())
 
-        if len(supported_plugins) == 0:
+        if not supported_plugins:
             raise PluginNotSupportedError("Plugin not supported: " +
                                           plugin_name, plugin_name)
 
