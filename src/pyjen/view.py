@@ -23,7 +23,7 @@ class View(JenkinsAPI):
 
         xml_obj = ViewXML(self.config_xml)
 
-        return xml_obj.derived_object()
+        return xml_obj.derived_object(self.url)
 
     @property
     def name(self):

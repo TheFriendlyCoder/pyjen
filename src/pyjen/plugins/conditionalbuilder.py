@@ -1,4 +1,5 @@
-"""Primitives for operating on Jenkins job builder of type 'Conditional Builder'"""
+"""Primitives for operating on Jenkins job builder of type 'Conditional Builder'
+"""
 import logging
 from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 

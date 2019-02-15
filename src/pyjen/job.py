@@ -437,9 +437,7 @@ class Job(JenkinsAPI):
             :rtype: :class:`list` of :class:`~.build.Build` objects
         """
         if start_time > end_time:
-            tmp = end_time
-            end_time = start_time
-            start_time = tmp
+            end_time, start_time = start_time, end_time
 
         builds = []
 

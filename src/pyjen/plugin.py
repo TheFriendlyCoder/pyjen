@@ -1,7 +1,7 @@
 """Interface for interacting with Jenkins plugins"""
+import os
 import requests
 from tqdm import tqdm
-import os
 
 
 class Plugin(object):
@@ -73,7 +73,7 @@ class Plugin(object):
         return retval
 
     def download(self, output_folder, overwrite=False,
-                 show_progress=False, get_latest=False):
+                 show_progress=False):
         """Downloads the plugin installation file for this plugin
 
         :param str output_folder:
@@ -84,10 +84,6 @@ class Plugin(object):
         :param bool show_progress:
             indicates whether a progress bar should be displayed as the
             plugin is downloaded
-        :param bool get_latest:
-            indicates whether the latest version of this plugin should be
-            downloaded. If false, the version currently installed on this
-            Jenkins instance is downloaded.
         """
 
         # Construct an absolute path for our output file based on a meaningful

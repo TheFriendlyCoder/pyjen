@@ -43,7 +43,7 @@ class Changeset(object):
     def __str__(self):  # pragma: no cover
         retval = ""
         changes = self.affected_items
-        if len(changes) > 0:
+        if changes:
             for change in changes:
                 retval += str(change)
         else:

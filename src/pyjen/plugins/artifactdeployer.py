@@ -1,4 +1,4 @@
-"""Primitives for operating on properties of the 'artifact deployer' publishing plugin"""
+"""properties of the 'artifact deployer' publishing plugin"""
 from pyjen.utils.pluginapi import init_plugin
 from pyjen.exceptions import PluginNotSupportedError
 

@@ -1,9 +1,9 @@
 """Primitives for interacting with Jenkins builds"""
 from datetime import datetime
 import logging
+from six.moves import urllib_parse
 from pyjen.changeset import Changeset
 from pyjen.utils.jenkins_api import JenkinsAPI
-from six.moves import urllib_parse
 
 
 class Build(JenkinsAPI):
