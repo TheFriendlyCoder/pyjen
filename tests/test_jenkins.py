@@ -31,6 +31,12 @@ fake_jenkins_headers = {
     "x-jenkins": "2.0.0"
 }
 
+
+def test_simple_connection(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    assert jk.connected
+
+
 @pytest.fixture
 def patch_jenkins_api(monkeypatch):
     mock_api_data = MagicMock()

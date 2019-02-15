@@ -11,6 +11,8 @@ chardet==3.0.4
 colorama==0.4.1
 coverage==4.5.2
 cryptography==2.5
+docker==3.7.0
+docker-pycreds==0.4.0
 docutils==0.14
 entrypoints==0.3
 filelock==3.0.10
@@ -25,7 +27,7 @@ mando==0.6.4
 MarkupSafe==1.1.0
 mccabe==0.6.1
 mock==2.0.0
-more-itertools==5.0.0
+more-itertools==6.0.0
 packaging==19.0
 pbr==5.1.2
 pkginfo==1.5.0.1
@@ -56,4 +58,5 @@ twine==1.12.1
 urllib3==1.24.1
 virtualenv==16.4.0
 webencodings==0.5.1
+websocket-client==0.54.0
 wrapt==1.11.1

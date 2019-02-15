@@ -2,41 +2,50 @@
 Overview
 =============
 
-Extensible, user and developer friendly Python interface to the `Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping
-the features exposed by the standard REST `API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using
-Pythonic objects and functions. Tested against the latest 2.x and 3.x versions of Python, and the
-latest trunk and LTS editions of Jenkins.
+Extensible, user and developer friendly Python interface to the
+`Jenkins <http://jenkins-ci.org/>`_ CI tool, wrapping the features exposed by
+the standard REST
+`API <https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API/>`_ using
+Pythonic objects and functions. Tested against the latest 2.x and 3.x versions
+of Python, and the latest trunk and LTS editions of Jenkins.
 
-With an intuitive and well thought out interface, PyJen offers anyone familiar with the Python programming
-language an easy way to manage Jenkins dashboards from a simple command prompt. All core primitives of Jenkins,
-including views, jobs and builds are easily accessible and can be loaded, analyzed and even modified or created
-via simple Python commands.
+With an intuitive and well thought out interface, PyJen offers anyone familiar
+with the Python programming language an easy way to manage Jenkins servers
+from a simple command prompt. All core primitives of Jenkins including views,
+jobs and builds are easily accessible and can be loaded, analyzed and even
+modified or created via simple Python commands.
 
-Comments, suggestions and bugs may be reported to the project `maintainer <mailto:kevin@thefriendlycoder.com>`_
+Comments, suggestions and bugs may be reported to the project
+`maintainer <mailto:thefriendlycoder@gmail.com>`_
 
-Full API documentation can be found on `ReadTheDocs.org <http://pyjen.readthedocs.org/en/v0.0.10dev/>`_.
+Full API documentation can be found on
+`ReadTheDocs.org <http://pyjen.readthedocs.org/>`_.
 
 =================
 Quick start guide
 =================
-1. First, we recommend that you install the pip package manager as described `here <http://www.pip-installer.org/en/latest/installing.html>`_
+1. First, we recommend that you install the pip package manager if it is not
+   already installed. See
+   `here <http://www.pip-installer.org/en/latest/installing.html>`_ for
+   details.
 
 2. Install PyJen directly from PyPI using PIP:
 
 ::
 
-# pip install pyjen --pre
+# pip install pyjen
 
-3. import the pyjen module and start scripting! See below for some common examples.
+3. import the pyjen module and start scripting!
+   See below for some common examples.
 
 For a more in-depth guide to contributing to the project, see our
-`contributors guide <https://pyjen.readthedocs.org/en/v0.0.10dev/contrib_guide.html>`_.
+`contributors guide <https://pyjen.readthedocs.io/en/latest/contrib_guide.html>`_.
 
-================
+========
 Examples
-================
+========
 Display a list of all jobs on the default view
-------------------------------------------------------------
+----------------------------------------------
 
 ::
 
@@ -50,7 +59,7 @@ Display a list of all jobs on the default view
 
 
 Disable all jobs in a view named "My View"
----------------------------------------------------------
+------------------------------------------
 
 ::
 
@@ -61,7 +70,7 @@ Disable all jobs in a view named "My View"
 
 
 Get all upstream dependencies of a job named "JobA"
-------------------------------------------------------------
+---------------------------------------------------
 
 ::
 
@@ -73,8 +82,8 @@ Get all upstream dependencies of a job named "JobA"
     for u in upstream:
         print(u.name)
 
-Clone all jobs in a view who are named with a 'trunk' identifier for a new branch configuration
-------------------------------------------------------------------------------------------------
+Clone all jobs in a view named with a 'trunk' identifier for a new branch
+-------------------------------------------------------------------------
 
 ::
 
