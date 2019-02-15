@@ -3,10 +3,10 @@ from pyjen.view import View
 
 
 class AllView(View):
-    """Interface to a view which displays all jobs managed by this Jenkins instance
+    """view which displays all jobs managed by this Jenkins instance
 
-    Instances of this class are typically instantiated directly or indirectly through
-    :py:meth:`~.view.View.create`
+    Instances of this class are typically instantiated directly or
+    indirectly through :py:meth:`~.view.View.create`
     """
 
     def __init__(self, url):

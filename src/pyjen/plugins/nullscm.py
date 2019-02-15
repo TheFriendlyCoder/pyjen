@@ -1,4 +1,4 @@
-"""Primitives for operating on SCM properties of Jenkins jobs with no source control configuration"""
+"""SCM properties of Jenkins jobs with no source control configuration"""
 
 
 class NullSCM:

@@ -22,7 +22,9 @@ class ArtifactDeployer:
     def entries(self):
         """Gets the list of deployment options associated with this plugin
 
-        :returns: list of configuration options for each set of artifacts managed by this instance
+        :returns:
+            list of configuration options for each set of artifacts managed by
+            this instance
         :rtype: :class:`list` of :class:`ArtifactDeployerEntry` objects
         """
 
@@ -34,13 +36,14 @@ class ArtifactDeployer:
             if plugin is not None:
                 retval.append(plugin)
             else:
-                raise PluginNotSupportedError("Artifact deployer configuration plugin not found", 'entries')
+                raise PluginNotSupportedError("Artifact deployer configuration "
+                                              "plugin not found", 'entries')
 
         return retval
 
 
 class ArtifactDeployerEntry:
-    """Interface to a single configuration of artifacts to be deployed by an Artifact Deployer instance"""
+    """a single artifacts to be deployed by an Artifact Deployer instance"""
     def __init__(self, node):
         """
         :param node: XML node defining the settings for a this plugin

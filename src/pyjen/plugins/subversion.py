@@ -22,7 +22,8 @@ class Subversion:
         """Gets the list of SVN URLs associated with this plugin instance
 
         :returns:
-            set of 0 or more ModuleLocation objects describing the SVN parameters for this module.
+            set of 0 or more ModuleLocation objects describing the SVN
+            parameters for this module.
         :rtype: :class:`list` of :class:`ModuleLocation` objects
         """
         retval = []
@@ -35,7 +36,7 @@ class Subversion:
 
     @property
     def included_regions(self):
-        """list of patterns reflecting the regions of the SVN repo to include in SCM operations
+        """patterns of the regions of the SVN repo to include in SCM operations
 
         :rtype: :class:`list` of :class:`str`
         """
@@ -46,7 +47,7 @@ class Subversion:
 
     @included_regions.setter
     def included_regions(self, new_regions):
-        """Defines a set of patterns from the SVN repo to include in SCM operations
+        """patterns of regions in an SVN repo to include in SCM operations
 
         :param list new_regions: list of paths to include in SCM operations
         """
@@ -75,7 +76,8 @@ class ModuleLocation(object):
     def url(self, new_url):
         """Sets the SVN URL where the source code for this module can be found
 
-        :param str new_url: the SVN URL where the source code for this module can be found
+        :param str new_url:
+            the SVN URL where the source code for this module can be found
         """
         self._root.find('remote').text = new_url
 
@@ -91,7 +93,9 @@ class ModuleLocation(object):
     def local_dir(self, new_dir):
         """Sets the local folder to checkout the source code for this module
 
-        :param str new_dir: New, relative path within the workspace to checkout the source for this module
+        :param str new_dir:
+            New, relative path within the workspace to checkout the source for
+            this module
         """
         self._root.find('local').text = new_dir
 
@@ -105,7 +109,7 @@ class ModuleLocation(object):
 
     @property
     def ignore_externals(self):
-        """Checks to see whether the 'ignore externals' option is enabled on this job
+        """see whether the 'ignore externals' option is enabled on this job
 
         :returns: True if ignore externals is enabled, otherwise False
         :rtype: :class:`bool`

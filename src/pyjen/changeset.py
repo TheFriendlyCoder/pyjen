@@ -12,8 +12,10 @@ class Changeset(object):
         of a builds source data as provided by the Jenkins REST API. Should have
         at least the following keys:
 
-        * **'kind'** - string describing the SCM tool associated with this set of changes.
-        * **'items'** - list of 0 or more SCM revisions associated with this change
+        * **'kind'** - string describing the SCM tool associated with this set
+                       of changes.
+        * **'items'** - list of 0 or more SCM revisions associated with this
+                        change
     """
 
     def __init__(self, data):
@@ -26,7 +28,9 @@ class Changeset(object):
     def affected_items(self):
         """gets details of the changes associated with the parent build
 
-        :returns: list of 0 or more revisions detailing each change associated with this Changeset
+        :returns:
+            list of 0 or more revisions detailing each change associated with
+            this Changeset
         :rtype: :class:`list` of :class:`ChangesetItem` objects
         """
         retval = []
@@ -66,17 +70,22 @@ class Changeset(object):
 
 
 class ChangesetItem(object):
-    """Represents the details of each SCM revision associated with a given :class:`Changeset`
+    """details of each SCM revision associated with a given :class:`Changeset`
 
     .. seealso:: :class:`Changeset`
 
     :param dict data:
-        Dictionary of attributes describing this revision. Required keys are as follows:
+        Dictionary of attributes describing this revision.
+        Required keys are as follows:
 
-        * author: :class:`dict` describing the Jenkins user who committed this change
-        * msg: :class:`str` representing the commit messages from the SCM tool associated with this change
-        * commitId: :class:`str` representing the revision number of the change provided by the SCM tool
-        * changes: :class:`list` of :class:`dict` describing the files modified by this change
+        * author: :class:`dict` describing the Jenkins user who committed this
+                  change
+        * msg: :class:`str` representing the commit messages from the SCM tool
+               associated with this change
+        * commitId: :class:`str` representing the revision number of the change
+                    provided by the SCM tool
+        * changes: :class:`list` of :class:`dict` describing the files modified
+                   by this change
     """
 
     def __init__(self, data):

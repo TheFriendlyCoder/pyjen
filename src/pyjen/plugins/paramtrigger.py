@@ -1,12 +1,14 @@
-"""Primitives for operating on Jenkins post-build publisher of type Parameterized Build Trigger"""
+"""Jenkins post-build publisher of type Parameterized Build Trigger"""
 import logging
 import xml.etree.ElementTree as ElementTree
 
 
 class BuildTriggerConfig(object):
-    """Abstraction around a basic parameterized build trigger"""
+    """Abstraction around a basic parameterized build trigger
+
+    :param node: configuration node loaded from the Jenkins API for this object
+    """
     def __init__(self, node):
-        """:param node: configuration node loaded from the Jenkins API for this object"""
         self._root = node
         self._log = logging.getLogger(__name__)
 
@@ -21,7 +23,8 @@ class BuildTriggerConfig(object):
         self._log.info(projects_node.text)
         retval = projects_node.text.split(",")
 
-        # To simplify post-processing, lets make sure to exclude any superfluous white space from the list items
+        # To simplify post-processing, lets make sure to exclude any
+        # superfluous white space from the list items
         return [i.lstrip().rstrip() for i in retval]
 
     @job_names.setter
@@ -46,14 +49,15 @@ class ParameterizedBuildTrigger:
 
     @property
     def triggers(self):
-        """Gets the list of trigger operations defined for this instance of the plugin
+        """list of trigger operations defined for this instance of the plugin
 
         :rtype: :class:`list` of :class:`BuildTriggerConfig` objects
         """
         retval = []
         configs_node = self._root.find('configs')
         for config in configs_node:
-            assert config.tag == "hudson.plugins.parameterizedtrigger.BuildTriggerConfig"
+            assert config.tag == \
+                   "hudson.plugins.parameterizedtrigger.BuildTriggerConfig"
             retval.append(BuildTriggerConfig(config))
         return retval
 

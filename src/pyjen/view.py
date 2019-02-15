@@ -5,7 +5,7 @@ from pyjen.utils.jenkins_api import JenkinsAPI
 
 
 class View(JenkinsAPI):
-    """ Abstraction for generic Jenkins views providing interfaces common to all view types
+    """generic Jenkins views providing interfaces common to all view types
 
     :param str url: Full URL of a view on a Jenkins master
     """
@@ -15,8 +15,9 @@ class View(JenkinsAPI):
 
     @property
     def derived_object(self):
-        """Looks for a custom plugin supporting the specific type of view managed by this object"""
-        # check to see if we're trying to derive an object from an already derived object
+        """custom plugin supporting this specific type of view"""
+        # check to see if we're trying to derive an object from an already
+        # derived object
         if not isinstance(self, View):
             return self
 
@@ -69,7 +70,8 @@ class View(JenkinsAPI):
         to manually manipulate the raw configuration settings
         of the view. Use with caution.
 
-        This method allows callers to dynamically update arbitrary properties of this view.
+        This method allows callers to dynamically update arbitrary properties
+        of this view.
 
         :returns:
             returns the raw XML of the views configuration in
@@ -80,7 +82,7 @@ class View(JenkinsAPI):
 
     @config_xml.setter
     def config_xml(self, new_xml):
-        """Updates the raw configuration of this view with a new set of properties
+        """Updates the raw config of this view with a new set of properties
 
         :param str new_xml:
             XML encoded text string to be used as a replacement for the
@@ -97,17 +99,17 @@ class View(JenkinsAPI):
         self.post(self.url + "doDelete")
 
     def delete_all_jobs(self):
-        """Batch method that allows callers to do bulk deletes of all jobs found in this view"""
+        """allows callers to do bulk deletes of all jobs found in this view"""
         for j in self.jobs:
             j.delete()
 
     def disable_all_jobs(self):
-        """Batch method that allows caller to bulk-disable all jobs found in this view"""
+        """allows caller to bulk-disable all jobs found in this view"""
         for j in self.jobs:
             j.disable()
 
     def enable_all_jobs(self):
-        """Batch method that allows caller to bulk-enable all jobs found in this view"""
+        """allows caller to bulk-enable all jobs found in this view"""
         for j in self.jobs:
             j.enable()
 
@@ -115,16 +117,19 @@ class View(JenkinsAPI):
         """Batch-clones all jobs contained within this view
 
         :param str source_job_name_pattern:
-            pattern to use as a substitution rule when generating new names for cloned jobs. Substrings within the
-            existing job names that match this pattern will be replaced by the given substitution string
+            pattern to use as a substitution rule when generating new names for
+            cloned jobs. Substrings within the existing job names that match
+            this pattern will be replaced by the given substitution string
         :param str new_job_substring:
-            character string used to generate new job names for the clones of the existing jobs. The substring
-            of an existing job that matches the given regex will be replaced by this new string to create the
+            character string used to generate new job names for the clones of
+            the existing jobs. The substring of an existing job that matches
+            the given regex will be replaced by this new string to create the
             new job name for it's cloned counterpart.
         """
         retval = []
         for cur_job in self.jobs:
-            new_name = cur_job.name.replace(source_job_name_pattern, new_job_substring)
+            new_name = cur_job.name.replace(
+                source_job_name_pattern, new_job_substring)
             new_job = cur_job.clone(new_name)
             retval.append(new_job)
         return retval
@@ -137,7 +142,8 @@ class View(JenkinsAPI):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(self.config_xml)
-        self._create_view(new_view_name, vxml.plugin_name() or vxml.plugin_class_name())
+        self._create_view(
+            new_view_name, vxml.plugin_name() or vxml.plugin_class_name())
 
         new_url = self.url.replace(self.name, new_view_name)
         new_view = View(new_url)
@@ -149,8 +155,10 @@ class View(JenkinsAPI):
     def rename(self, new_name):
         """Rename this view
 
-        Since Jenkins doesn't currently support renaming views, this method destroys the current view and creates
-        a new one with the same configuration. As such, once this method completes this object will become invalidated
+        Since Jenkins doesn't currently support renaming views, this method
+        destroys the current view and creates a new one with the same
+        configuration. As such, once this method completes this object will
+        become invalidated
 
         :param str new_name: new name for this view
         :returns: reference to the newly create view
@@ -198,7 +206,8 @@ class View(JenkinsAPI):
                 "unstable_jobs": unstable_jobs,
                 "disabled_jobs": disabled_jobs}
 
-    # TODO: Add a supported_types static method for returning all plugins which extend the View data type
+    # TODO: Add a supported_types static method for returning all plugins
+    #  which extend the View data type
 
 if __name__ == "__main__":  # pragma: no cover
     #for i in View.supported_types():

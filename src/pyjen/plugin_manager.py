@@ -8,7 +8,9 @@ class PluginManager(JenkinsAPI):
 
     Supports adding, removing and querying information about Jenkins plugins
 
-    :param str url: Full URL to the Jenkins REST API endpoint for the plugin manager interface
+    :param str url:
+        Full URL to the Jenkins REST API endpoint for the plugin manager
+        interface
     """
 
     def __init__(self, url):
@@ -16,7 +18,7 @@ class PluginManager(JenkinsAPI):
 
     @property
     def plugins(self):
-        """Gets a list of all installed plugins from the current Jenkins instance
+        """list of all installed plugins from the current Jenkins instance
 
         :returns: list of 0 or more plugins installed on the Jenkins instance
         :rtype: List of 0 or more :class:`~.plugin.Plugin` objects"""
@@ -33,10 +35,11 @@ class PluginManager(JenkinsAPI):
     def install_plugin(self, plugin_file):
         """Installs a new plugin on the selected Jenkins instance
 
-        NOTE: If using this method to batch-install many plugins at once you may want to add
-        a short wait / sleep between calls so as to not overwhelm the target server with
-        upload requests. Ad-hoc tests show that Jenkins will refuse connections if too many
-        uploads are running in parallel.
+        NOTE: If using this method to batch-install many plugins at once you
+        may want to add a short wait / sleep between calls so as to not
+        overwhelm the target server with upload requests. Ad-hoc tests show
+        that Jenkins will refuse connections if too many uploads are running
+        in parallel.
 
         :param str plugin_file: path to the HPI/JPI file to install
         """
@@ -44,5 +47,5 @@ class PluginManager(JenkinsAPI):
             files = {'file': handle}
             self.post(self.url + 'uploadPlugin', {"files": files})
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass

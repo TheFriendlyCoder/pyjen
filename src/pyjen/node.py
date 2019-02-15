@@ -49,9 +49,12 @@ class Node(JenkinsAPI):
     def toggle_offline(self, message=None):
         """Toggles the online status of this Node
 
-        If the current state of this Node is "offline" it will be toggled to "online" and vice-versa.
+        If the current state of this Node is "offline" it will be toggled to
+        "online" and vice-versa.
 
-        :param str message: optional descriptive message explaining the reason this node has been taken offline.
+        :param str message:
+            optional descriptive message explaining the reason this node has
+            been taken offline.
         """
         post_cmd = self.url + "toggleOffline"
         if message is not None:
@@ -63,10 +66,12 @@ class Node(JenkinsAPI):
         """Blocks execution until this Node enters an idle state
 
         :param int max_timeout:
-            The maximum amount of time, in seconds, to wait for an idle state. If this value is undefined, this method
-            will block indefinitely.
+            The maximum amount of time, in seconds, to wait for an idle state.
+            If this value is undefined, this method will block indefinitely.
 
-        :returns: True if the Node has entered idle state before returning otherwise returns False
+        :returns:
+            True if the Node has entered idle state before returning
+            otherwise returns False
         :rtype: :class:`bool`
         """
         polling_period_in_seconds = 1

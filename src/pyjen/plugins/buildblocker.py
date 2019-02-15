@@ -10,7 +10,8 @@ class BuildBlockerProperty:
 
     def __init__(self, node):
         """
-        :param node: ElementTree node initialized with the XML from the Jenkins job
+        :param node:
+            ElementTree node initialized with the XML from the Jenkins job
         """
         self._root = node
         assert 'plugin' in self._root.attrib

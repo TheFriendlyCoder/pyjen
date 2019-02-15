@@ -7,7 +7,7 @@ from six.moves import urllib_parse
 
 
 class Build(JenkinsAPI):
-    """Class that encapsulates information about a single build / run of a :class:`~.job.Job`
+    """information about a single build / run of a :class:`~.job.Job`
 
     Builds are executions of jobs and thus instances of this class are
     typically generated from the :class:`~.job.Job` class.
@@ -103,7 +103,8 @@ class Build(JenkinsAPI):
         """Gets the status of the build
 
         :returns:
-            Result state of the associated job upon completion of this build. Typically one of the following:
+            Result state of the associated job upon completion of this build.
+            Typically one of the following:
 
             * "SUCCESS"
             * "UNSTABLE"
@@ -118,7 +119,8 @@ class Build(JenkinsAPI):
     def changeset(self):
         """Gets the list of SCM changes associated with this build
 
-        :returns: 0 or more SCM changesets associated with / included in this build.
+        :returns:
+            0 or more SCM changesets associated with / included in this build.
         :rtype: :class:`~.changeset.Changeset`
         """
         data = self.get_api_data()
@@ -127,7 +129,9 @@ class Build(JenkinsAPI):
 
     @property
     def description(self):
-        """Gets the descriptive text associated with this build. May be an empty string if no description given.
+        """Gets the descriptive text associated with this build.
+
+        May be an empty string if no description given.
 
         :rtype: :class:`str`
         """
@@ -148,7 +152,7 @@ class Build(JenkinsAPI):
 
     @property
     def artifact_urls(self):
-        """Gets a list of 0 or more URLs which can be used to download the published build artifacts for this build
+        """list of 0 or more URLs to download published build artifacts
 
         :rtype: :class:`list` of :class:`str`
         """
