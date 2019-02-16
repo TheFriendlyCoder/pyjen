@@ -7,7 +7,7 @@
     "DEPENDENCIES" : [
         "requests[security]>=2.0.1",
         "six",
-        "tqdm"
+        "tqdm",
     ],
     "DEV_DEPENDENCIES" : [
         "twine",
@@ -17,7 +17,8 @@
         "pylint",
         "sphinx",
         "tox",
-        "radon"
+        "radon",
+        "docker"
     ],
     "DESCRIPTION" : "Python wrapper for the Jenkins CI REST API",
     "KEYWORDS" : "jenkins jenkins-ci api wrapper library",
