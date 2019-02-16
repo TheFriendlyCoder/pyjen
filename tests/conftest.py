@@ -143,6 +143,9 @@ def jenkins_env(request, configure_logger):
         with open(container_id_file) as file_handle:
             container_id = file_handle.read().strip()
         log.info("Reusing existing container %s", container_id)
+
+        # TODO: Detect when the ID in the file is invalid and re-create
+        #       the docker environment on the fly
     else:
         res = client.create_container(
             image_name, host_config=hc, volumes=["/var/jenkins_home"])
@@ -198,6 +201,23 @@ def jenkins_env(request, configure_logger):
             if os.path.exists(container_id_file):
                 os.unlink(container_id_file)
             log.info("Done Docker cleanup")
+
+
+@pytest.fixture(scope="function", autouse=True)
+def clear_global_state():
+    """Clears all global state from the PyJen library
+
+    This fixture is a total hack to compensate for the use of global state
+    in the PyJen library. My hope is to break dependency on this global state
+    and eliminate the need for this fixture completely
+    """
+    yield
+    from pyjen.utils.jenkins_api import JenkinsAPI
+    JenkinsAPI.creds = ()
+    JenkinsAPI.ssl_verify_enabled = False
+    JenkinsAPI.crumb_cache = None
+    JenkinsAPI.jenkins_root_url = None
+    JenkinsAPI.jenkins_headers_cache = None
 
 
 def pytest_collection_modifyitems(config, items):
