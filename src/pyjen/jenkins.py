@@ -271,6 +271,28 @@ class Jenkins(JenkinsAPI):
         assert retval is not None
         return retval
 
+    def create_job(self, job_name, job_type):
+        """Creates a new job on the Jenkins dashboard
+
+        :param str job_name:
+            the name for this new job
+            This name should be unique, different from any other jobs currently
+            managed by the Jenkins instance
+        :param str job_type:
+            type of job to create
+            must match one or more of the available jenkins types supported by
+            this Jenkins instance.
+            See :py:meth:`~.job.Job.supported_types` for a list of
+            supported job types.
+        :returns: An object to manage the newly created job
+        :rtype: :class:`~.job.Job`
+        """
+        self._create_job(job_name, job_type)
+
+        retval = self.find_job(job_name)
+        assert retval is not None
+        return retval
+
     @staticmethod
     def get_plugin_template(plugin_type):
         """retrieves a default XML template for constructing a specific plugin
