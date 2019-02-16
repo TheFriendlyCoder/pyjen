@@ -86,22 +86,19 @@ class Jenkins(JenkinsAPI):
         :rtype: :class:`bool`
         """
         try:
-            version = self.version
+            if self.jenkins_headers:
+                return True
+            return False
         except RequestException as err:
             self._log.error("Jenkins connection failed: %s.", err)
             return False
-
-        if version is None or version == "" or version == "Unknown":
-            self._log.error("Invalid Jenkins version detected: '%s'", version)
-            return False
-        return True
 
     @property
     def version(self):
         """Gets the version of Jenkins pointed to by this object
 
         :return: Version number of the currently running Jenkins instance
-        :rtype: :class:`str`
+        :rtype: :class:`tuple`
         """
         return self.jenkins_version
 
@@ -334,7 +331,7 @@ class Jenkins(JenkinsAPI):
             return None
 
     @property
-    def plugin_manager(self):  # pragma: no cover
+    def plugin_manager(self):
         """object which manages the plugins installed on this Jenkins
 
         :returns:

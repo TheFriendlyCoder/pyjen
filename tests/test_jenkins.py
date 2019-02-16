@@ -1,13 +1,166 @@
 from pyjen.jenkins import Jenkins
-from mock import MagicMock
+from mock import MagicMock, PropertyMock, patch
 import pytest
-from mock import PropertyMock
 from pytest import raises
-from pyjen.job import Job
-from pyjen.view import View
-from pyjen.utils.jenkins_api import JenkinsAPI
+from pyjen.exceptions import PluginNotSupportedError
 
 
+def test_simple_connection(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    assert jk.connected
+
+
+def test_not_connected():
+    jk = Jenkins("https://0.0.0.0")
+    assert not jk.connected
+
+
+def test_failed_connection_check():
+    with patch("pyjen.utils.jenkins_api.requests") as req:
+        mock_response = MagicMock()
+        mock_response.headers = None
+        req.get.return_value = mock_response
+
+        jk = Jenkins("https://0.0.0.0")
+        assert not jk.connected
+
+        req.get.assert_called_once()
+
+
+def test_get_version(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    assert jk.version
+    assert isinstance(jk.version, tuple)
+
+
+def test_is_shutting_down(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    assert not jk.is_shutting_down
+
+
+def test_cancel_shutdown_not_quietdown_mode(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    assert not jk.is_shutting_down
+    jk.cancel_shutdown()
+    assert not jk.is_shutting_down
+
+
+def test_cancel_shutdown(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    try:
+        jk.prepare_shutdown()
+        assert jk.is_shutting_down
+        jk.cancel_shutdown()
+        assert not jk.is_shutting_down
+    finally:
+        jk.cancel_shutdown()
+
+
+def test_prepare_shutdown(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    try:
+        jk.prepare_shutdown()
+        assert jk.is_shutting_down
+    finally:
+        jk.cancel_shutdown()
+
+
+def test_find_non_existent_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.find_job("DoesNotExistJob")
+    assert jb is None
+
+
+def test_get_default_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    v = jk.default_view
+    assert v is not None
+    assert v.url.startswith(jenkins_env["url"])
+    assert v.url == jenkins_env["url"] + "/view/all/"
+
+
+def test_get_views(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    v = jk.views
+
+    assert v is not None
+    assert isinstance(v, list)
+    assert len(v) == 1
+    assert v[0].name == "all"
+
+
+def test_find_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    v = jk.find_view("all")
+
+    assert v is not None
+    assert v.url == jenkins_env["url"] + "/view/all/"
+
+
+def test_find_missing_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    v = jk.find_view("DoesNotExist")
+
+    assert v is None
+
+
+def test_get_nodes(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    nodes = jk.nodes
+
+    assert nodes is not None
+    assert isinstance(nodes, list)
+    assert len(nodes) == 1
+    assert nodes[0].name == "master"
+
+
+def test_find_node(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.find_node("master")
+
+    assert node is not None
+    assert node.name == "master"
+
+
+def test_find_node_not_exists(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.find_node("NodeDoesNotExist")
+
+    assert node is None
+
+
+def test_find_user(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    user = jk.find_user(jenkins_env["admin_user"])
+    assert user is not None
+    assert user.full_name == jenkins_env["admin_user"]
+
+
+def test_find_user_not_exists(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    user = jk.find_user("UserDoesNotExist")
+    assert user is None
+
+
+def test_get_plugin_manager(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    pm = jk.plugin_manager
+
+    assert pm is not None
+
+
+# TODO: Fix this test so coverage works correctly
+# TODO: apply fix for pip install wheel file in my template project and elsewhere
+# TODO: Find a way to get pycharm to preserve docker container
+def test_get_plugin_template_not_supported():
+    jk = Jenkins("http://0.0.0.0")
+    with raises(PluginNotSupportedError):
+        res = jk.get_plugin_template("DoesNotExistTemplate")
+        assert res is None
+
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# legacy tests
 fake_jenkins_url = "http://localhost:8080/"
 fake_default_view_name = "MyPrimaryView"
 fake_default_view_url = fake_jenkins_url + "view/" + fake_default_view_name + "/"
@@ -27,27 +180,6 @@ fake_jenkins_data = {
     ]
 }
 
-fake_jenkins_headers = {
-    "x-jenkins": "2.0.0"
-}
-
-
-def test_simple_connection(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    assert jk.connected
-
-
-@pytest.fixture
-def patch_jenkins_api(monkeypatch):
-    mock_api_data = MagicMock()
-    mock_api_data.return_value = fake_jenkins_data
-    monkeypatch.setattr(Jenkins, "get_api_data", mock_api_data)
-
-    mock_headers = PropertyMock()
-    mock_headers.return_value = fake_jenkins_headers
-    monkeypatch.setattr(Jenkins, "jenkins_headers", mock_headers)
-
-
 def get_mock_api_data(field, data):
     tmp_data = fake_jenkins_data.copy()
     tmp_data[field] = data
@@ -57,6 +189,9 @@ def get_mock_api_data(field, data):
 
 
 def test_init():
+    # THIS TEST SHOULD BE DEPRECATED AS SOON AS WE ELIMINATE GLOBAL STATE
+    # FROM THE PYJEN API
+    from pyjen.utils.jenkins_api import JenkinsAPI
     jenkins_url = "http://localhost:8080"
     jenkins_user = "MyUser"
     jenkins_pw = "MyPass"
@@ -71,12 +206,6 @@ def test_init():
     assert JenkinsAPI.ssl_verify_enabled is True
 
 
-def test_get_version(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-
-    assert j.version == (2, 0, 0)
-
-
 def test_get_unknown_version(monkeypatch):
     from requests.exceptions import InvalidHeader
     mock_header = PropertyMock()
@@ -86,40 +215,6 @@ def test_get_unknown_version(monkeypatch):
 
     with raises(InvalidHeader):
         j.version
-
-
-def test_prepare_shutdown(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Jenkins, "post", mock_post)
-
-    jenkins_url = "http://localhost:8080"
-    j = Jenkins(jenkins_url)
-    j.prepare_shutdown()
-
-    mock_post.assert_called_once_with(jenkins_url + "/quietDown")
-
-
-def test_cancel_shutdown(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Jenkins, "post", mock_post)
-
-    jenkins_url = "http://localhost:8080"
-    j = Jenkins(jenkins_url)
-    j.cancel_shutdown()
-
-    mock_post.assert_called_once_with(jenkins_url + "/cancelQuietDown")
-
-
-def test_is_shutting_down(patch_jenkins_api):
-
-    j = Jenkins("http://localhost:8080")
-    assert j.is_shutting_down is True
-
-
-def test_find_non_existent_job(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-    jb = j.find_job("DoesNotExistJob")
-    assert jb is None
 
 
 def test_find_job(monkeypatch):
@@ -134,48 +229,7 @@ def test_find_job(monkeypatch):
     j = Jenkins("http://localhost:8080")
     jb = j.find_job("MyJob")
 
-    assert isinstance(jb, Job)
     assert jb.url == expected_job_url
-
-
-def test_get_default_view(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-    v = j.default_view
-
-    assert v.url == fake_jenkins_url + "view/" + fake_default_view_name + "/"
-
-
-def test_get_multiple_views(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-    views = j.views
-
-    assert len(views) == 2
-    for cur_view in views:
-        assert cur_view.url in [fake_second_view_url, fake_default_view_url]
-    assert views[0].url != views[1].url
-
-
-def test_find_view(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-    v = j.find_view(fake_second_view_name)
-
-    assert isinstance(v, View)
-    assert v.url == fake_second_view_url
-
-
-def test_find_missing_view(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-    v = j.find_view("DoesNotExist")
-
-    assert v is None
-
-
-def test_find_view_primary_view(patch_jenkins_api):
-    j = Jenkins("http://localhost:8080")
-    v = j.find_view(fake_default_view_name)
-
-    assert isinstance(v, View)
-    assert v.url == fake_default_view_url
 
 
 def test_create_view(monkeypatch):
@@ -188,35 +242,12 @@ def test_create_view(monkeypatch):
     j = Jenkins(fake_jenkins_url)
     v = j.create_view(new_view_name, expected_view_type)
 
-    assert isinstance(v, View)
     assert v.url == expected_view_url
     assert mock_post.call_count == 1
     assert mock_post.call_args[0][0] == fake_jenkins_url + "createView"
     assert mock_post.call_args[0][1]['data']['name'] == new_view_name
     assert mock_post.call_args[0][1]['data']['mode'] == expected_view_type
 
-
-def test_get_multiple_nodes(monkeypatch):
-    mock_api_data = MagicMock()
-    fake_node1_url = fake_jenkins_url + "computer/(master)/"
-    fake_node2_url = fake_jenkins_url + "computer/remoteNode1/"
-
-    fake_api_data = {
-        "computer": [
-            {"displayName": "master"},
-            {"displayName": "remoteNode1"}
-        ]
-    }
-    mock_api_data.return_value = fake_api_data
-    monkeypatch.setattr(Jenkins, "get_api_data", mock_api_data)
-
-    j = Jenkins("http://localhost:8080")
-    nodes = j.nodes
-
-    assert len(nodes) == 2
-    for cur_node in nodes:
-        assert cur_node.url in [fake_node1_url, fake_node2_url]
-    assert nodes[0].url != nodes[1].url
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
