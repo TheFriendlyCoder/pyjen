@@ -127,5 +127,7 @@ class ModuleLocation(object):
         self._root.find('ignoreExternalsOption').text = "false"
 
 
+PLUGIN_CLASS = Subversion
+
 if __name__ == "__main__":  # pragma: no cover
     pass

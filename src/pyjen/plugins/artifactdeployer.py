@@ -1,5 +1,5 @@
 """properties of the 'artifact deployer' publishing plugin"""
-from pyjen.utils.pluginapi import init_plugin
+#from pyjen.utils.pluginapi import init_plugin
 from pyjen.exceptions import PluginNotSupportedError
 
 
@@ -59,6 +59,10 @@ class ArtifactDeployerEntry:
         """
         node = self._root.find("remote")
         return node.text
+
+
+PLUGIN_CLASS = ArtifactDeployer
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass

@@ -61,5 +61,9 @@ class ParameterizedBuildTrigger:
             retval.append(BuildTriggerConfig(config))
         return retval
 
+
+PLUGIN_CLASS = BuildTriggerConfig
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

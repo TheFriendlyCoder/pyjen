@@ -183,5 +183,8 @@ class NestedView(View):
     #      essentially corrupt the view - not good.
 
 
+PLUGIN_CLASS = NestedView
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

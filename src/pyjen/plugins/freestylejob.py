@@ -77,5 +77,8 @@ class FreestyleJob(Job):
         return xml
 
 
+PLUGIN_CLASS = FreestyleJob
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

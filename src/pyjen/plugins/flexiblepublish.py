@@ -1,6 +1,6 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
 import logging
-from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
+#from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
 class FlexiblePublisher:
@@ -73,6 +73,10 @@ class ConditionalPublisher:
                               "Publisher not found", get_plugin_name(node))
 
         return plugin
+
+
+PLUGIN_CLASS = FlexiblePublisher
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass

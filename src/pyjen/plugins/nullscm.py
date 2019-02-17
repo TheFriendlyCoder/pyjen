@@ -14,5 +14,7 @@ class NullSCM:
         assert self._root.attrib['class'] == 'hudson.scm.NullSCM'
 
 
+PLUGIN_CLASS = NullSCM
+
 if __name__ == "__main__":  # pragma: no cover
     pass

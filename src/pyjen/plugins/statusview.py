@@ -19,5 +19,8 @@ class StatusView(View):
         super(StatusView, self).__init__(url)
 
 
+PLUGIN_CLASS = StatusView
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass
