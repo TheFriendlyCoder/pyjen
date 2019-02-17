@@ -17,7 +17,11 @@ script:
   - echo $TRAVIS_PYTHON_VERSION
   - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1 | sed 's/^py//'`
   - echo $PYVER
-  - tox -e py$PYVER
+  # Here we build a wheel file for the project and have tox use that pre-built
+  # package during testing. This ensures that we are testing all of the actual
+  # deployment logic that may be customized in the actual wheel file
+  - python setup.py bdist_wheel
+  - tox -e py$PYVER --installpkg ./dist/*.whl
 
 # Deploy to test.pypi.org for branches
 # Deploy to pypi.org for tags
