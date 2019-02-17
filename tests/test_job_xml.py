@@ -1,7 +1,6 @@
-from xml_test_base import xml_test_case
+from .xml_test_base import xml_test_case
 from pyjen.utils.jobxml import JobXML
 import pytest
-from pyjen.plugins.subversion import Subversion
 import sys
 
 

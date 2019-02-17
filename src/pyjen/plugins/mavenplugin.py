@@ -59,5 +59,8 @@ class MavenPlugin(Job):
         return xml
 
 
+PLUGIN_CLASS = MavenPlugin
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

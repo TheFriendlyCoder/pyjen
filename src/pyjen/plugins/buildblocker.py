@@ -71,5 +71,8 @@ class BuildBlockerProperty:
         node.text = "false"
 
 
+PLUGIN_CLASS = BuildBlockerProperty
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

@@ -53,6 +53,50 @@ def load_console_scripts(project):
     return retval
 
 
+def load_plugins(project):
+    """Generates list of plugins for use by Python setup tools
+
+    Each element in this list defines the name and entry point function for each
+    plugin included with the current project.
+
+    This script assumes that any python script found in a folder named 'plugins'
+    under the project folder is to be registered as an extension point for
+    the library.
+
+    The output from this function can be provided to the setuptools.setup()
+    function, something like this:
+
+    entry_points={
+        PROJECT["NAME"] + ".plugins" : load_plugins(project_name)
+    }
+
+    :param str project:
+        the name of the current project. It is also assumed that the project
+        sources will be located under a sub-folder of the same name.
+    :return:
+        list of plugins exposed by this project. Produces an empty
+        list if there are no plugins supported by the project.
+    """
+    plugins_path = os.path.join('src', project, 'plugins')
+    if not os.path.exists(plugins_path):
+        return []
+
+    plugins_namespace = "{0}.plugins".format(project)
+    retval = []
+
+    py_scripts = os.listdir(plugins_path)
+    for py_file in py_scripts:
+        file_parts = os.path.splitext(py_file)
+        if file_parts[1] == ".py" and file_parts[0] != '__init__':
+            script_config = "{0}={1}.{0}:PLUGIN_CLASS".format(
+                file_parts[0],
+                plugins_namespace
+            )
+            retval.append(script_config)
+
+    return retval
+
+
 def _verify_src_version(version):
     """Checks to make sure an arbitrary character string is a valid version id
 
@@ -254,7 +298,8 @@ setup(
     url='https://github.com/TheFriendlyCoder/' + PROJECT["NAME"],
     keywords=PROJECT["KEYWORDS"],
     entry_points={
-        'console_scripts': load_console_scripts(PROJECT["NAME"])
+        'console_scripts': load_console_scripts(PROJECT["NAME"]),
+        PROJECT["NAME"] + ".plugins" : load_plugins(PROJECT["NAME"]),
     },
     install_requires=PROJECT["DEPENDENCIES"],
     python_requires=PROJECT["SUPPORTED_PYTHON_VERSION"],

@@ -1,7 +1,7 @@
 """Primitives for operating on Jenkins job builder of type 'Conditional Builder'
 """
 import logging
-from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
+#from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 # TODO: Have a separate entry point for these plugins, and instantiate different
 #       classes depending on whether we have a single conditional build step or
@@ -50,6 +50,10 @@ class ConditionalBuilder:
                                   "builder not found", get_plugin_name(node))
 
         return retval
+
+
+PLUGIN_CLASS = ConditionalBuilder
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass
