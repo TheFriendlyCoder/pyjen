@@ -46,12 +46,12 @@ class BuildTriggerPublisher:
         return self._root
 
     @staticmethod
-    def create(project_name):
+    def create(project_names):
         """Factory method for creating a new build trigger
 
         The default trigger will run when the parent job is successful
 
-        :param str project_name: name of the downstream job to be triggered
+        :param list project_names: List of 1 or more names of jobs to trigger
         :rtype: :class:`pyjen.plugins.buildtriggerpublisher.BuildTriggerPublisher`
         """
         default_xml = """<hudson.tasks.BuildTrigger>
@@ -65,7 +65,7 @@ class BuildTriggerPublisher:
         root_node = ElementTree.fromstring(default_xml)
 
         child = ElementTree.SubElement(root_node, "childProjects")
-        child.text = project_name
+        child.text = ",".join(project_names)
 
         return BuildTriggerPublisher(root_node)
 
