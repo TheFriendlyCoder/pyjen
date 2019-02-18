@@ -281,12 +281,16 @@ def test_build_health(jenkins_env):
     finally:
         jb.delete()
 
-# TODO: add support for publishers to API so we can test upstream/downstream jobs
-# def test_publishers(jenkins_env):
-#     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-#     jb = jk.find_job("third")
-#     for cur_pub in jb.publishers:
-#         print(cur_pub)
+
+def test_no_publishers(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_publishers", "project")
+    pubs = jb.publishers
+
+    assert isinstance(pubs, list)
+    assert len(pubs) == 0
+
+
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

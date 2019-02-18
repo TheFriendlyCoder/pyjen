@@ -144,6 +144,13 @@ class JobXML(ConfigXML):
                 self._log.warning("Unsupported job 'publisher' plugin")
         return retval
 
+    def add_publisher(self, node):
+        """Adds a new publisher node to the publisher section of the job XML
+
+        :param node: Elementree XML node for the publisher to assign"""
+        pubs = self._root.find('publishers')
+        pubs.append(node)
+
     @property
     def builders(self):
         """Gets a list of 0 or more build operations associated with this job
