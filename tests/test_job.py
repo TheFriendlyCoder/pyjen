@@ -7,36 +7,38 @@ import time
 import xml.etree.ElementTree as ElementTree
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.freestylejob import FreestyleJob
+from .utils import async_assert, clean_job
+from pyjen.plugins.buildtriggerpublisher import BuildTriggerPublisher
 
 
 def test_create_freestyle_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_create_freestyle_job", "project")
-    assert jb is not None
-    jb.delete()
+    with clean_job(jb):
+        assert jb is not None
 
 
 def test_find_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_find_job"
     jb1 = jk.create_job(expected_name, "project")
-    try:
+    with clean_job(jb1):
         assert jb1 is not None
         jb2 = jk.find_job(expected_name)
+
         assert jb2 is not None
         assert jb2.name == expected_name
         assert jb2.url == jb1.url
-    finally:
-        jb1.delete()
 
 
 def test_derived_job_object(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_derived_job_object"
     jb1 = jk.create_job(expected_name, "project")
-    try:
+    with clean_job(jb1):
         assert jb1 is not None
         jb2 = jk.find_job(expected_name)
+
         assert jb2 is not None
         assert jb2.name == expected_name
         assert jb2.url == jb1.url
@@ -44,8 +46,6 @@ def test_derived_job_object(jenkins_env):
         derived = jb2.derived_object
 
         assert isinstance(derived, FreestyleJob)
-    finally:
-        jb1.delete()
 
 
 def test_delete_job(jenkins_env):
@@ -61,235 +61,241 @@ def test_get_job_name(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_get_job_name"
     jb = jk.create_job(expected_name, "project")
-    try:
+    with clean_job(jb):
         assert jb.name == expected_name
-    finally:
-        jb.delete()
 
 
 def test_is_disabled_defaults(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_is_disabled_defaults", "project")
-    try:
+    with clean_job(jb):
         assert not jb.is_disabled
-    finally:
-        jb.delete()
 
 
 def test_disable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_disable", "project")
-    try:
+    with clean_job(jb):
         jb.disable()
         assert jb.is_disabled
-    finally:
-        jb.delete()
 
 
 def test_enable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_enable", "project")
-    try:
+    with clean_job(jb):
         jb.disable()
         jb.enable()
         assert not jb.is_disabled
-    finally:
-        jb.delete()
 
 
 def test_has_not_been_built(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_has_not_been_built", "project")
-    try:
+    with clean_job(jb):
         assert not jb.has_been_built
-    finally:
-        jb.delete()
 
 
 def test_get_config_xml(jenkins_env):
 
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_config_xml", "project")
-    try:
+    with clean_job(jb):
         res = jb.config_xml
         assert res is not None
         xml = ElementTree.fromstring(res)
         assert xml.tag == "project"
-    finally:
-        jb.delete()
 
 
 def test_clone(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_clone_master", "project")
-    jb_clone = None
-    try:
+    with clean_job(jb):
         expected_name = "test_clone_second"
         jb_clone = jb.clone(expected_name)
-        assert jb_clone is not None
-        assert jb_clone.name == expected_name
-        assert jb_clone.is_disabled
-    finally:
-        jb.delete()
-        if jb_clone:
-            jb_clone.delete()
+        with clean_job(jb_clone):
+            assert jb_clone is not None
+            assert jb_clone.name == expected_name
+            assert jb_clone.is_disabled
 
 
 def test_no_downstream_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_no_downstream_jobs", "project")
-    try:
+    with clean_job(jb):
         dependencies = jb.downstream_jobs
 
         assert isinstance(dependencies, list)
         assert len(dependencies) == 0
-    finally:
-        jb.delete()
+
+
+def test_multiple_downstream_jobs_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_multiple_downstream_jobs_recursive1", "project")
+    with clean_job(jb):
+        expected_name1 = "test_multiple_downstream_jobs_recursive2"
+        jb2 = jk.create_job(expected_name1, "project")
+        with clean_job(jb2):
+            expected_name2 = "test_multiple_downstream_jobs_recursive3"
+            jb3 = jk.create_job(expected_name2, "project")
+            with clean_job(jb3):
+                publisher1 = BuildTriggerPublisher.create([expected_name1])
+                jb.add_publisher(publisher1)
+
+                publisher2 = BuildTriggerPublisher.create([expected_name2])
+                jb2.add_publisher(publisher2)
+
+                async_assert(lambda: len(jb.all_downstream_jobs) == 2)
+                res = jb.all_downstream_jobs
+
+                all_names = [expected_name1, expected_name2]
+                assert isinstance(res, list)
+                assert len(res) == 2
+                assert res[0].name in all_names
+                assert res[1].name in all_names
 
 
 def test_no_upstream_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_no_upstream_jobs", "project")
-    try:
+    with clean_job(jb):
         dependencies = jb.upstream_jobs
 
         assert isinstance(dependencies, list)
         assert len(dependencies) == 0
-    finally:
-        jb.delete()
 
+
+def test_multiple_upstream_jobs_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_multiple_upstream_jobs_recursive1", "project")
+    with clean_job(jb):
+        expected_name1 = "test_multiple_upstream_jobs_recursive2"
+        jb2 = jk.create_job(expected_name1, "project")
+        with clean_job(jb2):
+            expected_name2 = "test_multiple_upstream_jobs_recursive3"
+            jb3 = jk.create_job(expected_name2, "project")
+            with clean_job(jb3):
+                publisher1 = BuildTriggerPublisher.create([expected_name1])
+                jb.add_publisher(publisher1)
+
+                publisher2 = BuildTriggerPublisher.create([expected_name2])
+                jb2.add_publisher(publisher2)
+
+                async_assert(lambda: len(jb3.all_upstream_jobs) == 2)
+                res = jb3.all_upstream_jobs
+
+                all_names = [expected_name1, expected_name2]
+                assert isinstance(res, list)
+                assert len(res) == 2
+                assert res[0].name in all_names
+                assert res[1].name in all_names
 
 def test_get_no_recent_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_no_recent_builds", "project")
-    try:
+    with clean_job(jb):
         builds = jb.recent_builds
 
         assert isinstance(builds, list)
         assert len(builds) == 0
-    finally:
-        jb.delete()
 
 
 def test_start_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_start_build", "project")
-    try:
+    with clean_job(jb):
         jb.start_build()
-    finally:
-        jb.delete()
 
 
 def test_get_last_good_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_good_build_none", "project")
-    try:
+    with clean_job(jb):
         bld = jb.last_good_build
 
         assert bld is None
-    finally:
-        jb.delete()
 
 
 def test_get_last_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_build_none", "project")
-    try:
+    with clean_job(jb):
         bld = jb.last_build
 
         assert bld is None
-    finally:
-        jb.delete()
 
 
 def test_get_last_failed_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_failed_build_none", "project")
-    try:
+    with clean_job(jb):
         bld = jb.last_failed_build
 
         assert bld is None
-    finally:
-        jb.delete()
 
 
 def test_get_last_stable_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_stable_build_none", "project")
-    try:
+    with clean_job(jb):
         bld = jb.last_stable_build
 
         assert bld is None
-    finally:
-        jb.delete()
 
 
 def test_get_last_unsuccessful_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_unsuccessful_build_none", "project")
-    try:
+    with clean_job(jb):
         bld = jb.last_unsuccessful_build
 
         assert bld is None
-    finally:
-        jb.delete()
 
 
 def test_get_build_by_number_non_existent(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_build_by_number_non_existent", "project")
-    try:
+    with clean_job(jb):
         bld = jb.get_build_by_number(1024)
 
         assert bld is None
-    finally:
-        jb.delete()
 
 
 def test_no_build_health(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_no_build_health", "project")
-    try:
+    with clean_job(jb):
         score = jb.build_health
         assert score == 0
-    finally:
-        jb.delete()
 
 
 def test_has_been_built(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_has_been_built", "project")
-    try:
+    with clean_job(jb):
         jb.start_build()
-        # TODO: Find a way to reliably detect when a build is complete
-        time.sleep(10)
-        assert jb.has_been_built
-    finally:
-        jb.delete()
+        async_assert(lambda: jb.has_been_built)
 
 
 def test_build_health(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_build_health", "project")
-    try:
+    with clean_job(jb):
         jb.start_build()
-        # TODO: Find a way to reliably detect when a build is complete
-        time.sleep(10)
-        assert jb.has_been_built
-        score = jb.build_health
-        assert score == 100
-    finally:
-        jb.delete()
+
+        async_assert(lambda: jb.has_been_built)
+
+        assert jb.build_health == 100
 
 
 def test_no_publishers(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_no_publishers", "project")
-    pubs = jb.publishers
+    with clean_job(jb):
+        pubs = jb.publishers
 
-    assert isinstance(pubs, list)
-    assert len(pubs) == 0
-
+        assert isinstance(pubs, list)
+        assert len(pubs) == 0
 
 
 
@@ -354,19 +360,6 @@ def test_set_config_xml(monkeypatch):
     assert mock_post.call_args[0][1]['data'] == expected_config_xml
 
 
-def test_one_downstream_job(monkeypatch):
-    tmp_data = fake_job_data.copy()
-    downstream_url = "http://localhost:8080/job/AnotherJob"
-    tmp_data['downstreamProjects'] = [{"url": downstream_url}]
-    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    dependencies = j.downstream_jobs
-
-    assert len(dependencies) == 1
-    assert isinstance(dependencies[0], Job)
-    assert dependencies[0].url == downstream_url + "/"   # the API should append a trailing slash to our URL
-
 
 def test_multiple_downstream_jobs_recursive(monkeypatch):
     downstream_job1_url = "http://localhost:8080/job/Downstream1/"
@@ -396,19 +389,6 @@ def test_multiple_downstream_jobs_recursive(monkeypatch):
     assert dependencies[0].url == downstream_job1_url
     assert dependencies[1].url == downstream_job2_url
 
-
-def test_one_upstream_job(monkeypatch):
-    tmp_data = fake_job_data.copy()
-    upstream_url = "http://localhost:8080/job/AnotherJob"
-    tmp_data['upstreamProjects'] = [{"url": upstream_url}]
-    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    dependencies = j.upstream_jobs
-
-    assert len(dependencies) == 1
-    assert isinstance(dependencies[0], Job)
-    assert dependencies[0].url == upstream_url + "/"   # the API should append a trailing slash to our URL
 
 
 def test_multiple_upstream_jobs_recursive(monkeypatch):

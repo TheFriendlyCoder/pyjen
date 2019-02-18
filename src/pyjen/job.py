@@ -93,7 +93,6 @@ class Job(JenkinsAPI):
         :returns: True if the job has been built at least once, otherwise false
         :rtype: :class:`bool`
         """
-
         data = self.get_api_data()
 
         return data['color'] != "notbuilt"
