@@ -61,7 +61,7 @@ class ArtifactDeployerEntry:
         return node.text
 
 
-PLUGIN_CLASS = ArtifactDeployer
+PluginClass = ArtifactDeployer
 
 
 if __name__ == "__main__":  # pragma: no cover

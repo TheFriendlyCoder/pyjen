@@ -22,7 +22,7 @@ class ListView(View):
         super(ListView, self).__init__(url)
 
 
-PLUGIN_CLASS = ListView
+PluginClass = ListView
 
 
 if __name__ == "__main__":  # pragma: no cover

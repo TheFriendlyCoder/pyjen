@@ -75,7 +75,7 @@ class ConditionalPublisher:
         return plugin
 
 
-PLUGIN_CLASS = FlexiblePublisher
+PluginClass = FlexiblePublisher
 
 
 if __name__ == "__main__":  # pragma: no cover

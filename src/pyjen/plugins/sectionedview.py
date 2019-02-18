@@ -111,7 +111,7 @@ class SectionedViewXML(ViewXML):
         return retval
 
 
-PLUGIN_CLASS = SectionedView
+PluginClass = SectionedView
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -59,7 +59,7 @@ class MavenPlugin(Job):
         return xml
 
 
-PLUGIN_CLASS = MavenPlugin
+PluginClass = MavenPlugin
 
 
 if __name__ == "__main__":  # pragma: no cover

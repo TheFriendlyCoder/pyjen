@@ -25,7 +25,7 @@ class MyView(View):
         super(MyView, self).__init__(url)
 
 
-PLUGIN_CLASS = MyView
+PluginClass = MyView
 
 
 if __name__ == "__main__":  # pragma: no cover

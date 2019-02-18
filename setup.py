@@ -88,7 +88,7 @@ def load_plugins(project):
     for py_file in py_scripts:
         file_parts = os.path.splitext(py_file)
         if file_parts[1] == ".py" and file_parts[0] != '__init__':
-            script_config = "{0}={1}.{0}:PLUGIN_CLASS".format(
+            script_config = "{0}={1}.{0}:PluginClass".format(
                 file_parts[0],
                 plugins_namespace
             )

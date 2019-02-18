@@ -52,7 +52,7 @@ class ConditionalBuilder:
         return retval
 
 
-PLUGIN_CLASS = ConditionalBuilder
+PluginClass = ConditionalBuilder
 
 
 if __name__ == "__main__":  # pragma: no cover

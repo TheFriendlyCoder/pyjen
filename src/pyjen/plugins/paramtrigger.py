@@ -62,7 +62,7 @@ class ParameterizedBuildTrigger:
         return retval
 
 
-PLUGIN_CLASS = BuildTriggerConfig
+PluginClass = BuildTriggerConfig
 
 
 if __name__ == "__main__":  # pragma: no cover
