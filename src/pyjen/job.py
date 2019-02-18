@@ -480,6 +480,14 @@ class Job(JenkinsAPI):
         jxml = JobXML(self.config_xml)
         return jxml.publishers
 
+    def add_publisher(self, publisher):
+        """Adds a new job publisher to this job
+
+        :param publisher: job publisher to add"""
+        jxml = JobXML(self.config_xml)
+        jxml.add_publisher(publisher.node)
+        self.config_xml = jxml.xml
+
     @property
     def properties(self):  # pragma: no cover
         """all plugins configured as extra configuration properties"""
