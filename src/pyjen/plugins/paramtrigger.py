@@ -61,8 +61,19 @@ class ParameterizedBuildTrigger:
             retval.append(BuildTriggerConfig(config))
         return retval
 
+    @staticmethod
+    def get_jenkins_plugin_name():
+        """Gets the name of the Jenkins plugin associated with this PyJen plugin
 
-PLUGIN_CLASS = BuildTriggerConfig
+        This static method is used by the PyJen plugin API to associate this
+        class with a specific Jenkins plugin, as it is encoded in the config.xml
+
+        :rtype: :class:`str`
+        """
+        return "paramtrigger"
+
+
+PluginClass = ParameterizedBuildTrigger
 
 
 if __name__ == "__main__":  # pragma: no cover

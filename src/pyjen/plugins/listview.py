@@ -21,8 +21,18 @@ class ListView(View):
         """
         super(ListView, self).__init__(url)
 
+    @staticmethod
+    def get_jenkins_plugin_name():
+        """Gets the name of the Jenkins plugin associated with this PyJen plugin
 
-PLUGIN_CLASS = ListView
+        This static method is used by the PyJen plugin API to associate this
+        class with a specific Jenkins plugin, as it is encoded in the config.xml
+
+        :rtype: :class:`str`
+        """
+        return "listview"
+
+PluginClass = ListView
 
 
 if __name__ == "__main__":  # pragma: no cover

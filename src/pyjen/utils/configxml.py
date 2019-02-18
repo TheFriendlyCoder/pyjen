@@ -67,7 +67,6 @@ class ConfigXML(object):
                              'the form "name@version": ' + attr)
 
         parts = attr.split('@')
-
         return parts[0]
 
     def plugin_class_name(self, xml_node=None):
@@ -169,8 +168,8 @@ class ConfigXML(object):
         :rtype: :class:`list`
         """
         retval = []
-        for entry_point in iter_entry_points(group='pyjen.plugins', name=None):
-            retval.append(entry_point.name)
+        for entry_point in iter_entry_points(group='pyjen.plugins'):
+            retval.append(entry_point.load().get_jenkins_plugin_name())
         return retval
 
     @staticmethod
@@ -186,10 +185,17 @@ class ConfigXML(object):
         :returns:
             reference to the PyJen plugin class for the given Jenkins plugin
         """
+        all_plugins = []
+        for entry_point in iter_entry_points(group='pyjen.plugins'):
+            all_plugins.append(entry_point.load())
+
         supported_plugins = []
-        for entry_point in iter_entry_points(
-                group='pyjen.plugins', name=plugin_name):
-            supported_plugins.append(entry_point.load())
+        for cur_plugin in all_plugins:
+            if not hasattr(cur_plugin, "get_jenkins_plugin_name"):
+                continue
+
+            if cur_plugin.get_jenkins_plugin_name() == plugin_name:
+                supported_plugins.append(cur_plugin)
 
         if not supported_plugins:
             raise PluginNotSupportedError("Plugin not supported: " +
@@ -201,6 +207,7 @@ class ConfigXML(object):
                             " object: %s. Using first match.", plugin_name)
 
         return supported_plugins[0]
+
 
 if __name__ == "__main__":  # pragma: no cover
     # print a list of all installed PyJen plugins

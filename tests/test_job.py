@@ -4,15 +4,293 @@ from mock import MagicMock
 import pytest
 from datetime import datetime
 import time
+import xml.etree.ElementTree as ElementTree
 from pyjen.jenkins import Jenkins
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 def test_create_freestyle_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_freestyle_job", "freestylejob")
+    jb = jk.create_job("test_create_freestyle_job", "project")
     assert jb is not None
     jb.delete()
 
+
+def test_find_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "test_find_job"
+    jb1 = jk.create_job(expected_name, "project")
+    try:
+        assert jb1 is not None
+        jb2 = jk.find_job(expected_name)
+        assert jb2 is not None
+        assert jb2.name == expected_name
+        assert jb2.url == jb1.url
+    finally:
+        jb1.delete()
+
+
+def test_derived_job_object(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "test_derived_job_object"
+    jb1 = jk.create_job(expected_name, "project")
+    try:
+        assert jb1 is not None
+        jb2 = jk.find_job(expected_name)
+        assert jb2 is not None
+        assert jb2.name == expected_name
+        assert jb2.url == jb1.url
+
+        derived = jb2.derived_object
+
+        assert isinstance(derived, FreestyleJob)
+    finally:
+        jb1.delete()
+
+
+def test_delete_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "test_delete_job"
+    jb = jk.create_job(expected_name, "project")
+    jb.delete()
+    res = jk.find_job(expected_name)
+    assert res is None
+
+
+def test_get_job_name(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "test_get_job_name"
+    jb = jk.create_job(expected_name, "project")
+    try:
+        assert jb.name == expected_name
+    finally:
+        jb.delete()
+
+
+def test_is_disabled_defaults(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_is_disabled_defaults", "project")
+    try:
+        assert not jb.is_disabled
+    finally:
+        jb.delete()
+
+
+def test_disable(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_disable", "project")
+    try:
+        jb.disable()
+        assert jb.is_disabled
+    finally:
+        jb.delete()
+
+
+def test_enable(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_enable", "project")
+    try:
+        jb.disable()
+        jb.enable()
+        assert not jb.is_disabled
+    finally:
+        jb.delete()
+
+
+def test_has_not_been_built(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_has_not_been_built", "project")
+    try:
+        assert not jb.has_been_built
+    finally:
+        jb.delete()
+
+
+def test_get_config_xml(jenkins_env):
+
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_config_xml", "project")
+    try:
+        res = jb.config_xml
+        assert res is not None
+        xml = ElementTree.fromstring(res)
+        assert xml.tag == "project"
+    finally:
+        jb.delete()
+
+
+def test_clone(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_clone_master", "project")
+    jb_clone = None
+    try:
+        expected_name = "test_clone_second"
+        jb_clone = jb.clone(expected_name)
+        assert jb_clone is not None
+        assert jb_clone.name == expected_name
+        assert jb_clone.is_disabled
+    finally:
+        jb.delete()
+        if jb_clone:
+            jb_clone.delete()
+
+
+def test_no_downstream_jobs(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_downstream_jobs", "project")
+    try:
+        dependencies = jb.downstream_jobs
+
+        assert isinstance(dependencies, list)
+        assert len(dependencies) == 0
+    finally:
+        jb.delete()
+
+
+def test_no_upstream_jobs(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_upstream_jobs", "project")
+    try:
+        dependencies = jb.upstream_jobs
+
+        assert isinstance(dependencies, list)
+        assert len(dependencies) == 0
+    finally:
+        jb.delete()
+
+
+def test_get_no_recent_builds(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_no_recent_builds", "project")
+    try:
+        builds = jb.recent_builds
+
+        assert isinstance(builds, list)
+        assert len(builds) == 0
+    finally:
+        jb.delete()
+
+
+def test_start_build(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_start_build", "project")
+    try:
+        jb.start_build()
+    finally:
+        jb.delete()
+
+
+def test_get_last_good_build_none(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_good_build_none", "project")
+    try:
+        bld = jb.last_good_build
+
+        assert bld is None
+    finally:
+        jb.delete()
+
+
+def test_get_last_build_none(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_build_none", "project")
+    try:
+        bld = jb.last_build
+
+        assert bld is None
+    finally:
+        jb.delete()
+
+
+def test_get_last_failed_build_none(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_failed_build_none", "project")
+    try:
+        bld = jb.last_failed_build
+
+        assert bld is None
+    finally:
+        jb.delete()
+
+
+def test_get_last_stable_build_none(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_stable_build_none", "project")
+    try:
+        bld = jb.last_stable_build
+
+        assert bld is None
+    finally:
+        jb.delete()
+
+
+def test_get_last_unsuccessful_build_none(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_unsuccessful_build_none", "project")
+    try:
+        bld = jb.last_unsuccessful_build
+
+        assert bld is None
+    finally:
+        jb.delete()
+
+
+def test_get_build_by_number_non_existent(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_build_by_number_non_existent", "project")
+    try:
+        bld = jb.get_build_by_number(1024)
+
+        assert bld is None
+    finally:
+        jb.delete()
+
+
+def test_no_build_health(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_build_health", "project")
+    try:
+        score = jb.build_health
+        assert score == 0
+    finally:
+        jb.delete()
+
+
+def test_has_been_built(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_has_been_built", "project")
+    try:
+        jb.start_build()
+        # TODO: Find a way to reliably detect when a build is complete
+        time.sleep(10)
+        assert jb.has_been_built
+    finally:
+        jb.delete()
+
+
+def test_build_health(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_build_health", "project")
+    try:
+        jb.start_build()
+        # TODO: Find a way to reliably detect when a build is complete
+        time.sleep(10)
+        assert jb.has_been_built
+        score = jb.build_health
+        assert score == 100
+    finally:
+        jb.delete()
+
+# TODO: add support for publishers to API so we can test upstream/downstream jobs
+# def test_publishers(jenkins_env):
+#     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+#     jb = jk.find_job("third")
+#     for cur_pub in jb.publishers:
+#         print(cur_pub)
+
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#       LEGACY TESTS
 # This dictionary represents a "typical" dataset returned by the Jenkins REST API
 # when querying information about a job. This is used to fake output from the REST API
 # for tests below.
@@ -52,94 +330,6 @@ def get_mock_api_data(field, data):
 
 
 
-def test_get_name(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    assert j.name == fake_job_data["name"]
-
-
-def test_start_build(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Job, "post", mock_post)
-
-    job_url = "http://localhost:8080/job/MyJob1"
-    j = Job(job_url)
-    j.start_build()
-
-    mock_post.assert_called_once_with(job_url + "/build")
-
-
-def test_disable(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Job, "post", mock_post)
-
-    job_url = "http://localhost:8080/job/MyJob1"
-    j = Job(job_url)
-    j.disable()
-
-    mock_post.assert_called_once_with(job_url + "/disable")
-
-
-def test_enable(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Job, "post", mock_post)
-
-    job_url = "http://localhost:8080/job/MyJob1"
-    j = Job(job_url)
-    j.enable()
-
-    mock_post.assert_called_once_with(job_url + "/enable")
-
-
-def test_is_enabled(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    assert j.is_disabled is False
-
-
-def test_is_disabled(monkeypatch):
-    tmp_data = fake_job_data.copy()
-    tmp_data["color"] = "disabled"
-    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    assert j.is_disabled is True
-
-
-def test_delete(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Job, "post", mock_post)
-
-    job_url = "http://localhost:8080/job/MyJob1"
-    j = Job(job_url)
-    j.delete()
-
-    mock_post.assert_called_once_with(job_url + "/doDelete")
-
-
-def test_has_not_been_built(monkeypatch):
-    tmp_data = fake_job_data.copy()
-    tmp_data["color"] = "notbuilt"
-    monkeypatch.setattr(Job, "get_api_data", lambda s: tmp_data)
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    assert j.has_been_built is False
-
-
-def test_has_been_built(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    assert j.has_been_built is True
-
-
-def test_get_config_xml(monkeypatch):
-    expected_config_xml = "<Sample Config XML/>"
-    mock_get_text = MagicMock()
-    mock_get_text.return_value = expected_config_xml
-    monkeypatch.setattr(Job, "get_text", mock_get_text)
-
-    job_url = "http://localhost:8080/job/MyJob1"
-    j = Job(job_url)
-
-    assert j.config_xml == expected_config_xml
-    mock_get_text.assert_called_once_with("/config.xml")
 
 
 def test_set_config_xml(monkeypatch):
@@ -158,48 +348,6 @@ def test_set_config_xml(monkeypatch):
     assert mock_post.call_args[0][0] == job_url + "/config.xml"
     assert 'data' in mock_post.call_args[0][1]
     assert mock_post.call_args[0][1]['data'] == expected_config_xml
-
-
-def test_clone(monkeypatch):
-    new_job_name = "MyNewJob"
-    mock_post = MagicMock()
-    monkeypatch.setattr(Job, "post", mock_post)
-    monkeypatch.setattr(Job, "get_api_data", lambda s: fake_job_data)
-
-    jenkins_url = "http://localhost:8080"
-    j = Job(jenkins_url + "/job/MyJob1")
-    newjob = j.clone(new_job_name)
-
-    # Make sure our resulting object is of the correct type
-    assert isinstance(newjob, Job)
-
-    # Make sure our post calls have been correctly structured
-    assert mock_post.call_count == 2
-    first_call = mock_post.call_args_list[0]
-    second_call = mock_post.call_args_list[1]
-
-    # The first call should have been made to clone the job
-    assert first_call[0][0] == jenkins_url + "/createItem"
-
-    assert 'params' in first_call[0][1]
-    assert 'name' in first_call[0][1]['params']
-    assert first_call[0][1]['params']['name'] == new_job_name
-
-    assert 'mode' in first_call[0][1]['params']
-    assert first_call[0][1]['params']['mode'] == 'copy'
-
-    assert 'from' in first_call[0][1]['params']
-    assert first_call[0][1]['params']['from'] == fake_job_data['name']
-
-    # The second call should have been made to disable the newly generated job
-    assert second_call[0][0] == "http://localhost:8080/job/" + new_job_name + "/disable"
-
-
-def test_no_downstream_jobs(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    dependencies = j.downstream_jobs
-
-    assert len(dependencies) == 0
 
 
 def test_one_downstream_job(monkeypatch):
@@ -245,14 +393,6 @@ def test_multiple_downstream_jobs_recursive(monkeypatch):
     assert dependencies[1].url == downstream_job2_url
 
 
-def test_no_upstream_jobs(patch_job_api):
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    dependencies = j.upstream_jobs
-
-    assert len(dependencies) == 0
-
-
 def test_one_upstream_job(monkeypatch):
     tmp_data = fake_job_data.copy()
     upstream_url = "http://localhost:8080/job/AnotherJob"
@@ -296,13 +436,6 @@ def test_multiple_upstream_jobs_recursive(monkeypatch):
     assert dependencies[1].url == upstream_job2_url
 
 
-def test_get_no_recent_builds(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    builds = j.recent_builds
-
-    assert len(builds) == 0
-
-
 def test_get_one_recent_build(monkeypatch):
     build_url = "http://localhost:8080/job/MyJob1/123"
     monkeypatch.setattr(Job, "get_api_data", get_mock_api_data('builds', [{"url": build_url}]))
@@ -313,13 +446,6 @@ def test_get_one_recent_build(monkeypatch):
     assert len(builds) == 1
     assert isinstance(builds[0], Build)
     assert builds[0].url == build_url + "/"     # The API should append a trailing slash to our URL
-
-
-def test_get_last_good_build_none(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_good_build
-
-    assert bld is None
 
 
 def test_get_last_good_build(monkeypatch):
@@ -333,13 +459,6 @@ def test_get_last_good_build(monkeypatch):
     assert bld.url == build_url
 
 
-def test_get_last_build_none(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_build
-
-    assert bld is None
-
-
 def test_get_last_build(monkeypatch):
     build_url = "http://localhhost:8080/job/MyJob1/99/"
     monkeypatch.setattr(Job, "get_api_data", get_mock_api_data('lastBuild', {"url": build_url}))
@@ -349,13 +468,6 @@ def test_get_last_build(monkeypatch):
 
     assert isinstance(bld, Build)
     assert bld.url == build_url
-
-
-def test_get_last_failed_build_none(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_failed_build
-
-    assert bld is None
 
 
 def test_get_last_failed_build(monkeypatch):
@@ -369,13 +481,6 @@ def test_get_last_failed_build(monkeypatch):
     assert bld.url == build_url
 
 
-def test_get_last_stable_build_none(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_stable_build
-
-    assert bld is None
-
-
 def test_get_last_stable_build(monkeypatch):
     build_url = "http://localhhost:8080/job/MyJob1/99/"
     monkeypatch.setattr(Job, "get_api_data", get_mock_api_data('lastCompletedBuild', {"url": build_url}))
@@ -385,13 +490,6 @@ def test_get_last_stable_build(monkeypatch):
 
     assert isinstance(bld, Build)
     assert bld.url == build_url
-
-
-def test_get_last_unsuccessful_build_none(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_unsuccessful_build
-
-    assert bld is None
 
 
 def test_get_last_unsuccessful_build(monkeypatch):
@@ -416,19 +514,6 @@ def test_get_build_by_number(monkeypatch):
 
     assert isinstance(bld, Build)
     assert bld.url == job_url + "/" + str(expected_build_number) + "/"
-
-
-def test_get_build_by_number_non_existent(monkeypatch):
-    expected_build_number = 123
-    mock_api_data = MagicMock()
-    mock_api_data.side_effect = AssertionError()
-    monkeypatch.setattr(Build, "get_api_data", mock_api_data)
-
-    job_url = "http://localhost:8080/job/MyJob1"
-    j = Job(job_url)
-    bld = j.get_build_by_number(expected_build_number)
-
-    assert bld is None
 
 
 def test_get_builds_in_time_range_no_builds(patch_job_api):
@@ -550,20 +635,8 @@ def test_get_builds_in_time_range_upper_bound(monkeypatch):
     assert builds[0].url == build_url
 
 
-def test_build_health(patch_job_api):
-    j = Job("http://localhost:8080/job/MyJob1")
-    score = j.build_health
-
-    assert score == build_stability_score
 
 
-def test_no_build_health(monkeypatch):
-    monkeypatch.setattr(Job, "get_api_data", get_mock_api_data("healthReport", []))
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    score = j.build_health
-
-    assert score == 0
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
