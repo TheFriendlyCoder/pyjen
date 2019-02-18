@@ -6,6 +6,7 @@ import json
 import pytest
 import logging
 import docker
+import multiprocessing
 from docker.errors import DockerException
 
 # TODO: Add support for Jenkins 1 testing
@@ -69,6 +70,28 @@ def extract_file(client, container, path):
         return tf.extractfile(cur_mem).read().decode("utf-8").strip()
 
 
+def inject_file(client, container, local_file_path, container_path):
+    """Adds a single file to a Docker container
+
+    :param client: Docker API connection to the service
+    :param int container: ID of the container to work with
+    :param str local_file_path:
+        path to the local file to add to the container
+    :param str container_path:
+        path within the container to inject the file to
+    """
+    if os.path.exists("temp.tar"):
+        os.unlink("temp.tar")
+
+    with tarfile.open("temp.tar", 'w') as tar:
+        tar.add(local_file_path)
+
+    with open("temp.tar") as tf:
+        client.put_archive(container, container_path, tf)
+
+    os.unlink("temp.tar")
+
+
 def _workspace_dir():
     """Gets the absolute path to the root folder of the workspace
 
@@ -76,6 +99,21 @@ def _workspace_dir():
     """
     cur_path = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(cur_path, ".."))
+
+
+def docker_logger(client, container_id):
+    """Helper method that redirects Docker logs to Python logger
+
+    This helper method is intended to be used as a background daemon to
+    redirect all log messages from a given Docker container to the Python
+    logging subsystem.
+
+    :param client: docker-py API client object
+    :param str container_id: ID for the container to check logs for
+    """
+    log = logging.getLogger(__name__)
+    for cur_log in client.logs(container_id, stream=True, follow=True):
+        log.debug(cur_log.decode("utf-8").strip())
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -89,10 +127,14 @@ def configure_logger():
     global_log = logging.getLogger()
     global_log.setLevel(logging.DEBUG)
 
+    verbose_format = "%(asctime)s(%(levelname)s->%(module)s):%(message)s"
+    date_format = "%Y-%m-%d %H:%M:%S"
+    fmt = logging.Formatter(verbose_format, date_format)
     file_handler = logging.FileHandler(
         os.path.join(log_dir, "tests.log"),
         mode="w")
     file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(fmt)
     global_log.addHandler(file_handler)
 
 
@@ -153,24 +195,29 @@ def jenkins_env(request, configure_logger):
         container_id = res["Id"]
         log.debug("Container %s created", container_id)
 
-    if preserve_container:
-        with open(container_id_file, mode="w") as file_handle:
-            file_handle.write(container_id)
+    # Setup background thread for redirecting log output to Python logger
+    d = multiprocessing.Process(
+        name='docker_logger',
+        target=docker_logger,
+        args=(client, container_id))
+    d.daemon = True
+    d.start()
 
     try:
         log.info("Starting Jenkins Docker container...")
         client.start(container_id)
+
         # Look for a magic phrase in the log output from our container
         # to see when the Jenkins service is up and running before running
         # any tests
         log.info("Waiting for Jenkins Docker container to start...")
         magic_message = "Jenkins is fully up and running"
+
+        # Parse admin password from container
         for cur_log in client.logs(container_id, stream=True, follow=True):
             temp = cur_log.decode("utf-8").strip()
             if magic_message in temp:
                 break
-
-        # Parse admin password from container
         log.info("Container started. Extracting admin token...")
         token = extract_file(
             client,
@@ -186,6 +233,13 @@ def jenkins_env(request, configure_logger):
             "admin_user": "admin",
             "admin_token": token,
         }
+
+        # If the docker container launches successful, save the ID so we
+        # can reuse the same container for the next test run
+        if preserve_container:
+            with open(container_id_file, mode="w") as file_handle:
+                file_handle.write(container_id)
+
         yield data
     finally:
         if preserve_container:
