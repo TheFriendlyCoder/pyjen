@@ -29,5 +29,6 @@ def test_load_all_plugins():
         assert cur_plugin is not None
         assert inspect.isclass(cur_plugin)
 
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

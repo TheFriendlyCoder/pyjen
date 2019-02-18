@@ -6,19 +6,52 @@ from datetime import datetime
 import time
 import xml.etree.ElementTree as ElementTree
 from pyjen.jenkins import Jenkins
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 def test_create_freestyle_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_freestyle_job", "freestylejob")
+    jb = jk.create_job("test_create_freestyle_job", "project")
     assert jb is not None
     jb.delete()
+
+
+def test_find_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "test_find_job"
+    jb1 = jk.create_job(expected_name, "project")
+    try:
+        assert jb1 is not None
+        jb2 = jk.find_job(expected_name)
+        assert jb2 is not None
+        assert jb2.name == expected_name
+        assert jb2.url == jb1.url
+    finally:
+        jb1.delete()
+
+
+def test_derived_job_object(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "test_derived_job_object"
+    jb1 = jk.create_job(expected_name, "project")
+    try:
+        assert jb1 is not None
+        jb2 = jk.find_job(expected_name)
+        assert jb2 is not None
+        assert jb2.name == expected_name
+        assert jb2.url == jb1.url
+
+        derived = jb2.derived_object
+
+        assert isinstance(derived, FreestyleJob)
+    finally:
+        jb1.delete()
 
 
 def test_delete_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_delete_job"
-    jb = jk.create_job(expected_name, "freestylejob")
+    jb = jk.create_job(expected_name, "project")
     jb.delete()
     res = jk.find_job(expected_name)
     assert res is None
@@ -27,7 +60,7 @@ def test_delete_job(jenkins_env):
 def test_get_job_name(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_get_job_name"
-    jb = jk.create_job(expected_name, "freestylejob")
+    jb = jk.create_job(expected_name, "project")
     try:
         assert jb.name == expected_name
     finally:
@@ -36,7 +69,7 @@ def test_get_job_name(jenkins_env):
 
 def test_is_disabled_defaults(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_is_disabled_defaults", "freestylejob")
+    jb = jk.create_job("test_is_disabled_defaults", "project")
     try:
         assert not jb.is_disabled
     finally:
@@ -45,7 +78,7 @@ def test_is_disabled_defaults(jenkins_env):
 
 def test_disable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable", "freestylejob")
+    jb = jk.create_job("test_disable", "project")
     try:
         jb.disable()
         assert jb.is_disabled
@@ -55,7 +88,7 @@ def test_disable(jenkins_env):
 
 def test_enable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_enable", "freestylejob")
+    jb = jk.create_job("test_enable", "project")
     try:
         jb.disable()
         jb.enable()
@@ -66,7 +99,7 @@ def test_enable(jenkins_env):
 
 def test_has_not_been_built(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_has_not_been_built", "freestylejob")
+    jb = jk.create_job("test_has_not_been_built", "project")
     try:
         assert not jb.has_been_built
     finally:
@@ -76,7 +109,7 @@ def test_has_not_been_built(jenkins_env):
 def test_get_config_xml(jenkins_env):
 
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_config_xml", "freestylejob")
+    jb = jk.create_job("test_get_config_xml", "project")
     try:
         res = jb.config_xml
         assert res is not None
@@ -88,7 +121,7 @@ def test_get_config_xml(jenkins_env):
 
 def test_clone(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_master", "freestylejob")
+    jb = jk.create_job("test_clone_master", "project")
     jb_clone = None
     try:
         expected_name = "test_clone_second"
@@ -104,7 +137,7 @@ def test_clone(jenkins_env):
 
 def test_no_downstream_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_no_downstream_jobs", "freestylejob")
+    jb = jk.create_job("test_no_downstream_jobs", "project")
     try:
         dependencies = jb.downstream_jobs
 
@@ -116,7 +149,7 @@ def test_no_downstream_jobs(jenkins_env):
 
 def test_no_upstream_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_no_upstream_jobs", "freestylejob")
+    jb = jk.create_job("test_no_upstream_jobs", "project")
     try:
         dependencies = jb.upstream_jobs
 
@@ -128,7 +161,7 @@ def test_no_upstream_jobs(jenkins_env):
 
 def test_get_no_recent_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_no_recent_builds", "freestylejob")
+    jb = jk.create_job("test_get_no_recent_builds", "project")
     try:
         builds = jb.recent_builds
 
@@ -140,7 +173,7 @@ def test_get_no_recent_builds(jenkins_env):
 
 def test_start_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_start_build", "freestylejob")
+    jb = jk.create_job("test_start_build", "project")
     try:
         jb.start_build()
     finally:
@@ -149,7 +182,7 @@ def test_start_build(jenkins_env):
 
 def test_get_last_good_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_good_build_none", "freestylejob")
+    jb = jk.create_job("test_get_last_good_build_none", "project")
     try:
         bld = jb.last_good_build
 
@@ -160,7 +193,7 @@ def test_get_last_good_build_none(jenkins_env):
 
 def test_get_last_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_build_none", "freestylejob")
+    jb = jk.create_job("test_get_last_build_none", "project")
     try:
         bld = jb.last_build
 
@@ -171,7 +204,7 @@ def test_get_last_build_none(jenkins_env):
 
 def test_get_last_failed_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_failed_build_none", "freestylejob")
+    jb = jk.create_job("test_get_last_failed_build_none", "project")
     try:
         bld = jb.last_failed_build
 
@@ -182,7 +215,7 @@ def test_get_last_failed_build_none(jenkins_env):
 
 def test_get_last_stable_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_stable_build_none", "freestylejob")
+    jb = jk.create_job("test_get_last_stable_build_none", "project")
     try:
         bld = jb.last_stable_build
 
@@ -193,7 +226,7 @@ def test_get_last_stable_build_none(jenkins_env):
 
 def test_get_last_unsuccessful_build_none(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_unsuccessful_build_none", "freestylejob")
+    jb = jk.create_job("test_get_last_unsuccessful_build_none", "project")
     try:
         bld = jb.last_unsuccessful_build
 
@@ -204,7 +237,7 @@ def test_get_last_unsuccessful_build_none(jenkins_env):
 
 def test_get_build_by_number_non_existent(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_build_by_number_non_existent", "freestylejob")
+    jb = jk.create_job("test_get_build_by_number_non_existent", "project")
     try:
         bld = jb.get_build_by_number(1024)
 
@@ -215,7 +248,7 @@ def test_get_build_by_number_non_existent(jenkins_env):
 
 def test_no_build_health(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_no_build_health", "freestylejob")
+    jb = jk.create_job("test_no_build_health", "project")
     try:
         score = jb.build_health
         assert score == 0
@@ -225,7 +258,7 @@ def test_no_build_health(jenkins_env):
 
 def test_has_been_built(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_has_been_built", "freestylejob")
+    jb = jk.create_job("test_has_been_built", "project")
     try:
         jb.start_build()
         # TODO: Find a way to reliably detect when a build is complete
@@ -237,7 +270,7 @@ def test_has_been_built(jenkins_env):
 
 def test_build_health(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_build_health", "freestylejob")
+    jb = jk.create_job("test_build_health", "project")
     try:
         jb.start_build()
         # TODO: Find a way to reliably detect when a build is complete
