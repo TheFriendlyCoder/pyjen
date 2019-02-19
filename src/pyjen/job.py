@@ -474,7 +474,7 @@ class Job(JenkinsAPI):
         return new_job
 
     @property
-    def publishers(self):  # pragma: no cover
+    def publishers(self):
         """Gets all plugins configured as 'publishers' for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.publishers
@@ -488,13 +488,13 @@ class Job(JenkinsAPI):
         self.config_xml = jxml.xml
 
     @property
-    def properties(self):  # pragma: no cover
+    def properties(self):
         """all plugins configured as extra configuration properties"""
         jxml = JobXML(self.config_xml)
         return jxml.properties
 
     @property
-    def builders(self):  # pragma: no cover
+    def builders(self):
         """Gets all plugins configured as 'builders' for this job"""
         jxml = JobXML(self.config_xml)
         return jxml.builders
@@ -519,8 +519,8 @@ class Job(JenkinsAPI):
 
         return 0
 
-    # TODO: Add a supported_types static method for returning all plugins
-    #       which extend the Job data type
 
 if __name__ == "__main__":  # pragma: no cover
+    # TODO: Add a supported_types static method for returning all plugins
+    #       which extend the Job data type
     pass
