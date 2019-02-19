@@ -499,6 +499,14 @@ class Job(JenkinsAPI):
         jxml = JobXML(self.config_xml)
         return jxml.builders
 
+    def add_builder(self, builder):
+        """Adds a new build step to this job
+
+        :param builder: build step config to add"""
+        jxml = JobXML(self.config_xml)
+        jxml.add_builder(builder.node)
+        self.config_xml = jxml.xml
+
     @property
     def build_health(self):
         """Gets the percentage of good builds from recorded history of this job
