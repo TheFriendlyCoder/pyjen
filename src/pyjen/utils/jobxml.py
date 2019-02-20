@@ -169,5 +169,12 @@ class JobXML(ConfigXML):
 
         return retval
 
+    def add_builder(self, node):
+        """Adds a new builder node to the build steps section of the job XML
+
+        :param node: Elementree XML node for the builder to assign"""
+        pubs = self._root.find('builders')
+        pubs.append(node)
+
 if __name__ == "__main__":  # pragma: no cover
     pass
