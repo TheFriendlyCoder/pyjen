@@ -9,6 +9,7 @@ from pyjen.jenkins import Jenkins
 from pyjen.plugins.freestylejob import FreestyleJob
 from .utils import async_assert, clean_job
 from pyjen.plugins.buildtriggerpublisher import BuildTriggerPublisher
+from pyjen.plugins.shellbuilder import ShellBuilder
 
 
 def test_create_freestyle_job(jenkins_env):
@@ -286,6 +287,44 @@ def test_get_last_stable_build(jenkins_env):
         assert bld.number == 1
 
 
+def test_get_last_failed_build(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_failed_build", "project")
+    with clean_job(jb):
+        failing_step = ShellBuilder.create("exit -1")
+        jb.add_builder(failing_step)
+        async_assert(lambda: jb.builders)
+
+        jb.start_build()
+        async_assert(lambda: jb.last_build)
+        bld = jb.last_failed_build
+
+        assert bld is not None
+        assert isinstance(bld, Build)
+        assert bld.number == 1
+        assert bld.result == "FAILURE"
+
+
+def test_get_last_unsuccessful_build(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_last_unsuccessful_build", "project")
+    with clean_job(jb):
+        rcode = 12
+        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step.unstable_return_code = rcode
+        jb.add_builder(failing_step)
+        async_assert(lambda: jb.builders)
+
+        jb.start_build()
+        async_assert(lambda: jb.last_unsuccessful_build)
+        bld = jb.last_unsuccessful_build
+
+        assert bld is not None
+        assert isinstance(bld, Build)
+        assert bld.number == 1
+        assert bld.result == "UNSTABLE"
+
+
 def test_get_build_by_number(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_build_by_number", "project")
@@ -516,52 +555,6 @@ def test_no_properties(jenkins_env):
 
         assert isinstance(props, list)
         assert len(props) == 0
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#       LEGACY TESTS
-# This dictionary represents a "typical" dataset returned by the Jenkins REST API
-# when querying information about a job. This is used to fake output from the REST API
-# for tests below.
-def get_mock_api_data(field, data):
-    fake_job_data = {
-        "name": "MyJob1",
-        "color": "blue",
-        "downstreamProjects": [],  # no downstream jobs
-        "upstreamProjects": [],  # no upstream jobs
-        "builds": [],  # no builds of the job
-        "lastSuccessfulBuild": None,
-        "lastBuild": None,
-        "lastFailedBuild": None,
-        "lastCompletedBuild": None,
-        "lastUnsuccessfulBuild": None,
-        "allBuilds": [],
-    }
-    tmp_data = fake_job_data.copy()
-    tmp_data[field] = data
-    mock_api_data = MagicMock()
-    mock_api_data.return_value = tmp_data
-    return mock_api_data
-
-
-def test_get_last_failed_build(monkeypatch):
-    build_url = "http://localhhost:8080/job/MyJob1/99/"
-    monkeypatch.setattr(Job, "get_api_data", get_mock_api_data('lastFailedBuild', {"url": build_url}))
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_failed_build
-
-    assert isinstance(bld, Build)
-    assert bld.url == build_url
-
-
-def test_get_last_unsuccessful_build(monkeypatch):
-    build_url = "http://localhhost:8080/job/MyJob1/99/"
-    monkeypatch.setattr(Job, "get_api_data", get_mock_api_data('lastUnsuccessfulBuild', {"url": build_url}))
-
-    j = Job("http://localhost:8080/job/MyJob1")
-    bld = j.last_unsuccessful_build
-
-    assert isinstance(bld, Build)
-    assert bld.url == build_url
 
 
 if __name__ == "__main__":

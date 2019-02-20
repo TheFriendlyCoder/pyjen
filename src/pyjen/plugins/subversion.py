@@ -2,7 +2,7 @@
 associated with a :py:mod:`pyjen.job.Job`"""
 
 
-class Subversion:
+class Subversion(object):
     """Subversion SCM job plugin
 
     https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin

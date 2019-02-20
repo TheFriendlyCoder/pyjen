@@ -3,7 +3,7 @@ import logging
 #from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
-class FlexiblePublisher:
+class FlexiblePublisher(object):
     """Job plugin enabling conditional execution of post-build steps
 
     https://wiki.jenkins-ci.org/display/JENKINS/Flexible+Publish+Plugin
@@ -51,7 +51,7 @@ class FlexiblePublisher:
         return "flexiblepublish"
 
 
-class ConditionalPublisher:
+class ConditionalPublisher(object):
     """a single 'conditional' publisher contained within the flexible publisher
     """
 

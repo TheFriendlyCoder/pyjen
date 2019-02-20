@@ -1,7 +1,7 @@
 """SCM properties of Jenkins jobs with no source control configuration"""
 
 
-class NullSCM:
+class NullSCM(object):
     """SCM plugin for Jobs with no source control configurations"""
 
     def __init__(self, node):
