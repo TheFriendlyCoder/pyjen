@@ -8,6 +8,8 @@ import logging
 import docker
 import multiprocessing
 from docker.errors import DockerException
+from pyjen.jenkins import Jenkins
+from .utils import async_assert
 
 # TODO: Add support for Jenkins 1 testing
 
@@ -258,7 +260,7 @@ def jenkins_env(request, configure_logger):
 
 
 @pytest.fixture(scope="function", autouse=True)
-def clear_global_state():
+def clear_global_state(request):
     """Clears all global state from the PyJen library
 
     This fixture is a total hack to compensate for the use of global state
@@ -266,12 +268,50 @@ def clear_global_state():
     and eliminate the need for this fixture completely
     """
     yield
+    # For any test that is a member of a class, lets assume that the class has
+    # one or more test fixtures configured to manage it's global state. That
+    # being the case, we can't safely reset the global state of the pyjen
+    # API here because this fixture runs after every test function. So functions
+    # that are part of a test class would invalidate the connection which is
+    # then shared between the other tests in the class
+    if request.cls:
+        return
+
     from pyjen.utils.jenkins_api import JenkinsAPI
     JenkinsAPI.creds = ()
     JenkinsAPI.ssl_verify_enabled = False
     JenkinsAPI.crumb_cache = None
     JenkinsAPI.jenkins_root_url = None
     JenkinsAPI.jenkins_headers_cache = None
+
+
+@pytest.fixture(scope="class")
+def test_job(request, jenkins_env):
+    """Test fixture that creates a Jenkins Freestyle job for testing purposes
+
+    The generated job is automatically cleaned up at the end of the test
+    suite, which is defined as all of the methods contained within the same
+    class.
+
+    The expectation here is that tests that share this generated job will
+    only perform read operations on the job and will not change it's state.
+    This will ensure the tests within the suite don't affect one another.
+    """
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    request.cls.jenkins = jk
+    request.cls.job = jk.create_job(request.cls.__name__ + "Job", "project")
+    assert request.cls.job is not None
+
+    yield
+
+    request.cls.job.delete()
+
+
+@pytest.fixture(scope="class")
+def test_builds(request, test_job):
+    request.cls.job.start_build()
+
+    async_assert(lambda: request.cls.job.has_been_built)
 
 
 def pytest_collection_modifyitems(config, items):
