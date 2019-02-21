@@ -108,7 +108,7 @@ class Build(JenkinsAPI):
 
             * "SUCCESS"
             * "UNSTABLE"
-            * "FAILED"
+            * "FAILURE"
         :rtype: :class:`str`
         """
         data = self.get_api_data()

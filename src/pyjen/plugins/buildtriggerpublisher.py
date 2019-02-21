@@ -2,7 +2,7 @@
 import xml.etree.ElementTree as ElementTree
 
 
-class BuildTriggerPublisher:
+class BuildTriggerPublisher(object):
     """Interface to the Jenkins 'build trigger' publishing plugin
 
     This plugin is a default, built-in plugin which is part of the Jenkins core

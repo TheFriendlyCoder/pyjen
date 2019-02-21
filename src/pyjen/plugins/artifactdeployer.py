@@ -3,7 +3,7 @@
 from pyjen.exceptions import PluginNotSupportedError
 
 
-class ArtifactDeployer:
+class ArtifactDeployer(object):
     """Interface to the Jenkins 'artifact deployer' publishing plugin
 
     https://wiki.jenkins-ci.org/display/JENKINS/ArtifactDeployer+Plugin
@@ -53,7 +53,7 @@ class ArtifactDeployer:
         return "artifactdeployer"
 
 
-class ArtifactDeployerEntry:
+class ArtifactDeployerEntry(object):
     """a single artifacts to be deployed by an Artifact Deployer instance"""
     def __init__(self, node):
         """

@@ -2,7 +2,7 @@
 import xml.etree.ElementTree as ElementTree
 
 
-class BuildBlockerProperty:
+class BuildBlockerProperty(object):
     """Wrapper for Build Blocker job properties
 
     https://wiki.jenkins-ci.org/display/JENKINS/Build+Blocker+Plugin

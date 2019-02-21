@@ -12,7 +12,7 @@ import logging
 #       class so they can use methods like plugin_name, plugin_version, etc.
 
 
-class ConditionalBuilder:
+class ConditionalBuilder(object):
     """Jenkins job builder plugin
 
     capable of conditionally executing a build operation

@@ -2,7 +2,7 @@
 import xml.etree.ElementTree as ElementTree
 
 
-class ShellBuilder:
+class ShellBuilder(object):
     """Interface to control a basic shell build step job builder plugin
 
     This plugin is a default, built-in plugin which is part of the Jenkins core
@@ -36,6 +36,25 @@ class ShellBuilder:
 
         command_node = self._root.find('command')
         return command_node.text
+
+    @property
+    def unstable_return_code(self):
+        """Gets the return code that marks the build as unstable
+
+        :rtype: :class:`int`
+        """
+        retval = self._root.findtext('unstableReturn')
+        if not retval:
+            return None
+        return int(retval)
+
+    @unstable_return_code.setter
+    def unstable_return_code(self, value):
+        """Changes the return code that marks the build as unstable"""
+        rcode_node = self._root.find('unstableReturn')
+        if not rcode_node:
+            rcode_node = ElementTree.SubElement(self._root, "unstableReturn")
+        rcode_node.text = str(value)
 
     @property
     def node(self):
