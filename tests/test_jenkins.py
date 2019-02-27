@@ -232,22 +232,6 @@ def test_find_job(monkeypatch):
     assert jb.url == expected_job_url
 
 
-def test_create_view(monkeypatch):
-    new_view_name = "MyNewView"
-    expected_view_url = fake_jenkins_url + "view/" + new_view_name + "/"
-    expected_view_type = "ListView"
-    mock_post = MagicMock()
-    monkeypatch.setattr(Jenkins, "post", mock_post)
-    monkeypatch.setattr(Jenkins, "get_api_data", get_mock_api_data("views", [{"name": new_view_name, "url": expected_view_url}]))
-    j = Jenkins(fake_jenkins_url)
-    v = j.create_view(new_view_name, expected_view_type)
-
-    assert v.url == expected_view_url
-    assert mock_post.call_count == 1
-    assert mock_post.call_args[0][0] == fake_jenkins_url + "createView"
-    assert mock_post.call_args[0][1]['data']['name'] == new_view_name
-    assert mock_post.call_args[0][1]['data']['mode'] == expected_view_type
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

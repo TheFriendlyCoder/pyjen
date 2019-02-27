@@ -309,6 +309,7 @@ def test_job(request, jenkins_env):
 
 @pytest.fixture(scope="class")
 def test_builds(request, test_job):
+    """Helper fixture that creates a job with a sample good build for testing"""
     request.cls.job.start_build()
 
     async_assert(lambda: request.cls.job.has_been_built)

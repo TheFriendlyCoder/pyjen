@@ -18,6 +18,19 @@ def clean_job(jenkins_job):
         jenkins_job.delete()
 
 
+@contextmanager
+def clean_view(jenkins_view):
+    """Helper context manager that deletes a Jenkins view even when tests fail
+
+    :param jenkins_view: Jenkins view to manage
+    :type jenkins_view: :class:`pyjen.view.View`
+    """
+    try:
+        yield
+    finally:
+        jenkins_view.delete()
+
+
 def async_assert(test_func):
     """Runs a test function periodically
 
