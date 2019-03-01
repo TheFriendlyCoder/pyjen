@@ -1,107 +1,142 @@
-import time
-from mock import MagicMock
 import pytest
-from pyjen.node import Node
-
-# This dictionary represents a "typical" dataset returned by the Jenkins REST API
-# when querying information about a node. This is used to fake output from the REST API
-# for tests below.
-fake_node_data = {
-    "displayName": "agent1",
-    "offline": True,
-    'idle': True
-}
+from pyjen.jenkins import Jenkins
+from .utils import clean_job, async_assert
+from pyjen.plugins.shellbuilder import ShellBuilder
 
 
-@pytest.fixture
-def patch_node_api(monkeypatch):
-    monkeypatch.setattr(Node, "get_api_data", lambda s: fake_node_data)
+def test_get_nodes(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    result = jk.nodes
+
+    assert result is not None
+    assert isinstance(result, list)
+    assert len(result) == 1
 
 
-def test_get_name(patch_node_api):
-    n = Node("http://localhost:8080/computer/agent1")
-    assert n.name == fake_node_data['displayName']
+def test_find_node(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_name = "master"
+    result = jk.find_node(expected_name)
+
+    assert result is not None
+    assert result.name == expected_name
 
 
-def test_is_offline(patch_node_api):
-    n = Node("http://localhost:8080/computer/agent1")
+def test_node_online(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
 
-    assert n.is_offline is True
-
-
-def test_toggle_offline(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Node, "post", mock_post)
-    node_url = "http://localhost:8080/computer/agent1"
-    n = Node(node_url)
-    n.toggle_offline()
-
-    mock_post.assert_called_once_with(node_url + "/toggleOffline")
+    assert node.is_offline is False
 
 
-def test_toggle_offline_with_message(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Node, "post", mock_post)
-    node_url = "http://localhost:8080/computer/agent1"
-    n = Node(node_url)
-    offline_message = "Description"
-    n.toggle_offline(offline_message)
+def test_toggle_offline(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
 
-    mock_post.assert_called_once_with(node_url + "/toggleOffline?offlineMessage=" + offline_message)
-
-
-def test_toggle_offline_with_message_with_spaces(monkeypatch):
-    mock_post = MagicMock()
-    monkeypatch.setattr(Node, "post", mock_post)
-
-    node_url = "http://localhost:8080/computer/agent1"
-    n = Node(node_url)
-    offline_message = "Descriptive text goes here"
-    n.toggle_offline(offline_message)
-
-    mock_post.assert_called_once_with(node_url + "/toggleOffline?offlineMessage=" + offline_message.replace(" ", "%20"))
+    assert node.is_offline is False
+    node.toggle_offline()
+    assert node.is_offline is True
+    node.toggle_offline()
+    assert node.is_offline is False
 
 
-def test_is_idle(patch_node_api):
-    n = Node("http://localhost:8080/computer/agent1")
+def test_toggle_offline_with_message(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
 
-    assert n.is_idle is True
-
-
-def test_wait_for_idle(monkeypatch):
-    mock_get_api_data = MagicMock()
-
-    def mock_get_api_data_fn():
-        if not hasattr(mock_get_api_data_fn, "is_called"):
-            mock_get_api_data_fn.is_called = True
-            return {'idle': False}
-
-        return {'idle': True}
-
-    mock_get_api_data.side_effect = mock_get_api_data_fn
-    monkeypatch.setattr(Node, "get_api_data", mock_get_api_data)
-
-    n = Node("http://localhost:8080/computer/agent1")
-    final_is_idle_value = n.wait_for_idle()
-
-    assert final_is_idle_value is True
-    assert mock_get_api_data.call_count >= 2
+    assert node.is_offline is False
+    node.toggle_offline("Performing maintenance on node")
+    assert node.is_offline is True
+    node.toggle_offline()
+    assert node.is_offline is False
 
 
-def test_wait_for_idle_timeout(monkeypatch):
-    monkeypatch.setattr(Node, "get_api_data", lambda s: {'idle': False})
+def test_is_idle(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
 
-    n = Node("http://localhost:8080/computer/agent1")
+    assert node.is_idle is True
 
-    #TODO: Consider launching this method asynchronously somehow to prevent deadlocks if the wait method has bugs in it
-    expected_idle_time_in_seconds = 2
-    start_time = time.time()
-    final_is_idle_value = n.wait_for_idle(expected_idle_time_in_seconds)
-    duration_in_seconds = time.time() - start_time
 
-    assert final_is_idle_value is False
-    assert duration_in_seconds >= expected_idle_time_in_seconds
+def test_node_busy(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
+    expected_job_name = "test_node_busy_job"
+    jb = jk.create_job(expected_job_name, "project")
+    with clean_job(jb):
+        shell_builder = ShellBuilder.create("sleep 2")
+        jb.add_builder(shell_builder)
 
-        
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(expected_job_name).builders)
+
+        # Trigger a build
+        jb.start_build()
+
+        # The 'last_build' reference becomes available as soon as the previously
+        # triggered build exits the queue and starts running. So we wait for the
+        # last build to become valid before checking the node activity
+        async_assert(lambda: jb.last_build)
+
+        assert node.is_idle is False
+
+        # Wait until the test build completes
+        async_assert(lambda: jb.last_good_build)
+
+
+def test_wait_for_idle(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
+    expected_job_name = "test_wait_for_idle_job"
+    jb = jk.create_job(expected_job_name, "project")
+    with clean_job(jb):
+        shell_builder = ShellBuilder.create("sleep 2")
+        jb.add_builder(shell_builder)
+
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(expected_job_name).builders)
+
+        # Trigger a build
+        jb.start_build()
+
+        # The 'last_build' reference becomes available as soon as the previously
+        # triggered build exits the queue and starts running. So we wait for the
+        # last build to become valid before checking the node activity
+        async_assert(lambda: jb.last_build)
+
+        assert node.is_idle is False
+        assert node.wait_for_idle()
+        assert node.is_idle
+
+
+def test_wait_for_idle_timeout(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    node = jk.nodes[0]
+    expected_job_name = "test_wait_for_idle_timeout_job"
+    jb = jk.create_job(expected_job_name, "project")
+    with clean_job(jb):
+        shell_builder = ShellBuilder.create("sleep 5")
+        jb.add_builder(shell_builder)
+
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(expected_job_name).builders)
+
+        # Trigger a build
+        jb.start_build()
+
+        # The 'last_build' reference becomes available as soon as the previously
+        # triggered build exits the queue and starts running. So we wait for the
+        # last build to become valid before checking the node activity
+        async_assert(lambda: jb.last_build)
+
+        assert node.is_idle is False
+        assert node.wait_for_idle(2) is False
+
+        async_assert(lambda: jb.last_good_build)
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

@@ -47,5 +47,6 @@ class PluginManager(JenkinsAPI):
             files = {'file': handle}
             self.post(self.url + 'uploadPlugin', {"files": files})
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass
