@@ -1,7 +1,91 @@
 import time
-from datetime import datetime, timedelta
-from pyjen.build import Build
+from datetime import datetime
 import pytest
+from .utils import clean_job, async_assert
+from pyjen.jenkins import Jenkins
+from pyjen.build import Build
+from pyjen.plugins.shellbuilder import ShellBuilder
+
+
+@pytest.mark.usefixtures('test_builds')
+class TestSingleBuild:
+    def test_build_number(self):
+        bld = self.job.last_build
+        assert bld.number == 1
+
+    def test_is_not_building(self):
+        bld = self.job.last_build
+        assert bld.is_building is False
+
+    def test_build_no_description(self):
+        bld = self.job.last_build
+        assert bld.description == ''
+
+    def test_build_result(self):
+        bld = self.job.last_good_build
+        assert bld.result == "SUCCESS"
+
+    def test_build_id(self):
+        bld = self.job.last_build
+        assert bld.id == '1'
+
+    def test_build_equality(self):
+        bld1 = self.job.all_builds[0]
+        bld2 = self.job.last_build
+
+        assert bld1 == bld2
+        assert not bld1 != bld2
+
+
+def test_start_time(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_start_time_job", "project")
+    with clean_job(jb):
+        before = datetime.now()
+        jb.start_build()
+        async_assert(lambda: jb.last_build)
+        after = datetime.now()
+
+        bld = jb.last_build
+        assert before <= bld.start_time <= after
+
+
+def test_build_inequality(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_build_inequality_job", "project")
+    with clean_job(jb):
+        jb.start_build()
+        async_assert(lambda: len(jb.all_builds) == 1)
+        jb.start_build()
+        async_assert(lambda: len(jb.all_builds) == 2)
+
+        bld1 = jb.all_builds[0]
+        bld2 = jb.all_builds[1]
+
+        assert bld1 != bld2
+        assert not bld1 == bld2
+        assert bld1 != 1
+
+
+def test_console_text(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_job_name = "test_console_text_job"
+    jb = jk.create_job(expected_job_name, "project")
+    with clean_job(jb):
+        expected_output = "Here is my sample output..."
+        shell_builder = ShellBuilder.create("echo " + expected_output)
+        jb.add_builder(shell_builder)
+
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(expected_job_name).builders)
+
+        # Trigger a build and wait for it to complete
+        jb.start_build()
+        async_assert(lambda: jb.last_build)
+
+        assert expected_output in jb.last_build.console_output
+
 
 epoch_time = time.time()
 artifact_filename = "MyFile.txt"
@@ -36,54 +120,6 @@ def patch_build_api(monkeypatch):
     monkeypatch.setattr(Build, "get_text", lambda s, x: fake_build_text[x])
 
 
-def test_build_number(patch_build_api):
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.number == fake_build_data['number']
-
-
-def test_start_time(patch_build_api):
-    expected_time = datetime.fromtimestamp(epoch_time)
-    bld = Build('http://localhost:8080/job/MyJob/3')
-
-    # NOTE: Here we give our assertion some wiggle room to avoid superfluous test failures caused by rounding
-    #       errors that occasionally happen when converting epoch timestamps to datetimes.
-    assert bld.start_time - expected_time < timedelta(seconds=1)
-
-
-def test_is_building(patch_build_api):
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.is_building is True
-
-
-def test_console_text(patch_build_api):
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.console_output == fake_build_text['/consoleText']
-
-
-def test_build_result(patch_build_api):
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.result == fake_build_data['result']
-
-
-def test_build_description(patch_build_api):
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.description == fake_build_data['description']
-
-
-def test_build_no_description(monkeypatch):
-    tmp_data = fake_build_data.copy()
-    tmp_data['description'] = None
-
-    monkeypatch.setattr(Build, "get_api_data", lambda x: tmp_data)
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.description == ''
-
-
-def test_build_id(patch_build_api):
-    bld = Build('http://localhost:8080/job/MyJob/3')
-    assert bld.id == fake_build_data['id']
-
-
 def test_build_artifacts(patch_build_api):
     bld_url = 'http://localhost:8080/job/MyJob/3'
     bld = Build(bld_url)
@@ -91,44 +127,6 @@ def test_build_artifacts(patch_build_api):
     artifacts = bld.artifact_urls
     assert len(artifacts) == 1
     assert artifacts[0] == bld_url + "/artifact/" + artifact_filename
-
-
-def test_build_equality(monkeypatch):
-    bld1 = Build('http://localhost:8080/job/MyJob/3')
-    monkeypatch.setattr(bld1, "get_api_data", lambda: fake_build_data)
-    bld2 = Build('http://localhost:8080/view/MyView/job/MyJob/3')
-    monkeypatch.setattr(bld2, "get_api_data", lambda: fake_build_data)
-
-    assert bld1 == bld2
-    assert not bld1 != bld2
-
-
-def test_build_inequality(monkeypatch):
-    bld1 = Build('http://localhost:8080/job/MyJob/3')
-    monkeypatch.setattr(bld1, "get_api_data", lambda: fake_build_data)
-
-    # Confirm that 2 builds with different IDs compare as different
-    bld2 = Build('http://localhost:8080/view/MyView/job/MyJob/3')
-    tmp_data = fake_build_data.copy()
-    tmp_data['id'] = 1
-    monkeypatch.setattr(bld2, "get_api_data", lambda: tmp_data)
-
-    assert bld1 != bld2
-    assert not bld1 == bld2
-
-    # Confirm that 2 builds with different build numbers compare as different
-    tmp_data = fake_build_data.copy()
-    tmp_data['number'] = 1
-    monkeypatch.setattr(bld2, "get_api_data", lambda: tmp_data)
-
-    assert bld1 != bld2
-    assert not bld1 == bld2
-
-    # Confirm that comparisons between unrelated objects result in differences
-    bld2 = dict()
-
-    assert bld1 != bld2
-    assert not bld1 == bld2
 
 
 def test_build_changesets(patch_build_api):
@@ -140,6 +138,7 @@ def test_build_changesets(patch_build_api):
     assert changes.scm_type == "git"
     assert len(changes.affected_items) == 1
     assert changes.affected_items[0].message == changeset_message
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
