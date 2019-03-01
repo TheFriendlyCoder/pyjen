@@ -1,6 +1,7 @@
 """Interface for interacting with Jenkins plugins"""
 import os
 import requests
+import json
 from tqdm import tqdm
 
 
@@ -14,6 +15,10 @@ class Plugin(object):
             See :class:`~.plugin_manager.PluginManager` for details.
         """
         self._config = plugin_config
+
+    def __repr__(self):
+        """Serializable representation of our plugin, in json format"""
+        return json.dumps(self._config, indent=4)
 
     @property
     def long_name(self):

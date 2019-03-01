@@ -1,4 +1,5 @@
 """Base class for all objects that interact with the Jenkins REST API"""
+import logging
 import json
 import requests
 from requests.exceptions import InvalidHeader
@@ -45,6 +46,7 @@ class JenkinsAPI(object):
 
     def __init__(self, url):
         self._url = url.rstrip("/\\") + "/"
+        self._log = logging.getLogger(__name__)
 
     def __str__(self):
         """String representation of the job"""
@@ -157,7 +159,9 @@ class JenkinsAPI(object):
             auth=JenkinsAPI.creds,
             verify=JenkinsAPI.ssl_verify_enabled)
         req.raise_for_status()
-        return req.json()
+        retval = req.json()
+        self._log.debug(json.dumps(retval, indent=4))
+        return retval
 
     def get_text(self, path=None):
         """ gets the raw text data from a Jenkins URL
