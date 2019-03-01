@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 import pytest
 from .utils import clean_job, async_assert
@@ -87,49 +86,22 @@ def test_console_text(jenkins_env):
         assert expected_output in jb.last_build.console_output
 
 
-epoch_time = time.time()
-artifact_filename = "MyFile.txt"
-changeset_message = "Here's my commit message"
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# LEGACY UNIT TESTS
 
-# This dictionary represents a "typical" dataset returned by the Jenkins REST API
-# when querying information about a build. This is used to fake output from the REST API
-# for tests below.
-fake_build_data = {
-    "number": 3,
-    "timestamp": epoch_time * 1000,  # Jenkins stores timestamps in milliseconds instead of seconds
-    "building": True,
-    "result": "SUCCESS",
-    "description": "Description of my build",
-    "id": 3,
-    "artifacts": [{"fileName": artifact_filename}],
-    "changeSet": {
-        "items": [
-            {"msg": changeset_message}
+
+def test_build_changesets(monkeypatch):
+    changeset_message = "Here's my commit message"
+
+    fake_build_data = {
+        "changeSet": {
+            "items": [
+                {"msg": changeset_message}
             ],
-        "kind": "git"
+            "kind": "git"
+        }
     }
-}
-
-fake_build_text = {
-    "/consoleText": "Here is my console text"
-}
-
-@pytest.fixture
-def patch_build_api(monkeypatch):
     monkeypatch.setattr(Build, "get_api_data", lambda s: fake_build_data)
-    monkeypatch.setattr(Build, "get_text", lambda s, x: fake_build_text[x])
-
-
-def test_build_artifacts(patch_build_api):
-    bld_url = 'http://localhost:8080/job/MyJob/3'
-    bld = Build(bld_url)
-
-    artifacts = bld.artifact_urls
-    assert len(artifacts) == 1
-    assert artifacts[0] == bld_url + "/artifact/" + artifact_filename
-
-
-def test_build_changesets(patch_build_api):
 
     bld1 = Build('http://localhost:8080/job/MyJob/3')
     changes = bld1.changeset

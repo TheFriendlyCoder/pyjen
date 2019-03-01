@@ -241,6 +241,8 @@ def jenkins_env(request, configure_logger):
         if preserve_container:
             with open(container_id_file, mode="w") as file_handle:
                 file_handle.write(container_id)
+            with open(container_id_file + ".token", mode="w") as file_handle:
+                file_handle.write(token)
 
         yield data
     finally:
