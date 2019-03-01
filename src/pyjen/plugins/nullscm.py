@@ -22,7 +22,8 @@ class NullSCM(object):
 
         :rtype: :class:`str`
         """
-        return "nullscm"
+        return "hudson.scm.NullSCM"
+
 
 PluginClass = NullSCM
 
