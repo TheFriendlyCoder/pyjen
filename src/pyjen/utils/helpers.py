@@ -45,5 +45,6 @@ def find_view(jenkins_url, credentials, view_name):
 
     return None
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass

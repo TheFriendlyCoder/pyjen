@@ -388,6 +388,22 @@ def test_get_last_unsuccessful_build(jenkins_env):
         assert bld.result == "UNSTABLE"
 
 
+def test_is_unstable(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_is_unstable_job", "project")
+    with clean_job(jb):
+        rcode = 12
+        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step.unstable_return_code = rcode
+        jb.add_builder(failing_step)
+        async_assert(lambda: jb.builders)
+
+        jb.start_build()
+        async_assert(lambda: jb.last_unsuccessful_build)
+
+        assert jb.is_unstable
+
+
 def test_get_builds_in_time_range_no_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_builds_in_time_range_no_builds", "project")

@@ -88,5 +88,6 @@ class Node(JenkinsAPI):
 
         return self.is_idle
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass

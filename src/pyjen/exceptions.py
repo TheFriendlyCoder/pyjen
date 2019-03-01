@@ -123,5 +123,6 @@ class JenkinsFlushFailure(PyJenError):
             msg += "URL: " + i + " Status: " + str(self._failed_items[i])
         return msg
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass

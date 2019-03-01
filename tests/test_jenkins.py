@@ -3,6 +3,7 @@ from mock import MagicMock, PropertyMock, patch
 import pytest
 from pytest import raises
 from pyjen.exceptions import PluginNotSupportedError
+from .utils import clean_view
 
 
 def test_simple_connection(jenkins_env):
@@ -87,6 +88,21 @@ def test_get_views(jenkins_env):
     assert isinstance(v, list)
     assert len(v) == 1
     assert v[0].name == "all"
+
+
+def test_get_multiple_views(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    test_view_name = "test_get_multiple_views_view"
+    vw = jk.create_view(test_view_name, "hudson.model.ListView")
+    with clean_view(vw):
+        v = jk.views
+
+        assert v is not None
+        assert isinstance(v, list)
+        assert len(v) == 2
+        assert v[0].name in ["all", test_view_name]
+        assert v[1].name in ["all", test_view_name]
+        assert v[0].name != v[1].name
 
 
 def test_find_view(jenkins_env):

@@ -1,4 +1,3 @@
-from pyjen.user import User
 from pyjen.jenkins import Jenkins
 import pytest
 

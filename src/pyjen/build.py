@@ -29,9 +29,6 @@ class Build(JenkinsAPI):
         if obj.id != self.id:
             return False
 
-        if obj.number != self.number:
-            return False
-
         return True
 
     def __ne__(self, obj):
@@ -40,9 +37,6 @@ class Build(JenkinsAPI):
             return True
 
         if obj.id != self.id:
-            return True
-
-        if obj.number != self.number:
             return True
 
         return False

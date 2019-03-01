@@ -176,5 +176,6 @@ class JobXML(ConfigXML):
         pubs = self._root.find('builders')
         pubs.append(node)
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass

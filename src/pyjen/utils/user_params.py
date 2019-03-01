@@ -93,5 +93,6 @@ class JenkinsConfigParser(configparser.ConfigParser):  # pylint: disable=too-man
 
         return retval
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass

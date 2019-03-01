@@ -420,5 +420,6 @@ class DataRequester(object):
         self._log.debug("\tIs cache dirty?: %s",
                         self.is_dirty)
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass
