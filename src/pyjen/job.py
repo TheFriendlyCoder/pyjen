@@ -479,6 +479,12 @@ class Job(JenkinsAPI):
         jxml = JobXML(self.config_xml)
         return jxml.publishers
 
+    @property
+    def scm(self):
+        """Gets the source code repository configuration from the job config"""
+        jxml = JobXML(self.config_xml)
+        return jxml.scm
+
     def add_publisher(self, publisher):
         """Adds a new job publisher to this job
 

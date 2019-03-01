@@ -240,6 +240,11 @@ class TestJobReadOperations(object):
         assert isinstance(props, list)
         assert len(props) == 0
 
+    def test_null_scm(self):
+        result = self.job.scm
+        assert result is not None
+        assert result.get_jenkins_plugin_name() == "hudson.scm.NullSCM"
+
 
 @pytest.mark.usefixtures('test_builds')
 class TestJobBuilds:
