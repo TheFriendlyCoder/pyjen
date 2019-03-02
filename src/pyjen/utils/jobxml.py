@@ -110,6 +110,15 @@ class JobXML(ConfigXML):
 
         raise PluginNotSupportedError("SCM XML plugin not found", "scm")
 
+    @scm.setter
+    def scm(self, node):
+        """Defines a new source code manager or a job
+
+        :param node: Elementree XML node for the scm to assign"""
+        cur_scm = self._root.find('scm')
+        self._root.remove(cur_scm)
+        self._root.append(node)
+
     @property
     def properties(self):
         """Gets a list of 0 or more Jenkins properties associated with this job

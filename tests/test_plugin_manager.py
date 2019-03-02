@@ -1,7 +1,5 @@
 import pytest
 import os
-import logging
-import json
 from pyjen.jenkins import Jenkins
 
 

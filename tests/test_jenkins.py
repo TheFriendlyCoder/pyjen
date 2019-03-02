@@ -1,5 +1,5 @@
 from pyjen.jenkins import Jenkins
-from mock import MagicMock, PropertyMock, patch
+from mock import MagicMock, patch
 import pytest
 from pytest import raises
 from pyjen.exceptions import PluginNotSupportedError
@@ -165,88 +165,14 @@ def test_get_plugin_manager(jenkins_env):
     assert pm is not None
 
 
-# TODO: Fix this test so coverage works correctly
-# TODO: apply fix for pip install wheel file in my template project and elsewhere
-# TODO: Find a way to get pycharm to preserve docker container
 def test_get_plugin_template_not_supported():
+    # TODO: Fix this test so coverage works correctly
+    #       apparently pytest has trouble testing static class methods like
+    #       this one
     jk = Jenkins("http://0.0.0.0")
     with raises(PluginNotSupportedError):
         res = jk.get_plugin_template("DoesNotExistTemplate")
         assert res is None
-
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# legacy tests
-fake_jenkins_url = "http://localhost:8080/"
-fake_default_view_name = "MyPrimaryView"
-fake_default_view_url = fake_jenkins_url + "view/" + fake_default_view_name + "/"
-fake_second_view_name = "MySecondView"
-fake_second_view_url = fake_jenkins_url + "view/" + fake_second_view_name + "/"
-
-fake_jenkins_data = {
-    "quietingDown": True,
-    "jobs": [],
-    "primaryView": {
-        "name": fake_default_view_name,
-        "url": fake_jenkins_url
-    },
-    "views": [
-        {"name": fake_default_view_name, "url": fake_jenkins_url},
-        {"name": fake_second_view_name, "url": fake_second_view_url}
-    ]
-}
-
-def get_mock_api_data(field, data):
-    tmp_data = fake_jenkins_data.copy()
-    tmp_data[field] = data
-    mock_api_data = MagicMock()
-    mock_api_data.return_value = tmp_data
-    return mock_api_data
-
-
-def test_init():
-    # THIS TEST SHOULD BE DEPRECATED AS SOON AS WE ELIMINATE GLOBAL STATE
-    # FROM THE PYJEN API
-    from pyjen.utils.jenkins_api import JenkinsAPI
-    jenkins_url = "http://localhost:8080"
-    jenkins_user = "MyUser"
-    jenkins_pw = "MyPass"
-    jenkins_creds = (jenkins_user, jenkins_pw)
-    j = Jenkins(jenkins_url, jenkins_creds, True)
-
-    assert j.url == jenkins_url + "/"       # The API should append a slash to the URL for consistency
-
-    # Constructor should initialize our global state as well
-    assert JenkinsAPI.creds == jenkins_creds
-    assert JenkinsAPI.jenkins_root_url == j.url
-    assert JenkinsAPI.ssl_verify_enabled is True
-
-
-def test_get_unknown_version(monkeypatch):
-    from requests.exceptions import InvalidHeader
-    mock_header = PropertyMock()
-    mock_header.return_value = {}   # no version info in the header
-    monkeypatch.setattr(Jenkins, "jenkins_headers", mock_header)
-    j = Jenkins("http://localhost:8080")
-
-    with raises(InvalidHeader):
-        j.version
-
-
-def test_find_job(monkeypatch):
-    expected_job_name = "MyJob"
-    expected_job_url = "http://localhost:8080/job/MyJob/"
-    fake_jobs = [
-        {"name": "AnotherJob", "url": "http://localhost:8080/job/AnotherJob"},
-        {"name": expected_job_name, "url": expected_job_url}
-    ]
-    monkeypatch.setattr(Jenkins, "get_api_data", get_mock_api_data("jobs", fake_jobs))
-
-    j = Jenkins("http://localhost:8080")
-    jb = j.find_job("MyJob")
-
-    assert jb.url == expected_job_url
-
 
 
 if __name__ == "__main__":
