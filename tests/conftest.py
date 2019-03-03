@@ -18,6 +18,14 @@ from .utils import async_assert
 # the test runner
 FAILED_DOCKER_SETUP = False
 
+# List of Jenkins plugins to install in the test environment
+# May include specific versions of plugins using the notation 'plugin:version'
+# See the docs on how to use the Jenkins docker container for details:
+#       https://github.com/jenkinsci/docker/blob/master/README.md
+JENKINS_PLUGINS = [
+    'git-client:2.7.6', # peg our revision - test_plugin_manager:test_get_git_client_plugin() depends on this
+]
+
 
 def pytest_addoption(parser):
     """Customizations for the py.test command line options"""
@@ -191,9 +199,25 @@ def jenkins_env(request, configure_logger):
         # TODO: Detect when the ID in the file is invalid and re-create
         #       the docker environment on the fly
     else:
+        # Generate a custom Dockerfile on the fly for our test environment
+        dockerfile = "FROM {}\n".format(image_name)
+        dockerfile += "RUN /usr/local/bin/install-plugins.sh {}\n".format(
+            " ".join(JENKINS_PLUGINS)
+        )
+
+        # Build our Dockerfile and extract the SHA ID for the generated image
+        # from the log output
+        image_id = None
+        for cur_line in client.build(fileobj=io.BytesIO(dockerfile.encode('utf-8')), rm=True, decode=True):
+            log.debug(cur_line)
+            if "aux" in cur_line:
+                image_id = cur_line["aux"]["ID"]
+        assert image_id
+
+        # Launch a container from the built Docker image
         res = client.create_container(
-            image_name, host_config=hc, volumes=["/var/jenkins_home"])
-        log.debug(json.dumps(res, indent=4))
+            image_id, host_config=hc, volumes=["/var/jenkins_home"]
+        )
         container_id = res["Id"]
         log.debug("Container %s created", container_id)
 
@@ -234,6 +258,7 @@ def jenkins_env(request, configure_logger):
             "url": "http://localhost:{0}".format(http_port),
             "admin_user": "admin",
             "admin_token": token,
+            "plugins": JENKINS_PLUGINS[:],
         }
 
         # If the docker container launches successful, save the ID so we

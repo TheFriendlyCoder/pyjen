@@ -29,8 +29,22 @@ class PluginManager(JenkinsAPI):
         for cur_plugin in res['plugins']:
             tmp_plugin = Plugin(cur_plugin)
             retval.append(tmp_plugin)
-
         return retval
+
+    def find_plugin_by_shortname(self, short_name):
+        """Finds an installed plugin based on it's abbreviated name
+
+        :param str short_name:
+            abbreviated form of the plugin name to locate
+
+        :returns:
+            reference to the given plugin, or None if no such plugin found
+        :rtype: :class:`~.plugin.Plugin`
+        """
+        for cur_plugin in self.plugins:
+            if cur_plugin.short_name == short_name:
+                return cur_plugin
+        return None
 
     def install_plugin(self, plugin_file):
         """Installs a new plugin on the selected Jenkins instance
