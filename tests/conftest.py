@@ -23,7 +23,13 @@ FAILED_DOCKER_SETUP = False
 # See the docs on how to use the Jenkins docker container for details:
 #       https://github.com/jenkinsci/docker/blob/master/README.md
 JENKINS_PLUGINS = [
-    'git-client:2.7.6', # peg our revision - test_plugin_manager:test_get_git_client_plugin() depends on this
+    # Jenkins "pipeline" pseudo-plugin that installs all dependencies to run
+    # Jenkins pipeline scripts. Needed by many "core" plugins as well like
+    # Git.
+    'workflow-aggregator',
+
+    # Needed to test SCM related operations in the core API
+    'git',
 ]
 
 
@@ -43,7 +49,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--jenkins-version",
         action="store",
-        default="jenkins:alpine",
+        default="jenkins/jenkins:alpine",
         help="Name of docker container for the Jenkins version to test against"
     )
 
@@ -191,19 +197,25 @@ def jenkins_env(request, configure_logger):
         port_bindings={8080: None},
     )
 
+    # First lets see if we can find a valid container already running
+    container_id = None
     if os.path.exists(container_id_file):
         with open(container_id_file) as file_handle:
             container_id = file_handle.read().strip()
         log.info("Reusing existing container %s", container_id)
 
-        # TODO: Detect when the ID in the file is invalid and re-create
-        #       the docker environment on the fly
-    else:
+        res = client.containers(filters={"id": container_id})
+        if not res:
+            container_id = None
+
+    # if we can't find a container to use for the tests, create a new one
+    if not container_id:
         # Generate a custom Dockerfile on the fly for our test environment
         dockerfile = "FROM {}\n".format(image_name)
-        dockerfile += "RUN /usr/local/bin/install-plugins.sh {}\n".format(
-            " ".join(JENKINS_PLUGINS)
-        )
+        if JENKINS_PLUGINS:
+            dockerfile += "RUN /usr/local/bin/install-plugins.sh {}\n".format(
+                " ".join(JENKINS_PLUGINS)
+            )
 
         # Build our Dockerfile and extract the SHA ID for the generated image
         # from the log output
