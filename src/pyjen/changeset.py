@@ -18,10 +18,10 @@ class Changeset(object):
                         change
     """
 
-    def __init__(self, data):
+    def __init__(self, api, data):
         assert 'items' in data
         assert 'kind' in data
-
+        self._api = api
         self._data = data
 
     @property
@@ -36,7 +36,7 @@ class Changeset(object):
         retval = []
 
         for item in self._data['items']:
-            retval.append(ChangesetItem(item))
+            retval.append(ChangesetItem(self._api, item))
 
         return retval
 
@@ -88,7 +88,8 @@ class ChangesetItem(object):
                    by this change
     """
 
-    def __init__(self, data):
+    def __init__(self, api, data):
+        self._api = api
         self._data = data
 
     @property
@@ -97,7 +98,7 @@ class ChangesetItem(object):
         :returns: Person who committed this change to the associated SCM
         :rtype: :class:`~.user.User`
         """
-        return User(self._data['author']['absoluteUrl'])
+        return User(self._api.clone(self._data['author']['absoluteUrl']))
 
     @property
     def message(self):

@@ -12,7 +12,7 @@ from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.configxml import ConfigXML
 
 
-class Jenkins(JenkinsAPI):
+class Jenkins(object):
     """Python wrapper managing the Jenkins primary dashboard
 
     Generally you should use this class as the primary entry point to the PyJen
@@ -59,8 +59,9 @@ class Jenkins(JenkinsAPI):
     """
 
     def __init__(self, url, credentials=None, ssl_verify=False):
-        super(Jenkins, self).__init__(url)
+        super(Jenkins, self).__init__()
         self._log = logging.getLogger(__name__)
+        self._api = JenkinsAPI(url)
 
         # If no explicit credentials provided,
         # load credentials from any config files
@@ -72,11 +73,7 @@ class Jenkins(JenkinsAPI):
             JenkinsAPI.creds = credentials
 
         JenkinsAPI.ssl_verify_enabled = ssl_verify
-        JenkinsAPI.jenkins_root_url = self.url
-
-        #TODO: Consider adding a "debugging" flag that enables extra error
-        #       checking on the API, then add in extra checks for data types,
-        #       URLs and such throughout.
+        JenkinsAPI.jenkins_root_url = self._api.url
 
     @property
     def connected(self):
@@ -86,7 +83,7 @@ class Jenkins(JenkinsAPI):
         :rtype: :class:`bool`
         """
         try:
-            if self.jenkins_headers:
+            if self._api.jenkins_headers:
                 return True
             return False
         except RequestException as err:
@@ -100,7 +97,7 @@ class Jenkins(JenkinsAPI):
         :return: Version number of the currently running Jenkins instance
         :rtype: :class:`tuple`
         """
-        return self.jenkins_version
+        return self._api.jenkins_version
 
     @property
     def is_shutting_down(self):
@@ -111,7 +108,7 @@ class Jenkins(JenkinsAPI):
             (ie: in quiet down state), return True, otherwise returns False.
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['quietingDown']
 
@@ -122,16 +119,16 @@ class Jenkins(JenkinsAPI):
         :returns: list of 0 or more Node objects managed by this Jenkins master
         :rtype: :class:`list` of :class:`~.node.Node` objects
         """
-        data = self.get_api_data(target_url=self.url + "computer/")
+        data = self._api.get_api_data(target_url=self._api.url + "computer/")
         nodes = data['computer']
         retval = []
         for cur_node in nodes:
             if cur_node['displayName'] == 'master':
-                node_url = self.url + 'computer/(master)'
+                node_url = self._api.url + 'computer/(master)'
             else:
-                node_url = self.url + 'computer/' + cur_node['displayName']
+                node_url = self._api.url + 'computer/' + cur_node['displayName']
 
-            retval.append(Node(node_url))
+            retval.append(Node(self._api.clone(node_url)))
 
         return retval
 
@@ -145,14 +142,15 @@ class Jenkins(JenkinsAPI):
         :returns: object that manages the default Jenkins view
         :rtype: :class:`~.view.View`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         default_view = data['primaryView']
 
         # TODO: Add 'verify' method to job and view classes so callers can
         #       choose if they want to ensure their returned objects actually
         #       exist (ie; have a valid rest api endpoint)
-        return View(default_view['url'] + "view/" + default_view['name'])
+        view_url = default_view['url'] + "view/" + default_view['name']
+        return View(self._api.clone(view_url))
 
     @property
     def views(self):
@@ -165,20 +163,20 @@ class Jenkins(JenkinsAPI):
         :returns: list of one or more views defined on this Jenkins instance.
         :rtype: :class:`list` of :class:`~.view.View` objects
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         raw_views = data['views']
         retval = []
 
         for cur_view in raw_views:
-            turl = cur_view['url']
+            view_url = cur_view['url']
 
             # The default view will not have a valid view URL
             # so we need to look for this and generate a corrected one
-            if '/view/' not in turl:
-                turl = turl + "view/" + cur_view['name']
+            if '/view/' not in view_url:
+                view_url = view_url + "view/" + cur_view['name']
 
-            tview = View(turl)
+            tview = View(self._api.clone(view_url))
             retval.append(tview)
 
         return retval
@@ -192,7 +190,7 @@ class Jenkins(JenkinsAPI):
         You can cancel a previous requested shutdown using the
         :py:meth:`.cancel_shutdown` method
         """
-        self.post(self.url + 'quietDown')
+        self._api.post(self._api.url + 'quietDown')
 
     def cancel_shutdown(self):
         """Cancels a previous scheduled shutdown sequence
@@ -200,7 +198,7 @@ class Jenkins(JenkinsAPI):
         Cancels a shutdown operation initiated by the
         :py:meth:`.prepare_shutdown` method
         """
-        self.post(self.url + 'cancelQuietDown')
+        self._api.post(self._api.url + 'cancelQuietDown')
 
     def find_job(self, job_name):
         """Searches all jobs managed by this Jenkins instance for a specific job
@@ -213,12 +211,12 @@ class Jenkins(JenkinsAPI):
             the job will be returned, otherwise None
         :rtype: :class:`~.job.Job`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         tjobs = data['jobs']
 
         for tjob in tjobs:
             if tjob['name'] == job_name:
-                return Job(tjob['url'])
+                return Job(self._api.clone(tjob['url']))
 
         return None
 
@@ -233,19 +231,19 @@ class Jenkins(JenkinsAPI):
             the view will be returned, otherwise None
         :rtype: :class:`~.view.View`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         raw_views = data['views']
 
         for cur_view in raw_views:
             if cur_view['name'] == view_name:
-                turl = cur_view['url']
+                view_url = cur_view['url']
                 # TODO: Consider encapsulating the 'default view' URL handling
                 #  in the View() constructor
-                if 'view' not in turl:
-                    turl += "view/" + cur_view['name']
+                if 'view' not in view_url:
+                    view_url += "view/" + cur_view['name']
 
-                return View(turl)
+                return View(self._api.clone(view_url))
 
         return None
 
@@ -265,7 +263,7 @@ class Jenkins(JenkinsAPI):
         :returns: An object to manage the newly created view
         :rtype: :class:`~.view.View`
         """
-        self._create_view(view_name, view_type)
+        self._api.create_view(view_name, view_type)
 
         retval = self.find_view(view_name)
         assert retval is not None
@@ -287,7 +285,7 @@ class Jenkins(JenkinsAPI):
         :returns: An object to manage the newly created job
         :rtype: :class:`~.job.Job`
         """
-        self._create_job(job_name, job_type)
+        self._api.create_job(job_name, job_type)
 
         retval = self.find_job(job_name)
         assert retval is not None
@@ -318,9 +316,9 @@ class Jenkins(JenkinsAPI):
         #       one query, so we can rework this implementation to simply call
         #       self.users then iterate through them all to find the one
         #       we're looking for. Then we don't have to guess the URL.
-        new_url = self.url + "user/" + username
+        new_url = self._api.url + "user/" + username
         try:
-            retval = User(new_url)
+            retval = User(self._api.clone(new_url))
             assert retval.user_id == username
             return retval
         except RequestException:
@@ -344,9 +342,9 @@ class Jenkins(JenkinsAPI):
         #       self.nodes then iterate through them all to find the one
         #       we're looking for. Then we don't have to guess the URL.
 
-        new_url = self.url + "computer/" + temp_nodename
+        new_url = self._api.url + "computer/" + temp_nodename
         try:
-            retval = Node(new_url)
+            retval = Node(self._api.clone(new_url))
             assert retval.name == nodename
             return retval
         except RequestException:
@@ -360,7 +358,7 @@ class Jenkins(JenkinsAPI):
             reference to Jenkins object that manages plugins on this instance
         :rtype: :class:`~.plugin_manager.PluginManager`
         """
-        return PluginManager(self.url + 'pluginManager')
+        return PluginManager(self._api.clone(self._api.url + 'pluginManager'))
 
 
 if __name__ == '__main__':  # pragma: no cover
