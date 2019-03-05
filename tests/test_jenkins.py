@@ -76,8 +76,7 @@ def test_get_default_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     v = jk.default_view
     assert v is not None
-    assert v.url.startswith(jenkins_env["url"])
-    assert v.url == jenkins_env["url"] + "/view/all/"
+    assert v.name == "all"
 
 
 def test_get_views(jenkins_env):
@@ -107,10 +106,11 @@ def test_get_multiple_views(jenkins_env):
 
 def test_find_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    v = jk.find_view("all")
+    expected_name = "all"
+    v = jk.find_view(expected_name)
 
     assert v is not None
-    assert v.url == jenkins_env["url"] + "/view/all/"
+    assert v.name == expected_name
 
 
 def test_find_missing_view(jenkins_env):

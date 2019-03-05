@@ -1,16 +1,16 @@
 """Primitives for interacting with Jenkins views"""
 from pyjen.job import Job
 from pyjen.utils.viewxml import ViewXML
-from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class View(JenkinsAPI):
+class View(object):
     """generic Jenkins views providing interfaces common to all view types
 
     :param str url: Full URL of a view on a Jenkins master
     """
-    def __init__(self, url):
-        super(View, self).__init__(url)
+    def __init__(self, api):
+        super(View, self).__init__()
+        self._api = api
         self._type = None
 
     @property
@@ -23,7 +23,7 @@ class View(JenkinsAPI):
 
         xml_obj = ViewXML(self.config_xml)
 
-        return xml_obj.derived_object(self.url)
+        return xml_obj.derived_object(self._api.url)
 
     @property
     def name(self):
@@ -35,7 +35,7 @@ class View(JenkinsAPI):
         :returns: the name of the view
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['name']
 
     @property
@@ -50,13 +50,13 @@ class View(JenkinsAPI):
         :returns: list of 0 or more jobs that are included in this view
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self.get_api_data(query_params="depth=2")
+        data = self._api.get_api_data(query_params="depth=2")
 
         view_jobs = data['jobs']
 
         retval = []
         for j in view_jobs:
-            retval.append(Job(j['url']))
+            retval.append(Job(self._api.clone(j['url'])))
 
         return retval
 
@@ -76,7 +76,7 @@ class View(JenkinsAPI):
             a plain text string format
         :rtype: :class:`str`
         """
-        return self.get_text("/config.xml")
+        return self._api.get_text("/config.xml")
 
     @config_xml.setter
     def config_xml(self, new_xml):
@@ -90,11 +90,11 @@ class View(JenkinsAPI):
             requirements for a Jenkins view.
         """
         args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self.post(self.url + "config.xml", args)
+        self._api.post(self._api.url + "config.xml", args)
 
     def delete(self):
         """Deletes this view from the dashboard"""
-        self.post(self.url + "doDelete")
+        self._api.post(self._api.url + "doDelete")
 
     def delete_all_jobs(self):
         """allows callers to do bulk deletes of all jobs found in this view"""
@@ -140,11 +140,11 @@ class View(JenkinsAPI):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(self.config_xml)
-        self._create_view(
+        self._api.create_view(
             new_view_name, vxml.plugin_name() or vxml.plugin_class_name())
 
-        new_url = self.url.replace(self.name, new_view_name)
-        new_view = View(new_url)
+        new_url = self._api.url.replace(self.name, new_view_name)
+        new_view = View(self._api.clone(new_url))
 
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml
@@ -172,7 +172,7 @@ class View(JenkinsAPI):
         :return: Dictionary containing metrics about the view
         :rtype: :class:`dict`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         broken_jobs = []
         disabled_jobs = []
@@ -185,7 +185,7 @@ class View(JenkinsAPI):
 
             # TODO: Figure out how to prepopulate name field here
             #temp_job = Job._create(temp_data_io, self._master, job['name'])
-            temp_job = Job(job['url'])
+            temp_job = Job(self._api.clone(job['url']))
 
             if temp_job.is_failing:
                 broken_job_count += 1
@@ -207,7 +207,6 @@ class View(JenkinsAPI):
     # TODO: Add a supported_types static method for returning all plugins
     #  which extend the View data type
 
+
 if __name__ == "__main__":  # pragma: no cover
-    #for i in View.supported_types():
-    #    print(i)
     pass

@@ -1,9 +1,8 @@
 """Interfaces for managing plugins for a particular Jenkins instance"""
 from pyjen.plugin import Plugin
-from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class PluginManager(JenkinsAPI):
+class PluginManager(object):
     """Abstraction around Jenkins plugin management interfaces
 
     Supports adding, removing and querying information about Jenkins plugins
@@ -13,8 +12,9 @@ class PluginManager(JenkinsAPI):
         interface
     """
 
-    def __init__(self, url):
-        super(PluginManager, self).__init__(url)
+    def __init__(self, api):
+        super(PluginManager, self).__init__()
+        self._api = api
 
     @property
     def plugins(self):
@@ -22,7 +22,7 @@ class PluginManager(JenkinsAPI):
 
         :returns: list of 0 or more plugins installed on the Jenkins instance
         :rtype: List of 0 or more :class:`~.plugin.Plugin` objects"""
-        res = self.get_api_data(query_params='depth=2')
+        res = self._api.get_api_data(query_params='depth=2')
 
         retval = []
 
@@ -59,7 +59,7 @@ class PluginManager(JenkinsAPI):
         """
         with open(plugin_file, 'rb') as handle:
             files = {'file': handle}
-            self.post(self.url + 'uploadPlugin', {"files": files})
+            self._api.post(self._api.url + 'uploadPlugin', {"files": files})
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -58,7 +58,6 @@ class TestJobReadOperations(object):
 
         assert jb2 is not None
         assert jb2.name == self.job.name
-        assert jb2.url == self.job.url
 
     def test_derived_job_object(self):
         jb2 = self.jenkins.find_job(self.job.name)

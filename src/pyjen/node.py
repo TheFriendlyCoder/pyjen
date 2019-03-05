@@ -1,10 +1,9 @@
 """Declarations for the abstraction of a Jenkins build agent"""
 import time
 from six.moves import urllib_parse
-from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class Node(JenkinsAPI):
+class Node(object):
     """Wrapper around a Jenkins build agent (aka: Node) configuration
 
     Use this class to manipulate agents managed by a Jenkins master
@@ -14,8 +13,9 @@ class Node(JenkinsAPI):
     :param str url: Full URL of one particular build of a Jenkins job
     """
 
-    def __init__(self, url):
-        super(Node, self).__init__(url)
+    def __init__(self, api):
+        super(Node, self).__init__()
+        self._api = api
 
     @property
     def name(self):
@@ -23,7 +23,7 @@ class Node(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['displayName']
 
@@ -33,7 +33,7 @@ class Node(JenkinsAPI):
 
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['offline']
 
@@ -43,7 +43,7 @@ class Node(JenkinsAPI):
 
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['idle']
 
     def toggle_offline(self, message=None):
@@ -56,11 +56,11 @@ class Node(JenkinsAPI):
             optional descriptive message explaining the reason this node has
             been taken offline.
         """
-        post_cmd = self.url + "toggleOffline"
+        post_cmd = self._api.url + "toggleOffline"
         if message is not None:
             post_cmd += "?offlineMessage=" + urllib_parse.quote(message)
 
-        self.post(post_cmd)
+        self._api.post(post_cmd)
 
     def wait_for_idle(self, max_timeout=None):
         """Blocks execution until this Node enters an idle state

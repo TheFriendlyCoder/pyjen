@@ -56,6 +56,17 @@ class JenkinsAPI(object):
         """Encoded state of the job usable for serialization"""
         return "({0}: {1})".format(type(self), self.url)
 
+    def clone(self, api_url):
+        """Creates a copy of this instance, for a new endpoint URL
+
+        :param str api_url:
+            URL for the new REST API endpoint to be managed
+        :returns:
+            newly created JenkinsAPI
+        :rtype: :class:`~.utils.jenkins_api.JenkinsAPI`
+        """
+        return JenkinsAPI(api_url)
+
     @property
     def url(self):
         """Gets the URL for the REST API endpoint used by this object
@@ -258,7 +269,7 @@ class JenkinsAPI(object):
 
         return JenkinsAPI.crumb_cache
 
-    def _create_view(self, view_name, view_type):
+    def create_view(self, view_name, view_type):
         """Helper method used to create a new Jenkins view
 
         NOTE: This base-class helper is here to prevent code duplication
@@ -292,7 +303,7 @@ class JenkinsAPI(object):
 
         self.post(self.jenkins_root_url + 'createView', args)
 
-    def _create_job(self, job_name, job_type):
+    def create_job(self, job_name, job_type):
         """Helper method used to create a new Jenkins job
 
         :param str job_name:

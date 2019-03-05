@@ -3,10 +3,9 @@ from datetime import datetime
 import logging
 from six.moves import urllib_parse
 from pyjen.changeset import Changeset
-from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class Build(JenkinsAPI):
+class Build(object):
     """information about a single build / run of a :class:`~.job.Job`
 
     Builds are executions of jobs and thus instances of this class are
@@ -17,8 +16,9 @@ class Build(JenkinsAPI):
     :param str url: Full URL of one particular build of a Jenkins job
     """
 
-    def __init__(self, url):
-        super(Build, self).__init__(url)
+    def __init__(self, api):
+        super(Build, self).__init__()
+        self._api = api
         self._log = logging.getLogger(__name__)
 
     def __eq__(self, obj):
@@ -53,7 +53,7 @@ class Build(JenkinsAPI):
         :rtype: :class:`int`
         """
 
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['number']
 
@@ -66,7 +66,7 @@ class Build(JenkinsAPI):
 
         """
 
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         time_in_seconds = data['timestamp'] * 0.001
 
@@ -79,7 +79,7 @@ class Build(JenkinsAPI):
         :returns: True if the build is executing otherwise False
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['building']
 
@@ -90,7 +90,7 @@ class Build(JenkinsAPI):
         :returns: Raw console output from this build, in plain text format
         :rtype: :class:`str`
         """
-        return self.get_text("/consoleText")
+        return self._api.get_text("/consoleText")
 
     @property
     def result(self):
@@ -105,7 +105,7 @@ class Build(JenkinsAPI):
             * "FAILURE"
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['result']
 
@@ -117,9 +117,9 @@ class Build(JenkinsAPI):
             0 or more SCM changesets associated with / included in this build.
         :rtype: :class:`~.changeset.Changeset`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
-        return Changeset(data['changeSet'])
+        return Changeset(self._api, data['changeSet'])
 
     @property
     def description(self):
@@ -129,7 +129,7 @@ class Build(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         retval = data["description"]
         if retval is None:
             return ""
@@ -141,7 +141,7 @@ class Build(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data["id"]
 
     @property
@@ -150,12 +150,12 @@ class Build(JenkinsAPI):
 
         :rtype: :class:`list` of :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         artifacts_node = data['artifacts']
         retval = []
 
         for node in artifacts_node:
-            url = urllib_parse.urljoin(self.url, "artifact/" + node['fileName'])
+            url = urllib_parse.urljoin(self._api.url, "artifact/" + node['fileName'])
             retval.append(url)
 
         return retval

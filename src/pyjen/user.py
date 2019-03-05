@@ -1,8 +1,7 @@
 """Primitives for interacting with Jenkins users"""
-from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class User(JenkinsAPI):
+class User(object):
     """Interface to all primitives associated with a Jenkins user
 
     .. seealso:: :py:meth:`~.changeset.ChangesetItem.author`
@@ -13,8 +12,9 @@ class User(JenkinsAPI):
         a particular user
     """
 
-    def __init__(self, url):
-        super(User, self).__init__(url)
+    def __init__(self, api):
+        super(User, self).__init__()
+        self._api = api
 
     @property
     def user_id(self):
@@ -22,7 +22,7 @@ class User(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['id']
 
     @property
@@ -31,7 +31,7 @@ class User(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['fullName']
 
     @property
@@ -42,7 +42,7 @@ class User(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['description'] if data['description'] is not None else ''
 
     @property
@@ -53,7 +53,7 @@ class User(JenkinsAPI):
 
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         for prop in data['property']:
             if 'address' in prop:
                 return prop['address']

@@ -1,17 +1,17 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
 from pyjen.utils.jobxml import JobXML
-from pyjen.utils.jenkins_api import JenkinsAPI
 
 
-class Job(JenkinsAPI):
+class Job(object):
     """Abstraction for operations common to all job types on Jenkins
 
     :param str url: Full URL of a job on a Jenkins master
     """
 
-    def __init__(self, url):
-        super(Job, self).__init__(url)
+    def __init__(self, api):
+        super(Job, self).__init__()
+        self._api = api
         self._type = None
         # TODO: Consider whether we should name this class Freestyle or not
 
@@ -40,7 +40,7 @@ class Job(JenkinsAPI):
             return self
 
         obj_xml = JobXML(self.config_xml)
-        return obj_xml.derived_object(self.url)
+        return obj_xml.derived_object(self._api.url)
 
     @property
     def name(self):
@@ -49,7 +49,7 @@ class Job(JenkinsAPI):
         :returns: The name of the job
         :rtype: :class:`str`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['name']
 
     @property
@@ -59,7 +59,7 @@ class Job(JenkinsAPI):
         :returns: True if the job is disabled, otherwise False
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['color'] == "disabled"
 
@@ -71,7 +71,7 @@ class Job(JenkinsAPI):
             True if the latest build of the job is unsable, otherwise False
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['color'] == "yellow"
 
@@ -83,7 +83,7 @@ class Job(JenkinsAPI):
             True if the latest build of the job is a failure, otherwise False
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         return data['color'] == "red"
 
     @property
@@ -93,7 +93,7 @@ class Job(JenkinsAPI):
         :returns: True if the job has been built at least once, otherwise false
         :rtype: :class:`bool`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         return data['color'] != "notbuilt"
 
@@ -106,7 +106,7 @@ class Job(JenkinsAPI):
         :returns: the full XML tree describing this jobs configuration
         :rtype: :class:`str`
         """
-        return self.get_text("/config.xml")
+        return self._api.get_text("/config.xml")
 
     @config_xml.setter
     def config_xml(self, new_xml):
@@ -119,7 +119,7 @@ class Job(JenkinsAPI):
         :param str new_xml: A complete XML tree compatible with the Jenkins API
         """
         args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self.post(self.url + "config.xml", args)
+        self._api.post(self._api.url + "config.xml", args)
 
     @property
     def upstream_jobs(self):
@@ -128,14 +128,14 @@ class Job(JenkinsAPI):
         :returns: A list of 0 or more jobs that this job depends on
         :rtype: :class:`list` of :class:`~.job.Job` objects
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         jobs = data['upstreamProjects']
 
         retval = []
 
         for j in jobs:
-            temp_job = Job(j['url'])
+            temp_job = Job(self._api.clone(j['url']))
             retval.append(temp_job)
 
         return retval
@@ -150,12 +150,12 @@ class Job(JenkinsAPI):
         :returns: A list of 0 or more jobs this job depend on
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
         jobs = data['upstreamProjects']
         retval = []
 
         for j in jobs:
-            temp_job = Job(j['url'])
+            temp_job = Job(self._api.clone(j['url']))
             retval.append(temp_job)
             retval.extend(temp_job.all_upstream_jobs)
 
@@ -173,13 +173,13 @@ class Job(JenkinsAPI):
         :returns: a list of the most recent builds for this job
         :rtype: :class:`list` of :class:`~.build.Build` objects
         """
-        data = self.get_api_data(query_params="depth=2")
+        data = self._api.get_api_data(query_params="depth=2")
 
         builds = data['builds']
 
         retval = []
         for cur_build in builds:
-            temp_build = Build(cur_build['url'])
+            temp_build = Build(self._api.clone(cur_build['url']))
             retval.append(temp_build)
 
         return retval
@@ -191,13 +191,13 @@ class Job(JenkinsAPI):
         :returns: all recorded builds for this job
         :rtype: :class:`list` of :class:`~.build.Build` objects
         """
-        data = self.get_api_data(query_params="tree=allBuilds[url]")
+        data = self._api.get_api_data(query_params="tree=allBuilds[url]")
 
         builds = data['allBuilds']
 
         retval = []
         for cur_build in builds:
-            temp_build = Build(cur_build['url'])
+            temp_build = Build(self._api.clone(cur_build['url']))
             retval.append(temp_build)
 
         return retval
@@ -216,14 +216,14 @@ class Job(JenkinsAPI):
             this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         lgb = data['lastSuccessfulBuild']
 
         if lgb is None:
             return None
 
-        return Build(lgb['url'])
+        return Build(self._api.clone(lgb['url']))
 
     @property
     def last_build(self):
@@ -239,14 +239,14 @@ class Job(JenkinsAPI):
             this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         last_build = data['lastBuild']
 
         if last_build is None:
             return None
 
-        return Build(last_build['url'])
+        return Build(self._api.clone(last_build['url']))
 
     @property
     def last_failed_build(self):
@@ -260,14 +260,14 @@ class Job(JenkinsAPI):
             builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         bld = data['lastFailedBuild']
 
         if bld is None:
             return None
 
-        return Build(bld['url'])
+        return Build(self._api.clone(bld['url']))
 
     @property
     def last_stable_build(self):
@@ -281,14 +281,14 @@ class Job(JenkinsAPI):
             builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         bld = data['lastCompletedBuild']
 
         if bld is None:
             return None
 
-        return Build(bld['url'])
+        return Build(self._api.clone(bld['url']))
 
     @property
     def last_unsuccessful_build(self):
@@ -302,14 +302,14 @@ class Job(JenkinsAPI):
             builds in the build history, this method returns None
         :rtype: :class:`~.build.Build`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         bld = data['lastUnsuccessfulBuild']
 
         if bld is None:
             return None
 
-        return Build(bld['url'])
+        return Build(self._api.clone(bld['url']))
 
     @property
     def downstream_jobs(self):
@@ -318,14 +318,14 @@ class Job(JenkinsAPI):
         :returns: A list of 0 or more jobs which depend on this one
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         jobs = data['downstreamProjects']
 
         retval = []
 
         for j in jobs:
-            temp_job = Job(j['url'])
+            temp_job = Job(self._api.clone(j['url']))
             retval.append(temp_job)
 
         return retval
@@ -340,14 +340,14 @@ class Job(JenkinsAPI):
         :returns: A list of 0 or more jobs which depend on this one
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         jobs = data['downstreamProjects']
 
         retval = []
 
         for j in jobs:
-            temp_job = Job(j['url'])
+            temp_job = Job(self._api.clone(j['url']))
             retval.append(temp_job)
             retval.extend(temp_job.all_downstream_jobs)
 
@@ -362,7 +362,7 @@ class Job(JenkinsAPI):
         Use in conjunction with :py:meth:`.enable` and :py:attr:`.is_disabled`
         to control the state of the job.
         """
-        self.post(self.url + "disable")
+        self._api.post(self._api.url + "disable")
 
     def enable(self):
         """Enables this job
@@ -377,11 +377,11 @@ class Job(JenkinsAPI):
         Use in conjunction with :py:meth:`.disable` and :py:attr:`.is_disabled`
         to control the state of the job
         """
-        self.post(self.url + "enable")
+        self._api.post(self._api.url + "enable")
 
     def delete(self):
         """Deletes this job from the Jenkins dashboard"""
-        self.post(self.url + "doDelete")
+        self._api.post(self._api.url + "doDelete")
 
     def start_build(self):
         """Forces a build of this job
@@ -391,7 +391,7 @@ class Job(JenkinsAPI):
         appropriate build queue where it will be scheduled
         for execution on the next available agent + executor.
         """
-        self.post(self.url + "build")
+        self._api.post(self._api.url + "build")
 
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
@@ -409,8 +409,8 @@ class Job(JenkinsAPI):
         #       locate the one with the correct number this would still
         #       require 1 hit to the REST API but would be more robust than
         #       trying to "guess" the correct URL endpoint
-        temp_url = self.url + str(build_number)
-        retval = Build(temp_url)
+        temp_url = self._api.url + str(build_number)
+        retval = Build(self._api.clone(temp_url))
 
         # query the REST API to make sure the URL is correct and that it
         # returns the correct build number
@@ -460,11 +460,12 @@ class Job(JenkinsAPI):
             'headers': headers
         }
 
-        self.post(self.root_url + "createItem", args)
+        self._api.post(self._api.root_url + "createItem", args)
 
         # TODO: Figure out how to prepopulate name field here
         # new_job = Job._create(temp_data_io, self, new_job_name)
-        new_job = Job(self.root_url + "job/" + new_job_name)
+        job_url = self._api.root_url + "job/" + new_job_name
+        new_job = Job(self._api.clone(job_url))
 
         # disable the newly created job so it doesn't accidentally start running
         new_job.disable()
@@ -527,7 +528,7 @@ class Job(JenkinsAPI):
         :return: percentage of good builds on record for this job
         :rtype: :class:`int`
         """
-        data = self.get_api_data()
+        data = self._api.get_api_data()
 
         health_report = data['healthReport']
 
