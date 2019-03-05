@@ -4,6 +4,7 @@ import pytest
 import os
 import platform
 from six import StringIO
+import six
 
 
 def test_get_default_configfiles():
@@ -30,7 +31,10 @@ def test_get_default_configfiles():
 def test_get_credentials_empty_configuration():
     test_obj = JenkinsConfigParser()
     sample_config=StringIO("")
-    test_obj.readfp(sample_config)
+    if six.PY3:
+        test_obj.read_file(sample_config)
+    else:
+        test_obj.readfp(sample_config)
 
     assert test_obj.get_credentials("http://localhost:8080") is None
 
@@ -39,7 +43,10 @@ def test_empty_section():
     test_url = "http://localhost:8080"
     sample_config=StringIO("[http://localhost:8080]")
     test_obj = JenkinsConfigParser()
-    test_obj.readfp(sample_config)
+    if six.PY3:
+        test_obj.read_file(sample_config)
+    else:
+        test_obj.readfp(sample_config)
 
     assert test_obj.get_credentials(test_url) is None
 
@@ -51,7 +58,10 @@ username=
 password=
 """)
     test_obj = JenkinsConfigParser()
-    test_obj.readfp(sample_config)
+    if six.PY3:
+        test_obj.read_file(sample_config)
+    else:
+        test_obj.readfp(sample_config)
 
     assert test_obj.get_credentials(test_url) is None
 
@@ -66,7 +76,10 @@ username=jdoe
 password=Password123
 """)
     test_obj = JenkinsConfigParser()
-    test_obj.readfp(sample_config)
+    if six.PY3:
+        test_obj.read_file(sample_config)
+    else:
+        test_obj.readfp(sample_config)
 
     actual_credentials = test_obj.get_credentials(test_url)
     assert actual_credentials[0] == expected_username
@@ -80,7 +93,10 @@ def test_get_credentials_no_username():
 password=Password123
 """)
     test_obj = JenkinsConfigParser()
-    test_obj.readfp(sample_config)
+    if six.PY3:
+        test_obj.read_file(sample_config)
+    else:
+        test_obj.readfp(sample_config)
 
     with pytest.raises(InvalidUserParamsError):
         test_obj.get_credentials(test_url)
@@ -93,7 +109,10 @@ def test_get_credentials_no_password():
 username=jdoe
 """)
     test_obj = JenkinsConfigParser()
-    test_obj.readfp(sample_config)
+    if six.PY3:
+        test_obj.read_file(sample_config)
+    else:
+        test_obj.readfp(sample_config)
 
     with pytest.raises(InvalidUserParamsError):
         test_obj.get_credentials(test_url)
