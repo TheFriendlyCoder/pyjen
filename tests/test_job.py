@@ -33,89 +33,6 @@ def test_start_build(jenkins_env):
         jb.start_build()
 
 
-def test_get_all_builds(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_all_builds", "project")
-    with clean_job(jb):
-        jb.start_build()
-        async_assert(lambda: jb.all_builds)
-        builds = jb.all_builds
-
-        assert len(builds) == 1
-        assert isinstance(builds[0], Build)
-        assert builds[0].number == 1
-
-
-def test_disable(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable", "project")
-    with clean_job(jb):
-        jb.disable()
-        assert jb.is_disabled
-
-
-def test_enable(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_enable", "project")
-    with clean_job(jb):
-        jb.disable()
-        jb.enable()
-        assert not jb.is_disabled
-
-
-def test_multiple_downstream_jobs_recursive(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_multiple_downstream_jobs_recursive1", "project")
-    with clean_job(jb):
-        expected_name1 = "test_multiple_downstream_jobs_recursive2"
-        jb2 = jk.create_job(expected_name1, "project")
-        with clean_job(jb2):
-            expected_name2 = "test_multiple_downstream_jobs_recursive3"
-            jb3 = jk.create_job(expected_name2, "project")
-            with clean_job(jb3):
-                publisher1 = BuildTriggerPublisher.create([expected_name1])
-                jb.add_publisher(publisher1)
-
-                publisher2 = BuildTriggerPublisher.create([expected_name2])
-                jb2.add_publisher(publisher2)
-
-                async_assert(lambda: len(jb.all_downstream_jobs) == 2)
-                res = jb.all_downstream_jobs
-
-                all_names = [expected_name1, expected_name2]
-                assert isinstance(res, list)
-                assert len(res) == 2
-                assert res[0].name in all_names
-                assert res[1].name in all_names
-
-
-def test_multiple_upstream_jobs_recursive(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    parent_job_name = "test_multiple_upstream_jobs_recursive1"
-    jb = jk.create_job(parent_job_name, "project")
-    with clean_job(jb):
-        expected_name1 = "test_multiple_upstream_jobs_recursive2"
-        jb2 = jk.create_job(expected_name1, "project")
-        with clean_job(jb2):
-            expected_name2 = "test_multiple_upstream_jobs_recursive3"
-            jb3 = jk.create_job(expected_name2, "project")
-            with clean_job(jb3):
-                publisher1 = BuildTriggerPublisher.create([expected_name1])
-                jb.add_publisher(publisher1)
-
-                publisher2 = BuildTriggerPublisher.create([expected_name2])
-                jb2.add_publisher(publisher2)
-
-                async_assert(lambda: len(jb3.all_upstream_jobs) == 2)
-                res = jb3.all_upstream_jobs
-
-                all_names = [parent_job_name, expected_name1]
-                assert isinstance(res, list)
-                assert len(res) == 2
-                assert res[0].name in all_names
-                assert res[1].name in all_names
-
-
 @pytest.mark.usefixtures('test_job')
 class TestJobReadOperations(object):
     def test_get_job_name(self):
@@ -244,6 +161,89 @@ class TestJobReadOperations(object):
         result = self.job.scm
         assert result is not None
         assert result.get_jenkins_plugin_name() == "hudson.scm.NullSCM"
+
+
+def test_get_all_builds(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_all_builds", "project")
+    with clean_job(jb):
+        jb.start_build()
+        async_assert(lambda: jb.all_builds)
+        builds = jb.all_builds
+
+        assert len(builds) == 1
+        assert isinstance(builds[0], Build)
+        assert builds[0].number == 1
+
+
+def test_disable(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_disable", "project")
+    with clean_job(jb):
+        jb.disable()
+        assert jb.is_disabled
+
+
+def test_enable(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_enable", "project")
+    with clean_job(jb):
+        jb.disable()
+        jb.enable()
+        assert not jb.is_disabled
+
+
+def test_multiple_downstream_jobs_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_multiple_downstream_jobs_recursive1", "project")
+    with clean_job(jb):
+        expected_name1 = "test_multiple_downstream_jobs_recursive2"
+        jb2 = jk.create_job(expected_name1, "project")
+        with clean_job(jb2):
+            expected_name2 = "test_multiple_downstream_jobs_recursive3"
+            jb3 = jk.create_job(expected_name2, "project")
+            with clean_job(jb3):
+                publisher1 = BuildTriggerPublisher.create([expected_name1])
+                jb.add_publisher(publisher1)
+
+                publisher2 = BuildTriggerPublisher.create([expected_name2])
+                jb2.add_publisher(publisher2)
+
+                async_assert(lambda: len(jb.all_downstream_jobs) == 2)
+                res = jb.all_downstream_jobs
+
+                all_names = [expected_name1, expected_name2]
+                assert isinstance(res, list)
+                assert len(res) == 2
+                assert res[0].name in all_names
+                assert res[1].name in all_names
+
+
+def test_multiple_upstream_jobs_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    parent_job_name = "test_multiple_upstream_jobs_recursive1"
+    jb = jk.create_job(parent_job_name, "project")
+    with clean_job(jb):
+        expected_name1 = "test_multiple_upstream_jobs_recursive2"
+        jb2 = jk.create_job(expected_name1, "project")
+        with clean_job(jb2):
+            expected_name2 = "test_multiple_upstream_jobs_recursive3"
+            jb3 = jk.create_job(expected_name2, "project")
+            with clean_job(jb3):
+                publisher1 = BuildTriggerPublisher.create([expected_name1])
+                jb.add_publisher(publisher1)
+
+                publisher2 = BuildTriggerPublisher.create([expected_name2])
+                jb2.add_publisher(publisher2)
+
+                async_assert(lambda: len(jb3.all_upstream_jobs) == 2)
+                res = jb3.all_upstream_jobs
+
+                all_names = [parent_job_name, expected_name1]
+                assert isinstance(res, list)
+                assert len(res) == 2
+                assert res[0].name in all_names
+                assert res[1].name in all_names
 
 
 @pytest.mark.usefixtures('test_builds')

@@ -9,9 +9,9 @@ import docker
 import multiprocessing
 from docker.errors import DockerException
 from pyjen.jenkins import Jenkins
+from pyjen.plugins.gitscm import GitSCM
 from .utils import async_assert
 
-# TODO: Add support for Jenkins 1 testing
 
 # Global flag used to see whether we've already attempted to run our Jenkins
 # containerized environment. Prevents redundant failures from slowing down
@@ -351,7 +351,20 @@ def test_builds(request, test_job):
     """Helper fixture that creates a job with a sample good build for testing"""
     request.cls.job.start_build()
 
-    async_assert(lambda: request.cls.job.has_been_built)
+    async_assert(lambda: request.cls.job.last_good_build)
+
+
+@pytest.fixture(scope="class")
+def test_builds_with_git(request, test_job):
+    """Helper fixture that creates a job with a sample build with Git sources for testing"""
+    expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
+    test_scm = GitSCM.create(expected_url)
+    request.cls.job.scm = test_scm
+
+    async_assert(lambda: isinstance(request.cls.job.scm, GitSCM))
+
+    request.cls.job.start_build()
+    async_assert(lambda: request.cls.job.last_good_build)
 
 
 def pytest_collection_modifyitems(config, items):

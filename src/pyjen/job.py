@@ -485,6 +485,13 @@ class Job(JenkinsAPI):
         jxml = JobXML(self.config_xml)
         return jxml.scm
 
+    @scm.setter
+    def scm(self, value):
+        """Changes the SCM configuration for this job"""
+        jxml = JobXML(self.config_xml)
+        jxml.scm = value.node
+        self.config_xml = jxml.xml
+
     def add_publisher(self, publisher):
         """Adds a new job publisher to this job
 

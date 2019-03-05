@@ -1,69 +1,31 @@
-from pyjen.changeset import Changeset
+from pyjen.plugins.gitscm import GitSCM
 import pytest
 
-        
-def test_get_scm_type():
-    data = dict()
-    data['kind'] = "svn"
-    data['items'] = []
-    cs = Changeset(data)
 
-    assert cs.scm_type == "svn"
+@pytest.mark.usefixtures('test_builds_with_git')
+class TestBuildsWithGit(object):
+    def test_get_changeset(self):
 
+        bld = self.job.last_good_build
+        chgset = bld.changeset
+        assert chgset is not None
 
-def test_has_no_changes():
-    data = dict()
-    data['kind'] = "svn"
-    data['items'] = []
-    cs = Changeset(data)
+    def test_get_changeset_scm_type(self):
+        bld = self.job.last_good_build
+        chgset = bld.changeset
+        assert chgset.scm_type == GitSCM.get_jenkins_plugin_name()
 
-    assert cs.has_changes == False
+    def test_get_has_no_changes(self):
+        bld = self.job.last_good_build
+        chgset = bld.changeset
+        assert chgset.has_changes is False
 
-
-def test_has_changes():
-    data = dict()
-    data['kind'] = "svn"
-    data['items'] = {"message": "Hello World"}
-    cs = Changeset(data)
-
-    assert cs.has_changes == True
+    def test_get_has_no_affected_items(self):
+        bld = self.job.last_good_build
+        chgset = bld.changeset
+        assert isinstance(chgset.affected_items, list)
+        assert len(chgset.affected_items) == 0
 
 
-def test_affected_items():
-    expected_message = "Here is the commit log"
-
-    data = dict()
-    data['kind'] = "svn"
-    data['items'] = [{"msg": expected_message}]
-    cs = Changeset(data)
-    actual_items = cs.affected_items
-
-    assert len(actual_items) == 1
-    assert actual_items[0].message == expected_message
-
-
-def test_actual_items_empty():
-    data = dict()
-    data['kind'] = "svn"
-    data['items'] = []
-    cs = Changeset(data)
-    actual_items = cs.affected_items
-
-    assert actual_items is not None
-    assert len(actual_items) == 0
-
-
-def test_authors():
-    expected_url = "http://localhost:8080/user/jdoe/"
-
-    data = dict()
-    data['kind'] = "svn"
-    data['items'] = [{"author": {"absoluteUrl": expected_url, "fullName": "John Doe"}}]
-    cs = Changeset(data)
-    actual_items = cs.affected_items
-
-    assert len(actual_items) == 1
-    assert actual_items[0].author.url == expected_url
-    
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

@@ -2,7 +2,6 @@ from datetime import datetime
 import pytest
 from .utils import clean_job, async_assert
 from pyjen.jenkins import Jenkins
-from pyjen.build import Build
 from pyjen.plugins.shellbuilder import ShellBuilder
 
 
@@ -84,32 +83,6 @@ def test_console_text(jenkins_env):
         async_assert(lambda: jb.last_build)
 
         assert expected_output in jb.last_build.console_output
-
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# LEGACY UNIT TESTS
-
-
-def test_build_changesets(monkeypatch):
-    changeset_message = "Here's my commit message"
-
-    fake_build_data = {
-        "changeSet": {
-            "items": [
-                {"msg": changeset_message}
-            ],
-            "kind": "git"
-        }
-    }
-    monkeypatch.setattr(Build, "get_api_data", lambda s: fake_build_data)
-
-    bld1 = Build('http://localhost:8080/job/MyJob/3')
-    changes = bld1.changeset
-
-    assert changes.has_changes is True
-    assert changes.scm_type == "git"
-    assert len(changes.affected_items) == 1
-    assert changes.affected_items[0].message == changeset_message
 
 
 if __name__ == "__main__":
