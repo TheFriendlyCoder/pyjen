@@ -6,11 +6,13 @@ from pyjen.utils.jobxml import JobXML
 class FreestyleJob(Job):
     """Jenkins job of type 'freestyle'
 
-    :param str url: Full URL of a job on a Jenkins master
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
-    def __init__(self, url):
-        super(FreestyleJob, self).__init__(url)
+    def __init__(self, api):
+        super(FreestyleJob, self).__init__(api)
 
     @property
     def scm(self):

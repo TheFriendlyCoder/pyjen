@@ -7,9 +7,9 @@ class User(object):
     .. seealso:: :py:meth:`~.changeset.ChangesetItem.author`
     .. seealso:: :py:meth:`~.jenkins.Jenkins.find_user`
 
-    :param str url:
-        Full URL of the Jenkins REST API endpoint containing information about
-        a particular user
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
     def __init__(self, api):

@@ -298,32 +298,6 @@ def jenkins_env(request, configure_logger):
             log.info("Done Docker cleanup")
 
 
-@pytest.fixture(scope="function", autouse=True)
-def clear_global_state(request):
-    """Clears all global state from the PyJen library
-
-    This fixture is a total hack to compensate for the use of global state
-    in the PyJen library. My hope is to break dependency on this global state
-    and eliminate the need for this fixture completely
-    """
-    yield
-    # For any test that is a member of a class, lets assume that the class has
-    # one or more test fixtures configured to manage it's global state. That
-    # being the case, we can't safely reset the global state of the pyjen
-    # API here because this fixture runs after every test function. So functions
-    # that are part of a test class would invalidate the connection which is
-    # then shared between the other tests in the class
-    if request.cls:
-        return
-
-    from pyjen.utils.jenkins_api import JenkinsAPI
-    JenkinsAPI.creds = ()
-    JenkinsAPI.ssl_verify_enabled = False
-    JenkinsAPI.crumb_cache = None
-    JenkinsAPI.jenkins_root_url = None
-    JenkinsAPI.jenkins_headers_cache = None
-
-
 @pytest.fixture(scope="class")
 def test_job(request, jenkins_env):
     """Test fixture that creates a Jenkins Freestyle job for testing purposes

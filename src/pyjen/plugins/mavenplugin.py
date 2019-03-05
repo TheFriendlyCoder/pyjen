@@ -5,10 +5,12 @@ from pyjen.job import Job
 class MavenPlugin(Job):
     """Custom Maven job type
 
-    :param str url: Full URL of a job on a Jenkins master
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-    def __init__(self, url):
-        super(MavenPlugin, self).__init__(url)
+    def __init__(self, api):
+        super(MavenPlugin, self).__init__(api)
 
     @staticmethod
     def template_config_xml():
@@ -68,6 +70,7 @@ class MavenPlugin(Job):
         :rtype: :class:`str`
         """
         return "mavenplugin"
+
 
 PluginClass = MavenPlugin
 

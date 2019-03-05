@@ -7,46 +7,31 @@ from six.moves import urllib_parse
 
 
 class JenkinsAPI(object):
-    """Base class for all objects that interact with the Jenkins REST API
+    """Abstraction around the raw Jenkins REST API
 
-    This class provides methods for interacting with the Jenkins REST API in
-    various ways such as querying a specific API endpoint for data or posting
-    new data to a listening endpoint. Classes requiring this functionality
-    should simply derive from this base class so they can make calls directly
-    to the helpers, while the base class maintains the connection parameters
-    and state information for optimizing IO against the remote Jenkins service
+    :param str url:
+        URL of the Jenkins REST API endpoint to manage
+    :param tuple creds:
+        username and password pair to authenticate with when accessing
+        the REST API
+    :param bool verify_ssl:
+        indicates whether ssl certificate verification should be performed
+        on the REST API endpoints
     ."""
 
-    # Credentials to use when authenticating to the Jenkins REST API
-    creds = ()
-
-    # Indicates whether SSL encryption certificates should be verified when
-    # connecting to secure servers. Can cause connection problems when enabled
-    # if Jenkins is using a self-signed SSL certificate
-    ssl_verify_enabled = False
-
-    # Static data member intended to cache the Jenkins REST API 'crumb' token
-    # for use with POST operations typically populated by the 'crumb' property
-    # method upon first execution
-    crumb_cache = None
-
-    # Generated static member containing the root URL for the currently
-    # selected Jenkins instance. Typically will be populated by the 'root_url'
-    # property method, but may be overloaded directly if your Jenkins instance
-    # has an obfuscated URL (ie: http://someserver/jenkins/ say)
-    # The member can be overloaded as follows:
-    #       JenkinsAPI.jenkins_root_url = "http://someserver/jenkins/"
-    jenkins_root_url = None
-
-    # Static member intended to cache the header information provided by the
-    # main dashboard URL. This header information is static and never changes
-    # for any given session so we cache it here to minimize the times we need
-    # to query the REST API
-    jenkins_headers_cache = None
-
-    def __init__(self, url):
-        self._url = url.rstrip("/\\") + "/"
+    def __init__(self, url, creds, verify_ssl):
         self._log = logging.getLogger(__name__)
+
+        self._url = url.rstrip("/\\") + "/"
+        self._creds = creds
+        self._ssl_verify_enabled = verify_ssl
+
+        self._jenkins_root_url = self._url
+
+        # Internal data members used for caching certain API response data
+        # to improve performance
+        self._crumb_cache = None
+        self._jenkins_headers_cache = None
 
     def __str__(self):
         """String representation of the job"""
@@ -65,11 +50,14 @@ class JenkinsAPI(object):
             newly created JenkinsAPI
         :rtype: :class:`~.utils.jenkins_api.JenkinsAPI`
         """
-        return JenkinsAPI(api_url)
+        retval = JenkinsAPI(
+            api_url, self._creds, self._ssl_verify_enabled)
+        retval._jenkins_root_url = self._jenkins_root_url
+        return retval
 
     @property
     def url(self):
-        """Gets the URL for the REST API endpoint used by this object
+        """Gets the URL for the REST API endpoint managed by this object
 
         NOTE: The URL returned by this property is guaranteed to end with a
         trailing slash character
@@ -81,32 +69,12 @@ class JenkinsAPI(object):
     def root_url(self):
         """URL of the main Jenkins dashboard associated with the current object
 
-        NOTE: This property assumes that the main Jenkins dashboard is available
-        under the root domain of the host it is running on, which would use
-        URLs of the following form:
-            http(s)://servername[:port#]/
-
-        If the host running Jenkins sits behind a proxy or some other HTTP
-        redirection service, you will need to manually override the
-        JenkinsAPI.jenkins_root_url property
-
         NOTE: The URL returned by this property is guaranteed to end with a
         trailing slash character
 
         :rtype: :class:`str`
         """
-        if JenkinsAPI.jenkins_root_url is None:
-            url_parts = urllib_parse.urlparse(self.url)
-            JenkinsAPI.jenkins_root_url = \
-                url_parts.scheme + "://" + url_parts.netloc + "/"
-
-        # Sanity check: make sure our root URL ends with a slash character.
-        #               This check should only potentially fail if someone
-        #               overloads the data member directly and sets it
-        #               incorrectly
-        assert JenkinsAPI.jenkins_root_url[-1] == "/"
-
-        return JenkinsAPI.jenkins_root_url
+        return self._jenkins_root_url
 
     @property
     def jenkins_headers(self):
@@ -117,17 +85,17 @@ class JenkinsAPI(object):
         UI theme, and others.
 
         :rtype: :class:`dict`"""
-        if JenkinsAPI.jenkins_headers_cache is None:
+        if self._jenkins_headers_cache is None:
             temp_path = urllib_parse.urljoin(self.root_url, "api/python")
             req = requests.get(
                 temp_path,
-                auth=JenkinsAPI.creds,
-                verify=JenkinsAPI.ssl_verify_enabled)
+                auth=self._creds,
+                verify=self._ssl_verify_enabled)
             req.raise_for_status()
 
-            JenkinsAPI.jenkins_headers_cache = req.headers
+            self._jenkins_headers_cache = req.headers
 
-        return JenkinsAPI.jenkins_headers_cache
+        return self._jenkins_headers_cache
 
     @property
     def jenkins_version(self):
@@ -167,8 +135,8 @@ class JenkinsAPI(object):
 
         req = requests.get(
             temp_url,
-            auth=JenkinsAPI.creds,
-            verify=JenkinsAPI.ssl_verify_enabled)
+            auth=self._creds,
+            verify=self._ssl_verify_enabled)
         req.raise_for_status()
         retval = req.json()
         self._log.debug(json.dumps(retval, indent=4))
@@ -190,8 +158,8 @@ class JenkinsAPI(object):
 
         req = requests.get(
             temp_url,
-            auth=JenkinsAPI.creds,
-            verify=JenkinsAPI.ssl_verify_enabled)
+            auth=self._creds,
+            verify=self._ssl_verify_enabled)
         req.raise_for_status()
 
         return req.text
@@ -222,8 +190,8 @@ class JenkinsAPI(object):
 
         req = requests.post(
             target_url,
-            auth=JenkinsAPI.creds,
-            verify=JenkinsAPI.ssl_verify_enabled,
+            auth=self._creds,
+            verify=self._ssl_verify_enabled,
             headers=temp_headers,
             **args if args else dict())
 
@@ -245,17 +213,17 @@ class JenkinsAPI(object):
 
         :rtype: :class:`dict`
         """
-        if JenkinsAPI.crumb_cache is None:
+        if self._crumb_cache is None:
             # Query the REST API for the crumb token
             req = requests.get(
                 self.root_url + 'crumbIssuer/api/json',
-                auth=JenkinsAPI.creds,
-                verify=JenkinsAPI.ssl_verify_enabled)
+                auth=self._creds,
+                verify=self._ssl_verify_enabled)
 
             if req.status_code == 404:
                 # If we get a 404 error, endpoint not found, assume the Cross
                 # Site Scripting support has been disabled
-                JenkinsAPI.crumb_cache = ''
+                self._crumb_cache = ''
             else:
                 req.raise_for_status()
                 data = req.json()
@@ -263,11 +231,11 @@ class JenkinsAPI(object):
                 # Seeing as how the crumb for a given Jenkins instance is
                 # static, we cache the results locally to prevent having to hit
                 # the API unnecessarily
-                JenkinsAPI.crumb_cache = {
+                self._crumb_cache = {
                     data['crumbRequestField']: data['crumb']
                 }
 
-        return JenkinsAPI.crumb_cache
+        return self._crumb_cache
 
     def create_view(self, view_name, view_type):
         """Helper method used to create a new Jenkins view
@@ -301,7 +269,7 @@ class JenkinsAPI(object):
             'headers': headers
         }
 
-        self.post(self.jenkins_root_url + 'createView', args)
+        self.post(self._jenkins_root_url + 'createView', args)
 
     def create_job(self, job_name, job_type):
         """Helper method used to create a new Jenkins job
@@ -335,7 +303,7 @@ class JenkinsAPI(object):
             'headers': headers
         }
 
-        self.post(self.jenkins_root_url + 'createItem', args)
+        self.post(self._jenkins_root_url + 'createItem', args)
 
 
 if __name__ == "__main__":  # pragma: no cover

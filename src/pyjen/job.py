@@ -6,7 +6,9 @@ from pyjen.utils.jobxml import JobXML
 class Job(object):
     """Abstraction for operations common to all job types on Jenkins
 
-    :param str url: Full URL of a job on a Jenkins master
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
     def __init__(self, api):

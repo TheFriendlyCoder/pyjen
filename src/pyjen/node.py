@@ -10,7 +10,9 @@ class Node(object):
 
     .. seealso: :py:meth:`~.jenkins.Jenkins.find_node`
 
-    :param str url: Full URL of one particular build of a Jenkins job
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
     def __init__(self, api):

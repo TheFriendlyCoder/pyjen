@@ -7,9 +7,9 @@ class PluginManager(object):
 
     Supports adding, removing and querying information about Jenkins plugins
 
-    :param str url:
-        Full URL to the Jenkins REST API endpoint for the plugin manager
-        interface
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
     def __init__(self, api):
