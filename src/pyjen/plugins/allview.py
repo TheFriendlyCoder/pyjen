@@ -25,7 +25,7 @@ class AllView(View):
 
         :rtype: :class:`str`
         """
-        return "allview"
+        return "hudson.model.AllView"
 
 
 PluginClass = AllView
