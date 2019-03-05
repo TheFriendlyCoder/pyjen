@@ -6,7 +6,9 @@ from pyjen.utils.viewxml import ViewXML
 class View(object):
     """generic Jenkins views providing interfaces common to all view types
 
-    :param str url: Full URL of a view on a Jenkins master
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
     def __init__(self, api):
         super(View, self).__init__()

@@ -7,13 +7,14 @@ class AllView(View):
 
     Instances of this class are typically instantiated directly or
     indirectly through :py:meth:`~.view.View.create`
+
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
-    def __init__(self, url):
-        """
-        :param str url: REST API endpoint for this Jenkins view
-        """
-        super(AllView, self).__init__(url)
+    def __init__(self, api):
+        super(AllView, self).__init__(api)
 
     @staticmethod
     def get_jenkins_plugin_name():

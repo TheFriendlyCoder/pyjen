@@ -61,19 +61,17 @@ class Jenkins(object):
     def __init__(self, url, credentials=None, ssl_verify=False):
         super(Jenkins, self).__init__()
         self._log = logging.getLogger(__name__)
-        self._api = JenkinsAPI(url)
 
         # If no explicit credentials provided,
         # load credentials from any config files
         if credentials is None:
             config = JenkinsConfigParser()
             config.read(JenkinsConfigParser.get_default_configfiles())
-            JenkinsAPI.creds = config.get_credentials(url)
+            creds = config.get_credentials(url)
         else:
-            JenkinsAPI.creds = credentials
+            creds = credentials
 
-        JenkinsAPI.ssl_verify_enabled = ssl_verify
-        JenkinsAPI.jenkins_root_url = self._api.url
+        self._api = JenkinsAPI(url, creds, ssl_verify)
 
     @property
     def connected(self):

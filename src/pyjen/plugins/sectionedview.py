@@ -9,20 +9,15 @@ class SectionedView(View):
     """Interface to Jenkins views of type "SectionedView"
 
      Views of this type support groupings of jobs into 'sections'
-     which each have their own filters"""
+     which each have their own filters
 
-    def __init__(self, url):
-        """
-        :param controller:
-            class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API
-        :type controller: :class:`~.utils.datarequester.DataRequester`
-        :param jenkins_master:
-            Reference to Jenkins object associated with the master instance
-            managing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        """
-        super(SectionedView, self).__init__(url)
+     :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    """
+
+    def __init__(self, api):
+        super(SectionedView, self).__init__(api)
         self._log = logging.getLogger(__name__)
 
     @property
@@ -46,10 +41,11 @@ class SectionedView(View):
         return "sectionedview"
 
 
-class ListViewSection:
+class ListViewSection(object):
     """One of several 'section' types defined for a sectioned view
 
-    Represents sections of type 'ListView'"""
+    Represents sections of type 'ListView'
+    """
 
     def __init__(self, node):
         """
@@ -81,7 +77,7 @@ class ListViewSection:
         regex_node.text = new_regex
 
 
-class TextSection:
+class TextSection(object):
     """One of several 'section' types defined for a sectioned view
 
     Sections of this type contain simple descriptive text"""

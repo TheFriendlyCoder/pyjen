@@ -3,20 +3,15 @@ from pyjen.view import View
 
 
 class StatusView(View):
-    """Interface to Jenkins views of type 'StatusView'"""
+    """Interface to Jenkins views of type 'StatusView'
 
-    def __init__(self, url):
-        """
-        :param controller:
-            class capable of handling common HTTP IO requests sent by this
-            object to the Jenkins REST API
-        :type controller: :class:`~.utils.datarequester.DataRequester`
-        :param jenkins_master:
-            Reference to Jenkins object associated with the master instance
-            managing this job
-        :type jenkins_master: :class:`~.jenkins.Jenkins`
-        """
-        super(StatusView, self).__init__(url)
+    :param api:
+        Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    """
+
+    def __init__(self, api):
+        super(StatusView, self).__init__(api)
 
     @staticmethod
     def get_jenkins_plugin_name():
