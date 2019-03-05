@@ -179,9 +179,6 @@ class Job(JenkinsAPI):
 
         retval = []
         for cur_build in builds:
-            # TODO: Figure out a new way to pre-populate build data upon
-            #       object construction
-            # temp_data_io.set_api_data(cur_build)
             temp_build = Build(cur_build['url'])
             retval.append(temp_build)
 

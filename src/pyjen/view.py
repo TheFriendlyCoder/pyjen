@@ -56,8 +56,6 @@ class View(JenkinsAPI):
 
         retval = []
         for j in view_jobs:
-            # TODO: Find a way to prepoulate api data
-            # temp_data_io.set_api_data(j)
             retval.append(Job(j['url']))
 
         return retval
