@@ -1,6 +1,8 @@
 """Primitives for interacting with Jenkins views"""
+import logging
 from pyjen.job import Job
 from pyjen.utils.viewxml import ViewXML
+from pyjen.utils.plugin_api import find_plugin
 
 
 class View(object):
@@ -12,6 +14,7 @@ class View(object):
     """
     def __init__(self, api):
         super(View, self).__init__()
+        self._log = logging.getLogger(__name__)
         self._api = api
         self._type = None
 
@@ -20,12 +23,15 @@ class View(object):
         """custom plugin supporting this specific type of view"""
         # check to see if we're trying to derive an object from an already
         # derived object
-        if not isinstance(self, View):
+        if self.__class__.__name__ != "View":
             return self
 
         xml_obj = ViewXML(self.config_xml)
 
-        return xml_obj.derived_object(self._api.url)
+        plugin = find_plugin(xml_obj.plugin_name)
+        if not plugin:
+            return self
+        return plugin(self._api.clone(self._api.url))
 
     @property
     def name(self):
@@ -142,8 +148,7 @@ class View(object):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(self.config_xml)
-        self._api.create_view(
-            new_view_name, vxml.plugin_name() or vxml.plugin_class_name())
+        self._api.create_view(new_view_name, vxml.plugin_name)
 
         new_url = self._api.url.replace(self.name, new_view_name)
         new_view = View(self._api.clone(new_url))
