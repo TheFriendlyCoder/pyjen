@@ -1,5 +1,6 @@
 """Primitives for interacting with the main Jenkins dashboard"""
 import logging
+import json
 from requests.exceptions import RequestException
 from pyjen.view import View
 from pyjen.node import Node
@@ -142,7 +143,7 @@ class Jenkins(object):
         """
         data = self._api.get_api_data()
 
-        return View.instantiate(data['primaryView'], self._api)
+        return View.instantiate(data['primaryView'], self._api, self)
 
     @property
     def views(self):
@@ -160,7 +161,7 @@ class Jenkins(object):
         data = self._api.get_api_data()
 
         for cur_view in data['views']:
-            retval.append(View.instantiate(cur_view, self._api))
+            retval.append(View.instantiate(cur_view, self._api, self))
 
         return retval
 
@@ -217,7 +218,7 @@ class Jenkins(object):
         data = self._api.get_api_data()
 
         for cur_view in data['views']:
-            temp_view = View.instantiate(cur_view, self._api)
+            temp_view = View.instantiate(cur_view, self._api, self)
             if temp_view.name == view_name:
                 return temp_view
 
@@ -239,7 +240,21 @@ class Jenkins(object):
         :returns: An object to manage the newly created view
         :rtype: :class:`~.view.View`
         """
-        self._api.create_view(view_name, view_type)
+        view_type = view_type.replace("__", "_")
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        data = {
+            "name": view_name,
+            "mode": view_type,
+            "Submit": "OK",
+            "json": json.dumps({"name": view_name, "mode": view_type})
+        }
+
+        args = {
+            'data': data,
+            'headers': headers
+        }
+
+        self._api.post(self._api.url + 'createView', args)
 
         retval = self.find_view(view_name)
         assert retval is not None

@@ -150,7 +150,6 @@ def test_all_views_nested_sub_view(jenkins_env):
                 assert results[1].name in [expected_view_name1, expected_view_name2]
 
 
-@pytest.mark.skip("TODO: We need to fix the view cloning logic to work with nested views")
 def test_clone_sub_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     parent = jk.create_view("test_clone_sub_view_parent", "hudson.plugins.nested_view.NestedView")

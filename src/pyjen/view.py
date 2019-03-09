@@ -10,24 +10,35 @@ class View(object):
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
+    :param parent:
+        PyJen object that "owns" this view. Typically this is a reference to
+        the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
+        instance but in certain cases this may be a different object like
+        a :class:`pyjen.plugins.nestedview.NestedView`.
+
+        The parent object is expected to expose a method named `create_view`
+        which can be used to clone instances of this view.
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-    def __init__(self, api):
+    def __init__(self, api, parent):
         super(View, self).__init__()
         self._log = logging.getLogger(__name__)
         self._api = api
-        self._type = None
+        self._parent = parent
 
     @staticmethod
-    def instantiate(json_data, rest_api):
-        """Gets the appropriate PyJen view object based on the given data
+    def instantiate(json_data, rest_api, parent):
+        """Factory method for finding the appropriate PyJen view object based
+        on data loaded from the Jenkins REST API
 
         :param dict json_data:
             data loaded from the Jenkins REST API summarizing the view to be
             instantiated
         :param rest_api:
             PyJen REST API configured for use by the parent container. Will
-            be used to instantiate the PyJen view that is returned
+            be used to instantiate the PyJen view that is returned.
+        :param parent:
+            PyJen object that "owns" the new View object being instantiated
         :returns:
             PyJen view object wrapping the REST API for the given Jenkins view
         :rtype: :class:`~.view.View`
@@ -67,7 +78,7 @@ class View(object):
             log.debug("Unable to find plugin for class %s", json_data["_class"])
             plugin_class = View
 
-        return plugin_class(rest_api.clone(view_url))
+        return plugin_class(rest_api.clone(view_url), parent)
 
     @property
     def name(self):
@@ -184,10 +195,7 @@ class View(object):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(self.config_xml)
-        self._api.create_view(new_view_name, vxml.plugin_name)
-
-        new_url = self._api.url.replace(self.name, new_view_name)
-        new_view = View(self._api.clone(new_url))
+        new_view = self._parent.create_view(new_view_name, vxml.plugin_name)
 
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml
