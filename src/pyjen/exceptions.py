@@ -57,20 +57,6 @@ class InvalidParameterError(PyJenError):
         return self.__msg
 
 
-class NestedViewCreationError(PyJenError):
-    """Error when creating a sub-view in the nested-view plugin"""
-    def __init__(self, msg):
-        """Constructor
-
-        :param str msg: Descriptive message associated with this exception
-        """
-        super(NestedViewCreationError, self).__init__()
-        self._msg = msg
-
-    def __str__(self):
-        return self._msg
-
-
 class NotYetImplementedError(PyJenError):
     """Exception thrown from methods that are not yet implemented"""
 
