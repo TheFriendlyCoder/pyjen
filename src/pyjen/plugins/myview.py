@@ -11,6 +11,7 @@ class MyView(View):
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     :param parent:
         PyJen object that "owns" this view. Typically this is a reference to
         the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
@@ -19,7 +20,6 @@ class MyView(View):
 
         The parent object is expected to expose a method named `create_view`
         which can be used to clone instances of this view.
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
     def __init__(self, api, parent):
