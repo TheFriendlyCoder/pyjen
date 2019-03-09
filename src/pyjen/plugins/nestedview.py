@@ -10,22 +10,9 @@ class NestedView(View):
     Instances of this class are typically instantiated directly or indirectly
     through :py:meth:`pyjen.View.create`
 
-    NOTE: The class associations for this type of view are confusing. When
-    asking the root Jenkins API for a list of views, you'll see this:
-
-        hudson.plugins.nested_view.NestedView
-
-    when analysing the config.xml for the view you'll see this:
-
-        hudson.plugins.nested__view.NestedView
-
-    This plugin does support the "plugin" attribute in it's config.xml, so
-    it has something like
-
-        plugin="nested-view@1.17"
-
     :param api:
         Pre-initialized connection to the Jenkins REST API
+    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     :param parent:
         PyJen object that "owns" this view. Typically this is a reference to
         the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
@@ -34,7 +21,6 @@ class NestedView(View):
 
         The parent object is expected to expose a method named `create_view`
         which can be used to clone instances of this view.
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
     def __init__(self, api, parent):

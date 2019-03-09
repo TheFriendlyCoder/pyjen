@@ -26,13 +26,14 @@ JENKINS_PLUGINS = [
     # Jenkins "pipeline" pseudo-plugin that installs all dependencies to run
     # Jenkins pipeline scripts. Needed by many "core" plugins as well like
     # Git.
-    'workflow-aggregator',
+    "workflow-aggregator",
 
     # Needed to test SCM related operations in the core API
-    'git',
+    "git",
 
-    # Needed to test NestedView plugin
-    'nested-view',
+    # Needed to test PyJen plugins that ship with the core framework
+    "nested-view",
+    "status-view",
 ]
 
 

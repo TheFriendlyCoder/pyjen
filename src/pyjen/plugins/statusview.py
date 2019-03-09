@@ -1,4 +1,5 @@
 """Primitives for operating on Jenkins views of type 'StatusView'"""
+import logging
 from pyjen.view import View
 
 
@@ -8,10 +9,19 @@ class StatusView(View):
     :param api:
         Pre-initialized connection to the Jenkins REST API
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    :param parent:
+        PyJen object that "owns" this view. Typically this is a reference to
+        the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
+        instance but in certain cases this may be a different object like
+        a :class:`pyjen.plugins.nestedview.NestedView`.
+
+        The parent object is expected to expose a method named `create_view`
+        which can be used to clone instances of this view.
     """
 
-    def __init__(self, api):
-        super(StatusView, self).__init__(api)
+    def __init__(self, api, parent):
+        super(StatusView, self).__init__(api, parent)
+        self._log = logging.getLogger(__name__)
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -22,7 +32,7 @@ class StatusView(View):
 
         :rtype: :class:`str`
         """
-        return "statusview"
+        return "hudson.plugins.status_view.StatusView"
 
 
 PluginClass = StatusView
