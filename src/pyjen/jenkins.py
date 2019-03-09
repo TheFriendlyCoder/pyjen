@@ -11,6 +11,7 @@ from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.configxml import ConfigXML
+from pyjen.utils.plugin_api import find_plugin
 
 
 class Jenkins(object):
@@ -276,7 +277,25 @@ class Jenkins(object):
         :returns: An object to manage the newly created job
         :rtype: :class:`~.job.Job`
         """
-        self._api.create_job(job_name, job_type)
+        job_type = job_type.replace("__", "_")
+
+        headers = {'Content-Type': 'text/xml'}
+
+        params = {
+            "name": job_name
+        }
+
+        plugin = find_plugin(job_type)
+        xml_config = plugin.template_config_xml()
+        data = xml_config
+
+        args = {
+            'data': data,
+            'params': params,
+            'headers': headers
+        }
+
+        self._api.post(self._api.url + 'createItem', args)
 
         retval = self.find_job(job_name)
         assert retval is not None

@@ -237,40 +237,6 @@ class JenkinsAPI(object):
 
         return self._crumb_cache
 
-    def create_job(self, job_name, job_type):
-        """Helper method used to create a new Jenkins job
-
-        :param str job_name:
-            the name for this new job
-            This name should be unique, different from any other jobs currently
-            managed by the Jenkins instance
-        :param str job_type:
-            type of job to create
-            must match one or more of the available job types supported by
-            this Jenkins instance. See :py:meth:`~.job.Job.supported_types`
-            for a list of supported job types.
-        """
-        job_type = job_type.replace("__", "_")
-
-        headers = {'Content-Type': 'text/xml'}
-
-        params = {
-            "name": job_name
-        }
-
-        from pyjen.utils.configxml import ConfigXML
-        plugin = ConfigXML.find_plugin(job_type)
-        xml_config = plugin.template_config_xml()
-        data = xml_config
-
-        args = {
-            'data': data,
-            'params': params,
-            'headers': headers
-        }
-
-        self.post(self._jenkins_root_url + 'createItem', args)
-
 
 if __name__ == "__main__":  # pragma: no cover
     pass
