@@ -142,13 +142,7 @@ class Jenkins(object):
         """
         data = self._api.get_api_data()
 
-        default_view = data['primaryView']
-
-        # TODO: Add 'verify' method to job and view classes so callers can
-        #       choose if they want to ensure their returned objects actually
-        #       exist (ie; have a valid rest api endpoint)
-        view_url = default_view['url'] + "view/" + default_view['name']
-        return View(self._api.clone(view_url))
+        return View.instantiate(data['primaryView'], self._api)
 
     @property
     def views(self):
@@ -161,21 +155,12 @@ class Jenkins(object):
         :returns: list of one or more views defined on this Jenkins instance.
         :rtype: :class:`list` of :class:`~.view.View` objects
         """
+        retval = list()
+
         data = self._api.get_api_data()
 
-        raw_views = data['views']
-        retval = []
-
-        for cur_view in raw_views:
-            view_url = cur_view['url']
-
-            # The default view will not have a valid view URL
-            # so we need to look for this and generate a corrected one
-            if '/view/' not in view_url:
-                view_url = view_url + "view/" + cur_view['name']
-
-            tview = View(self._api.clone(view_url))
-            retval.append(tview)
+        for cur_view in data['views']:
+            retval.append(View.instantiate(cur_view, self._api))
 
         return retval
 
@@ -231,17 +216,10 @@ class Jenkins(object):
         """
         data = self._api.get_api_data()
 
-        raw_views = data['views']
-
-        for cur_view in raw_views:
-            if cur_view['name'] == view_name:
-                view_url = cur_view['url']
-                # TODO: Consider encapsulating the 'default view' URL handling
-                #  in the View() constructor
-                if 'view' not in view_url:
-                    view_url += "view/" + cur_view['name']
-
-                return View(self._api.clone(view_url))
+        for cur_view in data['views']:
+            temp_view = View.instantiate(cur_view, self._api)
+            if temp_view.name == view_name:
+                return temp_view
 
         return None
 
