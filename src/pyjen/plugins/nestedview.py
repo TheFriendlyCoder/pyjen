@@ -1,7 +1,7 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
+import logging
 import json
 from pyjen.view import View
-from pyjen.utils.viewxml import ViewXML
 
 
 class NestedView(View):
@@ -26,11 +26,20 @@ class NestedView(View):
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
+    :param parent:
+        PyJen object that "owns" this view. Typically this is a reference to
+        the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
+        instance but in certain cases this may be a different object like
+        a :class:`pyjen.plugins.nestedview.NestedView`.
+
+        The parent object is expected to expose a method named `create_view`
+        which can be used to clone instances of this view.
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
-    def __init__(self, api):
-        super(NestedView, self).__init__(api)
+    def __init__(self, api, parent):
+        super(NestedView, self).__init__(api, parent)
+        self._log = logging.getLogger(__name__)
 
     @property
     def views(self):
@@ -47,7 +56,7 @@ class NestedView(View):
         data = self._api.get_api_data()
 
         for cur_view in data['views']:
-            retval.append(View.instantiate(cur_view, self._api))
+            retval.append(View.instantiate(cur_view, self._api, self))
 
         return retval
 

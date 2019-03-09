@@ -14,7 +14,6 @@ class Job(object):
     def __init__(self, api):
         super(Job, self).__init__()
         self._api = api
-        self._type = None
         # TODO: Consider whether we should name this class Freestyle or not
 
     def __eq__(self, other):

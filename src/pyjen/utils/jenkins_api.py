@@ -237,40 +237,6 @@ class JenkinsAPI(object):
 
         return self._crumb_cache
 
-    def create_view(self, view_name, view_type):
-        """Helper method used to create a new Jenkins view
-
-        NOTE: This base-class helper is here to prevent code duplication
-        between the pyjen.View and pyjen.Jenkins classes. See
-        :py:meth:`~.jenkins.Jenkins.create_view` and
-        :py:meth:`~.view.View.clone`
-
-        :param str view_name:
-            the name for this new view
-            This name should be unique, different from any other views currently
-            managed by the Jenkins instance
-        :param str view_type:
-            type of view to create
-            must match one or more of the available view types supported by
-            this Jenkins instance. See :py:meth:`~.view.View.supported_types`
-            for a list of supported view types.
-        """
-        view_type = view_type.replace("__", "_")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": view_name, "mode": view_type})
-        }
-
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self.post(self._jenkins_root_url + 'createView', args)
-
     def create_job(self, job_name, job_type):
         """Helper method used to create a new Jenkins job
 
