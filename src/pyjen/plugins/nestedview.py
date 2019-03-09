@@ -2,86 +2,75 @@
 import json
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
-from pyjen.exceptions import NestedViewCreationError
 
 
 class NestedView(View):
-    """Interface to Jenkins views of type "NestedView"
+    """all Jenkins related 'view' information for views of type NestedView
 
-    Views of this type contain other views as sub-views
+    Instances of this class are typically instantiated directly or indirectly
+    through :py:meth:`pyjen.View.create`
+
+    NOTE: The class associations for this type of view are confusing. When
+    asking the root Jenkins API for a list of views, you'll see this:
+
+        hudson.plugins.nested_view.NestedView
+
+    when analysing the config.xml for the view you'll see this:
+
+        hudson.plugins.nested__view.NestedView
+
+    This plugin does support the "plugin" attribute in it's config.xml, so
+    it has something like
+
+        plugin="nested-view@1.17"
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-    plugin_name = "hudson.nestedview"
 
     def __init__(self, api):
         super(NestedView, self).__init__(api)
 
     @property
     def views(self):
-        """Gets all views contained within this view
+        """Gets all views contained within this view, non-recursively
 
         To get a recursive list of all child views and their children use
-        :py:func:`all_views`.
+        :py:meth:`all_views`.
 
         :returns: list of all views contained within this view
-        :rtype: :class:`list`
+        :rtype: :class:`list` of :class:`pyjen.view.View`
         """
+        retval = list()
+
         data = self._api.get_api_data()
 
-        raw_views = data['views']
-        retval = []
-
-        for cur_view in raw_views:
-            tview = View(self._api.clone(cur_view['url']))
-            retval.append(tview)
+        for cur_view in data['views']:
+            retval.append(View.instantiate(cur_view, self._api))
 
         return retval
 
     def find_view(self, view_name):
         """Attempts to locate a sub-view under this nested view by name
 
+        NOTE: Seeing as how view names need only be unique within a single
+        parent view, there may be multiple nested views with the same name.
+        To reflect this requirement this method will return a list of views
+        nested within this one that have the name given. If the list is empty
+        then there are no matches for the given name anywhere in this
+        view's sub-tree.
+
         :param str view_name: the name of the sub-view to locate
-        :returns:
-            the view with the given name, or None if no view with that name
-            exists
-        :rtype: Object derived from :class:`~.view.View`
+        :returns: List of 0 or more views with the given name
+        :rtype: :class:`list` of :class:`pyjen.view.View`
         """
+        retval = list()
+        for cur_view in self.all_views:
+            if cur_view.name == view_name:
+                retval.append(cur_view)
 
-        data = self._api.get_api_data()
-
-        raw_views = data['views']
-
-        for cur_view in raw_views:
-            if cur_view['name'] == view_name:
-                return View(self._api.clone(cur_view['url']))
-
-        for cur_view in raw_views:
-            temp_view = View(self._api.clone(cur_view['url']))
-            if isinstance(temp_view.derived_object, NestedView):
-                sub_view = temp_view.derived_object.find_view(view_name)  # pylint: disable=no-member
-                if sub_view is not None:
-                    return sub_view
-
-        return None
-
-    def has_view(self, view_name):
-        """see if a view with the given name already exists under this view
-
-        :param str view_name: the name of the view to look for
-        :returns: True if a view with that name already exists, otherwise false
-        :rtype: :class:`bool`
-        """
-        data = self._api.get_api_data()
-
-        raw_views = data['views']
-
-        for cur_view in raw_views:
-            if cur_view['name'] == view_name:
-                return True
-        return False
+        return retval
 
     @property
     def all_views(self):
@@ -90,17 +79,18 @@ class NestedView(View):
         :returns:
             list of all views contained within this view and it's children,
             recursively
-        :rtype: :class:`list`
+        :rtype: :class:`list` of :class:`pyjen.view.View`
         """
-        temp = self.views
+        retval = list()
+        for cur_view in self.views:
 
-        # TODO: Rework this to leverage the new plugin API
-        retval = []
-        for cur_view in temp:
-            if cur_view.type == NestedView.plugin_name:
+            retval.append(cur_view)
+
+            # See if our current view is, itself a nested view. If so then
+            # recurse into it appending all the views contained therein as well
+            if isinstance(cur_view, NestedView):
                 retval.extend(cur_view.all_views)
 
-        retval.extend(temp)
         return retval
 
     def create_view(self, view_name, view_type):
@@ -108,6 +98,8 @@ class NestedView(View):
 
         :param str view_name: name of the new sub-view to create
         :param str view_type: data type for newly generated view
+        :returns: reference to the newly created view
+        :rtype: :class:`pyjen.view.View`
         """
         view_type = view_type.replace("__", "_")
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -124,33 +116,19 @@ class NestedView(View):
         }
 
         self._api.post(self._api.url + 'createView', args)
+        result = self.find_view(view_name)
 
-        # Load a pyjen.View object with the new view
-        data = self._api.get_api_data()
+        # Sanity Check: views within the same parent MUST have unique names.
+        # This is a hard requirement enforced by the Jenkins API. If, on the
+        # other hand, our search operation yielded no results then something
+        # very strange has happened (ie: a backend server problem). If the
+        # post operation fails for some reason an exception will be raised and
+        # this line of code should never get executed. So we do one quick
+        # sanity check to make sure we have 1, and exactly 1, result from
+        # our search operation.
+        assert len(result) == 1
 
-        raw_views = data['views']
-
-        for cur_view in raw_views:
-            if cur_view['name'] == view_name:
-                return View(self._api.clone(cur_view['url']))
-
-        raise NestedViewCreationError("Failed to create nested view " +
-                                      view_name + " under " + self.name)
-
-    def clone_subview(self, existing_view, new_view_name):
-        """Creates a clone of an existing view under this nested view
-
-         :param existing_view: Instance of a PyJen view to be cloned
-         :type existing_view: :class:`~.view.View`
-         :param str new_view_name: the new name for the view
-         :returns: reference to new PyJen view object
-         :rtype: :class:`~.view.View`
-         """
-        retval = self.create_view(new_view_name, existing_view.type)
-        vxml = ViewXML(existing_view.config_xml)
-        vxml.rename(new_view_name)
-        retval.config_xml = vxml.xml
-        return retval
+        return result[0]
 
     def move_view(self, existing_view):
         """Moves an existing view to a new location
@@ -163,15 +141,11 @@ class NestedView(View):
         :returns: reference to new, relocated view object
         :rtype: :class:`~.view.View`
         """
-        new_view = self.clone_subview(existing_view, existing_view.name)
+        new_view = self.create_view(
+            existing_view.name, existing_view.get_jenkins_plugin_name())
+        new_view.config_xml = existing_view.config_xml
         existing_view.delete()
         return new_view
-
-    #TODO: Disable the get/set config_xml operations here to prevent bugs when
-    #      interacting with this plugin on live servers rationale: there is a
-    #      bug in this plugin that causes the XML retrieved from the REST API
-    #      to be incomplete, so if you pull the XML then re-post it it'll
-    #      essentially corrupt the view - not good.
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -182,7 +156,7 @@ class NestedView(View):
 
         :rtype: :class:`str`
         """
-        return "nestedview"
+        return "hudson.plugins.nested_view.NestedView"
 
 
 PluginClass = NestedView

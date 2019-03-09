@@ -30,6 +30,9 @@ JENKINS_PLUGINS = [
 
     # Needed to test SCM related operations in the core API
     'git',
+
+    # Needed to test NestedView plugin
+    'nested-view',
 ]
 
 
