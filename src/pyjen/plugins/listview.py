@@ -25,7 +25,7 @@ class ListView(View):
 
         :rtype: :class:`str`
         """
-        return "listview"
+        return "hudson.model.ListView"
 
 
 PluginClass = ListView

@@ -25,7 +25,7 @@ class MyView(View):
 
         :rtype: :class:`str`
         """
-        return "myview"
+        return "hudson.model.MyView"
 
 
 PluginClass = MyView
