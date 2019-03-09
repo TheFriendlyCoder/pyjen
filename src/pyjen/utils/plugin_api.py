@@ -21,6 +21,8 @@ def find_plugin(plugin_name):
         reference to the PyJen plugin class associated with the given Jenkins
         plugin, if one exists. If one doesn't exist, returns None.
     """
+    formatted_plugin_name = plugin_name.replace("__", "_")
+
     log = logging.getLogger(__name__)
     all_plugins = list()
     for entry_point in iter_entry_points(group=PLUGIN_ENTRYPOINT_NAME):
@@ -35,7 +37,7 @@ def find_plugin(plugin_name):
                 PLUGIN_METHOD_NAME)
             continue
 
-        if getattr(cur_plugin, PLUGIN_METHOD_NAME)() == plugin_name:
+        if getattr(cur_plugin, PLUGIN_METHOD_NAME)() == formatted_plugin_name:
             supported_plugins.append(cur_plugin)
 
     if not supported_plugins:
@@ -43,7 +45,7 @@ def find_plugin(plugin_name):
 
     if len(supported_plugins) > 1:
         log.warning("multiple plugins detected for specified Jenkins"
-                    " object: %s. Using first match.", plugin_name)
+                    " object: %s. Using first match.", formatted_plugin_name)
 
     return supported_plugins[0]
 
