@@ -79,7 +79,7 @@ class PluginNotSupportedError(NotImplementedError):
         self._plugin_name = plugin_name
 
     def __str__(self):
-        return self._message
+        return self._message + ": " + self.plugin_name
 
     @property
     def message(self):

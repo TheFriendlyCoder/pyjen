@@ -34,6 +34,7 @@ JENKINS_PLUGINS = [
     # Needed to test PyJen plugins that ship with the core framework
     "nested-view",
     "status-view",
+    "sectioned-view",
 ]
 
 

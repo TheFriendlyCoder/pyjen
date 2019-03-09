@@ -1,8 +1,9 @@
 """Primitives for working on Jenkins views of type 'SectionedView'"""
 import logging
-import xml.etree.ElementTree as ElementTree
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
+from pyjen.utils.plugin_api import find_plugin
+from pyjen.exceptions import PluginNotSupportedError
 
 
 class SectionedView(View):
@@ -37,6 +38,18 @@ class SectionedView(View):
         vxml = SectionedViewXML(self.config_xml)
         return vxml.sections
 
+    def add_section(self, section_type, name):
+        """Adds a new section to the sectioned view
+
+        :param str section_type:
+            name of class used to implement the new section to add
+        :param str name:
+            descriptive text to appear in the title area of the section
+        """
+        vxml = SectionedViewXML(self.config_xml)
+        vxml.add_section(section_type, name)
+        self.config_xml = vxml.xml
+
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -46,55 +59,7 @@ class SectionedView(View):
 
         :rtype: :class:`str`
         """
-        return "sectionedview"
-
-
-class ListViewSection(object):
-    """One of several 'section' types defined for a sectioned view
-
-    Represents sections of type 'ListView'
-    """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a ListView section
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def include_regex(self):
-        """regular filter for jobs to be shown in this section
-
-        :rtype: :class:`str`
-        """
-        regex_node = self._root.find("includeRegex")
-        if regex_node is None:
-            return ""
-        return regex_node.text
-
-    @include_regex.setter
-    def include_regex(self, new_regex):
-        """Sets the filter to use for jobs shown in this section
-
-        :param str new_regex: a new regular expression to use for the filter
-        """
-        regex_node = self._root.find("includeRegex")
-        if regex_node is None:
-            regex_node = ElementTree.SubElement(self._root, 'includeRegex')
-        regex_node.text = new_regex
-
-
-class TextSection(object):
-    """One of several 'section' types defined for a sectioned view
-
-    Sections of this type contain simple descriptive text"""
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a ListView section
-        :type node: :class:`ElementTree.Element`
-        """
-        self._node = node
+        return "hudson.plugins.sectioned_view.SectionedView"
 
 
 class SectionedViewXML(ViewXML):
@@ -114,16 +79,33 @@ class SectionedViewXML(ViewXML):
         """
         nodes = self._root.find('sections')
 
-        retval = []
+        retval = list()
         for node in nodes:
-            plugin = create_xml_plugin(node)
+            plugin = find_plugin(node.tag)
             if plugin is not None:
-                retval.append(plugin)
+                retval.append(plugin(node))
             else:
-                self._log.warning("Sectioned view plugin %s not found",
-                                  get_plugin_name(node))
+                self._log.warning("Sectioned view plugin not found: %s",
+                                  node.tag)
 
         return retval
+
+    def add_section(self, section_type, name):
+        """Adds a new section to the sectioned view
+
+        :param str section_type:
+            name of class used to implement the new section to add
+        :param str name:
+            descriptive text to appear in the title area of the section
+        """
+        plugin_class = find_plugin(section_type)
+        if not plugin_class:
+            raise PluginNotSupportedError(
+                "Failed loading Sectioned View section",
+                section_type)
+        new_section = plugin_class.create(name)
+        sections = self._root.find('sections')
+        sections.append(new_section.node)
 
 
 PluginClass = SectionedView
