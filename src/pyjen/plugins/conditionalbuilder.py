@@ -1,15 +1,11 @@
 """Primitives for operating on Jenkins job builder of type 'Conditional Builder'
 """
 import logging
-#from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 # TODO: Have a separate entry point for these plugins, and instantiate different
 #       classes depending on whether we have a single conditional build step or
 #       a multiple conditional build step the ConditionalBuilder class would
 #       map to the latter from the looks of it
-
-# TODO: Consider having most of these XML based plugins derive from ConfigXML
-#       class so they can use methods like plugin_name, plugin_version, etc.
 
 
 class ConditionalBuilder(object):

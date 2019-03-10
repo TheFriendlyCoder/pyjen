@@ -343,7 +343,7 @@ def test_builds_with_git(request, test_job):
     async_assert(lambda: isinstance(request.cls.job.scm, GitSCM))
 
     request.cls.job.start_build()
-    async_assert(lambda: request.cls.job.last_good_build)
+    async_assert(lambda: request.cls.job.last_good_build is not None)
 
 
 def pytest_collection_modifyitems(config, items):
