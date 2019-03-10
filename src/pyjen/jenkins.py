@@ -5,6 +5,7 @@ from requests.exceptions import RequestException
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
+from pyjen.utils.jobxml import JobXML
 from pyjen.user import User
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
@@ -303,6 +304,35 @@ class Jenkins(object):
         retval = self.find_job(job_name)
         assert retval is not None
         return retval
+
+    def clone_job(self, source_job_name, new_job_name, disable=True):
+        """"Create a new job with the same configuration as this one
+
+        :param str source_job_name: Name of the job to be cloned
+        :param str new_job_name: Name of the new job to be created
+        :param bool disable:
+            Indicates whether the newly created job should be disabled after
+            creation to prevent builds from accidentally triggering
+            immediately after creation
+        :returns: reference to the newly created job
+        :rtype: :class:`pyjen.job.Job`
+        """
+        # Locate the source job
+        source_job = self.find_job(source_job_name)
+        if source_job is None:
+            raise Exception("Unable to clone job %s. Job does not exist.",
+                            source_job_name)
+
+        # create a new job with the specified name and then copy the
+        # configuration from the old job to the new one
+        jxml = JobXML(source_job.config_xml)
+        new_job = self.create_job(
+            new_job_name, jxml.plugin_name)
+        new_job.config_xml = source_job.config_xml
+
+        if disable:
+            new_job.disable()
+        return new_job
 
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance

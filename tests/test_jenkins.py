@@ -1,9 +1,8 @@
 from pyjen.jenkins import Jenkins
 from mock import MagicMock, patch
 import pytest
-from pytest import raises
-from pyjen.exceptions import PluginNotSupportedError
-from .utils import clean_view
+from .utils import clean_view, clean_job, async_assert
+from pyjen.plugins.shellbuilder import ShellBuilder
 
 
 def test_simple_connection(jenkins_env):
@@ -163,6 +162,56 @@ def test_get_plugin_manager(jenkins_env):
     pm = jk.plugin_manager
 
     assert pm is not None
+
+
+def test_create_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_create_job", "project")
+    with clean_job(jb):
+        assert jb is not None
+
+
+def test_clone_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_clone_job", "project")
+    with clean_job(jb):
+        # add a builder to our source job so we can check to make sure the
+        # configuration has been properly cloned
+        expected_script = "echo Hello From TestCloneJob"
+        failing_step = ShellBuilder.create(expected_script)
+        jb.add_builder(failing_step)
+        async_assert(lambda: jb.builders)
+
+        # now, clone our job configuration and make sure the entire config
+        # has been cloned correctly
+        expected_name = "test_clone_job2"
+        jb_clone = jk.clone_job(jb.name, expected_name)
+        with clean_job(jb_clone):
+            assert jb_clone is not None
+            assert jb_clone.name == expected_name
+            assert jb_clone.is_disabled
+            results = jb_clone.builders
+            assert results is not None
+            assert isinstance(results, list)
+            assert len(results) == 1
+            assert isinstance(results[0], ShellBuilder)
+            assert results[0].script == expected_script
+
+
+def test_clone_job_doesnt_exist(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    with pytest.raises(Exception):
+        jk.clone_job("TestJobThatDoesNotExist", "test_clone_job_doesnt_exist")
+
+
+def test_clone_job_enabled(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_clone_job_enabled", "project")
+    with clean_job(jb):
+        jb_clone = jk.clone_job(jb.name, "test_clone_job2", False)
+        with clean_job(jb_clone):
+            assert jb_clone is not None
+            assert jb_clone.is_disabled is False
 
 
 if __name__ == "__main__":

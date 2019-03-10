@@ -118,26 +118,6 @@ def test_enable_all_jobs(jenkins_env):
         assert jb.is_disabled is False
 
 
-def test_clone_all_jobs(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    expected_job_name = "test_clone_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "project")
-    try:
-        with clean_job(jb):
-            vw = jk.default_view
-            vw.clone_all_jobs("clone_all_jobs", "clone_all_jobs2")
-
-            jb2 = vw.find_job("test_clone_all_jobs2_job")
-            assert jb2 is not None
-            with clean_job(jb2):
-                all_jobs = vw.jobs
-                assert len(all_jobs) == 2
-    except:
-        # just in case something odd happens during the flow of this text,
-        # we make sure to leave the environment clean when we leave
-        jk.default_view.delete_all_jobs()
-
-
 def test_get_config_xml(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
 
