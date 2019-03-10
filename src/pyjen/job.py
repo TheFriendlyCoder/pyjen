@@ -450,33 +450,6 @@ class Job(object):
                 builds.append(run)
         return builds
 
-    def clone(self, new_job_name):
-        """"Create a new job with the same configuration as this one
-
-        :param str new_job_name: Name of the new job to be created
-        """
-        params = {'name': new_job_name,
-                  'mode': 'copy',
-                  'from': self.name}
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-
-        args = {
-            'params': params,
-            'data': '',
-            'headers': headers
-        }
-
-        self._api.post(self._api.root_url + "createItem", args)
-
-        # TODO: Figure out how to prepopulate name field here
-        # new_job = Job._create(temp_data_io, self, new_job_name)
-        job_url = self._api.root_url + "job/" + new_job_name
-        new_job = Job(self._api.clone(job_url))
-
-        # disable the newly created job so it doesn't accidentally start running
-        new_job.disable()
-        return new_job
-
     @property
     def publishers(self):
         """Gets all plugins configured as 'publishers' for this job"""

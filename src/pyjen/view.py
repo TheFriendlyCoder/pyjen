@@ -166,27 +166,6 @@ class View(object):
         for j in self.jobs:
             j.enable()
 
-    def clone_all_jobs(self, source_job_name_pattern, new_job_substring):
-        """Batch-clones all jobs contained within this view
-
-        :param str source_job_name_pattern:
-            pattern to use as a substitution rule when generating new names for
-            cloned jobs. Substrings within the existing job names that match
-            this pattern will be replaced by the given substitution string
-        :param str new_job_substring:
-            character string used to generate new job names for the clones of
-            the existing jobs. The substring of an existing job that matches
-            the given regex will be replaced by this new string to create the
-            new job name for it's cloned counterpart.
-        """
-        retval = []
-        for cur_job in self.jobs:
-            new_name = cur_job.name.replace(
-                source_job_name_pattern, new_job_substring)
-            new_job = cur_job.clone(new_name)
-            retval.append(new_job)
-        return retval
-
     def clone(self, new_view_name):
         """Make a copy of this view with the specified name
 

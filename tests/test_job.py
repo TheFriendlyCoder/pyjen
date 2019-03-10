@@ -78,14 +78,6 @@ class TestJobReadOperations(object):
         xml = ElementTree.fromstring(res)
         assert xml.tag == "project"
 
-    def test_clone(self):
-        expected_name = "test_clone2"
-        jb_clone = self.job.clone(expected_name)
-        with clean_job(jb_clone):
-            assert jb_clone is not None
-            assert jb_clone.name == expected_name
-            assert jb_clone.is_disabled
-
     def test_no_downstream_jobs(self):
         dependencies = self.job.downstream_jobs
 
