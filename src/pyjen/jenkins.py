@@ -10,6 +10,7 @@ from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.plugin_api import find_plugin
+from pyjen.exceptions import PluginNotSupportedError
 
 
 class Jenkins(object):
@@ -284,6 +285,10 @@ class Jenkins(object):
         }
 
         plugin = find_plugin(job_type)
+        if plugin is None:
+            raise PluginNotSupportedError(
+                "Attempting to create a new job with an unsupported format",
+                job_type)
         xml_config = plugin.template_config_xml()
         data = xml_config
 
