@@ -165,15 +165,5 @@ def test_get_plugin_manager(jenkins_env):
     assert pm is not None
 
 
-def test_get_plugin_template_not_supported():
-    # TODO: Fix this test so coverage works correctly
-    #       apparently pytest has trouble testing static class methods like
-    #       this one
-    jk = Jenkins("http://0.0.0.0")
-    with raises(PluginNotSupportedError):
-        res = jk.get_plugin_template("DoesNotExistTemplate")
-        assert res is None
-
-
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

@@ -9,8 +9,6 @@ from pyjen.user import User
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
-from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.configxml import ConfigXML
 from pyjen.utils.plugin_api import find_plugin
 
 
@@ -300,19 +298,6 @@ class Jenkins(object):
         retval = self.find_job(job_name)
         assert retval is not None
         return retval
-
-    @staticmethod
-    def get_plugin_template(plugin_type):
-        """retrieves a default XML template for constructing a specific plugin
-
-        :param str plugin_type:
-            name of a specific plugin to load the template configuration for"""
-        plugin = ConfigXML.find_plugin(plugin_type)
-        if plugin is not None:
-            return plugin.template_config_xml()
-
-        raise PluginNotSupportedError(
-            "Plugin {0} not found".format(plugin_type), plugin_type)
 
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance

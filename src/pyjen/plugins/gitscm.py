@@ -11,8 +11,6 @@ class GitSCM(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert 'plugin' in self._root.attrib
-        assert self.get_jenkins_plugin_name() in self._root.attrib['plugin']
 
     @property
     def node(self):
@@ -28,7 +26,7 @@ class GitSCM(object):
 
         :rtype: :class:`str`
         """
-        return "git"
+        return "hudson.plugins.git.GitSCM"
 
     @staticmethod
     def create(repository_url):

@@ -1,6 +1,8 @@
 """Primitives for interacting with Jenkins jobs"""
 from pyjen.build import Build
 from pyjen.utils.jobxml import JobXML
+from pyjen.utils.plugin_api import find_plugin
+from pyjen.exceptions import PluginNotSupportedError
 
 
 class Job(object):
@@ -40,7 +42,11 @@ class Job(object):
             return self
 
         obj_xml = JobXML(self.config_xml)
-        return obj_xml.derived_object(self._api.url)
+        plugin_class = find_plugin(obj_xml.plugin_name)
+        if plugin_class is None:
+            raise PluginNotSupportedError("Unable to find Job plugin",
+                                          obj_xml.plugin_name)
+        return plugin_class(self._api.clone(self._api.url))
 
     @property
     def name(self):

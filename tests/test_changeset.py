@@ -13,7 +13,7 @@ class TestBuildsWithGit(object):
     def test_get_changeset_scm_type(self):
         bld = self.job.last_good_build
         chgset = bld.changeset
-        assert chgset.scm_type == GitSCM.get_jenkins_plugin_name()
+        assert chgset.scm_type == "git"
 
     def test_get_has_no_changes(self):
         bld = self.job.last_good_build

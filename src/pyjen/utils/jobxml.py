@@ -2,22 +2,42 @@
 import logging
 import xml.etree.ElementTree as ElementTree
 from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.configxml import ConfigXML
+from pyjen.utils.plugin_api import find_plugin
 
 
-class JobXML(ConfigXML):
+class JobXML(object):
     """ Wrapper around the config.xml for a Jenkins job
 
     The source xml can be loaded from nearly any URL by
     appending "/config.xml" to it, as in "http://server/jobs/job1/config.xml"
+
+    :param str config_xml:
+        Raw XML character string extracted from a Jenkins job.
     """
-    def __init__(self, xml):
-        """
-        :param str xml: Raw XML character string extracted from a Jenkins job.
-        """
-        super(JobXML, self).__init__(xml)
-        assert self._root.tag == "project"
+    def __init__(self, config_xml):
+        super(JobXML, self).__init__()
+        self._root = ElementTree.fromstring(config_xml)
         self._log = logging.getLogger(__name__)
+
+    def __str__(self):
+        """String representation of the configuration XML"""
+        return self.xml
+
+    @property
+    def xml(self):
+        """Raw XML in plain-text format
+
+        :rtype: :class:`str`
+        """
+        return ElementTree.tostring(self._root).decode("utf-8")
+
+    @property
+    def plugin_name(self):
+        """Gets the name of the Jenkins plugin associated with this view
+
+        :rtype: :class:`str`
+        """
+        return self._root.tag
 
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
@@ -104,11 +124,12 @@ class JobXML(ConfigXML):
         :rtype: :class:`~.pluginapi.PluginBase`
         """
         node = self._root.find('scm')
-        plugin = self._init_plugin(node)
-        if plugin is not None:
-            return plugin
-
-        raise PluginNotSupportedError("SCM XML plugin not found", "scm")
+        self._log.debug(node)
+        plugin_class = find_plugin(node.attrib["class"])
+        if plugin_class is None:
+            raise PluginNotSupportedError("SCM XML plugin not found",
+                                          node.attrib["class"])
+        return plugin_class(node)
 
     @scm.setter
     def scm(self, node):
@@ -146,11 +167,15 @@ class JobXML(ConfigXML):
         retval = []
         nodes = self._root.find('publishers')
         for node in nodes:
-            plugin = self._init_plugin(node)
-            if plugin is not None:
-                retval.append(plugin)
-            else:
-                self._log.warning("Unsupported job 'publisher' plugin")
+            plugin_class = find_plugin(node.tag)
+
+            if plugin_class is None:
+                self._log.warning("Unsupported job 'publisher' plugin: %s",
+                                  node.tag)
+                continue
+
+            retval.append(plugin_class(node))
+
         return retval
 
     def add_publisher(self, node):
@@ -167,14 +192,16 @@ class JobXML(ConfigXML):
         :returns: a list of build operations associated with this job
         :rtype: :class:`list` of builder plugins used by this job
         """
-        retval = []
+        retval = list()
         nodes = self._root.find('builders')
         for node in nodes:
-            plugin = self._init_plugin(node)
-            if plugin is not None:
-                retval.append(plugin)
-            else:
-                self._log.warning("Unsupported job 'builder' plugin")
+            plugin_class = find_plugin(node.tag)
+            if plugin_class is None:
+                self._log.warning("Unsupported job 'builder' plugin %s",
+                                  node.tag)
+                continue
+
+            retval.append(plugin_class(node))
 
         return retval
 
