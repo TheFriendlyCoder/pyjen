@@ -6,6 +6,7 @@ from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
+from pyjen.utils.viewxml import ViewXML
 from pyjen.user import User
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
@@ -144,7 +145,7 @@ class Jenkins(object):
         """
         data = self._api.get_api_data()
 
-        return View.instantiate(data['primaryView'], self._api, self)
+        return View.instantiate(data['primaryView'], self._api)
 
     @property
     def views(self):
@@ -162,7 +163,7 @@ class Jenkins(object):
         data = self._api.get_api_data()
 
         for cur_view in data['views']:
-            retval.append(View.instantiate(cur_view, self._api, self))
+            retval.append(View.instantiate(cur_view, self._api))
 
         return retval
 
@@ -219,7 +220,7 @@ class Jenkins(object):
         data = self._api.get_api_data()
 
         for cur_view in data['views']:
-            temp_view = View.instantiate(cur_view, self._api, self)
+            temp_view = View.instantiate(cur_view, self._api)
             if temp_view.name == view_name:
                 return temp_view
 
@@ -260,6 +261,45 @@ class Jenkins(object):
         retval = self.find_view(view_name)
         assert retval is not None
         return retval
+
+    def clone_view(self, source_view_name, new_view_name):
+        """Make a copy of a view with the specified name
+
+        :param str source_view_name:
+            name of the Jenkins view to be cloned
+        :param str new_view_name:
+            name to give the newly created view
+        :return: reference to the created view
+        :rtype: :class:`~.view.View`
+        """
+        source_view = self.find_view(source_view_name)
+        if source_view is None:
+            raise Exception("Unable to clone view. View not found: %s",
+                            source_view_name)
+
+        vxml = ViewXML(source_view.config_xml)
+        new_view = self.create_view(new_view_name, vxml.plugin_name)
+
+        vxml.rename(new_view_name)
+        new_view.config_xml = vxml.xml
+        return new_view
+
+    def rename_view(self, source_view_name, new_view_name):
+        """Rename a view managed by this Jenkins instance
+
+        :param str source_view_name:
+            name of the existing view to be renamed
+        :param str new_view_name:
+            new name for the selected source view
+        :returns: reference to the newly create view
+        """
+        source_view = self.find_view(source_view_name)
+        if source_view is None:
+            raise Exception("Unable to rename view. View not found: %s",
+                            source_view_name)
+        new_view = self.clone_view(source_view_name, new_view_name)
+        source_view.delete()
+        return new_view
 
     def create_job(self, job_name, job_type):
         """Creates a new job on the Jenkins dashboard

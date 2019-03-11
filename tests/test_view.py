@@ -3,14 +3,6 @@ import pytest
 from .utils import clean_view, clean_job
 
 
-def test_create_view(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    vw = jk.create_view("test_create_view", "hudson.model.ListView")
-    with clean_view(vw):
-        assert vw is not None
-        assert vw.name == "test_create_view"
-
-
 def test_delete_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_view_name = "test_delete_view"
@@ -25,36 +17,6 @@ def test_get_name(jenkins_env):
     vw = jk.create_view(expected_name, "hudson.model.ListView")
     with clean_view(vw):
         assert vw.name == expected_name
-
-
-def test_clone_view(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    vw = jk.create_view("test_clone_view1", "hudson.model.ListView")
-    with clean_view(vw):
-        expected_name = "test_clone_view2"
-        vw2 = vw.clone(expected_name)
-        with clean_view(vw2):
-            assert vw2 is not None
-            assert vw2.name == expected_name
-
-
-def test_rename_view(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    view_name_1 = "test_clone_view1"
-    vw = jk.create_view(view_name_1, "hudson.model.ListView")
-    try:
-        expected_name = "test_clone_view2"
-        vw2 = vw.rename(expected_name)
-        assert vw2 is not None
-        with clean_view(vw2):
-            tmp_view = jk.find_view(expected_name)
-            assert tmp_view is not None
-            assert tmp_view.name == expected_name
-    except:
-        tmp = jk.find_view(view_name_1)
-        if tmp:
-            tmp.delete()
-        raise
 
 
 def test_get_jobs_no_jobs(jenkins_env):

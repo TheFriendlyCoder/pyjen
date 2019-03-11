@@ -154,12 +154,11 @@ def test_clone_sub_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     parent = jk.create_view("test_clone_sub_view_parent", "hudson.plugins.nested_view.NestedView")
     with clean_view(parent):
-        source_view_name = "test_clone_sub_view_child1"
-        child1 = parent.create_view(source_view_name, "hudson.model.ListView")
+        child1 = parent.create_view("test_clone_sub_view_child1", "hudson.model.ListView")
 
         with clean_view(child1):
             expected_view_name = "test_clone_sub_view_child2"
-            child2 = child1.clone(expected_view_name)
+            child2 = parent.clone_view(child1.name, expected_view_name)
             assert child2 is not None
             with clean_view(child2):
                 assert child2.name == expected_view_name

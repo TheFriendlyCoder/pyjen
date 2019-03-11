@@ -2,6 +2,7 @@
 import logging
 import json
 from pyjen.view import View
+from pyjen.utils.viewxml import ViewXML
 
 
 class NestedView(View):
@@ -13,18 +14,10 @@ class NestedView(View):
     :param api:
         Pre-initialized connection to the Jenkins REST API
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
-    :param parent:
-        PyJen object that "owns" this view. Typically this is a reference to
-        the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
-        instance but in certain cases this may be a different object like
-        a :class:`pyjen.plugins.nestedview.NestedView`.
-
-        The parent object is expected to expose a method named `create_view`
-        which can be used to clone instances of this view.
     """
 
-    def __init__(self, api, parent):
-        super(NestedView, self).__init__(api, parent)
+    def __init__(self, api):
+        super(NestedView, self).__init__(api)
         self._log = logging.getLogger(__name__)
 
     @property
@@ -42,7 +35,7 @@ class NestedView(View):
         data = self._api.get_api_data()
 
         for cur_view in data['views']:
-            retval.append(View.instantiate(cur_view, self._api, self))
+            retval.append(View.instantiate(cur_view, self._api))
 
         return retval
 
@@ -124,6 +117,32 @@ class NestedView(View):
         assert len(result) == 1
 
         return result[0]
+
+    def clone_view(self, source_view_name, new_view_name):
+        """Make a copy of a view with the specified name
+
+        :param str source_view_name:
+            name of the Jenkins view to be cloned
+        :param str new_view_name:
+            name to give the newly created view
+        :return: reference to the created view
+        :rtype: :class:`~.view.View`
+        """
+        source_view = None
+        for cur_view in self.views:
+            if cur_view.name == source_view_name:
+                source_view = cur_view
+                break
+        if source_view is None:
+            raise Exception("Unable to clone view. View not found: %s",
+                            source_view_name)
+
+        vxml = ViewXML(source_view.config_xml)
+        new_view = self.create_view(new_view_name, vxml.plugin_name)
+
+        vxml.rename(new_view_name)
+        new_view.config_xml = vxml.xml
+        return new_view
 
     def move_view(self, existing_view):
         """Moves an existing view to a new location

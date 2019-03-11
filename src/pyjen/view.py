@@ -1,7 +1,6 @@
 """Primitives for interacting with Jenkins views"""
 import logging
 from pyjen.job import Job
-from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.plugin_api import find_plugin
 
 
@@ -10,24 +9,15 @@ class View(object):
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
-    :param parent:
-        PyJen object that "owns" this view. Typically this is a reference to
-        the :class:`pyjen.jenkins.Jenkins` object for the current Jenkins
-        instance but in certain cases this may be a different object like
-        a :class:`pyjen.plugins.nestedview.NestedView`.
-
-        The parent object is expected to expose a method named `create_view`
-        which can be used to clone instances of this view.
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-    def __init__(self, api, parent):
+    def __init__(self, api):
         super(View, self).__init__()
         self._log = logging.getLogger(__name__)
         self._api = api
-        self._parent = parent
 
     @staticmethod
-    def instantiate(json_data, rest_api, parent):
+    def instantiate(json_data, rest_api):
         """Factory method for finding the appropriate PyJen view object based
         on data loaded from the Jenkins REST API
 
@@ -78,7 +68,7 @@ class View(object):
             log.debug("Unable to find plugin for class %s", json_data["_class"])
             plugin_class = View
 
-        return plugin_class(rest_api.clone(view_url), parent)
+        return plugin_class(rest_api.clone(view_url))
 
     @property
     def name(self):
@@ -166,35 +156,6 @@ class View(object):
         for j in self.jobs:
             j.enable()
 
-    def clone(self, new_view_name):
-        """Make a copy of this view with the specified name
-
-        :param str new_view_name: name of the newly cloned view
-        :return: reference to the View object that manages the new, cloned view
-        :rtype: :class:`~.view.View`
-        """
-        vxml = ViewXML(self.config_xml)
-        new_view = self._parent.create_view(new_view_name, vxml.plugin_name)
-
-        vxml.rename(new_view_name)
-        new_view.config_xml = vxml.xml
-        return new_view
-
-    def rename(self, new_name):
-        """Rename this view
-
-        Since Jenkins doesn't currently support renaming views, this method
-        destroys the current view and creates a new one with the same
-        configuration. As such, once this method completes this object will
-        become invalidated
-
-        :param str new_name: new name for this view
-        :returns: reference to the newly create view
-        """
-        new_view = self.clone(new_name)
-        self.delete()
-        return new_view
-
     @property
     def view_metrics(self):
         """Composes a report on the jobs contained within the view
@@ -233,9 +194,6 @@ class View(object):
                 "broken_jobs": broken_jobs,
                 "unstable_jobs": unstable_jobs,
                 "disabled_jobs": disabled_jobs}
-
-    # TODO: Add a supported_types static method for returning all plugins
-    #  which extend the View data type
 
 
 if __name__ == "__main__":  # pragma: no cover
