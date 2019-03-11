@@ -207,14 +207,14 @@ def test_get_plugin_manager(jenkins_env):
 
 def test_create_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_job", "project")
+    jb = jk.create_job("test_create_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         assert jb is not None
 
 
 def test_clone_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job", "project")
+    jb = jk.create_job("test_clone_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         # add a builder to our source job so we can check to make sure the
         # configuration has been properly cloned
@@ -247,7 +247,7 @@ def test_clone_job_doesnt_exist(jenkins_env):
 
 def test_clone_job_enabled(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job_enabled", "project")
+    jb = jk.create_job("test_clone_job_enabled", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb_clone = jk.clone_job(jb.name, "test_clone_job2", False)
         with clean_job(jb_clone):

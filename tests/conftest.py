@@ -317,7 +317,7 @@ def test_job(request, jenkins_env):
     """
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     request.cls.jenkins = jk
-    request.cls.job = jk.create_job(request.cls.__name__ + "Job", "project")
+    request.cls.job = jk.create_job(request.cls.__name__ + "Job", "hudson.model.FreeStyleProject")
     assert request.cls.job is not None
 
     yield

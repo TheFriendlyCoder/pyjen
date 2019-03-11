@@ -8,7 +8,7 @@ from ..utils import async_assert, clean_job
 def test_add_artifact_archiver_publisher(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_artifact_archiver_publisher_job"
-    jb = jk.create_job(job_name, "project")
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_regex = "*.txt"
         publisher = ArtifactArchiverPublisher.create(expected_regex)
@@ -28,7 +28,7 @@ def test_add_artifact_archiver_publisher(jenkins_env):
 def test_artifacts_archived(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_artifacts_archived_job"
-    jb = jk.create_job(job_name, "project")
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         publisher = ArtifactArchiverPublisher.create("*.txt")
         jb.add_publisher(publisher)

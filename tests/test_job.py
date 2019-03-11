@@ -12,7 +12,7 @@ from pyjen.plugins.shellbuilder import ShellBuilder
 
 def test_create_freestyle_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_freestyle_job", "project")
+    jb = jk.create_job("test_create_freestyle_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         assert jb is not None
 
@@ -20,7 +20,7 @@ def test_create_freestyle_job(jenkins_env):
 def test_delete_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_delete_job"
-    jb = jk.create_job(expected_name, "project")
+    jb = jk.create_job(expected_name, "hudson.model.FreeStyleProject")
     jb.delete()
     res = jk.find_job(expected_name)
     assert res is None
@@ -28,7 +28,7 @@ def test_delete_job(jenkins_env):
 
 def test_start_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_start_build", "project")
+    jb = jk.create_job("test_start_build", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb.start_build()
 
@@ -49,7 +49,7 @@ class TestJobReadOperations(object):
         assert self.job != 10
         assert not self.job == 10
 
-        jb3 = self.jenkins.create_job("test_comparison_operators", "project")
+        jb3 = self.jenkins.create_job("test_comparison_operators", "hudson.model.FreeStyleProject")
         with clean_job(jb3):
             assert self.job != jb3
 
@@ -58,13 +58,7 @@ class TestJobReadOperations(object):
 
         assert jb2 is not None
         assert jb2.name == self.job.name
-
-    def test_derived_job_object(self):
-        jb2 = self.jenkins.find_job(self.job.name)
-
-        derived = jb2.derived_object
-
-        assert isinstance(derived, FreestyleJob)
+        assert isinstance(jb2, FreestyleJob)
 
     def test_is_disabled_defaults(self):
         assert not self.job.is_disabled
@@ -156,7 +150,7 @@ class TestJobReadOperations(object):
 
 def test_get_all_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_all_builds", "project")
+    jb = jk.create_job("test_get_all_builds", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb.start_build()
         async_assert(lambda: jb.all_builds)
@@ -169,7 +163,7 @@ def test_get_all_builds(jenkins_env):
 
 def test_disable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable", "project")
+    jb = jk.create_job("test_disable", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb.disable()
         assert jb.is_disabled
@@ -177,7 +171,7 @@ def test_disable(jenkins_env):
 
 def test_enable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_enable", "project")
+    jb = jk.create_job("test_enable", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb.disable()
         jb.enable()
@@ -186,13 +180,13 @@ def test_enable(jenkins_env):
 
 def test_multiple_downstream_jobs_recursive(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_multiple_downstream_jobs_recursive1", "project")
+    jb = jk.create_job("test_multiple_downstream_jobs_recursive1", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_name1 = "test_multiple_downstream_jobs_recursive2"
-        jb2 = jk.create_job(expected_name1, "project")
+        jb2 = jk.create_job(expected_name1, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             expected_name2 = "test_multiple_downstream_jobs_recursive3"
-            jb3 = jk.create_job(expected_name2, "project")
+            jb3 = jk.create_job(expected_name2, "hudson.model.FreeStyleProject")
             with clean_job(jb3):
                 publisher1 = BuildTriggerPublisher.create([expected_name1])
                 jb.add_publisher(publisher1)
@@ -213,13 +207,13 @@ def test_multiple_downstream_jobs_recursive(jenkins_env):
 def test_multiple_upstream_jobs_recursive(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     parent_job_name = "test_multiple_upstream_jobs_recursive1"
-    jb = jk.create_job(parent_job_name, "project")
+    jb = jk.create_job(parent_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_name1 = "test_multiple_upstream_jobs_recursive2"
-        jb2 = jk.create_job(expected_name1, "project")
+        jb2 = jk.create_job(expected_name1, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             expected_name2 = "test_multiple_upstream_jobs_recursive3"
-            jb3 = jk.create_job(expected_name2, "project")
+            jb3 = jk.create_job(expected_name2, "hudson.model.FreeStyleProject")
             with clean_job(jb3):
                 publisher1 = BuildTriggerPublisher.create([expected_name1])
                 jb.add_publisher(publisher1)
@@ -343,7 +337,7 @@ class TestJobBuilds:
 
 def test_get_last_failed_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_failed_build", "project")
+    jb = jk.create_job("test_get_last_failed_build", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         failing_step = ShellBuilder.create("exit -1")
         jb.add_builder(failing_step)
@@ -361,7 +355,7 @@ def test_get_last_failed_build(jenkins_env):
 
 def test_get_last_unsuccessful_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_unsuccessful_build", "project")
+    jb = jk.create_job("test_get_last_unsuccessful_build", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         rcode = 12
         failing_step = ShellBuilder.create("exit " + str(rcode))
@@ -381,7 +375,7 @@ def test_get_last_unsuccessful_build(jenkins_env):
 
 def test_is_unstable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_is_unstable_job", "project")
+    jb = jk.create_job("test_is_unstable_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         rcode = 12
         failing_step = ShellBuilder.create("exit " + str(rcode))
@@ -397,7 +391,7 @@ def test_is_unstable(jenkins_env):
 
 def test_get_builds_in_time_range_no_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_builds_in_time_range_no_builds", "project")
+    jb = jk.create_job("test_get_builds_in_time_range_no_builds", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         start_time = datetime.now() - timedelta(days=1)
         end_time = datetime.now() + timedelta(days=1)

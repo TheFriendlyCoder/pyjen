@@ -31,7 +31,7 @@ def test_get_jobs_no_jobs(jenkins_env):
 def test_get_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_get_jobs_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         vw = jk.default_view
         all_jobs = vw.jobs
@@ -43,7 +43,7 @@ def test_get_jobs(jenkins_env):
 def test_delete_all_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_delete_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
 
     try:
         vw = jk.default_view
@@ -60,7 +60,7 @@ def test_delete_all_jobs(jenkins_env):
 def test_disable_all_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_disable_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
 
     with clean_job(jb):
         vw = jk.default_view
@@ -71,7 +71,7 @@ def test_disable_all_jobs(jenkins_env):
 def test_enable_all_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_enable_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
 
     with clean_job(jb):
         vw = jk.default_view
@@ -89,7 +89,7 @@ def test_get_config_xml(jenkins_env):
 def test_get_view_metrics(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_get_view_metrics_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb.disable()
         result = jk.default_view.view_metrics

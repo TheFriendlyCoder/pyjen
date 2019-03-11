@@ -7,10 +7,10 @@ from ..utils import async_assert, clean_job
 def test_add_build_trigger_publisher(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     upstream_name = "test_add_build_trigger_publisher1"
-    jb = jk.create_job(upstream_name, "project")
+    jb = jk.create_job(upstream_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         downstream_name = "test_add_build_trigger_publisher2"
-        jb2 = jk.create_job(downstream_name, "project")
+        jb2 = jk.create_job(downstream_name, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             publisher = BuildTriggerPublisher.create([downstream_name])
             jb.add_publisher(publisher)
@@ -31,10 +31,10 @@ def test_add_build_trigger_publisher(jenkins_env):
 
 def test_one_downstream_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_one_downstream_job1", "project")
+    jb = jk.create_job("test_one_downstream_job1", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_name = "test_one_downstream_job2"
-        jb2 = jk.create_job(expected_name, "project")
+        jb2 = jk.create_job(expected_name, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             publisher = BuildTriggerPublisher.create([expected_name])
             jb.add_publisher(publisher)
@@ -49,13 +49,13 @@ def test_one_downstream_job(jenkins_env):
 
 def test_multiple_downstream_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_multiple_downstream_jobs1", "project")
+    jb = jk.create_job("test_multiple_downstream_jobs1", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_name1 = "test_multiple_downstream_jobs2"
-        jb2 = jk.create_job(expected_name1, "project")
+        jb2 = jk.create_job(expected_name1, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             expected_name2 = "test_multiple_downstream_jobs3"
-            jb3 = jk.create_job(expected_name2, "project")
+            jb3 = jk.create_job(expected_name2, "hudson.model.FreeStyleProject")
             with clean_job(jb3):
                 all_names = [expected_name1,expected_name2]
                 publisher = BuildTriggerPublisher.create(all_names)
@@ -73,10 +73,10 @@ def test_multiple_downstream_jobs(jenkins_env):
 def test_one_upstream_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     parent_job_name = "test_one_upstream_job1"
-    jb = jk.create_job(parent_job_name, "project")
+    jb = jk.create_job(parent_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         child_job_name = "test_one_upstream_job2"
-        jb2 = jk.create_job(child_job_name, "project")
+        jb2 = jk.create_job(child_job_name, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             publisher = BuildTriggerPublisher.create([child_job_name])
             jb.add_publisher(publisher)
@@ -92,13 +92,13 @@ def test_one_upstream_job(jenkins_env):
 def test_multiple_upstream_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     child_job_name = "test_multiple_upstream_jobs1"
-    jb = jk.create_job(child_job_name, "project")
+    jb = jk.create_job(child_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_name1 = "test_multiple_upstream_jobs2"
-        jb2 = jk.create_job(expected_name1, "project")
+        jb2 = jk.create_job(expected_name1, "hudson.model.FreeStyleProject")
         with clean_job(jb2):
             expected_name2 = "test_multiple_upstream_jobs3"
-            jb3 = jk.create_job(expected_name2, "project")
+            jb3 = jk.create_job(expected_name2, "hudson.model.FreeStyleProject")
             with clean_job(jb3):
                 all_names = [expected_name1,expected_name2]
                 publisher = BuildTriggerPublisher.create([child_job_name])

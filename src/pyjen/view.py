@@ -27,8 +27,6 @@ class View(object):
         :param rest_api:
             PyJen REST API configured for use by the parent container. Will
             be used to instantiate the PyJen view that is returned.
-        :param parent:
-            PyJen object that "owns" the new View object being instantiated
         :returns:
             PyJen view object wrapping the REST API for the given Jenkins view
         :rtype: :class:`~.view.View`
