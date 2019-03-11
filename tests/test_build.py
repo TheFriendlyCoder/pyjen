@@ -37,7 +37,7 @@ class TestSingleBuild:
 
 def test_start_time(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_start_time_job", "project")
+    jb = jk.create_job("test_start_time_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         before = datetime.now()
         jb.start_build()
@@ -50,7 +50,7 @@ def test_start_time(jenkins_env):
 
 def test_build_inequality(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_build_inequality_job", "project")
+    jb = jk.create_job("test_build_inequality_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
         jb.start_build()
         async_assert(lambda: len(jb.all_builds) == 1)
@@ -68,7 +68,7 @@ def test_build_inequality(jenkins_env):
 def test_console_text(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_console_text_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         shell_builder = ShellBuilder.create("echo " + expected_output)

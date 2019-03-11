@@ -7,7 +7,7 @@ from ..utils import async_assert, clean_job
 def test_add_simple_shell_builder(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_simple_shell_builder"
-    jb = jk.create_job(job_name, "project")
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_script = "echo hello"
         shell_builder = ShellBuilder.create(expected_script)
@@ -28,7 +28,7 @@ def test_add_simple_shell_builder(jenkins_env):
 def test_unstable_return_code(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_unstable_return_code"
-    jb = jk.create_job(job_name, "project")
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         rcode = 12
         failing_step = ShellBuilder.create("exit " + str(rcode))

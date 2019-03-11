@@ -198,11 +198,10 @@ class Jenkins(object):
         :rtype: :class:`~.job.Job`
         """
         data = self._api.get_api_data()
-        tjobs = data['jobs']
 
-        for tjob in tjobs:
-            if tjob['name'] == job_name:
-                return Job(self._api.clone(tjob['url']))
+        for cur_job in data['jobs']:
+            if cur_job['name'] == job_name:
+                return Job.instantiate(cur_job, self._api)
 
         return None
 
@@ -363,11 +362,16 @@ class Jenkins(object):
             raise Exception("Unable to clone job %s. Job does not exist.",
                             source_job_name)
 
+        if hasattr(source_job, "get_jenkins_plugin_name"):
+            plugin_name = source_job.get_jenkins_plugin_name()
+        else:
+            jxml = JobXML(source_job.config_xml)
+            plugin_name = jxml.plugin_name
+
         # create a new job with the specified name and then copy the
         # configuration from the old job to the new one
-        jxml = JobXML(source_job.config_xml)
         new_job = self.create_job(
-            new_job_name, jxml.plugin_name)
+            new_job_name, plugin_name)
         new_job.config_xml = source_job.config_xml
 
         if disable:

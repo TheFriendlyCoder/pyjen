@@ -8,7 +8,7 @@ from .utils import clean_job, async_assert
 def test_add_git_scm(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_git_scm"
-    jb = jk.create_job(job_name, "project")
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
         test_scm = GitSCM.create(expected_url)
@@ -26,7 +26,7 @@ def test_add_git_scm(jenkins_env):
 def test_build_git_scm(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_build_git_scm"
-    jb = jk.create_job(job_name, "project")
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
         test_scm = GitSCM.create(expected_url)

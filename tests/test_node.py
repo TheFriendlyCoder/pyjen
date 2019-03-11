@@ -62,7 +62,7 @@ def test_node_busy(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     node = jk.nodes[0]
     expected_job_name = "test_node_busy_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         shell_builder = ShellBuilder.create("sleep 2")
         jb.add_builder(shell_builder)
@@ -89,7 +89,7 @@ def test_wait_for_idle(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     node = jk.nodes[0]
     expected_job_name = "test_wait_for_idle_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         shell_builder = ShellBuilder.create("sleep 2")
         jb.add_builder(shell_builder)
@@ -115,7 +115,7 @@ def test_wait_for_idle_timeout(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     node = jk.nodes[0]
     expected_job_name = "test_wait_for_idle_timeout_job"
-    jb = jk.create_job(expected_job_name, "project")
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
         shell_builder = ShellBuilder.create("sleep 5")
         jb.add_builder(shell_builder)

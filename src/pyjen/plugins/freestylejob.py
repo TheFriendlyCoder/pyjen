@@ -15,19 +15,6 @@ class FreestyleJob(Job):
         super(FreestyleJob, self).__init__(api)
 
     @property
-    def scm(self):
-        """source code management configuration for a job
-
-        :returns:
-            One of several possible plugin objects which exposes the relevant
-            set of properties supported by a given source code management tool.
-        :rtype: :class:`~.utils.pluginapi.PluginBase`
-        """
-        xml = self.config_xml
-        jobxml = JobXML(xml)
-        return jobxml.scm
-
-    @property
     def custom_workspace(self):
         """
         :returns: custom workspace associated with this job
@@ -87,7 +74,7 @@ class FreestyleJob(Job):
 
         :rtype: :class:`str`
         """
-        return "project"
+        return "hudson.model.FreeStyleProject"
 
 
 PluginClass = FreestyleJob

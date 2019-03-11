@@ -1,4 +1,5 @@
 """Primitives for interacting with Jenkins jobs"""
+import logging
 from pyjen.build import Build
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
@@ -33,20 +34,54 @@ class Job(object):
         """Hashing function, allowing object to be serialized and compared"""
         return hash(self.name)
 
-    @property
-    def derived_object(self):
-        """custom plugin supporting this job type"""
-        # check to see if we're trying to derive an object from an already
-        # derived object
-        if not isinstance(self, Job):
-            return self
+    @staticmethod
+    def instantiate(json_data, rest_api):
+        """Factory method for finding the appropriate PyJen view object based
+        on data loaded from the Jenkins REST API
 
-        obj_xml = JobXML(self.config_xml)
-        plugin_class = find_plugin(obj_xml.plugin_name)
-        if plugin_class is None:
-            raise PluginNotSupportedError("Unable to find Job plugin",
-                                          obj_xml.plugin_name)
-        return plugin_class(self._api.clone(self._api.url))
+        :param dict json_data:
+            data loaded from the Jenkins REST API summarizing the view to be
+            instantiated
+        :param rest_api:
+            PyJen REST API configured for use by the parent container. Will
+            be used to instantiate the PyJen view that is returned.
+        :returns:
+            PyJen view object wrapping the REST API for the given Jenkins view
+        :rtype: :class:`~.view.View`
+        """
+        # TODO: Find some way to cache the json data given inside the view so
+        #       we can lazy-load API data. For example, the name of the view
+        #       is always included in the json data and therefore queries for
+        #       the View name after creation should not require another hit
+        #       to the REST API
+        log = logging.getLogger(__name__)
+
+        job_url = json_data["url"]
+
+        # Extract the name of the Jenkins plugin associated with this view
+        # Sanity Check: make sure the metadata for the view has a "_class"
+        #               attribute. I'm pretty sure older version of the Jenkins
+        #               core did not expose such an attribute, but all versions
+        #               from the past 2+ years or more do appear to include it.
+        #               If, for some reason this attribute doesn't exist, we'll
+        #               fall back to the default view base class which provides
+        #               functionality common to all Jenkins views. For extra
+        #               debugging purposes however, we log some debug output
+        #               if we ever hit this case so we can investigate the
+        #               the details further.
+        plugin_class = None
+        if "_class" in json_data:
+            plugin_class = find_plugin(json_data["_class"])
+        else:  # pragma: no cover
+            log.debug("Unsupported Jenkins version detected. Jobs are "
+                      "expected to have a _class metadata attribute but this "
+                      "one does not: %s", json_data)
+
+        if not plugin_class:
+            log.debug("Unable to find plugin for class %s", json_data["_class"])
+            plugin_class = Job
+
+        return plugin_class(rest_api.clone(job_url))
 
     @property
     def name(self):
@@ -519,6 +554,4 @@ class Job(object):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    # TODO: Add a supported_types static method for returning all plugins
-    #       which extend the Job data type
     pass
