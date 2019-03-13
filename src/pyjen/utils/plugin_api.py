@@ -24,19 +24,9 @@ def find_plugin(plugin_name):
     formatted_plugin_name = plugin_name.replace("__", "_")
 
     log = logging.getLogger(__name__)
-    all_plugins = list()
-    for entry_point in iter_entry_points(group=PLUGIN_ENTRYPOINT_NAME):
-        all_plugins.append(entry_point.load())
 
     supported_plugins = list()
-    for cur_plugin in all_plugins:
-        if not hasattr(cur_plugin, PLUGIN_METHOD_NAME):
-            log.debug(
-                "Plugin %s does not expose the required %s static method.",
-                cur_plugin.__module__,
-                PLUGIN_METHOD_NAME)
-            continue
-
+    for cur_plugin in get_all_plugins():
         if getattr(cur_plugin, PLUGIN_METHOD_NAME)() == formatted_plugin_name:
             supported_plugins.append(cur_plugin)
 
@@ -48,6 +38,33 @@ def find_plugin(plugin_name):
                     " object: %s. Using first match.", formatted_plugin_name)
 
     return supported_plugins[0]
+
+
+def get_all_plugins():
+    """Returns a list of all PyJen plugins installed on the system
+
+    :returns: list of 0 or more installed plugins
+    :rtype: :class:`list` of :class:`class`
+    """
+    log = logging.getLogger(__name__)
+    # First load all libraries that are registered with the PyJen plugin API
+    all_plugins = list()
+    for entry_point in iter_entry_points(group=PLUGIN_ENTRYPOINT_NAME):
+        all_plugins.append(entry_point.load())
+
+    # Next, filter out those that don't support the current version of our API
+    retval = list()
+    for cur_plugin in all_plugins:
+        if not hasattr(cur_plugin, PLUGIN_METHOD_NAME):
+            log.debug(
+                "Plugin %s does not expose the required %s static method.",
+                cur_plugin.__module__,
+                PLUGIN_METHOD_NAME)
+            continue
+
+        retval.append(cur_plugin)
+
+    return retval
 
 
 if __name__ == "__main__":  # pragma: no cover
