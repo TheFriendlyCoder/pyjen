@@ -118,25 +118,16 @@ class NestedView(View):
 
         return result[0]
 
-    def clone_view(self, source_view_name, new_view_name):
-        """Make a copy of a view with the specified name
+    def clone_view(self, source_view, new_view_name):
+        """Make a copy of a view with the specified name under this nested view
 
-        :param str source_view_name:
-            name of the Jenkins view to be cloned
+        :param source_view: view to be cloned
+        :type source_view: :class:`pyjen.view.View`
         :param str new_view_name:
             name to give the newly created view
         :return: reference to the created view
         :rtype: :class:`~.view.View`
         """
-        source_view = None
-        for cur_view in self.views:
-            if cur_view.name == source_view_name:
-                source_view = cur_view
-                break
-        if source_view is None:
-            raise Exception("Unable to clone view. View not found: %s",
-                            source_view_name)
-
         vxml = ViewXML(source_view.config_xml)
         new_view = self.create_view(new_view_name, vxml.plugin_name)
 
@@ -145,15 +136,15 @@ class NestedView(View):
         return new_view
 
     def move_view(self, existing_view):
-        """Moves an existing view to a new location
+        """Moves an existing view under this nested view
 
         NOTE: The original view object becomes obsolete after executing this
         operation
 
         :param existing_view: Instance of a PyJen view to be moved
-        :type existing_view: :class:`~.view.View`
+        :type existing_view: :class:`pyjen.view.View`
         :returns: reference to new, relocated view object
-        :rtype: :class:`~.view.View`
+        :rtype: :class:`pyjen.view.View`
         """
         new_view = self.create_view(
             existing_view.name, existing_view.get_jenkins_plugin_name())

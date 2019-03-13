@@ -3,7 +3,6 @@ import logging
 from pyjen.build import Build
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.exceptions import PluginNotSupportedError
 
 
 class Job(object):

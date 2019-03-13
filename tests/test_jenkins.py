@@ -125,7 +125,7 @@ def test_clone_view(jenkins_env):
     vw = jk.create_view("test_clone_view1", "hudson.model.ListView")
     with clean_view(vw):
         expected_name = "test_clone_view2"
-        vw2 = jk.clone_view(vw.name, expected_name)
+        vw2 = jk.clone_view(vw, expected_name)
         assert vw2 is not None
         with clean_view(vw2):
             assert vw2.name == expected_name
@@ -226,7 +226,7 @@ def test_clone_job(jenkins_env):
         # now, clone our job configuration and make sure the entire config
         # has been cloned correctly
         expected_name = "test_clone_job2"
-        jb_clone = jk.clone_job(jb.name, expected_name)
+        jb_clone = jk.clone_job(jb, expected_name)
         with clean_job(jb_clone):
             assert jb_clone is not None
             assert jb_clone.name == expected_name
@@ -239,17 +239,11 @@ def test_clone_job(jenkins_env):
             assert results[0].script == expected_script
 
 
-def test_clone_job_doesnt_exist(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    with pytest.raises(Exception):
-        jk.clone_job("TestJobThatDoesNotExist", "test_clone_job_doesnt_exist")
-
-
 def test_clone_job_enabled(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_clone_job_enabled", "hudson.model.FreeStyleProject")
     with clean_job(jb):
-        jb_clone = jk.clone_job(jb.name, "test_clone_job2", False)
+        jb_clone = jk.clone_job(jb, "test_clone_job2", False)
         with clean_job(jb_clone):
             assert jb_clone is not None
             assert jb_clone.is_disabled is False

@@ -124,9 +124,51 @@ class FolderJob(Job):
 
         for tjob in tjobs:
             if tjob['name'] == job_name:
-                return Job(self._api.clone(tjob['url']))
+                return Job.instantiate(tjob, self._api)
 
         return None
+
+    def clone_job(self, source_job, new_job_name, disable=True):
+        """"Create a new job with the same configuration as this one
+
+        :param source_job: job to be cloned
+        :type source_job: :class:`pyjen.job.Job`
+        :param str new_job_name: Name of the new job to be created
+        :param bool disable:
+            Indicates whether the newly created job should be disabled after
+            creation to prevent builds from accidentally triggering
+            immediately after creation
+        :returns: reference to the newly created job
+        :rtype: :class:`pyjen.job.Job`
+        """
+        plugin_name = source_job.get_jenkins_plugin_name()
+
+        # create a new job with the specified name and then copy the
+        # configuration from the old job to the new one
+        new_job = self.create_job(
+            new_job_name, plugin_name)
+        new_job.config_xml = source_job.config_xml
+
+        if disable:
+            new_job.disable()
+        return new_job
+
+    def move_job(self, existing_job):
+        """Moves an existing job under this folder job
+
+        NOTE: The original jobobject becomes obsolete after executing this
+        operation
+
+        :param existing_job: Instance of a PyJen job to be moved
+        :type existing_job: :class:`pyjen.job.Job`
+        :returns: reference to new, relocated job object
+        :rtype: :class:`pyjen.job.Job`
+        """
+        new_job = self.create_job(
+            existing_job.name, existing_job.get_jenkins_plugin_name())
+        new_job.config_xml = existing_job.config_xml
+        existing_job.delete()
+        return new_job
 
 
 PluginClass = FolderJob

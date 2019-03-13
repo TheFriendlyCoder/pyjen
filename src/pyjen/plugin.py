@@ -121,5 +121,6 @@ class Plugin(object):
                     progress.update(buff_size)
                     handle.write(data)
 
+
 if __name__ == "__main__":  # pragma: no cover
     pass
