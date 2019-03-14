@@ -2,7 +2,7 @@
 import logging
 from pyjen.build import Build
 from pyjen.utils.jobxml import JobXML
-from pyjen.utils.plugin_api import find_plugin
+from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 
 
 class Job(object):
@@ -81,6 +81,18 @@ class Job(object):
             plugin_class = Job
 
         return plugin_class(rest_api.clone(job_url))
+
+    @classmethod
+    def get_supported_plugins(cls):
+        """Returns a list of PyJen plugins that derive from this class
+
+        :rtype: :class:`list` of :class:`class`
+        """
+        retval = list()
+        for cur_plugin in get_all_plugins():
+            if issubclass(cur_plugin, cls):
+                retval.append(cur_plugin)
+        return retval
 
     @property
     def name(self):

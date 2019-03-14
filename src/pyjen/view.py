@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins views"""
 import logging
 from pyjen.job import Job
-from pyjen.utils.plugin_api import find_plugin
+from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 
 
 class View(object):
@@ -67,6 +67,18 @@ class View(object):
             plugin_class = View
 
         return plugin_class(rest_api.clone(view_url))
+
+    @classmethod
+    def get_supported_plugins(cls):
+        """Returns a list of PyJen plugins that derive from this class
+
+        :rtype: :class:`list` of :class:`class`
+        """
+        retval = list()
+        for cur_plugin in get_all_plugins():
+            if issubclass(cur_plugin, cls):
+                retval.append(cur_plugin)
+        return retval
 
     @property
     def name(self):

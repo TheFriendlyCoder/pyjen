@@ -1,6 +1,9 @@
 import pytest
 from mock import patch, MagicMock
-from pyjen.utils.plugin_api import find_plugin
+from .utils import count_plugins
+from pyjen.utils.plugin_api import find_plugin, get_all_plugins
+from pyjen.view import View
+from pyjen.job import Job
 
 
 def test_unsupported_plugin(caplog):
@@ -54,23 +57,45 @@ def test_multiple_supported_plugin(caplog):
         assert "multiple plugins detected" in caplog.text
 
 
-@pytest.mark.skip("TODO: add helper to get list of all installed plugins to new plugin api")
 def test_list_plugins():
-    res = ConfigXML.get_installed_plugins()
+    res = get_all_plugins()
     assert res is not None
     assert isinstance(res, list)
     assert len(res) == count_plugins()
 
 
-@pytest.mark.skip("TODO: add helper to get list of all installed plugins to new plugin api")
-def test_load_all_plugins():
-    plugin_names = ConfigXML.get_installed_plugins()
-    assert plugin_names
+def test_load_all_job_plugins():
+    plugins = Job.get_supported_plugins()
+    assert plugins is not None
+    assert isinstance(plugins, list)
+    assert len(plugins) > 0
 
-    for cur_plugin_name in plugin_names:
-        cur_plugin = ConfigXML.find_plugin(cur_plugin_name)
-        assert cur_plugin is not None
-        assert inspect.isclass(cur_plugin)
+    mock_api = MagicMock()
+    expected_name = "FakeName"
+    mock_api.get_api_data.return_value = {
+        "name": expected_name
+    }
+    for cur_plugin in plugins:
+        job = cur_plugin(mock_api)
+        assert job.name == expected_name
+        assert isinstance(job, Job)
+
+
+def test_load_all_view_plugins():
+    plugins = View.get_supported_plugins()
+    assert plugins is not None
+    assert isinstance(plugins, list)
+    assert len(plugins) > 0
+
+    mock_api = MagicMock()
+    expected_name = "FakeName"
+    mock_api.get_api_data.return_value = {
+        "name": expected_name
+    }
+    for cur_plugin in plugins:
+        view = cur_plugin(mock_api)
+        assert view.name == expected_name
+        assert isinstance(view, View)
 
 
 if __name__ == "__main__":
