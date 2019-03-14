@@ -1,6 +1,7 @@
 """Primitives for interacting with Jenkins views"""
 import logging
 from pyjen.job import Job
+from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 
 
@@ -81,6 +82,18 @@ class View(object):
         return retval
 
     @property
+    def jenkins_plugin_name(self):
+        """Extracts the name of the Jenkins plugin associated with this View
+
+        The data returned by this helper property is extracted from the
+        config XML that defines this job.
+
+        :rtype: :class:`str`
+        """
+        jxml = ViewXML(self.config_xml)
+        return jxml.plugin_name
+
+    @property
     def name(self):
         """Gets the display name for this view
 
@@ -111,7 +124,7 @@ class View(object):
 
         retval = []
         for j in view_jobs:
-            retval.append(Job(self._api.clone(j['url'])))
+            retval.append(Job.instantiate(j, self._api))
 
         return retval
 
@@ -184,8 +197,7 @@ class View(object):
 
         for job in data["jobs"]:
 
-            # TODO: Figure out how to prepopulate name field here
-            temp_job = Job(self._api.clone(job['url']))
+            temp_job = Job.instantiate(job, self._api)
 
             if temp_job.is_failing:
                 broken_job_count += 1

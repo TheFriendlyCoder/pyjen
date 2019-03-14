@@ -141,7 +141,15 @@ class FolderJob(Job):
         :returns: reference to the newly created job
         :rtype: :class:`pyjen.job.Job`
         """
-        plugin_name = source_job.get_jenkins_plugin_name()
+        # Try to extract the plugin name from a static helper method from
+        # the PyJen plugin to avoid having to hit the REST API for it. If
+        # we don't have a PyJen plugin to query, then we fall back to the
+        # jenkins_plugin_name property which has to call out to the REST API,
+        # which is slower
+        if hasattr(source_job, "get_jenkins_plugin_name"):
+            plugin_name = source_job.get_jenkins_plugin_name()
+        else:
+            plugin_name = source_job.jenkins_plugin_name
 
         # create a new job with the specified name and then copy the
         # configuration from the old job to the new one
@@ -156,7 +164,7 @@ class FolderJob(Job):
     def move_job(self, existing_job):
         """Moves an existing job under this folder job
 
-        NOTE: The original jobobject becomes obsolete after executing this
+        NOTE: The original job object becomes obsolete after executing this
         operation
 
         :param existing_job: Instance of a PyJen job to be moved
@@ -164,8 +172,18 @@ class FolderJob(Job):
         :returns: reference to new, relocated job object
         :rtype: :class:`pyjen.job.Job`
         """
+        # Try to extract the plugin name from a static helper method from
+        # the PyJen plugin to avoid having to hit the REST API for it. If
+        # we don't have a PyJen plugin to query, then we fall back to the
+        # jenkins_plugin_name property which has to call out to the REST API,
+        # which is slower
+        if hasattr(existing_job, "get_jenkins_plugin_name"):
+            plugin_name = existing_job.get_jenkins_plugin_name()
+        else:
+            plugin_name = existing_job.jenkins_plugin_name
+
         new_job = self.create_job(
-            existing_job.name, existing_job.get_jenkins_plugin_name())
+            existing_job.name, plugin_name)
         new_job.config_xml = existing_job.config_xml
         existing_job.delete()
         return new_job

@@ -14,7 +14,6 @@ class ArtifactArchiverPublisher(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert self._root.tag == self.get_jenkins_plugin_name()
 
     @staticmethod
     def get_jenkins_plugin_name():

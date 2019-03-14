@@ -38,6 +38,7 @@ def test_get_jobs(jenkins_env):
         assert isinstance(all_jobs, list)
         assert len(all_jobs) == 1
         assert all_jobs[0].name == expected_job_name
+        assert isinstance(all_jobs[0], type(jb))
 
 
 def test_delete_all_jobs(jenkins_env):
