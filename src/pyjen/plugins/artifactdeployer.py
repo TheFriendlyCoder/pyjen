@@ -1,5 +1,4 @@
 """properties of the 'artifact deployer' publishing plugin"""
-#from pyjen.utils.pluginapi import init_plugin
 from pyjen.exceptions import PluginNotSupportedError
 
 
@@ -15,8 +14,14 @@ class ArtifactDeployer(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert 'plugin' in self._root.attrib
-        assert self._root.attrib['plugin'].startswith('artifactdeployer')
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def entries(self):

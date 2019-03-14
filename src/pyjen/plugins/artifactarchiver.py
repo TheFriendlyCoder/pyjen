@@ -15,6 +15,14 @@ class ArtifactArchiverPublisher(object):
         """
         self._root = node
 
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
+
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -35,14 +43,6 @@ class ArtifactArchiverPublisher(object):
 
         children_node = self._root.find('artifacts')
         return children_node.text
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this publisher
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @staticmethod
     def create(file_pattern):

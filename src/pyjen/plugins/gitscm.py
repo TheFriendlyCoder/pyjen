@@ -14,7 +14,10 @@ class GitSCM(object):
 
     @property
     def node(self):
-        """Gets the root XML node containing the config data for this object"""
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
         return self._root
 
     @staticmethod
