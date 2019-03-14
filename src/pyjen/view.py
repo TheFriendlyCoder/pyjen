@@ -173,7 +173,6 @@ class View(object):
         for job in data["jobs"]:
 
             # TODO: Figure out how to prepopulate name field here
-            #temp_job = Job._create(temp_data_io, self._master, job['name'])
             temp_job = Job(self._api.clone(job['url']))
 
             if temp_job.is_failing:

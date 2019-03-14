@@ -261,21 +261,16 @@ class Jenkins(object):
         assert retval is not None
         return retval
 
-    def clone_view(self, source_view_name, new_view_name):
+    def clone_view(self, source_view, new_view_name):
         """Make a copy of a view with the specified name
 
-        :param str source_view_name:
-            name of the Jenkins view to be cloned
+        :param source_view: view to be cloned
+        :type source_view: :class:`pyjen.view.View`
         :param str new_view_name:
             name to give the newly created view
         :return: reference to the created view
         :rtype: :class:`~.view.View`
         """
-        source_view = self.find_view(source_view_name)
-        if source_view is None:
-            raise Exception("Unable to clone view. View not found: %s",
-                            source_view_name)
-
         vxml = ViewXML(source_view.config_xml)
         new_view = self.create_view(new_view_name, vxml.plugin_name)
 
@@ -296,7 +291,7 @@ class Jenkins(object):
         if source_view is None:
             raise Exception("Unable to rename view. View not found: %s",
                             source_view_name)
-        new_view = self.clone_view(source_view_name, new_view_name)
+        new_view = self.clone_view(source_view, new_view_name)
         source_view.delete()
         return new_view
 
@@ -344,10 +339,11 @@ class Jenkins(object):
         assert retval is not None
         return retval
 
-    def clone_job(self, source_job_name, new_job_name, disable=True):
+    def clone_job(self, source_job, new_job_name, disable=True):
         """"Create a new job with the same configuration as this one
 
-        :param str source_job_name: Name of the job to be cloned
+        :param source_job: job to be cloned
+        :type source_job: :class:`pyjen.job.Job`
         :param str new_job_name: Name of the new job to be created
         :param bool disable:
             Indicates whether the newly created job should be disabled after
@@ -356,12 +352,6 @@ class Jenkins(object):
         :returns: reference to the newly created job
         :rtype: :class:`pyjen.job.Job`
         """
-        # Locate the source job
-        source_job = self.find_job(source_job_name)
-        if source_job is None:
-            raise Exception("Unable to clone job %s. Job does not exist.",
-                            source_job_name)
-
         if hasattr(source_job, "get_jenkins_plugin_name"):
             plugin_name = source_job.get_jenkins_plugin_name()
         else:
