@@ -202,6 +202,8 @@ def test_multiple_downstream_jobs_recursive(jenkins_env):
                 assert len(res) == 2
                 assert res[0].name in all_names
                 assert res[1].name in all_names
+                assert isinstance(res[0], FreestyleJob)
+                assert isinstance(res[1], FreestyleJob)
 
 
 def test_multiple_upstream_jobs_recursive(jenkins_env):
@@ -229,6 +231,8 @@ def test_multiple_upstream_jobs_recursive(jenkins_env):
                 assert len(res) == 2
                 assert res[0].name in all_names
                 assert res[1].name in all_names
+                assert isinstance(res[0], FreestyleJob)
+                assert isinstance(res[1], FreestyleJob)
 
 
 @pytest.mark.usefixtures('test_builds')

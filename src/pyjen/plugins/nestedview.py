@@ -146,8 +146,18 @@ class NestedView(View):
         :returns: reference to new, relocated view object
         :rtype: :class:`pyjen.view.View`
         """
+        # Try to extract the plugin name from a static helper method from
+        # the PyJen plugin to avoid having to hit the REST API for it. If
+        # we don't have a PyJen plugin to query, then we fall back to the
+        # jenkins_plugin_name property which has to call out to the REST API,
+        # which is slower
+        if hasattr(existing_view, "get_jenkins_plugin_name"):
+            plugin_name = existing_view.get_jenkins_plugin_name()
+        else:
+            plugin_name = existing_view.jenkins_plugin_name
+
         new_view = self.create_view(
-            existing_view.name, existing_view.get_jenkins_plugin_name())
+            existing_view.name, plugin_name)
         new_view.config_xml = existing_view.config_xml
         existing_view.delete()
         return new_view

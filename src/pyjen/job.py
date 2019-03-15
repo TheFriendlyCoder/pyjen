@@ -95,6 +95,18 @@ class Job(object):
         return retval
 
     @property
+    def jenkins_plugin_name(self):
+        """Extracts the name of the Jenkins plugin associated with this job
+
+        The data returned by this helper property is extracted from the
+        config XML that defines this job.
+
+        :rtype: :class:`str`
+        """
+        jxml = JobXML(self.config_xml)
+        return jxml.plugin_name
+
+    @property
     def name(self):
         """Returns the name of the job managed by this object
 
@@ -184,11 +196,10 @@ class Job(object):
 
         jobs = data['upstreamProjects']
 
-        retval = []
+        retval = list()
 
         for j in jobs:
-            temp_job = Job(self._api.clone(j['url']))
-            retval.append(temp_job)
+            retval.append(Job.instantiate(j, self._api))
 
         return retval
 
@@ -202,15 +213,10 @@ class Job(object):
         :returns: A list of 0 or more jobs this job depend on
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._api.get_api_data()
-        jobs = data['upstreamProjects']
-        retval = []
 
-        for j in jobs:
-            temp_job = Job(self._api.clone(j['url']))
-            retval.append(temp_job)
-            retval.extend(temp_job.all_upstream_jobs)
-
+        retval = self.upstream_jobs
+        for cur_job in retval:
+            retval.extend(cur_job.all_upstream_jobs)
         return retval
 
     @property
@@ -374,11 +380,10 @@ class Job(object):
 
         jobs = data['downstreamProjects']
 
-        retval = []
+        retval = list()
 
         for j in jobs:
-            temp_job = Job(self._api.clone(j['url']))
-            retval.append(temp_job)
+            retval.append(Job.instantiate(j, self._api))
 
         return retval
 
@@ -392,16 +397,9 @@ class Job(object):
         :returns: A list of 0 or more jobs which depend on this one
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._api.get_api_data()
-
-        jobs = data['downstreamProjects']
-
-        retval = []
-
-        for j in jobs:
-            temp_job = Job(self._api.clone(j['url']))
-            retval.append(temp_job)
-            retval.extend(temp_job.all_downstream_jobs)
+        retval = self.downstream_jobs
+        for cur_job in retval:
+            retval.extend(cur_job.all_downstream_jobs)
 
         return retval
 
