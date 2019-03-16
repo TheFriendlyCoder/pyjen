@@ -186,40 +186,6 @@ class Job(object):
         self._api.post(self._api.url + "config.xml", args)
 
     @property
-    def upstream_jobs(self):
-        """Gets the list of upstream dependencies for this job
-
-        :returns: A list of 0 or more jobs that this job depends on
-        :rtype: :class:`list` of :class:`~.job.Job` objects
-        """
-        data = self._api.get_api_data()
-
-        jobs = data['upstreamProjects']
-
-        retval = list()
-
-        for j in jobs:
-            retval.append(Job.instantiate(j, self._api))
-
-        return retval
-
-    @property
-    def all_upstream_jobs(self):
-        """list of all jobs that this job depends on, recursively
-
-        Includes jobs that trigger this job, and all jobs trigger those
-        jobs, recursively for all upstream dependencies
-
-        :returns: A list of 0 or more jobs this job depend on
-        :rtype:  :class:`list` of :class:`~.job.Job` objects
-        """
-
-        retval = self.upstream_jobs
-        for cur_job in retval:
-            retval.extend(cur_job.all_upstream_jobs)
-        return retval
-
-    @property
     def recent_builds(self):
         """Gets a list of the most recent builds for this job
 
@@ -369,40 +335,6 @@ class Job(object):
 
         return Build(self._api.clone(bld['url']))
 
-    @property
-    def downstream_jobs(self):
-        """Gets the list of jobs to be triggered after this job completes
-
-        :returns: A list of 0 or more jobs which depend on this one
-        :rtype:  :class:`list` of :class:`~.job.Job` objects
-        """
-        data = self._api.get_api_data()
-
-        jobs = data['downstreamProjects']
-
-        retval = list()
-
-        for j in jobs:
-            retval.append(Job.instantiate(j, self._api))
-
-        return retval
-
-    @property
-    def all_downstream_jobs(self):
-        """list of all jobs that depend on this job, recursively
-
-        Includes jobs triggered by this job, and all jobs triggered by those
-        jobs, recursively for all downstream dependencies
-
-        :returns: A list of 0 or more jobs which depend on this one
-        :rtype:  :class:`list` of :class:`~.job.Job` objects
-        """
-        retval = self.downstream_jobs
-        for cur_job in retval:
-            retval.extend(cur_job.all_downstream_jobs)
-
-        return retval
-
     def disable(self):
         """Disables this job
 
@@ -495,51 +427,27 @@ class Job(object):
         return builds
 
     @property
-    def publishers(self):
-        """Gets all plugins configured as 'publishers' for this job"""
-        jxml = JobXML(self.config_xml)
-        return jxml.publishers
+    def quiet_period(self):
+        """
+        :returns:
+            the delay, in seconds, builds of this job wait in the queue before
+            being run
+        :rtype: :class:`int`
+        """
+        jobxml = JobXML(self.config_xml)
+        return jobxml.quiet_period
 
-    @property
-    def scm(self):
-        """Gets the source code repository configuration from the job config"""
-        jxml = JobXML(self.config_xml)
-        return jxml.scm
-
-    @scm.setter
-    def scm(self, value):
-        """Changes the SCM configuration for this job"""
-        jxml = JobXML(self.config_xml)
-        jxml.scm = value.node
-        self.config_xml = jxml.xml
-
-    def add_publisher(self, publisher):
-        """Adds a new job publisher to this job
-
-        :param publisher: job publisher to add"""
-        jxml = JobXML(self.config_xml)
-        jxml.add_publisher(publisher.node)
-        self.config_xml = jxml.xml
+    @quiet_period.setter
+    def quiet_period(self, value):
+        jobxml = JobXML(self.config_xml)
+        jobxml.quiet_period = value
+        self.config_xml = jobxml.xml
 
     @property
     def properties(self):
         """all plugins configured as extra configuration properties"""
         jxml = JobXML(self.config_xml)
         return jxml.properties
-
-    @property
-    def builders(self):
-        """Gets all plugins configured as 'builders' for this job"""
-        jxml = JobXML(self.config_xml)
-        return jxml.builders
-
-    def add_builder(self, builder):
-        """Adds a new build step to this job
-
-        :param builder: build step config to add"""
-        jxml = JobXML(self.config_xml)
-        jxml.add_builder(builder.node)
-        self.config_xml = jxml.xml
 
     @property
     def build_health(self):
