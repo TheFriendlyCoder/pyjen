@@ -1,6 +1,5 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
 import logging
-#from pyjen.utils.pluginapi import create_xml_plugin, PluginBase, get_plugin_name
 
 
 class FlexiblePublisher(object):
@@ -15,9 +14,15 @@ class FlexiblePublisher(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert 'plugin' in self._root.attrib
-        assert self._root.attrib['plugin'].startswith('flexible-publish')
         self._log = logging.getLogger(__name__)
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def actions(self):
@@ -61,9 +66,15 @@ class ConditionalPublisher(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert self._root.tag == \
-               'org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher'
         self._log = logging.getLogger(__name__)
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def publisher(self):

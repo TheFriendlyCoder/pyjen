@@ -6,14 +6,24 @@ class ShellBuilder(object):
     """Interface to control a basic shell build step job builder plugin
 
     This plugin is a default, built-in plugin which is part of the Jenkins core
+
+    :param node: XML node defining the settings for a this plugin
+    :type node: :class:`ElementTree.Element`
     """
 
     def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
         self._root = node
+
+    def __str__(self):
+        return ElementTree.tostring(self._root, encoding="utf-8")
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -55,22 +65,13 @@ class ShellBuilder(object):
             rcode_node = ElementTree.SubElement(self._root, "unstableReturn")
         rcode_node.text = str(value)
 
-    @property
-    def node(self):
-        """Gets the XML node associated with this publisher
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
-
     @staticmethod
     def create(script):
         """Factory method for creating a new shell build step
 
         :param str script: shell script to run as part of this build step
         """
-        default_xml = """<hudson.tasks.Shell>
-</hudson.tasks.Shell>"""
+        default_xml = """<hudson.tasks.Shell></hudson.tasks.Shell>"""
         root_node = ElementTree.fromstring(default_xml)
 
         child = ElementTree.SubElement(root_node, "command")

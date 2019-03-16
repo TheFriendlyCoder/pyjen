@@ -18,7 +18,10 @@ class ListViewSection(object):
 
     @property
     def node(self):
-        """Gets the XML tree describing this section"""
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
         return self._root
 
     @staticmethod

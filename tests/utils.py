@@ -6,29 +6,39 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def clean_job(jenkins_job):
+def clean_job(jenkins_job, disable=False):
     """Helper context manager that deletes a Jenkins job even when tests fail
 
     :param jenkins_job: Jenkins job to manage
     :type jenkins_job: :class:`pyjen.job.Job`
+    :param bool disable:
+        indicates whether the clean operation should be disabled. Defaults to
+        False. When set to True, the entity managed by this context manager
+        will be preserved. This is useful for debugging purposes.
     """
     try:
         yield
     finally:
-        jenkins_job.delete()
+        if not disable:
+            jenkins_job.delete()
 
 
 @contextmanager
-def clean_view(jenkins_view):
+def clean_view(jenkins_view, disable=False):
     """Helper context manager that deletes a Jenkins view even when tests fail
 
     :param jenkins_view: Jenkins view to manage
     :type jenkins_view: :class:`pyjen.view.View`
+    :param bool disable:
+        indicates whether the clean operation should be disabled. Defaults to
+        False. When set to True, the entity managed by this context manager
+        will be preserved. This is useful for debugging purposes.
     """
     try:
         yield
     finally:
-        jenkins_view.delete()
+        if not disable:
+            jenkins_view.delete()
 
 
 def async_assert(test_func):
@@ -75,6 +85,28 @@ def count_plugins():
             continue
         retval += 1
     return retval
+
+
+def assert_elements_equal(element1, element2):
+    """Helper method that compares two XML nodes, recursively
+
+    If the nodes differ in any way an assertion failure will be raised
+
+    :param element1: the first XML node to compare
+    :param element2: the second XML node to compare"""
+    assert element1.tag == element2.tag
+    # Sometimes text elements may be `None`, other times they may be empty
+    # strings. Other times still they may be strings with nothing but empty
+    # white space. Let's just look for non-white space characters to simplify
+    # our test cases
+    first = (element1.text or "").strip()
+    second = (element2.text or "").strip()
+    assert first == second
+    assert element1.tail == element2.tail
+    assert element1.attrib == element2.attrib
+    assert len(element1) == len(element2)
+    for child1, child2 in zip(element1, element2):
+        assert_elements_equal(child1, child2)
 
 
 if __name__ == "__main__":

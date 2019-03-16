@@ -35,6 +35,7 @@ JENKINS_PLUGINS = [
     "nested-view",
     "status-view",
     "sectioned-view",
+    "conditional-buildstep",
 ]
 
 

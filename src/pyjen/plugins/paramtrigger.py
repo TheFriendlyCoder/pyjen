@@ -13,6 +13,14 @@ class BuildTriggerConfig(object):
         self._log = logging.getLogger(__name__)
 
     @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
+
+    @property
     def job_names(self):
         """Gets a list of names of jobs triggered by this one
 
@@ -46,6 +54,14 @@ class ParameterizedBuildTrigger:
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def triggers(self):

@@ -14,8 +14,14 @@ class BuildBlockerProperty(object):
             ElementTree node initialized with the XML from the Jenkins job
         """
         self._root = node
-        assert 'plugin' in self._root.attrib
-        assert self._root.attrib['plugin'].startswith('build-blocker-plugin')
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def blockers(self):
@@ -80,6 +86,7 @@ class BuildBlockerProperty(object):
         :rtype: :class:`str`
         """
         return "buildblocker"
+
 
 PluginClass = BuildBlockerProperty
 

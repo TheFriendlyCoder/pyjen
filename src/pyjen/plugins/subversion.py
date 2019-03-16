@@ -14,8 +14,14 @@ class Subversion(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
-        assert 'plugin' in self._root.attrib
-        assert self._root.attrib['plugin'].startswith('subversion')
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def locations(self):
@@ -74,6 +80,14 @@ class ModuleLocation(object):
         :type node: :class:`ElementTree.Element`
         """
         self._root = node
+
+    @property
+    def node(self):
+        """Gets the XML node associated with this plugin
+
+        :rtype: :class:`ElementTree.Element`
+        """
+        return self._root
 
     @property
     def url(self):
