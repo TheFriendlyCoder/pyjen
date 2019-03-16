@@ -28,6 +28,7 @@ def test_build_git_scm(jenkins_env):
     job_name = "test_build_git_scm"
     jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
         test_scm = GitSCM.create(expected_url)
         jb.scm = test_scm

@@ -41,7 +41,7 @@ def clean_view(jenkins_view, disable=False):
             jenkins_view.delete()
 
 
-def async_assert(test_func):
+def async_assert(test_func, duration=10):
     """Runs a test function periodically
 
     Used to test asynchronous test operations that may take some time to
@@ -55,8 +55,11 @@ def async_assert(test_func):
         sleep briefly before repeating the check. After several failed
         attempts, the helper will assert false. Otherwise control returns
         to the caller.
+    :param int duration:
+        number of seconds to wait to see if the operation completes
+        Defaults to 10 seconds
     """
-    for i in range(10):
+    for i in range(duration):
         if test_func():
             break
         time.sleep(1)

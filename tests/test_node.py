@@ -64,6 +64,7 @@ def test_node_busy(jenkins_env):
     expected_job_name = "test_node_busy_job"
     jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         shell_builder = ShellBuilder.create("sleep 2")
         jb.add_builder(shell_builder)
 
@@ -91,6 +92,7 @@ def test_wait_for_idle(jenkins_env):
     expected_job_name = "test_wait_for_idle_job"
     jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         shell_builder = ShellBuilder.create("sleep 2")
         jb.add_builder(shell_builder)
 
@@ -117,6 +119,7 @@ def test_wait_for_idle_timeout(jenkins_env):
     expected_job_name = "test_wait_for_idle_timeout_job"
     jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         shell_builder = ShellBuilder.create("sleep 5")
         jb.add_builder(shell_builder)
 

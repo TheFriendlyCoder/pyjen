@@ -1,4 +1,5 @@
 import pytest
+import timeit
 from datetime import datetime
 from datetime import timedelta
 import xml.etree.ElementTree as ElementTree
@@ -30,6 +31,7 @@ def test_start_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_start_build", "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         jb.start_build()
 
 
@@ -152,6 +154,7 @@ def test_get_all_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_all_builds", "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         jb.start_build()
         async_assert(lambda: jb.all_builds)
         builds = jb.all_builds
@@ -343,6 +346,7 @@ def test_get_last_failed_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_failed_build", "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         failing_step = ShellBuilder.create("exit -1")
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
@@ -361,6 +365,7 @@ def test_get_last_unsuccessful_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_last_unsuccessful_build", "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         rcode = 12
         failing_step = ShellBuilder.create("exit " + str(rcode))
         failing_step.unstable_return_code = rcode
@@ -381,6 +386,7 @@ def test_is_unstable(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_is_unstable_job", "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         rcode = 12
         failing_step = ShellBuilder.create("exit " + str(rcode))
         failing_step.unstable_return_code = rcode
@@ -397,11 +403,39 @@ def test_get_builds_in_time_range_no_builds(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_get_builds_in_time_range_no_builds", "hudson.model.FreeStyleProject")
     with clean_job(jb):
+        jb.quiet_period = 0
         start_time = datetime.now() - timedelta(days=1)
         end_time = datetime.now() + timedelta(days=1)
         builds = jb.get_builds_in_time_range(start_time, end_time)
 
         assert len(builds) == 0
+
+
+def test_quiet_period(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_quiet_period", "hudson.model.FreeStyleProject")
+    with clean_job(jb):
+        jb.quiet_period = 0
+        # first set our quiet period
+        expected_duration = 10
+        jb.quiet_period = expected_duration
+
+        expected_output = "Testing my quiet period"
+        failing_step = ShellBuilder.create("echo " + expected_output)
+        jb.add_builder(failing_step)
+        async_assert(lambda: jb.builders)
+
+        assert jb.quiet_period == expected_duration
+
+        # Launch a build and time how long it takes to complete
+        start = timeit.default_timer()
+        jb.start_build()
+        async_assert(lambda: jb.last_build, expected_duration + 5)
+        duration = timeit.default_timer() - start
+        assert duration >= expected_duration
+
+        bld = jb.last_build
+        assert expected_output in bld.console_output
 
 
 if __name__ == "__main__":

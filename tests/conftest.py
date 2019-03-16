@@ -329,6 +329,7 @@ def test_job(request, jenkins_env):
 @pytest.fixture(scope="class")
 def test_builds(request, test_job):
     """Helper fixture that creates a job with a sample good build for testing"""
+    request.cls.job.quiet_period = 0
     request.cls.job.start_build()
 
     async_assert(lambda: request.cls.job.last_good_build)
@@ -341,6 +342,7 @@ def test_builds_with_git(request, test_job):
     test_scm = GitSCM.create(expected_url)
     request.cls.job.scm = test_scm
 
+    request.cls.job.quiet_period = 0
     async_assert(lambda: isinstance(request.cls.job.scm, GitSCM))
 
     request.cls.job.start_build()

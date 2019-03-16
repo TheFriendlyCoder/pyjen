@@ -1,4 +1,3 @@
-from pyjen.plugins.gitscm import GitSCM
 import pytest
 
 

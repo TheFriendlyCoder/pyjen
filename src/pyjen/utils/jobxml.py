@@ -51,6 +51,33 @@ class JobXML(object):
             self._root.remove(node)
 
     @property
+    def quiet_period(self):
+        """Gets the delay, in seconds, this job waits in queue before running
+        a build
+
+        May return None if no custom quiet period is defined. At the time of
+        this writing the default value is 5 seconds however this may change
+        over time.
+
+        :rtype: :class:`int`
+        """
+        node = self._root.find("quietPeriod")
+        if node is None:
+            return None
+        return int(node.text)
+
+    @quiet_period.setter
+    def quiet_period(self, value):
+        """Changes the quiet period
+
+        :param int value: time, in seconds, to set the quiet period to
+        """
+        node = self._root.find("quietPeriod")
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'quietPeriod')
+        node.text = str(value)
+
+    @property
     def custom_workspace(self):
         """Gets the local path for the custom workspace associated with this job
 
