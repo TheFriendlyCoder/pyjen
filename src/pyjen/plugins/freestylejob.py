@@ -15,6 +15,23 @@ class FreestyleJob(Job):
         super(FreestyleJob, self).__init__(api)
 
     @property
+    def quiet_period(self):
+        """
+        :returns:
+            the delay, in seconds, builds of this job wait in the queue before
+            being run
+        :rtype: :class:`int`
+        """
+        jobxml = JobXML(self.config_xml)
+        return jobxml.quiet_period
+
+    @quiet_period.setter
+    def quiet_period(self, value):
+        jobxml = JobXML(self.config_xml)
+        jobxml.quiet_period = value
+        self.config_xml = jobxml.xml
+
+    @property
     def custom_workspace(self):
         """
         :returns: custom workspace associated with this job
