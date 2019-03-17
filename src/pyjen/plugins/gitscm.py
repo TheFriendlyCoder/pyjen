@@ -20,6 +20,14 @@ class GitSCM(object):
         """
         return self._root
 
+    @property
+    def url(self):
+        """Gets the repository URL for the git config"""
+        branches_node = self._root.find("userRemoteConfigs")
+        remotes_node = branches_node.find("hudson.plugins.git.UserRemoteConfig")
+        url_node = remotes_node.find("url")
+        return url_node.text
+
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

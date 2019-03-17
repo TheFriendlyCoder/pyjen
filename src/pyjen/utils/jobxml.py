@@ -1,8 +1,6 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
 import logging
 import xml.etree.ElementTree as ElementTree
-from pyjen.exceptions import PluginNotSupportedError
-from pyjen.utils.plugin_api import find_plugin
 
 
 class JobXML(object):
@@ -22,33 +20,6 @@ class JobXML(object):
     def __str__(self):
         """String representation of the configuration XML"""
         return self.xml
-
-    @property
-    def xml(self):
-        """Raw XML in plain-text format
-
-        :rtype: :class:`str`
-        """
-        return ElementTree.tostring(self._root).decode("utf-8")
-
-    @property
-    def plugin_name(self):
-        """Gets the name of the Jenkins plugin associated with this view
-
-        :rtype: :class:`str`
-        """
-        return self._root.tag
-
-    def disable_custom_workspace(self):
-        """Disables a jobs use of a custom workspace
-
-        If the job is not currently using a custom workspace this method will
-        do nothing
-        """
-        node = self._root.find('customWorkspace')
-
-        if node is not None:
-            self._root.remove(node)
 
     @property
     def quiet_period(self):
@@ -76,6 +47,33 @@ class JobXML(object):
         if node is None:
             node = ElementTree.SubElement(self._root, 'quietPeriod')
         node.text = str(value)
+
+    @property
+    def xml(self):
+        """Raw XML in plain-text format
+
+        :rtype: :class:`str`
+        """
+        return ElementTree.tostring(self._root).decode("utf-8")
+
+    @property
+    def plugin_name(self):
+        """Gets the name of the Jenkins plugin associated with this view
+
+        :rtype: :class:`str`
+        """
+        return self._root.tag
+
+    def disable_custom_workspace(self):
+        """Disables a jobs use of a custom workspace
+
+        If the job is not currently using a custom workspace this method will
+        do nothing
+        """
+        node = self._root.find('customWorkspace')
+
+        if node is not None:
+            self._root.remove(node)
 
     @property
     def custom_workspace(self):
@@ -134,40 +132,6 @@ class JobXML(object):
         node.text = node_label
 
     @property
-    def scm(self):
-        """Retrieves the appropriate plugin for the SCM portion of a job
-
-        Detects which source code management tool is being used by this
-        job, locates the appropriate plugin for that tool, and returns
-        an instance of the wrapper for that plugin pre-configured with
-        the settings found in the relevant XML subtree.
-
-        :returns:
-            One of any number of plugin objects responsible for providing
-            extensions to the source code management portion of a job
-
-            Examples: :class:`~pyjen.plugins.subversion.Subversion`
-
-        :rtype: :class:`~.pluginapi.PluginBase`
-        """
-        node = self._root.find('scm')
-        self._log.debug(node)
-        plugin_class = find_plugin(node.attrib["class"])
-        if plugin_class is None:
-            raise PluginNotSupportedError("SCM XML plugin not found",
-                                          node.attrib["class"])
-        return plugin_class(node)
-
-    @scm.setter
-    def scm(self, node):
-        """Defines a new source code manager or a job
-
-        :param node: Elementree XML node for the scm to assign"""
-        cur_scm = self._root.find('scm')
-        self._root.remove(cur_scm)
-        self._root.append(node)
-
-    @property
     def properties(self):
         """Gets a list of 0 or more Jenkins properties associated with this job
 
@@ -183,61 +147,6 @@ class JobXML(object):
             else:
                 self._log.warning("Unsupported job 'property' plugin.")
         return retval
-
-    @property
-    def publishers(self):
-        """list of 0 or more post-build publishers associated with this job
-
-        :returns: a list of post-build publishers associated with this job
-        :rtype: :class:`list` of publisher plugins supported by this job
-        """
-        retval = []
-        nodes = self._root.find('publishers')
-        for node in nodes:
-            plugin_class = find_plugin(node.tag)
-
-            if plugin_class is None:
-                self._log.warning("Unsupported job 'publisher' plugin: %s",
-                                  node.tag)
-                continue
-
-            retval.append(plugin_class(node))
-
-        return retval
-
-    def add_publisher(self, node):
-        """Adds a new publisher node to the publisher section of the job XML
-
-        :param node: Elementree XML node for the publisher to assign"""
-        pubs = self._root.find('publishers')
-        pubs.append(node)
-
-    @property
-    def builders(self):
-        """Gets a list of 0 or more build operations associated with this job
-
-        :returns: a list of build operations associated with this job
-        :rtype: :class:`list` of builder plugins used by this job
-        """
-        retval = list()
-        nodes = self._root.find('builders')
-        for node in nodes:
-            plugin_class = find_plugin(node.tag)
-            if plugin_class is None:
-                self._log.warning("Unsupported job 'builder' plugin %s",
-                                  node.tag)
-                continue
-
-            retval.append(plugin_class(node))
-
-        return retval
-
-    def add_builder(self, node):
-        """Adds a new builder node to the build steps section of the job XML
-
-        :param node: Elementree XML node for the builder to assign"""
-        pubs = self._root.find('builders')
-        pubs.append(node)
 
 
 if __name__ == "__main__":  # pragma: no cover
