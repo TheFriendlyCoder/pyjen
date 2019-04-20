@@ -36,6 +36,7 @@ JENKINS_PLUGINS = [
     "status-view",
     "sectioned-view",
     "conditional-buildstep",
+    "parameterized-trigger",
 ]
 
 

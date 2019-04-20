@@ -1,6 +1,7 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
 import logging
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.plugin_api import find_plugin
 
 
 class JobXML(object):
@@ -138,15 +139,25 @@ class JobXML(object):
         :returns: a list of customizable properties associated with this job
         :rtype: :class:`list` of property plugins supported by this job
         """
-        retval = []
+        retval = list()
         nodes = self._root.find('properties')
         for node in nodes:
-            plugin = self._init_plugin(node)
+            plugin = find_plugin(node.tag)
             if plugin is not None:
-                retval.append(plugin)
+                retval.append(plugin(node))
             else:
-                self._log.warning("Unsupported job 'property' plugin.")
+                self._log.warning(
+                    "Unsupported job 'property' plugin: %s", node.tag)
         return retval
+
+    def add_property(self, node):
+        """Adds a new job property to the configuration
+
+        :param node:
+            XML node describing the new job property to add.
+        """
+        props_node = self._root.find('properties')
+        props_node.append(node)
 
 
 if __name__ == "__main__":  # pragma: no cover
