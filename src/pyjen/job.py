@@ -457,6 +457,18 @@ class Job(object):
         jxml = JobXML(self.config_xml)
         return jxml.properties
 
+    def add_property(self, new_property):
+        """Adds a new job property to the configuration
+
+        :param new_property:
+            Custom job property to be added.
+            May be any PyJen plugin that supports the Jenkins job property
+            plugin API.
+        """
+        jxml = JobXML(self.config_xml)
+        jxml.add_property(new_property.node)
+        self.config_xml = jxml.xml
+
     @property
     def build_health(self):
         """Gets the percentage of good builds from recorded history of this job
