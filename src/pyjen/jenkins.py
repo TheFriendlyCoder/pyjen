@@ -5,9 +5,9 @@ from requests.exceptions import RequestException
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
-from pyjen.utils.jobxml import JobXML
 from pyjen.utils.viewxml import ViewXML
 from pyjen.user import User
+from pyjen.queue import Queue
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
@@ -427,6 +427,14 @@ class Jenkins(object):
         :rtype: :class:`~.plugin_manager.PluginManager`
         """
         return PluginManager(self._api.clone(self._api.url + 'pluginManager'))
+
+    @property
+    def build_queue(self):
+        """object that describes / manages the queued builds
+
+        :rtype: :class:`~.queue.Queue`
+        """
+        return Queue(self._api.clone(self._api.url + 'queue'))
 
 
 if __name__ == '__main__':  # pragma: no cover

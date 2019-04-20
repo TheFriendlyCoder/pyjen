@@ -1,6 +1,7 @@
 """Primitives for interacting with Jenkins jobs"""
 import logging
 from pyjen.build import Build
+from pyjen.queue_item import QueueItem
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 
@@ -378,10 +379,12 @@ class Job(object):
             job when triggering the build.
         """
         if len(kwargs.keys()) == 0:
-            self._api.post(self._api.url + "build")
+            res = self._api.post(self._api.url + "build")
         else:
             params = {"params": kwargs}
-            self._api.post(self._api.url + "buildWithParameters", params)
+            res = self._api.post(self._api.url + "buildWithParameters", params)
+
+        return QueueItem(self._api.clone(res.headers["Location"]))
 
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history

@@ -178,6 +178,9 @@ class JenkinsAPI(object):
                        their values
             * 'files' - dictionary of file names and handles to be uploaded to
                         the target URL
+            * 'params' - form data to be passed to the API endpoint
+        :returns: reference to the response data returned by the post request
+        :rtype: :class:`requests.models.Response`
         """
         if args and "headers" in args:
             temp_headers = args["headers"]
@@ -196,6 +199,7 @@ class JenkinsAPI(object):
             **args if args else dict())
 
         req.raise_for_status()
+        return req
 
     @property
     def crumb(self):

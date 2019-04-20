@@ -249,5 +249,13 @@ def test_clone_job_enabled(jenkins_env):
             assert jb_clone.is_disabled is False
 
 
+def test_build_queue(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    queue = jk.build_queue
+    assert queue is not None
+    assert isinstance(queue.items, list)
+    assert len(queue.items) == 0
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
