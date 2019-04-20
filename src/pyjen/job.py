@@ -365,15 +365,23 @@ class Job(object):
         """Deletes this job from the Jenkins dashboard"""
         self._api.post(self._api.url + "doDelete")
 
-    def start_build(self):
+    def start_build(self, **kwargs):
         """Forces a build of this job
 
         Synonymous with a manual trigger. A new instance
         of the job (ie: a build) will be added to the
         appropriate build queue where it will be scheduled
         for execution on the next available agent + executor.
+
+        :param kwargs:
+            0 or more named arguments to pass as build parameters to the
+            job when triggering the build.
         """
-        self._api.post(self._api.url + "build")
+        if len(kwargs.keys()) == 0:
+            self._api.post(self._api.url + "build")
+        else:
+            params = {"params": kwargs}
+            self._api.post(self._api.url + "buildWithParameters", params)
 
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
