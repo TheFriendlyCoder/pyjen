@@ -1,14 +1,8 @@
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class ParameterizedBuildStringParameter(object):
-    def __init__(self, node):
-        self._node = node
-
-    @property
-    def node(self):
-        """Gets the raw XML node defining the configuration for this plugin"""
-        return self._node
+class ParameterizedBuildStringParameter(XMLPlugin):
 
     @property
     def name(self):
@@ -16,7 +10,7 @@ class ParameterizedBuildStringParameter(object):
 
         :rtype: :class:`str`
         """
-        node = self._node.find("name")
+        node = self._root.find("name")
         assert node is not None
         return node.text
 
@@ -26,7 +20,7 @@ class ParameterizedBuildStringParameter(object):
 
         :rtype: :class:`str`
         """
-        node = self._node.find("description")
+        node = self._root.find("description")
         assert node is not None
         return node.text
 
@@ -36,7 +30,7 @@ class ParameterizedBuildStringParameter(object):
 
         :rtype: :class:`str`
         """
-        node = self._node.find("defaultValue")
+        node = self._root.find("defaultValue")
         assert node is not None
         return node.text
 
@@ -47,7 +41,7 @@ class ParameterizedBuildStringParameter(object):
 
         :rtype: :class:`bool`
         """
-        node = self._node.find("trim")
+        node = self._root.find("trim")
         assert node is not None
         return node.text.lower().strip() == "true"
 

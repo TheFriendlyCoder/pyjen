@@ -1,23 +1,10 @@
 """SCM properties of Jenkins jobs with no source control configuration"""
+import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class NullSCM(object):
+class NullSCM(XMLPlugin):
     """SCM plugin for Jobs with no source control configurations"""
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -29,6 +16,11 @@ class NullSCM(object):
         :rtype: :class:`str`
         """
         return "hudson.scm.NullSCM"
+
+    @classmethod
+    def create(cls):
+        root_node = ElementTree.fromstring('<scm class="hudson.scm.NullSCM"/>')
+        return cls(root_node)
 
 
 PluginClass = NullSCM

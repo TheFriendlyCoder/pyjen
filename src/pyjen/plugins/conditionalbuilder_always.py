@@ -2,10 +2,10 @@
 step that always executes regardless of any input condition
 """
 import xml.etree.ElementTree as ElementTree
-from pyjen.plugins.conditionalbuilder import ConditionalBuilderCondition
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class AlwaysRun(ConditionalBuilderCondition):
+class AlwaysRun(XMLPlugin):
     """Plugin for the Conditional Builder plugin that defines a conditional
     build step that always executes regardless of any input condition
 

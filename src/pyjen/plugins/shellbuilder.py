@@ -1,30 +1,13 @@
 """Interface to control a basic shell build step job builder plugin"""
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class ShellBuilder(object):
+class ShellBuilder(XMLPlugin):
     """Interface to control a basic shell build step job builder plugin
 
     This plugin is a default, built-in plugin which is part of the Jenkins core
-
-    :param node: XML node defining the settings for a this plugin
-    :type node: :class:`ElementTree.Element`
     """
-
-    def __init__(self, node):
-        self._root = node
-
-    def __str__(self):
-        return ElementTree.tostring(self._root, encoding="utf-8")
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
-
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -65,8 +48,8 @@ class ShellBuilder(object):
             rcode_node = ElementTree.SubElement(self._root, "unstableReturn")
         rcode_node.text = str(value)
 
-    @staticmethod
-    def create(script):
+    @classmethod
+    def create(cls, script):
         """Factory method for creating a new shell build step
 
         :param str script: shell script to run as part of this build step
@@ -77,7 +60,7 @@ class ShellBuilder(object):
         child = ElementTree.SubElement(root_node, "command")
         child.text = script
 
-        return ShellBuilder(root_node)
+        return cls(root_node)
 
 
 PluginClass = ShellBuilder

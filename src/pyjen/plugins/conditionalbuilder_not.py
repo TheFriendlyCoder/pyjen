@@ -2,10 +2,10 @@
 step that performs a logical NOT operation on another condition
 """
 import xml.etree.ElementTree as ElementTree
-from pyjen.plugins.conditionalbuilder import ConditionalBuilderCondition
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class NotCondition(ConditionalBuilderCondition):
+class NotCondition(XMLPlugin):
     """Plugin for the Conditional Builder plugin that defines a conditional
     build step that performs a logical NOT operation on another condition
 

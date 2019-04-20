@@ -2,27 +2,14 @@
 
 This is a plugin supported by the SectionedView plugin"""
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class TextSection(object):
+class TextSection(XMLPlugin):
     """One of several 'section' types defined for a sectioned view
 
     Sections of this type contain simple descriptive text
-
-    :param node: XML node defining the settings for a ListView section
-    :type node: :class:`ElementTree.Element`
     """
-    def __init__(self, node):
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
-
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -34,8 +21,8 @@ class TextSection(object):
         """
         return "hudson.plugins.sectioned_view.TextSection"
 
-    @staticmethod
-    def create(section_name):
+    @classmethod
+    def create(cls, section_name):
         """Factory method for creating a new Git SCM code block
 
         :param str section_name:
@@ -57,7 +44,7 @@ class TextSection(object):
         name_node = ElementTree.SubElement(root_node, "name")
         name_node.text = section_name
 
-        return TextSection(root_node)
+        return cls(root_node)
 
     @property
     def name(self):

@@ -1,28 +1,13 @@
 """Module defining the interfaces for interacting with Subversion properties
 associated with a :py:mod:`pyjen.job.Job`"""
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class Subversion(object):
+class Subversion(XMLPlugin):
     """Subversion SCM job plugin
 
     https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin
     """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
-
     @property
     def locations(self):
         """Gets the list of SVN URLs associated with this plugin instance
