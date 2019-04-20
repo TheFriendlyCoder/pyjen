@@ -1,33 +1,18 @@
 """Primitives for operating on Jenkins job builder of type 'Conditional Builder'
 """
-import logging
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.plugin_api import find_plugin
 from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class ConditionalBuilder(object):
+class ConditionalBuilder(XMLPlugin):
     """Jenkins job builder plugin
 
     capable of conditionally executing a build operation
 
     https://wiki.jenkins-ci.org/display/JENKINS/Conditional+BuildStep+Plugin
-
-    :param node: XML node defining the settings for a this plugin
-    :type node: :class:`ElementTree.Element`
     """
-
-    def __init__(self, node):
-        self._log = logging.getLogger(__name__)
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -41,8 +26,8 @@ class ConditionalBuilder(object):
         return "org.jenkinsci.plugins.conditionalbuildstep.singlestep." \
                "SingleConditionalBuilder"
 
-    @staticmethod
-    def create(condition, builder):
+    @classmethod
+    def create(cls, condition, builder):
         """Factory method for creating a new conditional build step
 
         :param builder:
@@ -85,14 +70,20 @@ class ConditionalBuilder(object):
         for cur_child in builder.node:
             build_step.append(cur_child)
 
-        return ConditionalBuilder(root_node)
+        return cls(root_node)
 
     @property
     def condition(self):
         """Gets the object describing the conditions for this build step"""
         node = self._root.find("condition")
         assert node is not None
-        return ConditionalBuilderCondition.instantiate(node)
+        plugin = find_plugin(node.attrib["class"])
+        if not plugin:
+            raise PluginNotSupportedError(
+                "Conditional build step condition %s not supported by PyJen.",
+                node.attrib["class"]
+            )
+        return plugin(node)
 
     @property
     def builder(self):
@@ -114,44 +105,6 @@ class ConditionalBuilder(object):
             root_node.append(cur_child)
 
         return plugin(root_node)
-
-
-class ConditionalBuilderCondition(object):
-    """Base class for all conditional builder conditions. Any plugin that
-    supports the conditional builder plugin must either derive from this
-    class or implement it's interface exactly.
-
-    :param node: XML node defining the condition
-    :type node: :class:`ElementTree.Element`
-    """
-    def __init__(self, node):
-        self._node = node
-
-    @staticmethod
-    def instantiate(node):
-        """Factory method that instantiates the appropriate derived class for
-        a given condition
-
-        :param node:
-            The XML node containing the definition of the condition to create
-        :type node: :class:`ElementTree.Element`
-        :returns: :class:`~.ConditionalBuilderCondition`
-        """
-        plugin = find_plugin(node.attrib["class"])
-        if not plugin:
-            raise PluginNotSupportedError(
-                "Conditional build step condition %s not supported by PyJen.",
-                node.attrib["class"]
-            )
-        return plugin(node)
-
-    @property
-    def node(self):
-        """Gets the XML node containing the definition for this condition
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._node
 
 
 PluginClass = ConditionalBuilder

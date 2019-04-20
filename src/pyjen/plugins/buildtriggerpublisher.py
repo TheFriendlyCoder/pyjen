@@ -1,27 +1,13 @@
 """Interface to the Jenkins 'build trigger' publishing plugin"""
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class BuildTriggerPublisher(object):
+class BuildTriggerPublisher(XMLPlugin):
     """Interface to the Jenkins 'build trigger' publishing plugin
 
     This plugin is a default, built-in plugin which is part of the Jenkins core
     """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -44,8 +30,8 @@ class BuildTriggerPublisher(object):
         children_node = self._root.find('childProjects')
         return [i.strip() for i in children_node.text.split(",")]
 
-    @staticmethod
-    def create(project_names):
+    @classmethod
+    def create(cls, project_names):
         """Factory method for creating a new build trigger
 
         The default trigger will run when the parent job is successful
@@ -66,7 +52,7 @@ class BuildTriggerPublisher(object):
         child = ElementTree.SubElement(root_node, "childProjects")
         child.text = ",".join(project_names)
 
-        return BuildTriggerPublisher(root_node)
+        return cls(root_node)
 
 
 PluginClass = BuildTriggerPublisher

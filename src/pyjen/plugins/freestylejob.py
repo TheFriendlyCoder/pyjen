@@ -2,7 +2,6 @@
 from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
-import xml.etree.ElementTree as ElementTree
 from pyjen.exceptions import PluginNotSupportedError
 
 

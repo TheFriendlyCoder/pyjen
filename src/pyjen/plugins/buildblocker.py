@@ -1,27 +1,13 @@
 """Interfaces for interacting with Build Blockers job property plugin"""
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class BuildBlockerProperty(object):
+class BuildBlockerProperty(XMLPlugin):
     """Wrapper for Build Blocker job properties
 
     https://wiki.jenkins-ci.org/display/JENKINS/Build+Blocker+Plugin
     """
-
-    def __init__(self, node):
-        """
-        :param node:
-            ElementTree node initialized with the XML from the Jenkins job
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @property
     def blockers(self):

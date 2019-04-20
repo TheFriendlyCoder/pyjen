@@ -1,28 +1,12 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
-import logging
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class FlexiblePublisher(object):
+class FlexiblePublisher(XMLPlugin):
     """Job plugin enabling conditional execution of post-build steps
 
     https://wiki.jenkins-ci.org/display/JENKINS/Flexible+Publish+Plugin
     """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-        self._log = logging.getLogger(__name__)
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @property
     def actions(self):
@@ -56,25 +40,9 @@ class FlexiblePublisher(object):
         return "flexiblepublish"
 
 
-class ConditionalPublisher(object):
+class ConditionalPublisher(XMLPlugin):
     """a single 'conditional' publisher contained within the flexible publisher
     """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-        self._log = logging.getLogger(__name__)
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @property
     def publisher(self):

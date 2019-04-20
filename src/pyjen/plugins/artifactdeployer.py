@@ -1,27 +1,13 @@
 """properties of the 'artifact deployer' publishing plugin"""
 from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class ArtifactDeployer(object):
+class ArtifactDeployer(XMLPlugin):
     """Interface to the Jenkins 'artifact deployer' publishing plugin
 
     https://wiki.jenkins-ci.org/display/JENKINS/ArtifactDeployer+Plugin
     """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @property
     def entries(self):

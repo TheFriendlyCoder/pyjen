@@ -1,27 +1,13 @@
 """Interface to the Jenkins 'archive artifacts' publishing plugin"""
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class ArtifactArchiverPublisher(object):
+class ArtifactArchiverPublisher(XMLPlugin):
     """Interface to the Jenkins 'archive artifacts' publishing plugin
 
     This plugin is a default, built-in plugin which is part of the Jenkins core
     """
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -44,8 +30,8 @@ class ArtifactArchiverPublisher(object):
         children_node = self._root.find('artifacts')
         return children_node.text
 
-    @staticmethod
-    def create(file_pattern):
+    @classmethod
+    def create(cls, file_pattern):
         """Factory method for creating a new artifact archiver
 
         :param str file_pattern:
@@ -64,7 +50,7 @@ class ArtifactArchiverPublisher(object):
         child = ElementTree.SubElement(root_node, "artifacts")
         child.text = file_pattern
 
-        return ArtifactArchiverPublisher(root_node)
+        return cls(root_node)
 
 
 PluginClass = ArtifactArchiverPublisher

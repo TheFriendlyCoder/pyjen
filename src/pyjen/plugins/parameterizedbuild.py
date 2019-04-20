@@ -1,25 +1,16 @@
-import logging
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import find_plugin
 
 
-class ParameterizedBuild(object):
-    def __init__(self, node):
-        self._node = node
-        self._log = logging.getLogger(__name__)
-
-    @property
-    def node(self):
-        """Gets the raw XML node defining the configuration for this plugin"""
-        return self._node
-
+class ParameterizedBuild(XMLPlugin):
     @property
     def parameters(self):
         """Gets a list of the build parameters associated with this property
 
         :rtype: :class:`list` of build parameters
         """
-        params_node = self._node.find("parameterDefinitions")
+        params_node = self._root.find("parameterDefinitions")
         assert params_node is not None
         retval = list()
         for cur_param in params_node:

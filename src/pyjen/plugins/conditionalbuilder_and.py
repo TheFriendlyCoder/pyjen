@@ -2,10 +2,10 @@
 step that performs a logical AND operation on 2 or more other conditions
 """
 import xml.etree.ElementTree as ElementTree
-from pyjen.plugins.conditionalbuilder import ConditionalBuilderCondition
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class AndCondition(ConditionalBuilderCondition):
+class AndCondition(XMLPlugin):
     """Plugin for the Conditional Builder plugin that defines a conditional
     build step that performs a logical AND operation on 2 or more other
     conditions

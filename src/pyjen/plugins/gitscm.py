@@ -1,24 +1,10 @@
 """SCM properties for jobs which pull sources from a Git repository"""
 import xml.etree.ElementTree as ElementTree
+from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class GitSCM(object):
+class GitSCM(XMLPlugin):
     """SCM properties for jobs which pull sources from a Git repository"""
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
-
-    @property
-    def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`ElementTree.Element`
-        """
-        return self._root
 
     @property
     def url(self):
@@ -39,8 +25,8 @@ class GitSCM(object):
         """
         return "hudson.plugins.git.GitSCM"
 
-    @staticmethod
-    def create(repository_url):
+    @classmethod
+    def create(cls, repository_url):
         """Factory method for creating a new Git SCM code block
 
         :param str repository_url:
@@ -66,7 +52,7 @@ class GitSCM(object):
 
         url.text = repository_url
 
-        return GitSCM(root_node)
+        return cls(root_node)
 
 
 PluginClass = GitSCM
