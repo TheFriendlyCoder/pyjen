@@ -8,6 +8,58 @@ class BuildBlockerProperty(XMLPlugin):
 
     https://wiki.jenkins-ci.org/display/JENKINS/Build+Blocker+Plugin
     """
+    QUEUE_SCAN_TYPES = ("DISABLED", "ALL", "BUILDABLE")
+    LEVEL_TYPES = ("GLOBAL", "NODE")
+
+    @property
+    def queue_scan(self):
+        """Checks to see whether build blocking scans the build queue or not
+
+        :returns: One of BuildBlockerProperty.QUEUE_SCAN_TYPES
+        :rtype: :class:`str`
+        """
+        retval = self._root.find("scanQueueFor").text
+        assert retval in BuildBlockerProperty.QUEUE_SCAN_TYPES
+        return retval
+
+    @queue_scan.setter
+    def queue_scan(self, value):
+        """Sets the type of build queue scanning for the blocking job
+
+        :param str value:
+            type of queue scanning to perform
+            Must be one of BuildBlockerProperty.QUEUE_SCAN_TYPES
+        """
+        if value not in BuildBlockerProperty.QUEUE_SCAN_TYPES:
+            raise ValueError(
+                "Build blocker queue scan may only be one of the following "
+                "types: " + ",".join(BuildBlockerProperty.QUEUE_SCAN_TYPES))
+        self._root.find("scanQueueFor").text = value
+
+    @property
+    def level(self):
+        """Gets the scope of the blocked job settings
+
+        :returns: One of BuildBlockerProperty.LEVEL_TYPES
+        :rtype: :class:`str`
+        """
+        retval = self._root.find("blockLevel").text
+        assert retval in BuildBlockerProperty.LEVEL_TYPES
+        return retval
+
+    @level.setter
+    def level(self, value):
+        """Sets the scope of the blocked builds
+
+        :param str value:
+            scope for this build blocker
+            Must be one of BuildBlockerProperty.LEVEL_TYPES
+        """
+        if value not in BuildBlockerProperty.LEVEL_TYPES:
+            raise ValueError(
+                "Build blocker scope level may only be one of the following "
+                "types: " + ",".join(BuildBlockerProperty.LEVEL_TYPES))
+        self._root.find("blockLevel").text = value
 
     @property
     def blockers(self):
@@ -16,27 +68,24 @@ class BuildBlockerProperty(XMLPlugin):
         :return: list of search criteria for blocking jobs
         :rtype: :class:`list`
         """
-        retval = []
-        if not self.is_enabled:
-            return retval
-
         temp = self._root.find("blockingJobs").text
-        if temp is None:
-            return retval
-
-        retval = temp.split()
-        return retval
+        return temp.split()
 
     @blockers.setter
-    def blockers(self, new_blockers):
-        """Sets the list of search criteria for blocking jobs
+    def blockers(self, patterns):
+        """Defines the names or regular expressions for jobs that block
+        execution of this job
 
-        :param list new_blockers: list of search criteria for blocking jobs
+        :param patterns:
+            One or more names or regular expressions for jobs that block the
+            execution of this one.
+        :type patterns: either :class:`list` or :class:`str`
         """
         node = self._root.find("blockingJobs")
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'blockingJobs')
-        node.text = "\n".join(new_blockers)
+        if isinstance(patterns, str):
+            node.text = patterns
+        else:
+            node.text = "\n".join(patterns)
 
     @property
     def is_enabled(self):
@@ -51,15 +100,11 @@ class BuildBlockerProperty(XMLPlugin):
     def enable(self):
         """Enables this set of build blockers"""
         node = self._root.find("useBuildBlocker")
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'useBuildBlocker')
         node.text = "true"
 
     def disable(self):
         """Disables this set of build blockers"""
         node = self._root.find("useBuildBlocker")
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'useBuildBlocker')
         node.text = "false"
 
     @staticmethod
@@ -71,7 +116,30 @@ class BuildBlockerProperty(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "buildblocker"
+        return "hudson.plugins.buildblocker.BuildBlockerProperty"
+
+    @classmethod
+    def create(cls, patterns):
+        """Factory method used to instantiate an instance of this plugin
+
+        :param patterns:
+            One or more names or regular expressions for jobs that block the
+            execution of this one.
+        :type patterns: either :class:`list` or :class:`str`
+        """
+        default_xml = """<hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
+<useBuildBlocker>true</useBuildBlocker>
+<blockLevel>GLOBAL</blockLevel>
+<scanQueueFor>DISABLED</scanQueueFor>
+</hudson.plugins.buildblocker.BuildBlockerProperty>"""
+
+        root_node = ElementTree.fromstring(default_xml)
+        jobs_node = ElementTree.SubElement(root_node, "blockingJobs")
+        if isinstance(patterns, str):
+            jobs_node.text = patterns
+        else:
+            jobs_node.text = " ".join(patterns)
+        return cls(root_node)
 
 
 PluginClass = BuildBlockerProperty

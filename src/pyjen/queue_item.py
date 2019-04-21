@@ -88,7 +88,7 @@ class QueueItem(object):
 
         :rtype: :class:`bool`
         """
-        return self._data["cancelled"]
+        return self._data.get("cancelled", False)
 
     @property
     def job(self):

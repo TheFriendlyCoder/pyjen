@@ -82,7 +82,6 @@ class Build(object):
         :rtype: :class:`bool`
         """
         data = self._api.get_api_data()
-
         return data['building']
 
     @property
@@ -105,10 +104,11 @@ class Build(object):
             * "SUCCESS"
             * "UNSTABLE"
             * "FAILURE"
+            * "ABORTED"
+
         :rtype: :class:`str`
         """
         data = self._api.get_api_data()
-
         return data['result']
 
     @property
@@ -161,6 +161,10 @@ class Build(object):
             retval.append(url)
 
         return retval
+
+    def abort(self):
+        """Aborts this build before it completes"""
+        self._api.post(self._api.url + "stop")
 
 
 if __name__ == "__main__":  # pragma: no cover
