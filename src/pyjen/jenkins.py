@@ -54,14 +54,14 @@ class Jenkins(object):
         authenticate with. If not provided, credentials will be loaded from any
         PyJen config files detected on the system. If no config files can be
         found, anonymous access will be assumed
-    :param bool ssl_verify:
-        flag indicating whether SSL certificates should be verified or not on
-        this connection. Enabling this flag on servers running Jenkins behind
-        an HTTPS connect with self-signed SSL certificates will result in
-        connection errors
+    :param ssl_cert:
+        Passed directly to the requests library when authenticating to the
+        remote server. Maybe be a boolean indicating whether SSL verification
+        is enabled or disabled, or may be a path to a certificate authority
+        bundle.
     """
 
-    def __init__(self, url, credentials=None, ssl_verify=False):
+    def __init__(self, url, credentials=None, ssl_cert=True):
         super(Jenkins, self).__init__()
         self._log = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class Jenkins(object):
         else:
             creds = credentials
 
-        self._api = JenkinsAPI(url, creds, ssl_verify)
+        self._api = JenkinsAPI(url, creds, ssl_cert)
 
     @property
     def connected(self):
