@@ -88,5 +88,32 @@ def test_console_text(jenkins_env):
         assert expected_output in jb.last_build.console_output
 
 
+@pytest.mark.timeout(10)
+def test_abort(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    expected_job_name = "test_abort"
+    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+
+    with clean_job(jb):
+        jb.quiet_period = 0
+        shell_builder = ShellBuilder.create("echo 'waiting for sleep' && sleep 40")
+        jb.add_builder(shell_builder)
+
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(expected_job_name).builders)
+
+        # Trigger a build and wait for it to complete
+        jb.start_build()
+        async_assert(lambda: jb.last_build)
+
+        async_assert(lambda: "waiting for sleep" in jb.last_build.console_output)
+
+        jb.last_build.abort()
+
+        assert jb.last_build.is_building is False
+        assert jb.last_build.result == "ABORTED"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

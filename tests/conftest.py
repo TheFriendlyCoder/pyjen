@@ -37,6 +37,7 @@ JENKINS_PLUGINS = [
     "sectioned-view",
     "conditional-buildstep",
     "parameterized-trigger",
+    "build-blocker-plugin",
 ]
 
 
