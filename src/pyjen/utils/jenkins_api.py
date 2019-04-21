@@ -14,17 +14,17 @@ class JenkinsAPI(object):
     :param tuple creds:
         username and password pair to authenticate with when accessing
         the REST API
-    :param bool verify_ssl:
-        indicates whether ssl certificate verification should be performed
-        on the REST API endpoints
+    :param ssl_cert:
+        Either a boolean controlling SSL verification, or a path to a cert
+        authority bundle to use for SSL verification.
     ."""
 
-    def __init__(self, url, creds, verify_ssl):
+    def __init__(self, url, creds, ssl_cert):
         self._log = logging.getLogger(__name__)
 
         self._url = url.rstrip("/\\") + "/"
         self._creds = creds
-        self._ssl_verify_enabled = verify_ssl
+        self._ssl_cert = ssl_cert
 
         self._jenkins_root_url = self._url
 
@@ -50,8 +50,7 @@ class JenkinsAPI(object):
             newly created JenkinsAPI
         :rtype: :class:`~.utils.jenkins_api.JenkinsAPI`
         """
-        retval = JenkinsAPI(
-            api_url, self._creds, self._ssl_verify_enabled)
+        retval = JenkinsAPI(api_url, self._creds, self._ssl_cert)
         retval._jenkins_root_url = self._jenkins_root_url
         return retval
 
@@ -90,7 +89,7 @@ class JenkinsAPI(object):
             req = requests.get(
                 temp_path,
                 auth=self._creds,
-                verify=self._ssl_verify_enabled)
+                verify=self._ssl_cert)
             req.raise_for_status()
 
             self._jenkins_headers_cache = req.headers
@@ -136,7 +135,7 @@ class JenkinsAPI(object):
         req = requests.get(
             temp_url,
             auth=self._creds,
-            verify=self._ssl_verify_enabled)
+            verify=self._ssl_cert)
         req.raise_for_status()
         retval = req.json()
         self._log.debug(json.dumps(retval, indent=4))
@@ -159,7 +158,7 @@ class JenkinsAPI(object):
         req = requests.get(
             temp_url,
             auth=self._creds,
-            verify=self._ssl_verify_enabled)
+            verify=self._ssl_cert)
         req.raise_for_status()
 
         return req.text
@@ -194,7 +193,7 @@ class JenkinsAPI(object):
         req = requests.post(
             target_url,
             auth=self._creds,
-            verify=self._ssl_verify_enabled,
+            verify=self._ssl_cert,
             headers=temp_headers,
             **args if args else dict())
 
@@ -222,7 +221,7 @@ class JenkinsAPI(object):
             req = requests.get(
                 self.root_url + 'crumbIssuer/api/json',
                 auth=self._creds,
-                verify=self._ssl_verify_enabled)
+                verify=self._ssl_cert)
 
             if req.status_code == 404:
                 # If we get a 404 error, endpoint not found, assume the Cross
