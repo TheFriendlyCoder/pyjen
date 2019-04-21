@@ -34,6 +34,10 @@ class Job(object):
         """Hashing function, allowing object to be serialized and compared"""
         return hash(self.name)
 
+    @property
+    def job_xml(self):
+        return JobXML(self.config_xml)
+
     @staticmethod
     def instantiate(json_data, rest_api):
         """Factory method for finding the appropriate PyJen view object based
