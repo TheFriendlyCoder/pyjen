@@ -3,19 +3,7 @@ from pyjen.utils.xml_plugin import XMLPlugin
 
 
 class BuildTriggerConfig(XMLPlugin):
-    """Abstraction around a basic parameterized build trigger
-    """
-
-    @staticmethod
-    def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
-
-        This static method is used by the PyJen plugin API to associate this
-        class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
-        """
-        return "hudson.plugins.parameterizedtrigger.BuildTriggerConfig"
+    """Abstraction around a basic parameterized build trigger"""
 
     @property
     def job_names(self):
@@ -40,6 +28,18 @@ class BuildTriggerConfig(XMLPlugin):
             node = ElementTree.SubElement(self._root, 'projects')
 
         node.text = ",".join(triggered_jobs)
+
+    # --------------------------------------------------------------- PLUGIN API
+    @staticmethod
+    def get_jenkins_plugin_name():
+        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+
+        This static method is used by the PyJen plugin API to associate this
+        class with a specific Jenkins plugin, as it is encoded in the config.xml
+
+        :rtype: :class:`str`
+        """
+        return "hudson.plugins.parameterizedtrigger.BuildTriggerConfig"
 
 
 PluginClass = BuildTriggerConfig

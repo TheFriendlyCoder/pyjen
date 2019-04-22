@@ -17,7 +17,7 @@ class Subversion(XMLPlugin):
             parameters for this module.
         :rtype: :class:`list` of :class:`ModuleLocation` objects
         """
-        retval = []
+        retval = list()
 
         locations_node = self._root.find("locations")
         for loc in locations_node:
@@ -44,6 +44,7 @@ class Subversion(XMLPlugin):
         """
         self._root.find("includedRegions").text = "\n".join(new_regions)
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -56,15 +57,8 @@ class Subversion(XMLPlugin):
         return "subversion"
 
 
-class ModuleLocation(object):
+class ModuleLocation(XMLPlugin):
     """Interface to SCM module declarations in a Subversion property of a job"""
-
-    def __init__(self, node):
-        """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
 
     @property
     def node(self):

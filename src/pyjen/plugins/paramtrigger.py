@@ -22,6 +22,7 @@ class ParameterizedBuildTrigger(XMLPlugin):
             retval.append(plugin(config))
         return retval
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

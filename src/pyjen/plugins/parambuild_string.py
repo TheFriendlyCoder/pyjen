@@ -45,6 +45,7 @@ class ParameterizedBuildStringParameter(XMLPlugin):
         assert node is not None
         return node.text.lower().strip() == "true"
 
+    # --------------------------------------------------------------- PLUGIN API
     @classmethod
     def create(cls, name, default_value, description, trim):
         """Creates a new string build parameter

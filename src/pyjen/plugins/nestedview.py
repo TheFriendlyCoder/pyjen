@@ -1,5 +1,4 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
-import logging
 import json
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
@@ -10,15 +9,7 @@ class NestedView(View):
 
     Instances of this class are typically instantiated directly or indirectly
     through :py:meth:`pyjen.View.create`
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-
-    def __init__(self, api):
-        super(NestedView, self).__init__(api)
-        self._log = logging.getLogger(__name__)
 
     @property
     def views(self):
@@ -162,6 +153,7 @@ class NestedView(View):
         existing_view.delete()
         return new_view
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

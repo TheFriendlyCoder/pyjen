@@ -9,18 +9,10 @@ from pyjen.exceptions import PluginNotSupportedError
 class SectionedView(View):
     """Interface to Jenkins views of type "SectionedView"
 
-     Views of this type support groupings of jobs into 'sections'
-     which each have their own filters
-
-     :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    Views of this type support groupings of jobs into 'sections'
+    which each have their own filters
     """
-
-    def __init__(self, api):
-        super(SectionedView, self).__init__(api)
-        self._log = logging.getLogger(__name__)
-
+    # ----------------------------------------------------- XML BASED PROPERTIES
     @property
     def sections(self):
         """
@@ -42,6 +34,7 @@ class SectionedView(View):
         vxml.add_section(section_type, name)
         self.config_xml = vxml.xml
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

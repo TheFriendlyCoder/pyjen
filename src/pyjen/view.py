@@ -14,7 +14,7 @@ class View(object):
     """
     def __init__(self, api):
         super(View, self).__init__()
-        self._log = logging.getLogger(__name__)
+        self._log = logging.getLogger(self.__module__)
         self._api = api
 
     @staticmethod
