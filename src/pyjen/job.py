@@ -155,7 +155,7 @@ class Job(object):
             May be any PyJen plugin that supports the Jenkins job property
             plugin API.
         """
-        self._job_xml.add_property(new_property.node)
+        self._job_xml.add_property(new_property)
         self._job_xml.update()
 
     @property

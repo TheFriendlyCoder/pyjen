@@ -233,5 +233,32 @@ def test_edit_build_blocker(jenkins_env):
         assert expected_job_names[1] in blockers
 
 
+def test_add_then_edit_build_blocker(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    job_name = "test_add_then_edit_build_blocker"
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    with clean_job(jb):
+        build_blocker = BuildBlockerProperty.create("MyCoolJob")
+        jb.add_property(build_blocker)
+
+        # edit the original build blocker object - changes should still get
+        # applied to the underlying Jenkins job
+        expected_job_names = ["SomeOtherJob1", "SomeOtherJob2"]
+        build_blocker.blockers = expected_job_names
+
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(job_name).properties)
+
+        # Now, get a clean reference to the job
+        jb2 = jk.find_job(job_name)
+        props = jb2.properties
+        blockers = props[0].blockers
+        assert isinstance(blockers, list)
+        assert len(blockers) == 2
+        assert expected_job_names[0] in blockers
+        assert expected_job_names[1] in blockers
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
