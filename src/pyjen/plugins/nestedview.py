@@ -1,5 +1,4 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
-import logging
 import json
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
@@ -10,16 +9,27 @@ class NestedView(View):
 
     Instances of this class are typically instantiated directly or indirectly
     through :py:meth:`pyjen.View.create`
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
 
-    def __init__(self, api):
-        super(NestedView, self).__init__(api)
-        self._log = logging.getLogger(__name__)
+    # ---------------------------------------------- CONFIG XML BASED PROPERTIES
+    def clone_view(self, source_view, new_view_name):
+        """Make a copy of a view with the specified name under this nested view
 
+        :param source_view: view to be cloned
+        :type source_view: :class:`pyjen.view.View`
+        :param str new_view_name:
+            name to give the newly created view
+        :return: reference to the created view
+        :rtype: :class:`~.view.View`
+        """
+        vxml = ViewXML(source_view.config_xml)
+        new_view = self.create_view(new_view_name, vxml.plugin_name)
+
+        vxml.rename(new_view_name)
+        new_view.config_xml = vxml.xml
+        return new_view
+
+    # ---------------------------------------------------- JSON BASED PROPERTIES
     @property
     def views(self):
         """Gets all views contained within this view, non-recursively
@@ -118,23 +128,6 @@ class NestedView(View):
 
         return result[0]
 
-    def clone_view(self, source_view, new_view_name):
-        """Make a copy of a view with the specified name under this nested view
-
-        :param source_view: view to be cloned
-        :type source_view: :class:`pyjen.view.View`
-        :param str new_view_name:
-            name to give the newly created view
-        :return: reference to the created view
-        :rtype: :class:`~.view.View`
-        """
-        vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, vxml.plugin_name)
-
-        vxml.rename(new_view_name)
-        new_view.config_xml = vxml.xml
-        return new_view
-
     def move_view(self, existing_view):
         """Moves an existing view under this nested view
 
@@ -162,6 +155,7 @@ class NestedView(View):
         existing_view.delete()
         return new_view
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

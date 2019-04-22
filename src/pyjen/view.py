@@ -14,8 +14,9 @@ class View(object):
     """
     def __init__(self, api):
         super(View, self).__init__()
-        self._log = logging.getLogger(__name__)
+        self._log = logging.getLogger(self.__module__)
         self._api = api
+        self._xml_cache = None
 
     @staticmethod
     def instantiate(json_data, rest_api):
@@ -81,6 +82,45 @@ class View(object):
                 retval.append(cur_plugin)
         return retval
 
+    # ---------------------------------------------- CONFIG XML BASED PROPERTIES
+    @property
+    def _view_xml(self):
+        if self._xml_cache is not None:
+            return self._xml_cache
+        self._xml_cache = self._xml_class(self._api)
+        return self._xml_cache
+
+    @property
+    def config_xml(self):
+        """Gets the raw configuration data in XML format
+
+        This is an advanced function which allows the caller
+        to manually manipulate the raw configuration settings
+        of the view. Use with caution.
+
+        This method allows callers to dynamically update arbitrary properties
+        of this view.
+
+        :returns:
+            returns the raw XML of the views configuration in
+            a plain text string format
+        :rtype: :class:`str`
+        """
+        return self._view_xml.xml
+
+    @config_xml.setter
+    def config_xml(self, new_xml):
+        """Updates the raw config of this view with a new set of properties
+
+        :param str new_xml:
+            XML encoded text string to be used as a replacement for the
+            current configuration being used by this view.
+
+            NOTE: It is assumed that this input text meets the schema
+            requirements for a Jenkins view.
+        """
+        self._view_xml.xml = new_xml
+
     @property
     def jenkins_plugin_name(self):
         """Extracts the name of the Jenkins plugin associated with this View
@@ -90,9 +130,9 @@ class View(object):
 
         :rtype: :class:`str`
         """
-        jxml = ViewXML(self.config_xml)
-        return jxml.plugin_name
+        return self._view_xml.plugin_name
 
+    # ---------------------------------------------------- JSON BASED PROPERTIES
     @property
     def name(self):
         """Gets the display name for this view
@@ -122,43 +162,11 @@ class View(object):
 
         view_jobs = data['jobs']
 
-        retval = []
+        retval = list()
         for j in view_jobs:
             retval.append(Job.instantiate(j, self._api))
 
         return retval
-
-    @property
-    def config_xml(self):
-        """Gets the raw configuration data in XML format
-
-        This is an advanced function which allows the caller
-        to manually manipulate the raw configuration settings
-        of the view. Use with caution.
-
-        This method allows callers to dynamically update arbitrary properties
-        of this view.
-
-        :returns:
-            returns the raw XML of the views configuration in
-            a plain text string format
-        :rtype: :class:`str`
-        """
-        return self._api.get_text("/config.xml")
-
-    @config_xml.setter
-    def config_xml(self, new_xml):
-        """Updates the raw config of this view with a new set of properties
-
-        :param str new_xml:
-            XML encoded text string to be used as a replacement for the
-            current configuration being used by this view.
-
-            NOTE: It is assumed that this input text meets the schema
-            requirements for a Jenkins view.
-        """
-        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self._api.post(self._api.url + "config.xml", args)
 
     def delete(self):
         """Deletes this view from the dashboard"""
@@ -215,6 +223,11 @@ class View(object):
                 "broken_jobs": broken_jobs,
                 "unstable_jobs": unstable_jobs,
                 "disabled_jobs": disabled_jobs}
+
+    # --------------------------------------------------------------- PLUGIN API
+    @property
+    def _xml_class(self):
+        return ViewXML
 
 
 if __name__ == "__main__":  # pragma: no cover

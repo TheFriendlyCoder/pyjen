@@ -9,17 +9,32 @@ class ViewXML(object):
     Loaded from the ./view/config.xml REST API endpoint for any arbitrary
     Jenkins view.
 
-    :param str config_xml:
-        Raw XML character string extracted from a Jenkins view.
+    :param api:
+        Connection object pre-initialized for the Jenkins REST API
     """
-    def __init__(self, config_xml):
+    def __init__(self, api):
         super(ViewXML, self).__init__()
-        self._root = ElementTree.fromstring(config_xml)
-        self._log = logging.getLogger(__name__)
+        self._api = api
+        self._log = logging.getLogger(self.__module__)
+        self._cache = None
 
     def __str__(self):
         """String representation of the configuration XML"""
         return self.xml
+
+    @property
+    def _root(self):
+        """Gets the decoded root node from the config xml"""
+        if self._cache is not None:
+            return self._cache
+        text = self._api.get_text("/config.xml")
+        self._cache = ElementTree.fromstring(text)
+        return self._cache
+
+    def update(self):
+        """Posts all changes made to the object back to Jenkins"""
+        args = {'data': self.xml, 'headers': {'Content-Type': 'text/xml'}}
+        self._api.post(self._api.url + "config.xml", args)
 
     @property
     def xml(self):
@@ -28,6 +43,17 @@ class ViewXML(object):
         :rtype: :class:`str`
         """
         return ElementTree.tostring(self._root).decode("utf-8")
+
+    @xml.setter
+    def xml(self, new_xml):
+        """Updates the job config from some new, statically defined XML source
+
+        :param str new_xml:
+            raw XML config data to be uploaded
+        """
+        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
+        self._api.post(self._api.url + "config.xml", args)
+        self._cache = ElementTree.fromstring(new_xml)
 
     @property
     def plugin_name(self):
