@@ -46,5 +46,33 @@ def test_unstable_return_code(jenkins_env):
         assert builders[0].unstable_return_code == rcode
 
 
+def test_edit_unstable_return_code(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    job_name = "test_edit_unstable_return_code"
+    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    with clean_job(jb):
+        jb.quiet_period = 0
+        rcode = 12
+        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step.unstable_return_code = 1
+        jb.add_builder(failing_step)
+
+        # Get a fresh copy of our job to ensure we have an up to date
+        # copy of the config.xml for the job
+        async_assert(lambda: jk.find_job(job_name).builders)
+        jb2 = jk.find_job(job_name)
+        builders = jb2.builders
+
+        # Edit the builder and run a build to see if the changes were auto applied
+        builders[0].unstable_return_code = rcode
+        jb2.start_build()
+        async_assert(lambda: jb2.last_build)
+        bld = jb2.last_build
+
+        # Because of our changes to the configuration, the returned error code
+        # should have resulted in an unstable build instead of a failed build
+        assert bld.result == "UNSTABLE"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

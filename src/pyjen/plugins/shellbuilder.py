@@ -8,17 +8,6 @@ class ShellBuilder(XMLPlugin):
 
     This plugin is a default, built-in plugin which is part of the Jenkins core
     """
-    @staticmethod
-    def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
-
-        This static method is used by the PyJen plugin API to associate this
-        class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
-        """
-        return "hudson.tasks.Shell"
-
     @property
     def script(self):
         """Gets the shell script associated with this builder
@@ -47,6 +36,19 @@ class ShellBuilder(XMLPlugin):
         if not rcode_node:
             rcode_node = ElementTree.SubElement(self._root, "unstableReturn")
         rcode_node.text = str(value)
+        self.update()
+
+    # --------------------------------------------------------------- PLUGIN API
+    @staticmethod
+    def get_jenkins_plugin_name():
+        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+
+        This static method is used by the PyJen plugin API to associate this
+        class with a specific Jenkins plugin, as it is encoded in the config.xml
+
+        :rtype: :class:`str`
+        """
+        return "hudson.tasks.Shell"
 
     @classmethod
     def create(cls, script):
