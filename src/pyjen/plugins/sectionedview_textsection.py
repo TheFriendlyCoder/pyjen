@@ -10,6 +10,17 @@ class TextSection(XMLPlugin):
 
     Sections of this type contain simple descriptive text
     """
+    @property
+    def name(self):
+        """Gets the title text of this section
+
+        :rtype: :class:`str`
+        """
+        name_node = self._root.find("name")
+        assert name_node is not None
+        return name_node.text
+
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -45,16 +56,6 @@ class TextSection(XMLPlugin):
         name_node.text = section_name
 
         return cls(root_node)
-
-    @property
-    def name(self):
-        """Gets the title text of this section
-
-        :rtype: :class:`str`
-        """
-        name_node = self._root.find("name")
-        assert name_node is not None
-        return name_node.text
 
 
 PluginClass = TextSection

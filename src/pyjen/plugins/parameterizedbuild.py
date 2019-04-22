@@ -24,6 +24,7 @@ class ParameterizedBuild(XMLPlugin):
             retval.append(plugin(cur_param))
         return retval
 
+    # --------------------------------------------------------------- PLUGIN API
     @classmethod
     def create(cls, params):
         """Factory method for this class

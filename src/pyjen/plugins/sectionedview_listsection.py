@@ -10,7 +10,39 @@ class ListViewSection(XMLPlugin):
 
     Represents sections of type 'ListView'
     """
+    @property
+    def name(self):
+        """Gets the title text of this section
 
+        :rtype: :class:`str`
+        """
+        name_node = self._root.find("name")
+        assert name_node is not None
+        return name_node.text
+
+    @property
+    def include_regex(self):
+        """regular filter for jobs to be shown in this section
+
+        :rtype: :class:`str`
+        """
+        regex_node = self._root.find("includeRegex")
+        if regex_node is None:
+            return ""
+        return regex_node.text
+
+    @include_regex.setter
+    def include_regex(self, new_regex):
+        """Sets the filter to use for jobs shown in this section
+
+        :param str new_regex: a new regular expression to use for the filter
+        """
+        regex_node = self._root.find("includeRegex")
+        if regex_node is None:
+            regex_node = ElementTree.SubElement(self._root, 'includeRegex')
+        regex_node.text = new_regex
+
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -53,38 +85,6 @@ class ListViewSection(XMLPlugin):
         name_node.text = section_name
 
         return cls(root_node)
-
-    @property
-    def name(self):
-        """Gets the title text of this section
-
-        :rtype: :class:`str`
-        """
-        name_node = self._root.find("name")
-        assert name_node is not None
-        return name_node.text
-
-    @property
-    def include_regex(self):
-        """regular filter for jobs to be shown in this section
-
-        :rtype: :class:`str`
-        """
-        regex_node = self._root.find("includeRegex")
-        if regex_node is None:
-            return ""
-        return regex_node.text
-
-    @include_regex.setter
-    def include_regex(self, new_regex):
-        """Sets the filter to use for jobs shown in this section
-
-        :param str new_regex: a new regular expression to use for the filter
-        """
-        regex_node = self._root.find("includeRegex")
-        if regex_node is None:
-            regex_node = ElementTree.SubElement(self._root, 'includeRegex')
-        regex_node.text = new_regex
 
 
 PluginClass = ListViewSection

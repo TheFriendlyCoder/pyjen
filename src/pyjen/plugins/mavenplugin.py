@@ -3,15 +3,9 @@ from pyjen.job import Job
 
 
 class MavenPlugin(Job):
-    """Custom Maven job type
+    """Custom Maven job type"""
 
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
-    """
-    def __init__(self, api):
-        super(MavenPlugin, self).__init__(api)
-
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def template_config_xml():
         """XML configuration template to when instantiating jobs of this type

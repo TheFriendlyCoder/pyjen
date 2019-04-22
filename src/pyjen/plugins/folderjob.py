@@ -5,65 +5,7 @@ from pyjen.exceptions import PluginNotSupportedError
 
 
 class FolderJob(Job):
-    """Jenkins job of type 'folder'
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
-    """
-
-    def __init__(self, api):
-        super(FolderJob, self).__init__(api)
-
-    @staticmethod
-    def template_config_xml():
-        """XML configuration template for  instantiating jobs of this type
-
-        :returns:
-            a basic XML configuration template for use when instantiating
-            jobs of this type
-        :rtype: :class:`str`
-        """
-        xml = """<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.7">
-    <description/>
-    <properties>
-        <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig plugin="pipeline-model-definition@1.3.6">
-        <dockerLabel/>
-        <registry plugin="docker-commons@1.13"/>
-        </org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
-    </properties>
-    <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
-        <views>
-            <hudson.model.AllView>
-                <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
-                <name>All</name>
-                <filterExecutors>false</filterExecutors>
-                <filterQueue>false</filterQueue>
-                <properties class="hudson.model.View$PropertyList"/>
-            </hudson.model.AllView>
-        </views>
-        <tabBar class="hudson.views.DefaultViewsTabBar"/>
-    </folderViews>
-    <healthMetrics>
-        <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
-            <nonRecursive>false</nonRecursive>
-        </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
-    </healthMetrics>
-    <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
-</com.cloudbees.hudson.plugins.folder.Folder>"""
-        return xml
-
-    @staticmethod
-    def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
-
-        This static method is used by the PyJen plugin API to associate this
-        class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
-        """
-        return "com.cloudbees.hudson.plugins.folder.Folder"
-
+    """Jenkins job of type 'folder'"""
     def create_job(self, job_name, job_type):
         """Creates a new job on the Jenkins dashboard
 
@@ -187,6 +129,56 @@ class FolderJob(Job):
         new_job.config_xml = existing_job.config_xml
         existing_job.delete()
         return new_job
+
+    # --------------------------------------------------------------- PLUGIN API
+    @staticmethod
+    def template_config_xml():
+        """XML configuration template for  instantiating jobs of this type
+
+        :returns:
+            a basic XML configuration template for use when instantiating
+            jobs of this type
+        :rtype: :class:`str`
+        """
+        xml = """<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.7">
+        <description/>
+        <properties>
+            <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig plugin="pipeline-model-definition@1.3.6">
+            <dockerLabel/>
+            <registry plugin="docker-commons@1.13"/>
+            </org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
+        </properties>
+        <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
+            <views>
+                <hudson.model.AllView>
+                    <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+                    <name>All</name>
+                    <filterExecutors>false</filterExecutors>
+                    <filterQueue>false</filterQueue>
+                    <properties class="hudson.model.View$PropertyList"/>
+                </hudson.model.AllView>
+            </views>
+            <tabBar class="hudson.views.DefaultViewsTabBar"/>
+        </folderViews>
+        <healthMetrics>
+            <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+                <nonRecursive>false</nonRecursive>
+            </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+        </healthMetrics>
+        <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+    </com.cloudbees.hudson.plugins.folder.Folder>"""
+        return xml
+
+    @staticmethod
+    def get_jenkins_plugin_name():
+        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+
+        This static method is used by the PyJen plugin API to associate this
+        class with a specific Jenkins plugin, as it is encoded in the config.xml
+
+        :rtype: :class:`str`
+        """
+        return "com.cloudbees.hudson.plugins.folder.Folder"
 
 
 PluginClass = FolderJob

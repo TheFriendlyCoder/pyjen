@@ -1,5 +1,4 @@
 """Class that interact with Jenkins views of type "AllView" """
-import logging
 from pyjen.view import View
 
 
@@ -8,16 +7,7 @@ class AllView(View):
 
     Instances of this class are typically instantiated directly or
     indirectly through :py:meth:`~.view.View.create`
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-
-    def __init__(self, api):
-        super(AllView, self).__init__(api)
-        self._log = logging.getLogger(__name__)
-
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
