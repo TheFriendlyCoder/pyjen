@@ -170,7 +170,9 @@ class JobXML(object):
         for node in nodes:
             plugin = find_plugin(node.tag)
             if plugin is not None:
-                retval.append(plugin(node))
+                temp = plugin(node)
+                temp.parent = self
+                retval.append(temp)
             else:
                 self._log.warning(
                     "Unsupported job 'property' plugin: %s", node.tag)
