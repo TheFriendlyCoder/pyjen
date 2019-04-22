@@ -6,30 +6,61 @@ from pyjen.exceptions import PluginNotSupportedError
 
 
 class FreestyleJob(Job):
-    """Jenkins job of type 'freestyle'
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
-    """
-
-    def __init__(self, api):
-        super(FreestyleJob, self).__init__(api)
-
+    """Jenkins job of type 'freestyle'"""
+    # ----------------------------------------------------- XML BASED PROPERTIES
     @property
     def builders(self):
         """Gets all plugins configured as 'builders' for this job"""
-        jxml = FreestyleXML(self.config_xml)
-        return jxml.builders
+        return self._job_xml.builders
 
     def add_builder(self, builder):
         """Adds a new build step to this job
 
         :param builder: build step config to add"""
-        jxml = FreestyleXML(self.config_xml)
-        jxml.add_builder(builder.node)
-        self.config_xml = jxml.xml
+        self._job_xml.add_builder(builder.node)
+        self._job_xml.update()
 
+    @property
+    def scm(self):
+        """Gets the source code repository configuration from the job config"""
+        return self._job_xml.scm
+
+    @scm.setter
+    def scm(self, value):
+        """Changes the SCM configuration for this job"""
+        self._job_xml.scm = value.node
+        self._job_xml.update()
+
+    @property
+    def publishers(self):
+        """Gets all plugins configured as 'publishers' for this job"""
+        return self._job_xml.publishers
+
+    def add_publisher(self, publisher):
+        """Adds a new job publisher to this job
+
+        :param publisher: job publisher to add"""
+        self._job_xml.add_publisher(publisher.node)
+        self._job_xml.update()
+
+    @property
+    def custom_workspace(self):
+        """
+        :returns: custom workspace associated with this job
+        :rtype: :class:`str`
+        """
+        return self._job_xml.custom_workspace
+
+    @custom_workspace.setter
+    def custom_workspace(self, path):
+        """Defines a new custom workspace for the job
+
+        :param str path: new custom workspace path
+        """
+        self._job_xml.custom_workspace = path
+        self._job_xml.update()
+
+    # ---------------------------------------------------- JSON BASED PROPERTIES
     @property
     def upstream_jobs(self):
         """Gets the list of upstream dependencies for this job
@@ -98,56 +129,10 @@ class FreestyleJob(Job):
 
         return retval
 
+    # --------------------------------------------------------------- PLUGIN API
     @property
-    def scm(self):
-        """Gets the source code repository configuration from the job config"""
-        jxml = FreestyleXML(self.config_xml)
-        return jxml.scm
-
-    @scm.setter
-    def scm(self, value):
-        """Changes the SCM configuration for this job"""
-        jxml = FreestyleXML(self.config_xml)
-        jxml.scm = value.node
-        self.config_xml = jxml.xml
-
-    @property
-    def publishers(self):
-        """Gets all plugins configured as 'publishers' for this job"""
-        jxml = FreestyleXML(self.config_xml)
-        return jxml.publishers
-
-    def add_publisher(self, publisher):
-        """Adds a new job publisher to this job
-
-        :param publisher: job publisher to add"""
-        jxml = FreestyleXML(self.config_xml)
-        jxml.add_publisher(publisher.node)
-        self.config_xml = jxml.xml
-
-    @property
-    def custom_workspace(self):
-        """
-        :returns: custom workspace associated with this job
-        :rtype: :class:`str`
-        """
-        xml = self.config_xml
-
-        jobxml = FreestyleXML(xml)
-        return jobxml.custom_workspace
-
-    @custom_workspace.setter
-    def custom_workspace(self, path):
-        """Defines a new custom workspace for the job
-
-        :param str path: new custom workspace path
-        """
-        xml = self.config_xml
-
-        jobxml = FreestyleXML(xml)
-        jobxml.custom_workspace = path
-
-        self.config_xml = jobxml.xml
+    def _xml_class(self):
+        return FreestyleXML
 
     @staticmethod
     def template_config_xml():
@@ -197,7 +182,7 @@ class FreestyleXML(JobXML):
         :returns: a list of post-build publishers associated with this job
         :rtype: :class:`list` of publisher plugins supported by this job
         """
-        retval = []
+        retval = list()
         nodes = self._root.find('publishers')
         for node in nodes:
             plugin_class = find_plugin(node.tag)
@@ -236,7 +221,6 @@ class FreestyleXML(JobXML):
         :rtype: :class:`~.pluginapi.PluginBase`
         """
         node = self._root.find('scm')
-        self._log.debug(node)
         plugin_class = find_plugin(node.attrib["class"])
         if plugin_class is None:
             raise PluginNotSupportedError("SCM XML plugin not found",
