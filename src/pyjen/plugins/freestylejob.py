@@ -17,7 +17,7 @@ class FreestyleJob(Job):
         """Adds a new build step to this job
 
         :param builder: build step config to add"""
-        self._job_xml.add_builder(builder.node)
+        self._job_xml.add_builder(builder)
         self._job_xml.update()
 
     @property
@@ -251,17 +251,21 @@ class FreestyleXML(JobXML):
                 self._log.warning("Unsupported job 'builder' plugin %s",
                                   node.tag)
                 continue
-
-            retval.append(plugin_class(node))
+            temp = plugin_class(node)
+            temp.parent = self
+            retval.append(temp)
 
         return retval
 
-    def add_builder(self, node):
+    def add_builder(self, builder):
         """Adds a new builder node to the build steps section of the job XML
 
-        :param node: Elementree XML node for the builder to assign"""
+        :param builder:
+            PyJen plugin implementing the new job builder to be added
+        """
         pubs = self._root.find('builders')
-        pubs.append(node)
+        pubs.append(builder.node)
+        builder.parent = self
 
 
 PluginClass = FreestyleJob
