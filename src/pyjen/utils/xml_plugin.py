@@ -38,11 +38,6 @@ class XMLPlugin(object):
         self._root = node
         self._log = logging.getLogger(self.__module__)
 
-        # Sanity Check: Make sure our derived object has correctly implemented
-        #               the required API
-        assert hasattr(self, "get_jenkins_plugin_name")
-        assert hasattr(self, "create")
-
     @property
     def parent(self):
         """Gets the parent XML tree this node belongs to"""

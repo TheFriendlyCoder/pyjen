@@ -178,14 +178,15 @@ class JobXML(object):
                     "Unsupported job 'property' plugin: %s", node.tag)
         return retval
 
-    def add_property(self, node):
+    def add_property(self, prop):
         """Adds a new job property to the configuration
 
-        :param node:
-            XML node describing the new job property to add.
+        :param prop:
+            PyJen plugin associated with the job property to add
         """
         props_node = self._root.find('properties')
-        props_node.append(node)
+        props_node.append(prop.node)
+        prop.parent = self
 
 
 if __name__ == "__main__":  # pragma: no cover
