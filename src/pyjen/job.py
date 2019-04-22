@@ -13,10 +13,11 @@ class Job(object):
         Pre-initialized connection to the Jenkins REST API
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
-
     def __init__(self, api):
         super(Job, self).__init__()
         self._api = api
+        self._xml_cache = None
+        self._log = logging.getLogger(self.__module__)
 
     def __eq__(self, other):
         """equality operator"""
@@ -33,10 +34,6 @@ class Job(object):
     def __hash__(self):
         """Hashing function, allowing object to be serialized and compared"""
         return hash(self.name)
-
-    @property
-    def job_xml(self):
-        return JobXML(self.config_xml)
 
     @staticmethod
     def instantiate(json_data, rest_api):
@@ -99,6 +96,68 @@ class Job(object):
                 retval.append(cur_plugin)
         return retval
 
+    # ---------------------------------------------- CONFIG XML BASED PROPERTIES
+    @property
+    def _job_xml(self):
+        if self._xml_cache is not None:
+            return self._xml_cache
+        self._xml_cache = self._xml_class(self._api)
+        return self._xml_cache
+
+    @property
+    def config_xml(self):
+        """Gets the raw XML configuration for the job
+
+        Allows callers to manipulate the raw job configuration file as desired.
+
+        :returns: the full XML tree describing this jobs configuration
+        :rtype: :class:`str`
+        """
+        return self._job_xml.xml
+
+    @config_xml.setter
+    def config_xml(self, new_xml):
+        """Allows a caller to manually override the entire job configuration
+
+        WARNING: This is an advanced method that should only be used in
+        rare circumstances. All configuration changes should normally
+        be handled using other methods provided on this class.
+
+        :param str new_xml: A complete XML tree compatible with the Jenkins API
+        """
+        self._job_xml.xml = new_xml
+
+    @property
+    def quiet_period(self):
+        """
+        :returns:
+            the delay, in seconds, builds of this job wait in the queue before
+            being run
+        :rtype: :class:`int`
+        """
+        return self._job_xml.quiet_period
+
+    @quiet_period.setter
+    def quiet_period(self, value):
+        self._job_xml.quiet_period = value
+        self._job_xml.update()
+
+    @property
+    def properties(self):
+        """all plugins configured as extra configuration properties"""
+        return self._job_xml.properties
+
+    def add_property(self, new_property):
+        """Adds a new job property to the configuration
+
+        :param new_property:
+            Custom job property to be added.
+            May be any PyJen plugin that supports the Jenkins job property
+            plugin API.
+        """
+        self._job_xml.add_property(new_property.node)
+        self._job_xml.update()
+
     @property
     def jenkins_plugin_name(self):
         """Extracts the name of the Jenkins plugin associated with this job
@@ -108,9 +167,9 @@ class Job(object):
 
         :rtype: :class:`str`
         """
-        jxml = JobXML(self.config_xml)
-        return jxml.plugin_name
+        return self._job_xml.plugin_name
 
+    # ---------------------------------------------------- JSON BASED PROPERTIES
     @property
     def name(self):
         """Returns the name of the job managed by this object
@@ -167,30 +226,6 @@ class Job(object):
         return data['color'] != "notbuilt"
 
     @property
-    def config_xml(self):
-        """Gets the raw XML configuration for the job
-
-        Allows callers to manipulate the raw job configuration file as desired.
-
-        :returns: the full XML tree describing this jobs configuration
-        :rtype: :class:`str`
-        """
-        return self._api.get_text("/config.xml")
-
-    @config_xml.setter
-    def config_xml(self, new_xml):
-        """Allows a caller to manually override the entire job configuration
-
-        WARNING: This is an advanced method that should only be used in
-        rare circumstances. All configuration changes should normally
-        be handled using other methods provided on this class.
-
-        :param str new_xml: A complete XML tree compatible with the Jenkins API
-        """
-        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self._api.post(self._api.url + "config.xml", args)
-
-    @property
     def recent_builds(self):
         """Gets a list of the most recent builds for this job
 
@@ -206,7 +241,7 @@ class Job(object):
 
         builds = data['builds']
 
-        retval = []
+        retval = list()
         for cur_build in builds:
             temp_build = Build(self._api.clone(cur_build['url']))
             retval.append(temp_build)
@@ -224,7 +259,7 @@ class Job(object):
 
         builds = data['allBuilds']
 
-        retval = []
+        retval = list()
         for cur_build in builds:
             temp_build = Build(self._api.clone(cur_build['url']))
             retval.append(temp_build)
@@ -432,7 +467,7 @@ class Job(object):
         if start_time > end_time:
             end_time, start_time = start_time, end_time
 
-        builds = []
+        builds = list()
 
         for run in self.all_builds:
             if run.start_time < start_time:
@@ -440,41 +475,6 @@ class Job(object):
             elif end_time >= run.start_time >= start_time:
                 builds.append(run)
         return builds
-
-    @property
-    def quiet_period(self):
-        """
-        :returns:
-            the delay, in seconds, builds of this job wait in the queue before
-            being run
-        :rtype: :class:`int`
-        """
-        jobxml = JobXML(self.config_xml)
-        return jobxml.quiet_period
-
-    @quiet_period.setter
-    def quiet_period(self, value):
-        jobxml = JobXML(self.config_xml)
-        jobxml.quiet_period = value
-        self.config_xml = jobxml.xml
-
-    @property
-    def properties(self):
-        """all plugins configured as extra configuration properties"""
-        jxml = JobXML(self.config_xml)
-        return jxml.properties
-
-    def add_property(self, new_property):
-        """Adds a new job property to the configuration
-
-        :param new_property:
-            Custom job property to be added.
-            May be any PyJen plugin that supports the Jenkins job property
-            plugin API.
-        """
-        jxml = JobXML(self.config_xml)
-        jxml.add_property(new_property.node)
-        self.config_xml = jxml.xml
 
     @property
     def build_health(self):
@@ -495,6 +495,11 @@ class Job(object):
                 return cur_report["score"]
 
         return 0
+
+    # --------------------------------------------------------------- PLUGIN API
+    @property
+    def _xml_class(self):
+        return JobXML
 
 
 if __name__ == "__main__":  # pragma: no cover

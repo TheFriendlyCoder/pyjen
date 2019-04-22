@@ -205,6 +205,7 @@ def test_build_blocker_functionality(jenkins_env):
             assert queue1.waiting is False
 
 
+@pytest.mark.skip("Disabled until functionality is implemented")
 def test_edit_build_blocker(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_edit_build_blocker"

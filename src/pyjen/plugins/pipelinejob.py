@@ -1,4 +1,4 @@
-"""Primitives that manage Jenkins job of type 'Freestyle'"""
+"""Primitives that manage Jenkins job of type 'pipeline'"""
 from pyjen.job import Job
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.jobxml import JobXML
@@ -7,41 +7,8 @@ from pyjen.exceptions import PluginNotSupportedError
 
 
 class PipelineJob(Job):
-    """Jenkins job of type 'freestyle'
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
-    """
-
-    def __init__(self, api):
-        super(PipelineJob, self).__init__(api)
-
-    @staticmethod
-    def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
-
-        This static method is used by the PyJen plugin API to associate this
-        class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
-        """
-        return "org.jenkinsci.plugins.workflow.job.WorkflowJob"
-
-    @staticmethod
-    def template_config_xml():
-        return """<flow-definition plugin="workflow-job@2.32">
-<description/>
-<keepDependencies>false</keepDependencies>
-<properties/>
-<definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.64">
-<script/>
-<sandbox>true</sandbox>
-</definition>
-<triggers/>
-<disabled>false</disabled>
-</flow-definition>"""
-
+    """Jenkins job of type 'pipeline'"""
+    # ----------------------------------------------------- XML BASED PROPERTIES
     def scm_definition(self, scm, script_path="Jenkinsfile", lightweight=True):
         """Defines the Pipeline groovy script used by this job from files
         stored in a source code repository
@@ -57,9 +24,8 @@ class PipelineJob(Job):
             check out the entire repository before running the Jenkinsfile.
             Defaults to True
         """
-        jobxml = PipelineXML(self.config_xml)
-        jobxml.scm_definition(scm, script_path, lightweight)
-        self.config_xml = jobxml.xml
+        self._job_xml.scm_definition(scm, script_path, lightweight)
+        self._job_xml.update()
 
     def script_definition(self, script, sandbox=True):
         """Defines the pipeline build using an inline groovy script
@@ -70,9 +36,8 @@ class PipelineJob(Job):
             indicates whether the Groovy script can run in the safer 'sandbox'
             environment. Defaults to True.
         """
-        jobxml = PipelineXML(self.config_xml)
-        jobxml.script_definition(script, sandbox)
-        self.config_xml = jobxml.xml
+        self._job_xml.script_definition(script, sandbox)
+        self._job_xml.update()
 
     @property
     def script(self):
@@ -80,14 +45,42 @@ class PipelineJob(Job):
 
         :rtype: :class:`str`
         """
-        jobxml = PipelineXML(self.config_xml)
-        return jobxml.script
+        return self._job_xml.script
 
     @property
     def scm(self):
         """Gets the source code repo where the job config is defined"""
-        jobxml = PipelineXML(self.config_xml)
-        return jobxml.scm
+        return self._job_xml.scm
+
+    # --------------------------------------------------------------- PLUGIN API
+    @property
+    def _xml_class(self):
+        return PipelineXML
+
+    @staticmethod
+    def get_jenkins_plugin_name():
+        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+
+        This static method is used by the PyJen plugin API to associate this
+        class with a specific Jenkins plugin, as it is encoded in the config.xml
+
+        :rtype: :class:`str`
+        """
+        return "org.jenkinsci.plugins.workflow.job.WorkflowJob"
+
+    @staticmethod
+    def template_config_xml():
+        return """<flow-definition plugin="workflow-job@2.32">
+    <description/>
+    <keepDependencies>false</keepDependencies>
+    <properties/>
+    <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.64">
+    <script/>
+    <sandbox>true</sandbox>
+    </definition>
+    <triggers/>
+    <disabled>false</disabled>
+    </flow-definition>"""
 
 
 class PipelineXML(JobXML):
@@ -170,9 +163,10 @@ class PipelineXML(JobXML):
         plugin = find_plugin(plugin_name)
         if plugin is None:
             raise PluginNotSupportedError(
-                "PyJen has no plugin installed for Jenkins plugin " +
+                "PyJen has no plugin installed for Jenkins plugin ",
                 plugin_name)
         return plugin(scm_node)
+
 
 PluginClass = PipelineJob
 
