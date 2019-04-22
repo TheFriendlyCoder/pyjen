@@ -34,6 +34,7 @@ class XMLPlugin(object):
     :type node: :class:`ElementTree.Element`
     """
     def __init__(self, node):
+        self._parent = None
         self._root = node
         self._log = logging.getLogger(self.__module__)
 
@@ -41,6 +42,22 @@ class XMLPlugin(object):
         #               the required API
         assert hasattr(self, "get_jenkins_plugin_name")
         assert hasattr(self, "create")
+
+    @property
+    def parent(self):
+        """Gets the parent XML tree this node belongs to"""
+        return self._parent
+
+    @parent.setter
+    def parent(self, value):
+        """Associates this XML node with an existing XML tree"""
+        self._parent = value
+
+    def update(self):
+        """Updates parent XML tree when one exists"""
+        if self._parent is None:
+            return
+        self._parent.update()
 
     def __str__(self):
         """String representation of XML node managed by this class

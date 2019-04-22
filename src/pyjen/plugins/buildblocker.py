@@ -35,6 +35,7 @@ class BuildBlockerProperty(XMLPlugin):
                 "Build blocker queue scan may only be one of the following "
                 "types: " + ",".join(BuildBlockerProperty.QUEUE_SCAN_TYPES))
         self._root.find("scanQueueFor").text = value
+        self.update()
 
     @property
     def level(self):
@@ -60,6 +61,7 @@ class BuildBlockerProperty(XMLPlugin):
                 "Build blocker scope level may only be one of the following "
                 "types: " + ",".join(BuildBlockerProperty.LEVEL_TYPES))
         self._root.find("blockLevel").text = value
+        self.update()
 
     @property
     def blockers(self):
@@ -86,6 +88,7 @@ class BuildBlockerProperty(XMLPlugin):
             node.text = patterns
         else:
             node.text = "\n".join(patterns)
+        self.update()
 
     @property
     def is_enabled(self):
@@ -101,12 +104,15 @@ class BuildBlockerProperty(XMLPlugin):
         """Enables this set of build blockers"""
         node = self._root.find("useBuildBlocker")
         node.text = "true"
+        self.update()
 
     def disable(self):
         """Disables this set of build blockers"""
         node = self._root.find("useBuildBlocker")
         node.text = "false"
+        self.update()
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

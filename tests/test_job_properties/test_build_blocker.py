@@ -205,7 +205,6 @@ def test_build_blocker_functionality(jenkins_env):
             assert queue1.waiting is False
 
 
-@pytest.mark.skip("Disabled until functionality is implemented")
 def test_edit_build_blocker(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_edit_build_blocker"
@@ -218,13 +217,11 @@ def test_edit_build_blocker(jenkins_env):
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
         async_assert(lambda: jk.find_job(job_name).properties)
-        jxml = jk.find_job(job_name).job_xml
-        properties = jxml.properties
+        properties = jk.find_job(job_name).properties
 
         # edit the build blocker
         expected_job_names = ["SomeOtherJob1", "SomeOtherJob2"]
         properties[0].blockers = expected_job_names
-        jb.config_xml = jxml.xml
 
         # Now, get a clean reference to the job
         jb2 = jk.find_job(job_name)
