@@ -122,7 +122,7 @@ class JenkinsAPI(object):
         :returns:
             The set of Jenkins attributes, converted to Python objects,
             associated with the given URL.
-        :rtype: :class:`object`
+        :rtype: :class:`dict`
         """
         if target_url is None:
             target_url = self.url

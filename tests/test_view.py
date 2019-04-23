@@ -1,12 +1,13 @@
 from pyjen.jenkins import Jenkins
 import pytest
 from .utils import clean_view, clean_job
+from pyjen.plugins.listview import ListView
 
 
 def test_delete_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_view_name = "test_delete_view"
-    vw = jk.create_view(expected_view_name, "hudson.model.ListView")
+    vw = jk.create_view(expected_view_name, ListView)
     vw.delete()
     assert jk.find_view(expected_view_name) is None
 
@@ -14,14 +15,14 @@ def test_delete_view(jenkins_env):
 def test_get_name(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_name = "test_get_name_view"
-    vw = jk.create_view(expected_name, "hudson.model.ListView")
+    vw = jk.create_view(expected_name, ListView)
     with clean_view(vw):
         assert vw.name == expected_name
 
 
 def test_get_jobs_no_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    vw = jk.create_view("test_get_jobs_no_jobs_views", "hudson.model.ListView")
+    vw = jk.create_view("test_get_jobs_no_jobs_views", ListView)
     with clean_view(vw):
         jobs = vw.jobs
         assert isinstance(jobs, list)

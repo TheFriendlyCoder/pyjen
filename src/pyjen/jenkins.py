@@ -13,6 +13,7 @@ from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.plugin_api import find_plugin
 from pyjen.exceptions import PluginNotSupportedError
+from pyjen.utils.helpers import create_view
 
 
 class Jenkins(object):
@@ -229,36 +230,15 @@ class Jenkins(object):
         """Creates a new view on the Jenkins dashboard
 
         :param str view_name:
-            the name for this new view
-            This name should be unique, different from any other views currently
-            managed by the Jenkins instance
-        :param str view_type:
-            type of view to create
-            must match one or more of the available view types supported by this
-            Jenkins instance.
-            See :py:meth:`~.view.View.supported_types` for a list of
-            supported view types.
-        :returns: An object to manage the newly created view
-        :rtype: :class:`~.view.View`
+            name of the new sub-view to create
+        :param view_type:
+            PyJen plugin class associated with the view type to create
+        :returns: reference to the newly created view
+        :rtype: :class:`pyjen.view.View`
         """
-        view_type = view_type.replace("__", "_")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": view_name, "mode": view_type})
-        }
-
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self._api.post(self._api.url + 'createView', args)
-
-        retval = self.find_view(view_name)
-        assert retval is not None
+        new_api = create_view(self._api, view_name, view_type.get_jenkins_plugin_name())
+        retval = view_type(new_api)
+        assert retval.name == view_name
         return retval
 
     def clone_view(self, source_view, new_view_name):
@@ -272,7 +252,7 @@ class Jenkins(object):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, vxml.plugin_name)
+        new_view = self.create_view(new_view_name, source_view.__class__)
 
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml

@@ -1,7 +1,7 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
-import json
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
+from pyjen.utils.helpers import create_view
 
 
 class NestedView(View):
@@ -75,39 +75,17 @@ class NestedView(View):
     def create_view(self, view_name, view_type):
         """Creates a new sub-view within this nested view
 
-        :param str view_name: name of the new sub-view to create
-        :param str view_type: data type for newly generated view
+        :param str view_name:
+            name of the new sub-view to create
+        :param view_type:
+            PyJen plugin class associated with the view type to create
         :returns: reference to the newly created view
         :rtype: :class:`pyjen.view.View`
         """
-        view_type = view_type.replace("__", "_")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": view_name, "mode": view_type})
-        }
-
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self._api.post(self._api.url + 'createView', args)
-        result = self.find_view(view_name)
-
-        # Sanity Check: views within the same parent MUST have unique names.
-        # This is a hard requirement enforced by the Jenkins API. If, on the
-        # other hand, our search operation yielded no results then something
-        # very strange has happened (ie: a backend server problem). If the
-        # post operation fails for some reason an exception will be raised and
-        # this line of code should never get executed. So we do one quick
-        # sanity check to make sure we have 1, and exactly 1, result from
-        # our search operation.
-        assert len(result) == 1
-
-        return result[0]
+        new_api = create_view(self._api, view_name, view_type.get_jenkins_plugin_name())
+        retval = view_type(new_api)
+        assert retval.name == view_name
+        return retval
 
     def clone_view(self, source_view, new_view_name):
         """Make a copy of a view with the specified name under this nested view
@@ -120,7 +98,7 @@ class NestedView(View):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, vxml.plugin_name)
+        new_view = self.create_view(new_view_name, source_view.__class__)
 
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml
@@ -137,18 +115,12 @@ class NestedView(View):
         :returns: reference to new, relocated view object
         :rtype: :class:`pyjen.view.View`
         """
-        # Try to extract the plugin name from a static helper method from
-        # the PyJen plugin to avoid having to hit the REST API for it. If
-        # we don't have a PyJen plugin to query, then we fall back to the
-        # jenkins_plugin_name property which has to call out to the REST API,
-        # which is slower
-        if hasattr(existing_view, "get_jenkins_plugin_name"):
-            plugin_name = existing_view.get_jenkins_plugin_name()
-        else:
-            plugin_name = existing_view.jenkins_plugin_name
-
+        # TODO: Consider updating state of original view object here
+        #       instead of returning a copy of a new view
+        # TODO: Consider, if I can't get the tests for this working to
+        #       just remove this helper completely
         new_view = self.create_view(
-            existing_view.name, plugin_name)
+            existing_view.name, existing_view.__class__)
         new_view.config_xml = existing_view.config_xml
         existing_view.delete()
         return new_view
