@@ -1,7 +1,7 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
-import json
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
+from pyjen.utils.helpers import create_view
 
 
 class NestedView(View):
@@ -72,16 +72,16 @@ class NestedView(View):
 
         return retval
 
-    def create_view(self, view_name, view_type):
+    def create_view(self, view_name, view_class):
         """Creates a new sub-view within this nested view
 
         :param str view_name: name of the new sub-view to create
-        :param str view_type: data type for newly generated view
+        :param view_class:
+            PyJen plugin class associated with the type of view to be created
         :returns: reference to the newly created view
         :rtype: :class:`pyjen.view.View`
         """
-        from pyjen.utils.helpers import create_view
-        create_view(self._api, view_name, view_type)
+        create_view(self._api, view_name, view_class)
         result = self.find_view(view_name)
 
         # Sanity Check: views within the same parent MUST have unique names.
@@ -107,7 +107,7 @@ class NestedView(View):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, vxml.plugin_name)
+        new_view = self.create_view(new_view_name, source_view.__class__)
 
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml

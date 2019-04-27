@@ -3,6 +3,7 @@ from mock import MagicMock, patch
 import pytest
 from .utils import clean_view, clean_job, async_assert
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.listview import ListView
 
 
 def test_simple_connection(jenkins_env):
@@ -91,7 +92,7 @@ def test_get_views(jenkins_env):
 def test_get_multiple_views(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     test_view_name = "test_get_multiple_views_view"
-    vw = jk.create_view(test_view_name, "hudson.model.ListView")
+    vw = jk.create_view(test_view_name, ListView)
     with clean_view(vw):
         v = jk.views
 
@@ -114,7 +115,7 @@ def test_find_view(jenkins_env):
 
 def test_create_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    vw = jk.create_view("test_create_view", "hudson.model.ListView")
+    vw = jk.create_view("test_create_view", ListView)
     with clean_view(vw):
         assert vw is not None
         assert vw.name == "test_create_view"
@@ -122,7 +123,7 @@ def test_create_view(jenkins_env):
 
 def test_clone_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    vw = jk.create_view("test_clone_view1", "hudson.model.ListView")
+    vw = jk.create_view("test_clone_view1", ListView)
     with clean_view(vw):
         expected_name = "test_clone_view2"
         vw2 = jk.clone_view(vw, expected_name)
@@ -135,7 +136,7 @@ def test_clone_view(jenkins_env):
 def test_rename_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     view_name_1 = "test_clone_view1"
-    vw = jk.create_view(view_name_1, "hudson.model.ListView")
+    vw = jk.create_view(view_name_1, ListView)
     try:
         expected_name = "test_clone_view2"
         vw2 = jk.rename_view(vw.name, expected_name)

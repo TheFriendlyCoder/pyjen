@@ -225,24 +225,20 @@ class Jenkins(object):
 
         return None
 
-    def create_view(self, view_name, view_type):
+    def create_view(self, view_name, view_class):
         """Creates a new view on the Jenkins dashboard
 
         :param str view_name:
             the name for this new view
             This name should be unique, different from any other views currently
             managed by the Jenkins instance
-        :param str view_type:
-            type of view to create
-            must match one or more of the available view types supported by this
-            Jenkins instance.
-            See :py:meth:`~.view.View.supported_types` for a list of
-            supported view types.
+        :param view_class:
+            PyJen plugin class associated with the type of view to be created
         :returns: An object to manage the newly created view
         :rtype: :class:`~.view.View`
         """
 
-        create_view(self._api, view_name, view_type)
+        create_view(self._api, view_name, view_class)
         retval = self.find_view(view_name)
         assert retval is not None
         return retval
@@ -258,7 +254,7 @@ class Jenkins(object):
         :rtype: :class:`~.view.View`
         """
         vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, vxml.plugin_name)
+        new_view = self.create_view(new_view_name, source_view.__class__)
 
         vxml.rename(new_view_name)
         new_view.config_xml = vxml.xml
