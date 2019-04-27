@@ -1,8 +1,7 @@
 from pyjen.jenkins import Jenkins
 from mock import MagicMock, patch
 import pytest
-from .utils import clean_view, clean_job, async_assert
-from pyjen.plugins.shellbuilder import ShellBuilder
+from .utils import clean_view, clean_job
 from pyjen.plugins.listview import ListView
 from pyjen.plugins.freestylejob import FreestyleJob
 
@@ -179,43 +178,6 @@ def test_create_job(jenkins_env):
     jb = jk.create_job("test_create_job", FreestyleJob)
     with clean_job(jb):
         assert jb is not None
-
-
-def test_clone_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job", FreestyleJob)
-    with clean_job(jb):
-        # add a builder to our source job so we can check to make sure the
-        # configuration has been properly cloned
-        expected_script = "echo Hello From TestCloneJob"
-        failing_step = ShellBuilder.create(expected_script)
-        jb.add_builder(failing_step)
-        async_assert(lambda: jb.builders)
-
-        # now, clone our job configuration and make sure the entire config
-        # has been cloned correctly
-        expected_name = "test_clone_job2"
-        jb_clone = jk.clone_job(jb, expected_name)
-        with clean_job(jb_clone):
-            assert jb_clone is not None
-            assert jb_clone.name == expected_name
-            assert jb_clone.is_disabled
-            results = jb_clone.builders
-            assert results is not None
-            assert isinstance(results, list)
-            assert len(results) == 1
-            assert isinstance(results[0], ShellBuilder)
-            assert results[0].script == expected_script
-
-
-def test_clone_job_enabled(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job_enabled", FreestyleJob)
-    with clean_job(jb):
-        jb_clone = jk.clone_job(jb, "test_clone_job2", False)
-        with clean_job(jb_clone):
-            assert jb_clone is not None
-            assert jb_clone.is_disabled is False
 
 
 def test_build_queue(jenkins_env):

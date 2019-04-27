@@ -50,7 +50,7 @@ def test_clone_job_in_folder_job(jenkins_env):
         jb2 = jb.create_job("test_clone_job_in_folder_job2", FreestyleJob)
         with clean_job(jb2):
             expected_name = "test_clone_job_in_folder_job3"
-            jb3 = jb.clone_job(jb2, expected_name)
+            jb3 = jb2.clone(expected_name)
             assert jb3 is not None
             with clean_job(jb3):
                 assert jb3.name == expected_name
@@ -65,7 +65,7 @@ def test_clone_enabled_job_in_folder_job(jenkins_env):
         jb2 = jb.create_job("test_clone_enabled_job_in_folder_job2", FreestyleJob)
         with clean_job(jb2):
             expected_name = "test_clone_enabled_job_in_folder_job3"
-            jb3 = jb.clone_job(jb2, expected_name, False)
+            jb3 = jb2.clone(expected_name, False)
             assert jb3 is not None
             with clean_job(jb3):
                 assert jb3.name == expected_name

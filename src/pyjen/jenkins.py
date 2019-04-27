@@ -9,9 +9,7 @@ from pyjen.queue import Queue
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
-from pyjen.utils.plugin_api import find_plugin
 from pyjen.utils.helpers import create_view, create_job
-from pyjen.exceptions import PluginNotSupportedError
 
 
 class Jenkins(object):
@@ -259,25 +257,6 @@ class Jenkins(object):
         retval = self.find_job(job_name)
         assert retval is not None
         return retval
-
-    def clone_job(self, source_job, new_job_name, disable=True):
-        """"Create a new job with the same configuration as this one
-
-        :param source_job: job to be cloned
-        :type source_job: :class:`pyjen.job.Job`
-        :param str new_job_name: Name of the new job to be created
-        :param bool disable:
-            Indicates whether the newly created job should be disabled after
-            creation to prevent builds from accidentally triggering
-            immediately after creation
-        :returns: reference to the newly created job
-        :rtype: :class:`pyjen.job.Job`
-        """
-        new_job = self.create_job(new_job_name, source_job.__class__)
-        new_job.config_xml = source_job.config_xml
-        if disable:
-            new_job.disable()
-        return new_job
 
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance

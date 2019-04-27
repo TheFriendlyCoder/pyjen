@@ -1,9 +1,11 @@
 """Primitives for interacting with Jenkins jobs"""
 import logging
+from six.moves import urllib_parse
 from pyjen.build import Build
 from pyjen.queue_item import QueueItem
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
+from pyjen.utils.helpers import create_job
 
 
 class Job(object):
@@ -495,6 +497,40 @@ class Job(object):
                 return cur_report["score"]
 
         return 0
+
+    def clone(self, new_job_name, disable=True):
+        """"Create a new job with the same configuration as this one
+
+        :param str new_job_name: Name of the new job to be created
+        :param bool disable:
+            Indicates whether the newly created job should be disabled after
+            creation to prevent builds from accidentally triggering
+            immediately after creation
+        :returns: reference to the newly created job
+        :rtype: :class:`pyjen.job.Job`
+        """
+        # NOTE: In order to properly support views that may contain nested
+        #       views we have to do some URL manipulations to extrapolate the
+        #       REST API endpoint for the parent object to which the cloned
+        #       view is to be contained.
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        assert len(parts) >= 2
+        assert parts[-2] == "job"
+        parent_url = urllib_parse.urljoin(
+            self._api.url, "/" + "/".join(parts[:-2]))
+
+        parent_api = self._api.clone(parent_url)
+        create_job(parent_api, new_job_name, self.__class__)
+
+        new_url = urllib_parse.urljoin(
+            parent_api.url, "job/" + new_job_name)
+        temp_api = self._api.clone(new_url)
+        new_job = self.__class__(temp_api)
+        new_job.config_xml = self.config_xml
+        if disable:
+            new_job.disable()
+        return new_job
 
     # --------------------------------------------------------------- PLUGIN API
     @property

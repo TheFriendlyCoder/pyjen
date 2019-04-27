@@ -1,8 +1,6 @@
 """Primitives that manage Jenkins job of type 'Folder'"""
 from pyjen.job import Job
-from pyjen.utils.plugin_api import find_plugin
 from pyjen.utils.helpers import create_job
-from pyjen.exceptions import PluginNotSupportedError
 
 
 class FolderJob(Job):
@@ -43,25 +41,6 @@ class FolderJob(Job):
                 return Job.instantiate(tjob, self._api)
 
         return None
-
-    def clone_job(self, source_job, new_job_name, disable=True):
-        """"Create a new job with the same configuration as this one
-
-        :param source_job: job to be cloned
-        :type source_job: :class:`pyjen.job.Job`
-        :param str new_job_name: Name of the new job to be created
-        :param bool disable:
-            Indicates whether the newly created job should be disabled after
-            creation to prevent builds from accidentally triggering
-            immediately after creation
-        :returns: reference to the newly created job
-        :rtype: :class:`pyjen.job.Job`
-        """
-        new_job = self.create_job(new_job_name, source_job.__class__)
-        new_job.config_xml = source_job.config_xml
-        if disable:
-            new_job.disable()
-        return new_job
 
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
