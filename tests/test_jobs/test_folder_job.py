@@ -73,5 +73,30 @@ def test_clone_enabled_job_in_folder_job(jenkins_env):
                 assert jb2.is_disabled is False
 
 
+def test_rename_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    parent = jk.create_job("test_rename_job_parent", FolderJob)
+    with clean_job(parent):
+        original_job_name = "test_rename_job1"
+        new_job_name = "test_rename_job2"
+        jb = parent.create_job(original_job_name, FreestyleJob)
+        try:
+            jb.rename(new_job_name)
+            assert parent.find_job(original_job_name) is None
+            jb_copy = parent.find_job(new_job_name)
+            assert jb_copy is not None
+            assert jb.name == new_job_name
+            assert jb_copy == jb
+        except:
+            tmp = parent.find_job(original_job_name)
+            if tmp:
+                tmp.delete()
+
+            tmp = parent.find_job(new_job_name)
+            if tmp:
+                tmp.delete()
+            raise
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
