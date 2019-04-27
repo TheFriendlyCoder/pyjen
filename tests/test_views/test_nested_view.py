@@ -167,5 +167,30 @@ def test_clone_sub_view(jenkins_env):
                 assert isinstance(child2, type(child1))
 
 
+def test_rename_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    parent_view_name = "test_rename_view1"
+    parent = jk.create_view(parent_view_name, NestedView)
+    with clean_view(parent):
+        original_view_name = "test_rename_sub_view_child1"
+        vw = parent.create_view(original_view_name, ListView)
+        assert vw is not None
+        try:
+            expected_name = "test_rename_sub_view_child2"
+            vw.rename(expected_name)
+            assert len(parent.find_view(original_view_name)) == 0
+        finally:
+            tmp = parent.find_view(original_view_name)
+            if tmp:
+                tmp[0].delete()
+
+        with clean_view(vw):
+            assert vw.name == expected_name
+
+            tmp_view = parent.find_view(expected_name)
+            assert len(tmp_view) == 1
+            assert tmp_view[0].name == expected_name
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

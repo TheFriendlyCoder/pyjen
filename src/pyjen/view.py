@@ -245,6 +245,33 @@ class View(object):
         temp_api = self._api.clone(new_url)
         return self.__class__(temp_api)
 
+    def rename(self, new_view_name):
+        """Changes the name of this view
+
+        :param str new_view_name:
+            new name for the selected source view
+        """
+        # NOTE: In order to properly support views that may contain nested
+        #       views we have to do some URL manipulations to extrapolate the
+        #       REST API endpoint for the parent object to which the cloned
+        #       view is to be contained.
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        assert len(parts) >= 2
+        assert parts[-2] == "view"
+        parent_url = urllib_parse.urljoin(
+            self._api.url, "/" + "/".join(parts[:-2]))
+
+        parent_api = self._api.clone(parent_url)
+        create_view(parent_api, new_view_name, self.__class__)
+
+        self.delete()
+
+        new_url = urllib_parse.urljoin(
+            parent_api.url, "view/" + new_view_name)
+        temp_api = self._api.clone(new_url)
+        self._api = temp_api
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass

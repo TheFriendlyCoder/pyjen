@@ -126,5 +126,27 @@ def test_clone_view(jenkins_env):
             assert isinstance(vw2, type(vw))
 
 
+def test_rename_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    original_view_name = "test_rename_view1"
+    vw = jk.create_view(original_view_name, ListView)
+    try:
+        expected_name = "test_rename_view2"
+        vw.rename(expected_name)
+        assert jk.find_view(original_view_name) is None
+    finally:
+        tmp = jk.find_view(original_view_name)
+        if tmp:
+            tmp.delete()
+
+    with clean_view(vw):
+        assert vw.name == expected_name
+
+        tmp_view = jk.find_view(expected_name)
+        assert tmp_view is not None
+        assert tmp_view.name == expected_name
+
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
