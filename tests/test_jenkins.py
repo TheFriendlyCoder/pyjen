@@ -4,6 +4,7 @@ import pytest
 from .utils import clean_view, clean_job, async_assert
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.listview import ListView
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 def test_simple_connection(jenkins_env):
@@ -175,14 +176,14 @@ def test_get_plugin_manager(jenkins_env):
 
 def test_create_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_job", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_create_job", FreestyleJob)
     with clean_job(jb):
         assert jb is not None
 
 
 def test_clone_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_clone_job", FreestyleJob)
     with clean_job(jb):
         # add a builder to our source job so we can check to make sure the
         # configuration has been properly cloned
@@ -209,7 +210,7 @@ def test_clone_job(jenkins_env):
 
 def test_clone_job_enabled(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job_enabled", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_clone_job_enabled", FreestyleJob)
     with clean_job(jb):
         jb_clone = jk.clone_job(jb, "test_clone_job2", False)
         with clean_job(jb_clone):

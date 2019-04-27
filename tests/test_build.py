@@ -3,6 +3,7 @@ import pytest
 from .utils import clean_job, async_assert
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 @pytest.mark.usefixtures('test_builds')
@@ -37,7 +38,7 @@ class TestSingleBuild:
 
 def test_start_time(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_start_time_job", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_start_time_job", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         before = datetime.now()
@@ -51,7 +52,7 @@ def test_start_time(jenkins_env):
 
 def test_build_inequality(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_build_inequality_job", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_build_inequality_job", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         jb.start_build()
@@ -70,7 +71,7 @@ def test_build_inequality(jenkins_env):
 def test_console_text(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_console_text_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         expected_output = "Here is my sample output..."
@@ -92,7 +93,7 @@ def test_console_text(jenkins_env):
 def test_abort(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_abort"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
 
     with clean_job(jb):
         jb.quiet_period = 0

@@ -2,13 +2,14 @@ import pytest
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.parameterizedbuild import ParameterizedBuild
 from pyjen.plugins.parambuild_string import ParameterizedBuildStringParameter
+from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
 def test_add_string_parameter(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_string_parameter"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_param_name = "param1"
         expected_param_val = "fubar"

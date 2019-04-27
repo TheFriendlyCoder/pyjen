@@ -1,6 +1,7 @@
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.gitscm import GitSCM
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.freestylejob import FreestyleJob
 import pytest
 from .utils import clean_job, async_assert
 
@@ -8,7 +9,7 @@ from .utils import clean_job, async_assert
 def test_add_git_scm(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_git_scm"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
         test_scm = GitSCM.create(expected_url)
@@ -26,7 +27,7 @@ def test_add_git_scm(jenkins_env):
 def test_build_git_scm(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_build_git_scm"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"

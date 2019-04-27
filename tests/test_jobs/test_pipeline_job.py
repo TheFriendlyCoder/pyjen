@@ -2,18 +2,19 @@ import pytest
 from ..utils import clean_job, async_assert
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.gitscm import GitSCM
+from pyjen.plugins.pipelinejob import PipelineJob
 
 
 def test_create_pipeline_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_pipeline_job", "org.jenkinsci.plugins.workflow.job.WorkflowJob")
+    jb = jk.create_job("test_create_pipeline_job", PipelineJob)
     with clean_job(jb):
         assert jb is not None
 
 
 def test_groovy_script_pipeline_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_groovy_script_pipeline_job", "org.jenkinsci.plugins.workflow.job.WorkflowJob")
+    jb = jk.create_job("test_groovy_script_pipeline_job", PipelineJob)
     with clean_job(jb):
         jb.quiet_period = 0
         expected_output = "hello"
@@ -29,7 +30,7 @@ def test_groovy_script_pipeline_job(jenkins_env):
 
 def test_git_scm_pipeline_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_git_scm_pipeline_job", "org.jenkinsci.plugins.workflow.job.WorkflowJob")
+    jb = jk.create_job("test_git_scm_pipeline_job", PipelineJob)
     with clean_job(jb):
         expected_url = "git@repo.com"
         scm = GitSCM.create(expected_url)
@@ -45,7 +46,7 @@ def test_git_scm_pipeline_job(jenkins_env):
 
 def test_overwrite_definition(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_overwrite_definition", "org.jenkinsci.plugins.workflow.job.WorkflowJob")
+    jb = jk.create_job("test_overwrite_definition", PipelineJob)
     with clean_job(jb):
         expected_url = "git@repo.com"
         scm = GitSCM.create(expected_url)
