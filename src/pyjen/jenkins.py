@@ -243,40 +243,6 @@ class Jenkins(object):
         assert retval is not None
         return retval
 
-    def clone_view(self, source_view, new_view_name):
-        """Make a copy of a view with the specified name
-
-        :param source_view: view to be cloned
-        :type source_view: :class:`pyjen.view.View`
-        :param str new_view_name:
-            name to give the newly created view
-        :return: reference to the created view
-        :rtype: :class:`~.view.View`
-        """
-        vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, source_view.__class__)
-
-        vxml.rename(new_view_name)
-        new_view.config_xml = vxml.xml
-        return new_view
-
-    def rename_view(self, source_view_name, new_view_name):
-        """Rename a view managed by this Jenkins instance
-
-        :param str source_view_name:
-            name of the existing view to be renamed
-        :param str new_view_name:
-            new name for the selected source view
-        :returns: reference to the newly create view
-        """
-        source_view = self.find_view(source_view_name)
-        if source_view is None:
-            raise Exception("Unable to rename view. View not found: %s",
-                            source_view_name)
-        new_view = self.clone_view(source_view, new_view_name)
-        source_view.delete()
-        return new_view
-
     def create_job(self, job_name, job_type):
         """Creates a new job on the Jenkins dashboard
 
