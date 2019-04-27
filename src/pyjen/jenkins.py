@@ -4,14 +4,13 @@ from requests.exceptions import RequestException
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
-from pyjen.utils.viewxml import ViewXML
 from pyjen.user import User
 from pyjen.queue import Queue
 from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.utils.helpers import create_view
+from pyjen.utils.helpers import create_view, create_job
 from pyjen.exceptions import PluginNotSupportedError
 
 
@@ -261,27 +260,12 @@ class Jenkins(object):
         """
         job_type = job_type.replace("__", "_")
 
-        headers = {'Content-Type': 'text/xml'}
-
-        params = {
-            "name": job_name
-        }
-
         plugin = find_plugin(job_type)
         if plugin is None:
             raise PluginNotSupportedError(
                 "Attempting to create a new job with an unsupported format",
                 job_type)
-        xml_config = plugin.template_config_xml()
-        data = xml_config
-
-        args = {
-            'data': data,
-            'params': params,
-            'headers': headers
-        }
-
-        self._api.post(self._api.url + 'createItem', args)
+        create_job(self._api, job_name, plugin)
 
         retval = self.find_job(job_name)
         assert retval is not None
