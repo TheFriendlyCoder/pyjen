@@ -1,6 +1,5 @@
 """Primitives for interacting with the main Jenkins dashboard"""
 import logging
-import json
 from requests.exceptions import RequestException
 from pyjen.view import View
 from pyjen.node import Node
@@ -12,6 +11,7 @@ from pyjen.plugin_manager import PluginManager
 from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.plugin_api import find_plugin
+from pyjen.utils.helpers import create_view
 from pyjen.exceptions import PluginNotSupportedError
 
 
@@ -241,22 +241,8 @@ class Jenkins(object):
         :returns: An object to manage the newly created view
         :rtype: :class:`~.view.View`
         """
-        view_type = view_type.replace("__", "_")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": view_name, "mode": view_type})
-        }
 
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self._api.post(self._api.url + 'createView', args)
-
+        create_view(self._api, view_name, view_type)
         retval = self.find_view(view_name)
         assert retval is not None
         return retval
