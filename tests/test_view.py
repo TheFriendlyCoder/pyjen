@@ -2,6 +2,7 @@ from pyjen.jenkins import Jenkins
 import pytest
 from .utils import clean_view, clean_job
 from pyjen.plugins.listview import ListView
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 def test_delete_view(jenkins_env):
@@ -32,7 +33,7 @@ def test_get_jobs_no_jobs(jenkins_env):
 def test_get_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_get_jobs_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         vw = jk.default_view
         all_jobs = vw.jobs
@@ -45,7 +46,7 @@ def test_get_jobs(jenkins_env):
 def test_delete_all_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_delete_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
 
     try:
         vw = jk.default_view
@@ -62,7 +63,7 @@ def test_delete_all_jobs(jenkins_env):
 def test_disable_all_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_disable_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
 
     with clean_job(jb):
         vw = jk.default_view
@@ -73,7 +74,7 @@ def test_disable_all_jobs(jenkins_env):
 def test_enable_all_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_enable_all_jobs_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
 
     with clean_job(jb):
         vw = jk.default_view
@@ -91,7 +92,7 @@ def test_get_config_xml(jenkins_env):
 def test_get_view_metrics(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_get_view_metrics_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.disable()
         result = jk.default_view.view_metrics
@@ -145,7 +146,6 @@ def test_rename_view(jenkins_env):
         tmp_view = jk.find_view(expected_name)
         assert tmp_view is not None
         assert tmp_view.name == expected_name
-
 
 
 if __name__ == "__main__":

@@ -1,13 +1,14 @@
 import pytest
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
 def test_add_simple_shell_builder(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_simple_shell_builder"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_script = "echo hello"
         shell_builder = ShellBuilder.create(expected_script)
@@ -28,7 +29,7 @@ def test_add_simple_shell_builder(jenkins_env):
 def test_unstable_return_code(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_unstable_return_code"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         rcode = 12
         failing_step = ShellBuilder.create("exit " + str(rcode))
@@ -49,7 +50,7 @@ def test_unstable_return_code(jenkins_env):
 def test_edit_unstable_return_code(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_edit_unstable_return_code"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
@@ -77,7 +78,7 @@ def test_edit_unstable_return_code(jenkins_env):
 def test_add_then_edit_unstable_return_code(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_then_edit_unstable_return_code"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12

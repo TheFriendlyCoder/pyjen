@@ -2,6 +2,7 @@ import pytest
 from pyjen.jenkins import Jenkins
 from .utils import clean_job, async_assert
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 def test_get_nodes(jenkins_env):
@@ -62,7 +63,7 @@ def test_node_busy(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     node = jk.nodes[0]
     expected_job_name = "test_node_busy_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         shell_builder = ShellBuilder.create("sleep 2")
@@ -90,7 +91,7 @@ def test_wait_for_idle(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     node = jk.nodes[0]
     expected_job_name = "test_wait_for_idle_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         shell_builder = ShellBuilder.create("sleep 2")
@@ -117,7 +118,7 @@ def test_wait_for_idle_timeout(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     node = jk.nodes[0]
     expected_job_name = "test_wait_for_idle_timeout_job"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         shell_builder = ShellBuilder.create("sleep 5")

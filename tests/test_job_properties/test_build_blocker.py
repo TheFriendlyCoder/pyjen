@@ -2,13 +2,14 @@ import pytest
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.buildblocker import BuildBlockerProperty
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
 def test_add_build_blocker(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_build_blocker"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_job_name = "MyCoolJob"
         build_blocker = BuildBlockerProperty.create(expected_job_name)
@@ -27,7 +28,7 @@ def test_add_build_blocker(jenkins_env):
 def test_multiple_blocking_jobs(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_multiple_blocking_jobs"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         build_blocker = BuildBlockerProperty.create(["ShouldNotSeeMe"])
@@ -50,7 +51,7 @@ def test_multiple_blocking_jobs(jenkins_env):
 def test_default_queue_scan(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_default_queue_scan"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         build_blocker = BuildBlockerProperty.create(expected_jobs)
@@ -68,7 +69,7 @@ def test_default_queue_scan(jenkins_env):
 def test_custom_queue_scan(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_custom_queue_scan"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         expected_type = "ALL"
@@ -95,7 +96,7 @@ def test_invalid_queue_scan_type():
 def test_default_block_level(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_default_block_level"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         build_blocker = BuildBlockerProperty.create(expected_jobs)
@@ -113,7 +114,7 @@ def test_default_block_level(jenkins_env):
 def test_custom_block_level(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_custom_block_level"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         expected_type = "NODE"
@@ -137,28 +138,10 @@ def test_invalid_block_level():
         build_blocker.level = "FuBar"
 
 
-def test_default_queue_scan(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    job_name = "test_default_queue_scan"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
-    with clean_job(jb):
-        expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
-        build_blocker = BuildBlockerProperty.create(expected_jobs)
-        jb.add_property(build_blocker)
-
-        # Get a fresh copy of our job to ensure we have an up to date
-        # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
-
-        prop = properties[0]
-        assert prop.queue_scan == "DISABLED"
-
-
 def test_disable_build_blocker(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_disable_build_blocker"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         build_blocker = BuildBlockerProperty.create("MyJob")
         build_blocker.disable()
@@ -176,10 +159,10 @@ def test_disable_build_blocker(jenkins_env):
 def test_build_blocker_functionality(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name1 = "test_build_blocker_functionality1"
-    jb1 = jk.create_job(job_name1, "hudson.model.FreeStyleProject")
+    jb1 = jk.create_job(job_name1, FreestyleJob)
     with clean_job(jb1):
         job_name2 = "test_build_blocker_functionality2"
-        jb2 = jk.create_job(job_name2, "hudson.model.FreeStyleProject")
+        jb2 = jk.create_job(job_name2, FreestyleJob)
         with clean_job(jb2):
             expected_jobs = job_name2
             build_blocker = BuildBlockerProperty.create(expected_jobs)
@@ -208,7 +191,7 @@ def test_build_blocker_functionality(jenkins_env):
 def test_edit_build_blocker(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_edit_build_blocker"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
 
         build_blocker = BuildBlockerProperty.create("MyCoolJob")
@@ -236,7 +219,7 @@ def test_edit_build_blocker(jenkins_env):
 def test_add_then_edit_build_blocker(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     job_name = "test_add_then_edit_build_blocker"
-    jb = jk.create_job(job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         build_blocker = BuildBlockerProperty.create("MyCoolJob")
         jb.add_property(build_blocker)

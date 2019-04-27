@@ -2,12 +2,13 @@ import pytest
 from .utils import async_assert, clean_job
 from pyjen.jenkins import Jenkins
 from pyjen.queue_item import QueueItem
+from pyjen.plugins.freestylejob import FreestyleJob
 
 
 def test_waiting_build_queue(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     queue = jk.build_queue
-    jb = jk.create_job("test_waiting_build_queue", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_waiting_build_queue", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 5
         jb.start_build()
@@ -23,7 +24,7 @@ def test_waiting_build_queue(jenkins_env):
 def test_out_of_queue(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     queue = jk.build_queue
-    jb = jk.create_job("test_waiting_build_queue", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_waiting_build_queue", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 1
         jb.start_build()
@@ -40,7 +41,7 @@ def test_out_of_queue(jenkins_env):
 def test_cancel_queued_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     queue = jk.build_queue
-    jb = jk.create_job("test_cancel_queued_build", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_cancel_queued_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 10
         jb.start_build()
@@ -56,7 +57,7 @@ def test_cancel_queued_build(jenkins_env):
 def test_get_build_after_queued(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     queue = jk.build_queue
-    jb = jk.create_job("test_get_build_after_queued", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_get_build_after_queued", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 1
         jb.start_build()
@@ -73,7 +74,7 @@ def test_get_build_after_queued(jenkins_env):
 def test_start_build_returned_queue_item(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     queue = jk.build_queue
-    jb = jk.create_job("test_start_build_returned_queue_item", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_start_build_returned_queue_item", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 1
         item = jb.start_build()
@@ -85,7 +86,7 @@ def test_start_build_returned_queue_item(jenkins_env):
 
 def test_queue_get_build(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_queue_get_build", "hudson.model.FreeStyleProject")
+    jb = jk.create_job("test_queue_get_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         item = jb.start_build()

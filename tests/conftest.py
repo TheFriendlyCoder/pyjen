@@ -9,6 +9,7 @@ import docker
 import multiprocessing
 from docker.errors import DockerException
 from pyjen.jenkins import Jenkins
+from pyjen.plugins.freestylejob import FreestyleJob
 from pyjen.plugins.gitscm import GitSCM
 from .utils import async_assert
 
@@ -328,7 +329,7 @@ def test_job(request, jenkins_env):
     """
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     request.cls.jenkins = jk
-    request.cls.job = jk.create_job(request.cls.__name__ + "Job", "hudson.model.FreeStyleProject")
+    request.cls.job = jk.create_job(request.cls.__name__ + "Job", FreestyleJob)
     assert request.cls.job is not None
 
     yield

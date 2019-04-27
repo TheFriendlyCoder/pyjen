@@ -6,13 +6,14 @@ from pyjen.plugins.conditionalbuilder_never import NeverRun
 from pyjen.plugins.conditionalbuilder_and import AndCondition
 from pyjen.plugins.conditionalbuilder_not import NotCondition
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job, assert_elements_equal
 
 
 def test_add_conditional_builder(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_add_conditional_builder"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         expected_cmd = "echo " + expected_output
@@ -41,7 +42,7 @@ def test_add_conditional_builder(jenkins_env):
 def test_always_run_condition(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_always_run_condition"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         expected_cmd = "echo " + expected_output
@@ -68,7 +69,7 @@ def test_always_run_condition(jenkins_env):
 def test_never_run_condition(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_never_run_condition"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         shell_builder = ShellBuilder.create("echo " + expected_output)
@@ -100,7 +101,7 @@ def test_never_run_condition(jenkins_env):
 def test_and_build_condition_true(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_and_build_condition_true"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         shell_builder = ShellBuilder.create("echo " + expected_output)
@@ -134,7 +135,7 @@ def test_and_build_condition_true(jenkins_env):
 def test_and_build_condition_false(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_and_build_condition_false"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         shell_builder = ShellBuilder.create("echo " + expected_output)
@@ -168,7 +169,7 @@ def test_and_build_condition_false(jenkins_env):
 def test_not_build_condition_true(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     expected_job_name = "test_not_build_condition_true"
-    jb = jk.create_job(expected_job_name, "hudson.model.FreeStyleProject")
+    jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         shell_builder = ShellBuilder.create("echo " + expected_output)
