@@ -14,7 +14,6 @@ def create_view(api, view_name, view_class):
         PyJen plugin class associated with the type of view to be created
     """
     view_type = view_class.get_jenkins_plugin_name()
-    #view_type = view_type.replace("__", "_")
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     data = {
         "name": view_name,

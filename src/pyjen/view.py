@@ -1,8 +1,10 @@
 """Primitives for interacting with Jenkins views"""
 import logging
+from six.moves import urllib_parse
 from pyjen.job import Job
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
+from pyjen.utils.helpers import create_view
 
 
 class View(object):
@@ -215,6 +217,33 @@ class View(object):
                 "broken_jobs": broken_jobs,
                 "unstable_jobs": unstable_jobs,
                 "disabled_jobs": disabled_jobs}
+
+    def clone(self, new_view_name):
+        """Make a copy of this view with the specified name
+
+        :param str new_view_name:
+            name to give the newly created view
+        :return: reference to the created view
+        :rtype: :class:`~.view.View`
+        """
+        # NOTE: In order to properly support views that may contain nested
+        #       views we have to do some URL manipulations to extrapolate the
+        #       REST API endpoint for the parent object to which the cloned
+        #       view is to be contained.
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        assert len(parts) >= 2
+        assert parts[-2] == "view"
+        parent_url = urllib_parse.urljoin(
+            self._api.url, "/" + "/".join(parts[:-2]))
+
+        parent_api = self._api.clone(parent_url)
+        create_view(parent_api, new_view_name, self.__class__)
+
+        new_url = urllib_parse.urljoin(
+            parent_api.url, "view/" + new_view_name)
+        temp_api = self._api.clone(new_url)
+        return self.__class__(temp_api)
 
 
 if __name__ == "__main__":  # pragma: no cover

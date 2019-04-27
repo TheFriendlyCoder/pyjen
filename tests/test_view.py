@@ -114,5 +114,17 @@ def test_get_view_metrics(jenkins_env):
         assert result['disabled_jobs'][0].name == expected_job_name
 
 
+def test_clone_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    vw = jk.create_view("test_clone_view1", ListView)
+    with clean_view(vw):
+        expected_name = "test_clone_view2"
+        vw2 = vw.clone(expected_name)
+        assert vw2 is not None
+        with clean_view(vw2):
+            assert vw2.name == expected_name
+            assert isinstance(vw2, type(vw))
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])

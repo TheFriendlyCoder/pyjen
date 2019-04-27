@@ -159,9 +159,10 @@ def test_clone_sub_view(jenkins_env):
 
         with clean_view(child1):
             expected_view_name = "test_clone_sub_view_child2"
-            child2 = parent.clone_view(child1, expected_view_name)
+            child2 = child1.clone(expected_view_name)
             assert child2 is not None
             with clean_view(child2):
+                assert parent.find_view(expected_view_name)
                 assert child2.name == expected_view_name
                 assert isinstance(child2, type(child1))
 
