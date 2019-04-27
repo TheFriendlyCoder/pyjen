@@ -80,21 +80,8 @@ class NestedView(View):
         :returns: reference to the newly created view
         :rtype: :class:`pyjen.view.View`
         """
-        view_type = view_type.replace("__", "_")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {
-            "name": view_name,
-            "mode": view_type,
-            "Submit": "OK",
-            "json": json.dumps({"name": view_name, "mode": view_type})
-        }
-
-        args = {
-            'data': data,
-            'headers': headers
-        }
-
-        self._api.post(self._api.url + 'createView', args)
+        from pyjen.utils.helpers import create_view
+        create_view(self._api, view_name, view_type)
         result = self.find_view(view_name)
 
         # Sanity Check: views within the same parent MUST have unique names.

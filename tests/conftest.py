@@ -13,6 +13,10 @@ from pyjen.plugins.gitscm import GitSCM
 from .utils import async_assert
 
 
+# Default Docker container to use for testing
+# May be overloaded from the command prompt using '--jenkins-version'
+DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.173-alpine"
+
 # Global flag used to see whether we've already attempted to run our Jenkins
 # containerized environment. Prevents redundant failures from slowing down
 # the test runner
@@ -57,7 +61,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--jenkins-version",
         action="store",
-        default="jenkins/jenkins:alpine",
+        default=DEFAULT_JENKINS_VERSION,
         help="Name of docker container for the Jenkins version to test against"
     )
 
@@ -173,6 +177,7 @@ def jenkins_env(request, configure_logger):
             "Skipping Docker setup logic. Previous attempt failed.")
 
     image_name = request.config.getoption("--jenkins-version")
+    log.info("Using Jenkins docker container '{0}'".format(image_name))
     preserve_container = request.config.getoption("--preserve")
     container_id_file = os.path.join(_workspace_dir(), "container_id.txt")
 
@@ -208,6 +213,9 @@ def jenkins_env(request, configure_logger):
     # First lets see if we can find a valid container already running
     container_id = None
     if os.path.exists(container_id_file):
+        # TODO: See if the running container is using the same Jenkins
+        #       version that has been requested for this run and start
+        #       a new container if not
         with open(container_id_file) as file_handle:
             container_id = file_handle.read().strip()
         log.info("Reusing existing container %s", container_id)
