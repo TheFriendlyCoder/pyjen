@@ -1,6 +1,5 @@
 """Primitives for working with Jenkins views of type 'NestedView'"""
 from pyjen.view import View
-from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.helpers import create_view
 
 
@@ -95,23 +94,6 @@ class NestedView(View):
         assert len(result) == 1
 
         return result[0]
-
-    def clone_view(self, source_view, new_view_name):
-        """Make a copy of a view with the specified name under this nested view
-
-        :param source_view: view to be cloned
-        :type source_view: :class:`pyjen.view.View`
-        :param str new_view_name:
-            name to give the newly created view
-        :return: reference to the created view
-        :rtype: :class:`~.view.View`
-        """
-        vxml = ViewXML(source_view.config_xml)
-        new_view = self.create_view(new_view_name, source_view.__class__)
-
-        vxml.rename(new_view_name)
-        new_view.config_xml = vxml.xml
-        return new_view
 
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
