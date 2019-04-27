@@ -72,7 +72,7 @@ def test_find_nested_sub_view(jenkins_env):
             child2 = child1.create_view(expected_view_name, ListView)
             assert child2 is not None
             with clean_view(child2):
-                result = parent.find_view(expected_view_name)
+                result = parent.find_all_views(expected_view_name)
                 assert result is not None
                 assert isinstance(result, list)
                 assert len(result) == 1
@@ -98,7 +98,7 @@ def test_find_multiple_nested_sub_views(jenkins_env):
                 assert child2 is not None
                 with clean_view(child2):
 
-                    results = parent1.find_view(expected_view_name)
+                    results = parent1.find_all_views(expected_view_name)
                     assert results is not None
                     assert isinstance(results, list)
                     assert len(results) == 2
