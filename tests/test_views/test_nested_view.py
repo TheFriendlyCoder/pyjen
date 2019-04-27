@@ -165,45 +165,5 @@ def test_clone_sub_view(jenkins_env):
                 assert isinstance(child2, type(child1))
 
 
-def test_move_view(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    parent = jk.create_view("test_move_view", "hudson.plugins.nested_view.NestedView")
-    with clean_view(parent):
-        expected_view_name = "test_move_view_child1"
-        original_child = jk.create_view(expected_view_name, "hudson.model.ListView")
-
-        # after we move the view to the new location, the old view becomes
-        # invalidated. So here we try and make sure the original view always
-        # gets cleaned up even if the test fails, but only until we know
-        # the move operation has completed
-        try:
-            new_child = parent.move_view(original_child)
-            assert new_child is not None
-        except:
-            if original_child:
-                original_child.delete()
-            raise
-
-        # If we get here we can be fairly certain the old view as been destroyed
-        # and the new view has been created. That being the case we need to make
-        # sure the new view gets cleaned up when the test finishes
-        with clean_view(new_child):
-            # Make sure the new child has been created
-            assert new_child.name == expected_view_name
-            results = parent.views
-            assert len(results) == 1
-            assert results[0].name == expected_view_name
-
-            # make sure the original view no longer exists in the parent namespace
-            assert jk.find_view(expected_view_name) is None
-
-            # Final sanity check to make sure the original view object gets
-            # invalidated. We do this by trying to force a call against the
-            # REST API using the original API endpoint, and any such requests
-            # should fail and raise an exception
-            with pytest.raises(Exception):
-                original_child.config_xml
-
-
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
