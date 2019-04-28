@@ -44,7 +44,7 @@ class NestedView(View):
         :rtype: :class:`list` of :class:`pyjen.view.View`
         """
         retval = list()
-        for cur_view in self.all_views:
+        for cur_view in self.views:
             if cur_view.name == view_name:
                 retval.append(cur_view)
 
@@ -68,6 +68,28 @@ class NestedView(View):
             # recurse into it appending all the views contained therein as well
             if isinstance(cur_view, NestedView):
                 retval.extend(cur_view.all_views)
+
+        return retval
+
+    def find_all_views(self, view_name):
+        """Attempts to locate a sub-view under this nested view by name,
+        recursively
+
+        NOTE: Seeing as how view names need only be unique within a single
+        parent view, there may be multiple nested views with the same name.
+        To reflect this requirement this method will return a list of views
+        nested within this one that have the name given. If the list is empty
+        then there are no matches for the given name anywhere in this
+        view's sub-tree.
+
+        :param str view_name: the name of the sub-view to locate
+        :returns: List of 0 or more views with the given name
+        :rtype: :class:`list` of :class:`pyjen.view.View`
+        """
+        retval = list()
+        for cur_view in self.all_views:
+            if cur_view.name == view_name:
+                retval.append(cur_view)
 
         return retval
 
