@@ -19,6 +19,26 @@ class View(object):
         self._log = logging.getLogger(self.__module__)
         self._api = api
 
+    def __repr__(self):
+        """Serialized representation of this object"""
+        return self._api.url
+
+    def __eq__(self, other):
+        """equality operator"""
+        if not isinstance(other, type(self)):
+            return False
+        return other.name == self.name
+
+    def __ne__(self, other):
+        """inequality operator"""
+        if not isinstance(other, type(self)):
+            return True
+        return other.name != self.name
+
+    def __hash__(self):
+        """Hashing function, allowing object to be serialized and compared"""
+        return hash(self._api.url)
+
     @staticmethod
     def instantiate(json_data, rest_api):
         """Factory method for finding the appropriate PyJen view object based

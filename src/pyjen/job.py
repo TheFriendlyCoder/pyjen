@@ -21,21 +21,25 @@ class Job(object):
         self._xml_cache = None
         self._log = logging.getLogger(self.__module__)
 
+    def __repr__(self):
+        """Serialized representation of this object"""
+        return self._api.url
+
     def __eq__(self, other):
         """equality operator"""
-        if not isinstance(other, Job):
+        if not isinstance(other, type(self)):
             return False
         return other.name == self.name
 
     def __ne__(self, other):
         """inequality operator"""
-        if not isinstance(other, Job):
+        if not isinstance(other, type(self)):
             return True
         return other.name != self.name
 
     def __hash__(self):
         """Hashing function, allowing object to be serialized and compared"""
-        return hash(self.name)
+        return hash(self._api.url)
 
     @staticmethod
     def instantiate(json_data, rest_api):
@@ -509,8 +513,8 @@ class Job(object):
         :returns: reference to the newly created job
         :rtype: :class:`pyjen.job.Job`
         """
-        # NOTE: In order to properly support views that may contain nested
-        #       views we have to do some URL manipulations to extrapolate the
+        # NOTE: In order to properly support jobs that may contain nested
+        #       jobs we have to do some URL manipulations to extrapolate the
         #       REST API endpoint for the parent object to which the cloned
         #       view is to be contained.
         parts = urllib_parse.urlsplit(self._api.url).path.split("/")
@@ -531,6 +535,34 @@ class Job(object):
         if disable:
             new_job.disable()
         return new_job
+
+    def rename(self, new_job_name):
+        """Changes the name of this job
+
+        :param str new_job_name:
+            new name to assign to this job
+        """
+        args = {
+            "params": {
+                "newName": new_job_name
+            }
+        }
+        self._api.post(self._api.url + "doRename", args=args)
+
+        # NOTE: In order to properly support jobs that may contain nested
+        #       jobs we have to do some URL manipulations to extrapolate the
+        #       REST API endpoint for the parent object to which the cloned
+        #       view is to be contained.
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        assert len(parts) >= 2
+        assert parts[-2] == "job"
+        new_url = urllib_parse.urljoin(
+            self._api.url, "/" + "/".join(parts[:-2]))
+        new_url += "/job/" + new_job_name
+        self._api = self._api.clone(new_url)
+
+        assert self.name == new_job_name
 
     # --------------------------------------------------------------- PLUGIN API
     @property
