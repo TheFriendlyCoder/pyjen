@@ -525,13 +525,18 @@ class Job(object):
             self._api.url, "/" + "/".join(parts[:-2]))
 
         parent_api = self._api.clone(parent_url)
-        create_job(parent_api, new_job_name, self.__class__)
+        args = {
+            "params": {
+                "name": new_job_name,
+                "mode": "copy",
+                "from": self.name
+            }
+        }
+        parent_api.post(parent_api.url + "createItem", args=args)
 
-        new_url = urllib_parse.urljoin(
-            parent_api.url, "job/" + new_job_name)
-        temp_api = self._api.clone(new_url)
-        new_job = self.__class__(temp_api)
-        new_job.config_xml = self.config_xml
+        new_url = parent_api.url + "job/" + new_job_name
+        new_api = self._api.clone(new_url)
+        new_job = self.__class__(new_api)
         if disable:
             new_job.disable()
         return new_job
