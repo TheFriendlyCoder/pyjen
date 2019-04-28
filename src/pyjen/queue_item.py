@@ -1,3 +1,5 @@
+import requests
+from requests.exceptions import HTTPError
 from pyjen.build import Build
 from pyjen.utils.plugin_api import find_plugin
 from pyjen.exceptions import PluginNotSupportedError
@@ -127,6 +129,24 @@ class QueueItem(object):
             "params": {"id": self.id},
         }
         self._api.post(tmp_url, params)
+
+    def is_valid(self):
+        """Checks to make sure the queue item this object manages still exists
+
+        Jenkins periodically expires / invalidates queue items server-side.
+        There is no way for us to detect or predict when this will happen. When
+        it does, this client-side queue item object will no longer refer to
+        a valid REST API endpoint. This helper method helps users of the PyJen
+        library check to see if the object still points to a valid queue item.
+
+        :rtype: :class:`bool`
+        """
+        try:
+            return self.id is not None
+        except HTTPError as err:
+            if err.response.status_code == requests.codes.NOT_FOUND:
+                return False
+            raise
 
 
 if __name__ == "__main__":  # pragma: no cover

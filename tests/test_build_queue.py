@@ -98,5 +98,35 @@ def test_queue_get_build(jenkins_env):
         assert bld == jb.last_build
 
 
+def test_is_valid(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_is_valid", FreestyleJob)
+    with clean_job(jb):
+        jb.quiet_period = 0
+        item = jb.start_build()
+
+        async_assert(lambda: jb.last_build)
+
+        # Our queue item should remain valid even after it leaves the queue
+        assert item.is_valid()
+
+
+@pytest.mark.skip("Disabling long-running sanity test")
+def test_is_not_valid(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_is_not_valid", FreestyleJob)
+    from time import sleep
+    with clean_job(jb):
+        jb.quiet_period = 0
+        item = jb.start_build()
+
+        async_assert(lambda: jb.last_build)
+
+        # Apparently Jenkins retains build queue items for 5 minutes
+        # so we wait 6 minutes before proceeding
+        sleep(360)
+        assert not item.is_valid()
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
