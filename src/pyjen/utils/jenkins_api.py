@@ -4,6 +4,7 @@ import json
 import requests
 from requests.exceptions import InvalidHeader
 from six.moves import urllib_parse
+import xml.etree.ElementTree as ElementTree
 
 
 class JenkinsAPI(object):
@@ -130,6 +131,7 @@ class JenkinsAPI(object):
         temp_url = urllib_parse.urljoin(target_url, "api/json")
 
         if query_params is not None:
+            # TODO: Update this to pass 'params' key to get method
             temp_url += "?" + query_params
 
         req = requests.get(
@@ -141,13 +143,14 @@ class JenkinsAPI(object):
         self._log.debug(json.dumps(retval, indent=4))
         return retval
 
-    def get_text(self, path=None):
+    def get_text(self, path=None, params=None):
         """ gets the raw text data from a Jenkins URL
 
         :param str path:
             optional extension path to append to the root URL managed by this
             object when performing the get operation
-
+        :param dict params:
+            optional query parameters to be passed to the request
         :returns: the text loaded from this objects' URL
         :rtype: :class:`str`
         """
@@ -158,10 +161,28 @@ class JenkinsAPI(object):
         req = requests.get(
             temp_url,
             auth=self._creds,
-            verify=self._ssl_cert)
+            verify=self._ssl_cert,
+            params=params)
         req.raise_for_status()
 
         return req.text
+
+    def get_api_xml(self, path=None, params=None):
+        """Gets api XML data from a given REST API endpoint
+
+        :param str path:
+            optional extension path to append to the root URL managed by this
+            object when performing the get operation
+        :param dict params:
+            optional query parameters to be passed to the request
+        :returns: parsed XML data
+        """
+        temp_url = self.url
+        if path is not None:
+            temp_url = urllib_parse.urljoin(temp_url, path.lstrip("/\\"))
+        temp_url += "/api/xml"
+        text = self.get_text(temp_url, params)
+        return ElementTree.fromstring(text)
 
     def post(self, target_url, args=None):
         """sends data to or triggers an operation via a Jenkins URL

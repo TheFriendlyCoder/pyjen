@@ -498,5 +498,32 @@ def test_rename_job(jenkins_env):
             tmp.delete()
 
 
+def test_find_build_by_queue_id_match(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_find_build_by_queue_id_match", FreestyleJob)
+    with clean_job(jb):
+        jb.quiet_period = 0
+        q1 = jb.start_build()
+        async_assert(lambda: jb.last_build)
+        bld1 = q1.build
+        assert bld1 is not None
+
+        bld2 = jb.find_build_by_queue_id(q1.id)
+        assert bld1 == bld2
+
+
+def test_find_build_by_queue_id_no_match(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_find_build_by_queue_id_no_match", FreestyleJob)
+    with clean_job(jb):
+        jb.quiet_period = 0
+        q1 = jb.start_build()
+        test_id = q1.id + 50
+        async_assert(lambda: jb.last_build)
+
+        bld = jb.find_build_by_queue_id(test_id)
+        assert bld is None
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
