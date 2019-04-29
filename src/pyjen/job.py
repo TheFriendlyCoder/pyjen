@@ -1,6 +1,8 @@
 """Primitives for interacting with Jenkins jobs"""
 import logging
 from six.moves import urllib_parse
+import requests
+from requests.exceptions import HTTPError
 from pyjen.build import Build
 from pyjen.queue_item import QueueItem
 from pyjen.utils.jobxml import JobXML
@@ -379,6 +381,33 @@ class Job(object):
             return None
 
         return Build(self._api.clone(bld['url']))
+
+    def find_build_by_queue_id(self, queue_id):
+        """Gets the build of this job which correlates to a specific queue item
+
+        :param int queue_id:
+            ID of the build queue item to correlate with. Typically extracted
+            from the :meth:`pyjen.queue_item.QueueItem.id` property.
+        :returns:
+            reference to the build associated with the specified queue id
+            None if no such reference exsts
+        """
+        data = {
+            "tree": "builds[url,queueId]",
+            "xpath": "//build[queueId={0}]".format(queue_id)
+        }
+        try:
+            root_node = self._api.get_api_xml(params=data)
+        except HTTPError as err:
+            if err.response.status_code == requests.codes.NOT_FOUND:
+                return None
+            raise
+
+        node = root_node.find("url")
+        new_api = self._api.clone(node.text)
+        return Build(new_api)
+
+        #tmp = "http://localhost/job/eoijeooivoif/api/xml?tree=builds%5Burl,queueId%5D&xpath=//build%5BqueueId=1166%5D"
 
     def disable(self):
         """Disables this job
