@@ -23,3 +23,10 @@ pip install -e .[dev]
 pip freeze --exclude-editable > ./tests/python3.reqs
 deactivate
 rm -rf tmp
+
+virtualenv -p python3 tmp
+source ./tmp/bin/activate
+pip install -e .[docs]
+pip freeze --exclude-editable > ./docs/python3.reqs
+deactivate
+rm -rf tmp
