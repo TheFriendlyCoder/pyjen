@@ -1,4 +1,6 @@
 import requests
+from six.moves import urllib_parse
+from six import PY2
 from requests.exceptions import HTTPError
 from pyjen.build import Build
 from pyjen.utils.plugin_api import find_plugin
@@ -18,11 +20,21 @@ class QueueItem(object):
         self._api = api
 
     def __eq__(self, other):
+        """Equality operator
+
+        :param other: other object to be compared to this one
+        :rtype: :class:`bool`
+        """
         if not isinstance(other, QueueItem):
             return False
         return self._api.url == other._api.url
 
     def __ne__(self, other):
+        """Equality operator
+
+        :param other: other object to be compared to this one
+        :rtype: :class:`bool`
+        """
         if not isinstance(other, QueueItem):
             return True
         return self._api.url != other._api.url
@@ -31,74 +43,121 @@ class QueueItem(object):
     def _data(self):
         """Gets the API data describing the current state of the queued build
 
+        May return an empty dictionary if the object is no longer backed by a
+        valid REST API endpoint.
+
         :rtype: :class:`dict`
         """
-        retval = self._api.get_api_data()
-        return retval
+        try:
+            return self._api.get_api_data()
+        except HTTPError as err:
+            if err.response.status_code == requests.codes.NOT_FOUND:
+                return dict()
+            raise
 
     @property
     def id(self):
         """Gets the numeric identifier of this queued build
 
+        Guaranteed to return a valid identifier, even when the queue item
+        this object refers to has been invalidated by Jenkins.
+
         :rtype: :class:`int`
         """
-        return int(self._data["id"])
+        # We could try and pull the item ID from the "id" field of our response
+        # data, but to ensure we always have the ability to return a valid
+        # ID even when this queue item has been cleaned up server-side, we
+        # extrapolate the ID from the URL.
+        #
+        # Queue items are defined by a URL that look something like this:
+        #       https://server/queue/item/1234
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        queue_id = parts[-1]
+        if PY2:
+            queue_id = queue_id.decode("utf-8")
+        assert queue_id.isnumeric()
+
+        return int(queue_id)
 
     @property
     def stuck(self):
         """Is this scheduled build blocked / unable to build?
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`bool`
         """
-        return self._data["stuck"]
+        return self._data.get("stuck")
 
     @property
     def blocked(self):
         """Is this scheduled build waiting for some other event to complete?
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`bool`
         """
-        return self._data["blocked"]
+        return self._data.get("blocked")
 
     @property
     def buildable(self):
         """TBD
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`bool`
         """
-        return self._data["buildable"]
+        return self._data.get("buildable")
 
     @property
     def reason(self):
         """Descriptive text explaining why this build is still in the queue
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`str`
         """
-        return self._data["why"] or ""
+        if not self._data.keys():
+            return None
+        return self._data.get("why", "")
 
     @property
     def waiting(self):
         """Is this queue item still waiting in the queue?
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`bool`
         """
-        return "$WaitingItem" in self._data["_class"]
+        temp = self._data.get("_class")
+        if temp is None:
+            return None
+        return "$WaitingItem" in temp
 
     @property
     def cancelled(self):
         """Has this queued build been cancelled?
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`bool`
         """
+        if not self._data.keys():
+            return None
         return self._data.get("cancelled", False)
 
     @property
     def job(self):
         """Gets the Jenkins job associated with this scheduled build
 
+        May return None if this queue item has been invalidated by Jenkins
+
         :rtype: :class:`pyjen.job.Job`
         """
-        job_data = self._data["task"]
+        job_data = self._data.get("task")
+        if job_data is None:
+            return None
         plugin = find_plugin(job_data["_class"])
         if plugin is None:
             raise PluginNotSupportedError(
@@ -141,12 +200,7 @@ class QueueItem(object):
 
         :rtype: :class:`bool`
         """
-        try:
-            return self.id is not None
-        except HTTPError as err:
-            if err.response.status_code == requests.codes.NOT_FOUND:
-                return False
-            raise
+        return True if self._data.keys() else False
 
 
 if __name__ == "__main__":  # pragma: no cover

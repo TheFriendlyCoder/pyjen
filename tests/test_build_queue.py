@@ -1,5 +1,7 @@
 import pytest
+from mock import MagicMock
 from .utils import async_assert, clean_job
+from requests.exceptions import HTTPError
 from pyjen.jenkins import Jenkins
 from pyjen.queue_item import QueueItem
 from pyjen.plugins.freestylejob import FreestyleJob
@@ -126,6 +128,35 @@ def test_is_not_valid(jenkins_env):
         # so we wait 6 minutes before proceeding
         sleep(360)
         assert not item.is_valid()
+
+
+def test_getters_from_invalid_queue_item():
+    # First we mock an HTTP 404 error response, which is what the Jenkins
+    # REST API will return when the endpoint referenced by our queue item
+    # no longer exists
+    mock_response = MagicMock()
+    mock_response.status_code = 404
+
+    # Mock a Jenkins REST API object with the relevant structures used by
+    # our queue item
+    mock_api = MagicMock()
+    mock_api.get_api_data.side_effect = HTTPError(response=mock_response)
+    expected_id = 1234
+    mock_api.url = "https://jenkins.server/queue/item/" + str(expected_id)
+
+    # Flex our code
+    q1 = QueueItem(mock_api)
+
+    # confirm the results
+    assert q1.id == expected_id
+    assert q1.stuck is None
+    assert q1.blocked is None
+    assert q1.buildable is None
+    assert q1.reason is None
+    assert q1.waiting is None
+    assert q1.cancelled is None
+    assert q1.job is None
+    assert q1.build is None
 
 
 if __name__ == "__main__":
