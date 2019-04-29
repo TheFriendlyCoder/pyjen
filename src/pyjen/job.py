@@ -5,7 +5,6 @@ from pyjen.build import Build
 from pyjen.queue_item import QueueItem
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
-from pyjen.utils.helpers import create_job
 
 
 class Job(object):
