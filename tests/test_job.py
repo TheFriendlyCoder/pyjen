@@ -9,6 +9,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from pyjen.build import Build
 from pyjen.plugins.buildtriggerpublisher import BuildTriggerPublisher
 from pyjen.plugins.shellbuilder import ShellBuilder
+from pyjen.plugins.nullscm import NullSCM
 
 
 def test_create_freestyle_job(jenkins_env):
@@ -147,7 +148,7 @@ class TestJobReadOperations(object):
     def test_null_scm(self):
         result = self.job.scm
         assert result is not None
-        assert result.get_jenkins_plugin_name() == "hudson.scm.NullSCM"
+        assert isinstance(result, NullSCM)
 
 
 def test_get_all_builds(jenkins_env):

@@ -4,6 +4,7 @@ from pyjen.jenkins import Jenkins
 from pyjen.plugins.folderjob import FolderJob
 from pyjen.plugins.freestylejob import FreestyleJob
 
+
 def test_create_folder_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_create_folder_job", FolderJob)
@@ -87,7 +88,7 @@ def test_rename_job(jenkins_env):
             assert jb_copy is not None
             assert jb.name == new_job_name
             assert jb_copy == jb
-        except:
+        finally:
             tmp = parent.find_job(original_job_name)
             if tmp:
                 tmp.delete()
@@ -95,7 +96,6 @@ def test_rename_job(jenkins_env):
             tmp = parent.find_job(new_job_name)
             if tmp:
                 tmp.delete()
-            raise
 
 
 if __name__ == "__main__":
