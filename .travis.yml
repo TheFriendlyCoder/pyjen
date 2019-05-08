@@ -34,14 +34,14 @@ jobs:
       script:
         - python setup.py bdist_wheel
         - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
-      if: tag IS true
+      if: tag IS true AND fork IS NOT true
     - stage: deploy-snapshot
       python: 3.6
       script:
         - python setup.py bdist_wheel
         - twine upload --repository-url https://test.pypi.org/legacy/
             dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
-      if: tag IS NOT true
+      if: tag IS NOT true AND fork IS NOT true
 
 after_success:
   - coveralls
