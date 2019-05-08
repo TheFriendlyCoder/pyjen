@@ -37,8 +37,8 @@ Table of Contents
    :maxdepth: 1
 
    examples
-   modules
    contrib_guide
+   API Docs <api/modules>
    revision_history
    faq
 

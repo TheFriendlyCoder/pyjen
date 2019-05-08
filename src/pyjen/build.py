@@ -166,6 +166,9 @@ class Build(object):
         """Aborts this build before it completes"""
         self._api.post(self._api.url + "stop")
 
+    def kill(self):
+        """Performs hard kill on this build"""
+        self._api.post(self._api.url + "kill")
 
 if __name__ == "__main__":  # pragma: no cover
     pass

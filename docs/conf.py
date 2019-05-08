@@ -13,13 +13,15 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 import ast
-# import sys
-# import os
+import sys
+import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('..'))
+_base_path = os.path.abspath(os.path.dirname(__file__))
+_src_dir = os.path.abspath(os.path.join(_base_path, '..', 'src'))
+sys.path.insert(0, _src_dir)
 # sys.path.insert(0, os.path.abspath("docs"))
 
 # -- General configuration ------------------------------------------------
@@ -35,6 +37,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinxcontrib.apidoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -53,9 +56,15 @@ master_doc = 'index'
 copyright = '2019, Kevin S. Phillips'
 author = 'Kevin S. Phillips'
 _proj_props = ast.literal_eval(open('../project.prop').read())
-with open("../src/" + _proj_props["NAME"] + "/version.prop") as prop_file:
+_proj_dir = os.path.join(_src_dir, _proj_props["NAME"])
+with open(os.path.join(_proj_dir, "version.prop")) as prop_file:
     _proj_props["VERSION"] = ast.literal_eval(prop_file.read())
 project = _proj_props["NAME"]
+
+apidoc_module_dir = _proj_dir
+apidoc_output_dir = os.path.join(_base_path, "api")
+apidoc_separate_modules = True
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.

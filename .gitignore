@@ -103,3 +103,5 @@ py?/
 .vscode
 container_id.txt
 container_id.txt.token
+
+docs/api/*
