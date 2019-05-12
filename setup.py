@@ -305,7 +305,6 @@ setup(
     python_requires=PROJECT["SUPPORTED_PYTHON_VERSION"],
     extras_require={
         'dev': PROJECT["DEV_DEPENDENCIES"],
-        'docs': PROJECT['DOCS_DEPENDENCIES'],
     },
     # The following support files are needed by this setup.py script
     # These files are not deployed with the project when building a wheel
