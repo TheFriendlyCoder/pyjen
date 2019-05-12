@@ -57,8 +57,11 @@ copyright = '2019, Kevin S. Phillips'
 author = 'Kevin S. Phillips'
 _proj_props = ast.literal_eval(open('../project.prop').read())
 _proj_dir = os.path.join(_src_dir, _proj_props["NAME"])
-with open(os.path.join(_proj_dir, "version.prop")) as prop_file:
-    _proj_props["VERSION"] = ast.literal_eval(prop_file.read())
+with open(os.path.join(_proj_dir, "version.py")) as prop_file:
+    _data = ast.parse(prop_file.read())
+    _proj_props["VERSION"] = _data.body[0].value.s
+
+
 project = _proj_props["NAME"]
 
 apidoc_module_dir = _proj_dir
