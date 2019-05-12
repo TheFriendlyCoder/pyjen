@@ -10,21 +10,12 @@
         "tqdm",
     ],
     "DEV_DEPENDENCIES" : [
-        "twine",
         "pytest",
-        "pytest-cov",
         "pytest-timeout",
         "mock",
-        # HACK: PyLint 2.0 introduced a dependency which doesn't work on
-        #       PyPy3.5 on Travis CI. This needs to be resolved.
-        "pylint<2.0",
+        "pylint",
         "tox",
-        "radon",
         "docker"
-    ],
-    "DOCS_DEPENDENCIES" : [
-        "sphinx",
-        "sphinxcontrib-apidoc",
     ],
     "DESCRIPTION" : "Python wrapper for the Jenkins CI REST API",
     "KEYWORDS" : "jenkins jenkins-ci api wrapper library",
