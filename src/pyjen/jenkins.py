@@ -164,6 +164,20 @@ class Jenkins(object):
 
         return retval
 
+    @property
+    def jobs(self):
+        """Gets all jobs managed by this Jenkins instance
+
+        :rtype:  :class:`list` of :class:`~.job.Job` objects
+        """
+        data = self._api.get_api_data(query_params="depth=2")
+
+        retval = list()
+        for j in data['jobs']:
+            retval.append(Job.instantiate(j, self._api))
+
+        return retval
+
     def prepare_shutdown(self):
         """Starts a "quiet down" and prevents new builds from executing
 

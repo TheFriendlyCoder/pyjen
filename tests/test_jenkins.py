@@ -173,6 +173,25 @@ def test_get_plugin_manager(jenkins_env):
     assert pm is not None
 
 
+def test_get_no_jobs(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    res = jk.jobs
+
+    assert res is not None
+    assert isinstance(res, list)
+    assert len(res) == 0
+
+
+def test_get_one_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_one_job", FreestyleJob)
+    with clean_job(jb):
+        res = jk.jobs
+
+        assert len(res) == 1
+        assert res[0] == jb
+
+
 def test_create_job(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_create_job", FreestyleJob)
