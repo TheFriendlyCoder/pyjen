@@ -44,6 +44,7 @@ JENKINS_PLUGINS = [
     "parameterized-trigger",
     "build-blocker-plugin",
     "jenkins-multijob-plugin",
+    "artifactdeployer",
 ]
 
 

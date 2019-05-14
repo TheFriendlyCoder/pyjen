@@ -1,13 +1,26 @@
 """properties of the 'artifact deployer' publishing plugin"""
-from pyjen.exceptions import PluginNotSupportedError
+import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
 class ArtifactDeployer(XMLPlugin):
     """Interface to the Jenkins 'artifact deployer' publishing plugin
 
-    https://wiki.jenkins-ci.org/display/JENKINS/ArtifactDeployer+Plugin
+    https://plugins.jenkins.io/artifactdeployer
     """
+
+    @classmethod
+    def create(cls):
+        """Factory method for creating a new artifact deployer
+        :rtype: :class:`pyjen.plugins.artifactdeployer.ArtifactDeployer`
+        """
+        default_xml = """<org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher plugin="artifactdeployer@1.2">
+<entries class="empty-list"/>
+<deployEvenBuildFail>false</deployEvenBuildFail>
+</org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher>"""
+        root_node = ElementTree.fromstring(default_xml)
+
+        return cls(root_node)
 
     @property
     def entries(self):
@@ -21,16 +34,23 @@ class ArtifactDeployer(XMLPlugin):
 
         nodes = self._root.find("entries")
 
-        retval = []
+        retval = list()
         for node in nodes:
-            plugin = init_plugin(node)
-            if plugin is not None:
-                retval.append(plugin)
-            else:
-                raise PluginNotSupportedError("Artifact deployer configuration "
-                                              "plugin not found", 'entries')
+            retval.append(ArtifactDeployerEntry(node))
 
         return retval
+
+    def add_entry(self, new_entry):
+        """Adds a new deployer entry to this publisher
+
+        :param new_entry:
+            New publisher descriptor entry to be added
+        :type new_entry: :class:`~.ArtifactDeployerEntry`
+        """
+        entries_node = self._root.find('entries')
+        entries_node.append(new_entry.node)
+        new_entry.parent = self
+        self.update()
 
     @staticmethod
     def get_jenkins_plugin_name():
@@ -41,17 +61,39 @@ class ArtifactDeployer(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "artifactdeployer"
+        return "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher"
 
 
-class ArtifactDeployerEntry(object):
+class ArtifactDeployerEntry(XMLPlugin):
     """a single artifacts to be deployed by an Artifact Deployer instance"""
-    def __init__(self, node):
+    @classmethod
+    def create(cls, include_pattern, remote_path):
+        """Factory method used to instantiate instances of this class
+
+        :param str include_pattern:
+            Path or regular expression of the file(s) to be published
+        :param str remote_path:
+            Path to remote share where files are to be published
+        :returns:
+            instance of the artifact deployer entry
+        :rtype: :class:`ArtifactDeployerEntry`
         """
-        :param node: XML node defining the settings for a this plugin
-        :type node: :class:`ElementTree.Element`
-        """
-        self._root = node
+        default_xml = """<org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry>
+    <basedir/>
+    <excludes/>
+    <flatten>false</flatten>
+    <deleteRemote>false</deleteRemote>
+    <deleteRemoteArtifacts>false</deleteRemoteArtifacts>
+    <failNoFilesDeploy>false</failNoFilesDeploy>
+</org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry>"""
+
+        root_node = ElementTree.fromstring(default_xml)
+        includes_node = ElementTree.SubElement(root_node, "includes")
+        includes_node.text = include_pattern
+        remote_node = ElementTree.SubElement(root_node, "remote")
+        remote_node.text = remote_path
+
+        return cls(root_node)
 
     @property
     def remote(self):
@@ -60,6 +102,15 @@ class ArtifactDeployerEntry(object):
         :rtype: :class:`str`
         """
         node = self._root.find("remote")
+        return node.text
+
+    @property
+    def includes(self):
+        """Gets the path or regular expression describing files to be published
+
+        :rtype: :class:`str`
+        """
+        node = self._root.find("includes")
         return node.text
 
 
