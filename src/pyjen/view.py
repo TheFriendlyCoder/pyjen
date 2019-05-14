@@ -131,6 +131,37 @@ class View(object):
                 "unstable_jobs": unstable_jobs,
                 "disabled_jobs": disabled_jobs}
 
+    def _clone_view_helper(self, new_view_name):
+        # NOTE: In order to properly support views that may contain nested
+        #       views we have to do some URL manipulations to extrapolate the
+        #       REST API endpoint for the parent object to which the cloned
+        #       view is to be contained.
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        assert len(parts) >= 2
+        assert parts[-2] == "view"
+        parent_url = urllib_parse.urljoin(
+            self._api.url, "/" + "/".join(parts[:-2]))
+
+        # Ask the parent object to create a new view of the same type
+        # as the current view
+        parent_api = self._api.clone(parent_url)
+        create_view(parent_api, new_view_name, self.__class__)
+
+        # Save a backup copy of the original config XML with the view
+        # name changed
+        temp_view_xml = self._view_xml
+        temp_view_xml.rename(new_view_name)
+        updated_xml = temp_view_xml.xml
+
+        # Update our REST API object to point to the endpoint associated
+        # with the newly created view
+        new_url = urllib_parse.urljoin(
+            parent_api.url, "view/" + new_view_name)
+        updated_api = self._api.clone(new_url)
+
+        return updated_api, updated_xml
+
     def clone(self, new_view_name):
         """Make a copy of this view with the specified name
 
@@ -139,24 +170,10 @@ class View(object):
         :return: reference to the created view
         :rtype: :class:`~.view.View`
         """
-        # NOTE: In order to properly support views that may contain nested
-        #       views we have to do some URL manipulations to extrapolate the
-        #       REST API endpoint for the parent object to which the cloned
-        #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
-        parts = [cur_part for cur_part in parts if cur_part.strip()]
-        assert len(parts) >= 2
-        assert parts[-2] == "view"
-        parent_url = urllib_parse.urljoin(
-            self._api.url, "/" + "/".join(parts[:-2]))
-
-        parent_api = self._api.clone(parent_url)
-        create_view(parent_api, new_view_name, self.__class__)
-
-        new_url = urllib_parse.urljoin(
-            parent_api.url, "view/" + new_view_name)
-        temp_api = self._api.clone(new_url)
-        return self.__class__(temp_api)
+        updated_api, updated_xml = self._clone_view_helper(new_view_name)
+        retval = self.__class__(updated_api)
+        retval.config_xml = updated_xml
+        return retval
 
     def rename(self, new_view_name):
         """Changes the name of this view
@@ -164,26 +181,19 @@ class View(object):
         :param str new_view_name:
             new name for the selected source view
         """
-        # NOTE: In order to properly support views that may contain nested
-        #       views we have to do some URL manipulations to extrapolate the
-        #       REST API endpoint for the parent object to which the cloned
-        #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
-        parts = [cur_part for cur_part in parts if cur_part.strip()]
-        assert len(parts) >= 2
-        assert parts[-2] == "view"
-        parent_url = urllib_parse.urljoin(
-            self._api.url, "/" + "/".join(parts[:-2]))
+        updated_api, updated_xml = self._clone_view_helper(new_view_name)
 
-        parent_api = self._api.clone(parent_url)
-        create_view(parent_api, new_view_name, self.__class__)
-
+        # Invalidate the current view
         self.delete()
 
-        new_url = urllib_parse.urljoin(
-            parent_api.url, "view/" + new_view_name)
-        temp_api = self._api.clone(new_url)
-        self._api = temp_api
+        # Update our REST API object to point to the endpoint associated
+        # with the newly created view
+        self._api = updated_api
+
+        # Finally, make sure the full XML configuration from the original
+        # view is copied to the newly created view
+        self._xml_cache = None
+        self._view_xml.xml = updated_xml
 
     # ---------------------------------------------- CONFIG XML BASED PROPERTIES
     @property

@@ -79,7 +79,6 @@ def test_add_text_section(jenkins_env):
         assert result[0].name == expected_name
 
 
-@pytest.mark.skip("Bug in view cloning logic to be fixed")
 def test_rename_view(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     original_view_name = "test_rename_view"
@@ -109,6 +108,32 @@ def test_rename_view(jenkins_env):
         assert isinstance(result, list)
         assert len(result) == 1
         assert result[0].name == expected_section_name
+
+
+def test_clone_view(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    original_view_name = "test_clone_view"
+    vw1 = jk.create_view(original_view_name, SectionedView)
+
+    with clean_view(vw1):
+        expected_section_name = "MyNewSection"
+        vw1.add_section("hudson.plugins.sectioned_view.TextSection", expected_section_name)
+
+        expected_view_name = "test_clone_view2"
+        vw2 = vw1.clone(expected_view_name)
+        assert vw2 is not None
+        with clean_view(vw2):
+
+            tmp_view = jk.find_view(expected_view_name)
+            assert tmp_view is not None
+            assert tmp_view.name == expected_view_name
+
+            result = tmp_view.sections
+
+            assert result is not None
+            assert isinstance(result, list)
+            assert len(result) == 1
+            assert result[0].name == expected_section_name
 
 
 if __name__ == "__main__":
