@@ -16,8 +16,9 @@ class View(object):
     """
     def __init__(self, api):
         super(View, self).__init__()
-        self._log = logging.getLogger(self.__module__)
         self._api = api
+        self._xml_cache = None
+        self._log = logging.getLogger(self.__module__)
 
     def __repr__(self):
         """Serialized representation of this object"""
@@ -38,82 +39,6 @@ class View(object):
     def __hash__(self):
         """Hashing function, allowing object to be serialized and compared"""
         return hash(self._api.url)
-
-    @staticmethod
-    def instantiate(json_data, rest_api):
-        """Factory method for finding the appropriate PyJen view object based
-        on data loaded from the Jenkins REST API
-
-        :param dict json_data:
-            data loaded from the Jenkins REST API summarizing the view to be
-            instantiated
-        :param rest_api:
-            PyJen REST API configured for use by the parent container. Will
-            be used to instantiate the PyJen view that is returned.
-        :returns:
-            PyJen view object wrapping the REST API for the given Jenkins view
-        :rtype: :class:`~.view.View`
-        """
-        # TODO: Find some way to cache the json data given inside the view so
-        #       we can lazy-load API data. For example, the name of the view
-        #       is always included in the json data and therefore queries for
-        #       the View name after creation should not require another hit
-        #       to the REST API
-        log = logging.getLogger(__name__)
-        # The default view will not have a valid view URL
-        # so we need to look for this and generate a corrected one
-        view_url = json_data["url"]
-        if '/view/' not in view_url:
-            view_url = view_url + "view/" + json_data["name"]
-
-        # Extract the name of the Jenkins plugin associated with this view
-        # Sanity Check: make sure the metadata for the view has a "_class"
-        #               attribute. I'm pretty sure older version of the Jenkins
-        #               core did not expose such an attribute, but all versions
-        #               from the past 2+ years or more do appear to include it.
-        #               If, for some reason this attribute doesn't exist, we'll
-        #               fall back to the default view base class which provides
-        #               functionality common to all Jenkins views. For extra
-        #               debugging purposes however, we log some debug output
-        #               if we ever hit this case so we can investigate the
-        #               the details further.
-        plugin_class = None
-        if "_class" in json_data:
-            plugin_class = find_plugin(json_data["_class"])
-        else:  # pragma: no cover
-            log.debug("Unsupported Jenkins version detected. Views are "
-                      "expected to have a _class metadata attribute but this "
-                      "one does not: %s", json_data)
-
-        if not plugin_class:
-            log.debug("Unable to find plugin for class %s", json_data["_class"])
-            plugin_class = View
-
-        return plugin_class(rest_api.clone(view_url))
-
-    @classmethod
-    def get_supported_plugins(cls):
-        """Returns a list of PyJen plugins that derive from this class
-
-        :rtype: :class:`list` of :class:`class`
-        """
-        retval = list()
-        for cur_plugin in get_all_plugins():
-            if issubclass(cur_plugin, cls):
-                retval.append(cur_plugin)
-        return retval
-
-    @property
-    def jenkins_plugin_name(self):
-        """Extracts the name of the Jenkins plugin associated with this View
-
-        The data returned by this helper property is extracted from the
-        config XML that defines this job.
-
-        :rtype: :class:`str`
-        """
-        jxml = ViewXML(self.config_xml)
-        return jxml.plugin_name
 
     @property
     def name(self):
@@ -149,38 +74,6 @@ class View(object):
             retval.append(Job.instantiate(j, self._api))
 
         return retval
-
-    @property
-    def config_xml(self):
-        """Gets the raw configuration data in XML format
-
-        This is an advanced function which allows the caller
-        to manually manipulate the raw configuration settings
-        of the view. Use with caution.
-
-        This method allows callers to dynamically update arbitrary properties
-        of this view.
-
-        :returns:
-            returns the raw XML of the views configuration in
-            a plain text string format
-        :rtype: :class:`str`
-        """
-        return self._api.get_text("/config.xml")
-
-    @config_xml.setter
-    def config_xml(self, new_xml):
-        """Updates the raw config of this view with a new set of properties
-
-        :param str new_xml:
-            XML encoded text string to be used as a replacement for the
-            current configuration being used by this view.
-
-            NOTE: It is assumed that this input text meets the schema
-            requirements for a Jenkins view.
-        """
-        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self._api.post(self._api.url + "config.xml", args)
 
     def delete(self):
         """Deletes this view from the dashboard"""
@@ -291,6 +184,117 @@ class View(object):
             parent_api.url, "view/" + new_view_name)
         temp_api = self._api.clone(new_url)
         self._api = temp_api
+
+    # ---------------------------------------------- CONFIG XML BASED PROPERTIES
+    @property
+    def _view_xml(self):
+        if self._xml_cache is not None:
+            return self._xml_cache
+        self._xml_cache = self._xml_class(self._api)
+        return self._xml_cache
+
+    @property
+    def jenkins_plugin_name(self):
+        """Extracts the name of the Jenkins plugin associated with this View
+
+        The data returned by this helper property is extracted from the
+        config XML that defines this job.
+
+        :rtype: :class:`str`
+        """
+        return self._view_xml.plugin_name
+
+    @property
+    def config_xml(self):
+        """Gets the raw XML configuration for the view
+
+        Allows callers to manipulate the raw view configuration file as desired.
+
+        :returns: the full XML tree describing this view's configuration
+        :rtype: :class:`str`
+        """
+        return self._view_xml.xml
+
+    @config_xml.setter
+    def config_xml(self, new_xml):
+        """Allows a caller to manually override the entire view configuration
+
+        WARNING: This is an advanced method that should only be used in
+        rare circumstances. All configuration changes should normally
+        be handled using other methods provided on this class.
+
+        :param str new_xml: A complete XML tree compatible with the Jenkins API
+        """
+        self._view_xml.xml = new_xml
+
+    # --------------------------------------------------------------- PLUGIN API
+    @staticmethod
+    def instantiate(json_data, rest_api):
+        """Factory method for finding the appropriate PyJen view object based
+        on data loaded from the Jenkins REST API
+
+        :param dict json_data:
+            data loaded from the Jenkins REST API summarizing the view to be
+            instantiated
+        :param rest_api:
+            PyJen REST API configured for use by the parent container. Will
+            be used to instantiate the PyJen view that is returned.
+        :returns:
+            PyJen view object wrapping the REST API for the given Jenkins view
+        :rtype: :class:`~.view.View`
+        """
+        # TODO: Find some way to cache the json data given inside the view so
+        #       we can lazy-load API data. For example, the name of the view
+        #       is always included in the json data and therefore queries for
+        #       the View name after creation should not require another hit
+        #       to the REST API
+        log = logging.getLogger(__name__)
+        # The default view will not have a valid view URL
+        # so we need to look for this and generate a corrected one
+        view_url = json_data["url"]
+        if '/view/' not in view_url:
+            view_url = view_url + "view/" + json_data["name"]
+
+        # Extract the name of the Jenkins plugin associated with this view
+        # Sanity Check: make sure the metadata for the view has a "_class"
+        #               attribute. I'm pretty sure older version of the Jenkins
+        #               core did not expose such an attribute, but all versions
+        #               from the past 2+ years or more do appear to include it.
+        #               If, for some reason this attribute doesn't exist, we'll
+        #               fall back to the default view base class which provides
+        #               functionality common to all Jenkins views. For extra
+        #               debugging purposes however, we log some debug output
+        #               if we ever hit this case so we can investigate the
+        #               the details further.
+        plugin_class = None
+        if "_class" in json_data:
+            plugin_class = find_plugin(json_data["_class"])
+        else:  # pragma: no cover
+            log.debug("Unsupported Jenkins version detected. Views are "
+                      "expected to have a _class metadata attribute but this "
+                      "one does not: %s", json_data)
+
+        if not plugin_class:
+            log.debug("Unable to find plugin for class %s", json_data["_class"])
+            plugin_class = View
+
+        return plugin_class(rest_api.clone(view_url))
+
+    @classmethod
+    def get_supported_plugins(cls):
+        """Returns a list of PyJen plugins that derive from this class
+
+        :rtype: :class:`list` of :class:`class`
+        """
+        retval = list()
+        for cur_plugin in get_all_plugins():
+            if issubclass(cur_plugin, cls):
+                retval.append(cur_plugin)
+        return retval
+
+    @property
+    def _xml_class(self):
+        return ViewXML
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -1,5 +1,4 @@
 """Primitives for working on Jenkins views of type 'SectionedView'"""
-import logging
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.plugin_api import find_plugin
@@ -19,8 +18,7 @@ class SectionedView(View):
         :returns: a list of sections contained within this view
         :rtype: :class:`list` of one of the 'SectionedView' section types
         """
-        vxml = SectionedViewXML(self.config_xml)
-        return vxml.sections
+        return self._view_xml.sections
 
     def add_section(self, section_type, name):
         """Adds a new section to the sectioned view
@@ -30,11 +28,14 @@ class SectionedView(View):
         :param str name:
             descriptive text to appear in the title area of the section
         """
-        vxml = SectionedViewXML(self.config_xml)
-        vxml.add_section(section_type, name)
-        self.config_xml = vxml.xml
+        self._view_xml.add_section(section_type, name)
+        self._view_xml.update()
 
     # --------------------------------------------------------------- PLUGIN API
+    @property
+    def _xml_class(self):
+        return SectionedViewXML
+
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -49,12 +50,6 @@ class SectionedView(View):
 
 class SectionedViewXML(ViewXML):
     """raw config.xml parser for a Jenkins view of type 'Sectioned View'"""
-    def __init__(self, xml):
-        """
-        :param str xml: XML string describing a sectioned view
-        """
-        super(SectionedViewXML, self).__init__(xml)
-        self._log = logging.getLogger(__name__)
 
     @property
     def sections(self):
@@ -66,12 +61,14 @@ class SectionedViewXML(ViewXML):
 
         retval = list()
         for node in nodes:
-            plugin = find_plugin(node.tag)
-            if plugin is not None:
-                retval.append(plugin(node))
-            else:
+            plugin_class = find_plugin(node.tag)
+            if plugin_class is None:
                 self._log.warning("Sectioned view plugin not found: %s",
                                   node.tag)
+                continue
+            temp = plugin_class(node)
+            temp.parent = self
+            retval.append(temp)
 
         return retval
 
@@ -89,6 +86,7 @@ class SectionedViewXML(ViewXML):
                 "Failed loading Sectioned View section",
                 section_type)
         new_section = plugin_class.create(name)
+        new_section.parent = self
         sections = self._root.find('sections')
         sections.append(new_section.node)
 
