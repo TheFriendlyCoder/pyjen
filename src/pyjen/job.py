@@ -42,67 +42,6 @@ class Job(object):
         """Hashing function, allowing object to be serialized and compared"""
         return hash(self._api.url)
 
-    @staticmethod
-    def instantiate(json_data, rest_api):
-        """Factory method for finding the appropriate PyJen view object based
-        on data loaded from the Jenkins REST API
-
-        :param dict json_data:
-            data loaded from the Jenkins REST API summarizing the view to be
-            instantiated
-        :param rest_api:
-            PyJen REST API configured for use by the parent container. Will
-            be used to instantiate the PyJen view that is returned.
-        :returns:
-            PyJen view object wrapping the REST API for the given Jenkins view
-        :rtype: :class:`~.view.View`
-        """
-        # TODO: Find some way to cache the json data given inside the view so
-        #       we can lazy-load API data. For example, the name of the view
-        #       is always included in the json data and therefore queries for
-        #       the View name after creation should not require another hit
-        #       to the REST API
-        log = logging.getLogger(__name__)
-
-        job_url = json_data["url"]
-
-        # Extract the name of the Jenkins plugin associated with this view
-        # Sanity Check: make sure the metadata for the view has a "_class"
-        #               attribute. I'm pretty sure older version of the Jenkins
-        #               core did not expose such an attribute, but all versions
-        #               from the past 2+ years or more do appear to include it.
-        #               If, for some reason this attribute doesn't exist, we'll
-        #               fall back to the default view base class which provides
-        #               functionality common to all Jenkins views. For extra
-        #               debugging purposes however, we log some debug output
-        #               if we ever hit this case so we can investigate the
-        #               the details further.
-        plugin_class = None
-        if "_class" in json_data:
-            plugin_class = find_plugin(json_data["_class"])
-        else:  # pragma: no cover
-            log.debug("Unsupported Jenkins version detected. Jobs are "
-                      "expected to have a _class metadata attribute but this "
-                      "one does not: %s", json_data)
-
-        if not plugin_class:
-            log.debug("Unable to find plugin for class %s", json_data["_class"])
-            plugin_class = Job
-
-        return plugin_class(rest_api.clone(job_url))
-
-    @classmethod
-    def get_supported_plugins(cls):
-        """Returns a list of PyJen plugins that derive from this class
-
-        :rtype: :class:`list` of :class:`class`
-        """
-        retval = list()
-        for cur_plugin in get_all_plugins():
-            if issubclass(cur_plugin, cls):
-                retval.append(cur_plugin)
-        return retval
-
     # ---------------------------------------------- CONFIG XML BASED PROPERTIES
     @property
     def _job_xml(self):
@@ -598,6 +537,67 @@ class Job(object):
         assert self.name == new_job_name
 
     # --------------------------------------------------------------- PLUGIN API
+    @staticmethod
+    def instantiate(json_data, rest_api):
+        """Factory method for finding the appropriate PyJen view object based
+        on data loaded from the Jenkins REST API
+
+        :param dict json_data:
+            data loaded from the Jenkins REST API summarizing the view to be
+            instantiated
+        :param rest_api:
+            PyJen REST API configured for use by the parent container. Will
+            be used to instantiate the PyJen view that is returned.
+        :returns:
+            PyJen view object wrapping the REST API for the given Jenkins view
+        :rtype: :class:`~.view.View`
+        """
+        # TODO: Find some way to cache the json data given inside the view so
+        #       we can lazy-load API data. For example, the name of the view
+        #       is always included in the json data and therefore queries for
+        #       the View name after creation should not require another hit
+        #       to the REST API
+        log = logging.getLogger(__name__)
+
+        job_url = json_data["url"]
+
+        # Extract the name of the Jenkins plugin associated with this view
+        # Sanity Check: make sure the metadata for the view has a "_class"
+        #               attribute. I'm pretty sure older version of the Jenkins
+        #               core did not expose such an attribute, but all versions
+        #               from the past 2+ years or more do appear to include it.
+        #               If, for some reason this attribute doesn't exist, we'll
+        #               fall back to the default view base class which provides
+        #               functionality common to all Jenkins views. For extra
+        #               debugging purposes however, we log some debug output
+        #               if we ever hit this case so we can investigate the
+        #               the details further.
+        plugin_class = None
+        if "_class" in json_data:
+            plugin_class = find_plugin(json_data["_class"])
+        else:  # pragma: no cover
+            log.debug("Unsupported Jenkins version detected. Jobs are "
+                      "expected to have a _class metadata attribute but this "
+                      "one does not: %s", json_data)
+
+        if not plugin_class:
+            log.debug("Unable to find plugin for class %s", json_data["_class"])
+            plugin_class = Job
+
+        return plugin_class(rest_api.clone(job_url))
+
+    @classmethod
+    def get_supported_plugins(cls):
+        """Returns a list of PyJen plugins that derive from this class
+
+        :rtype: :class:`list` of :class:`class`
+        """
+        retval = list()
+        for cur_plugin in get_all_plugins():
+            if issubclass(cur_plugin, cls):
+                retval.append(cur_plugin)
+        return retval
+
     @property
     def _xml_class(self):
         return JobXML

@@ -10,14 +10,18 @@ class JobXML(object):
     The source xml can be loaded from nearly any URL by
     appending "/config.xml" to it, as in "http://server/jobs/job1/config.xml"
 
-    :param str config_xml:
-        Raw XML character string extracted from a Jenkins job.
+    :param api:
+        Rest API for the Jenkins XML configuration managed by this object
     """
     def __init__(self, api):
         super(JobXML, self).__init__()
         self._api = api
         self._log = logging.getLogger(__name__)
         self._cache = None
+
+    def __str__(self):
+        """String representation of the configuration XML"""
+        return self.xml
 
     @property
     def _root(self):
@@ -28,41 +32,10 @@ class JobXML(object):
         self._cache = ElementTree.fromstring(text)
         return self._cache
 
-    def __str__(self):
-        """String representation of the configuration XML"""
-        return self.xml
-
     def update(self):
         """Posts all changes made to the object back to Jenkins"""
         args = {'data': self.xml, 'headers': {'Content-Type': 'text/xml'}}
         self._api.post(self._api.url + "config.xml", args)
-
-    @property
-    def quiet_period(self):
-        """Gets the delay, in seconds, this job waits in queue before running
-        a build
-
-        May return None if no custom quiet period is defined. At the time of
-        this writing the default value is 5 seconds however this may change
-        over time.
-
-        :rtype: :class:`int`
-        """
-        node = self._root.find("quietPeriod")
-        if node is None:
-            return None
-        return int(node.text)
-
-    @quiet_period.setter
-    def quiet_period(self, value):
-        """Changes the quiet period
-
-        :param int value: time, in seconds, to set the quiet period to
-        """
-        node = self._root.find("quietPeriod")
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'quietPeriod')
-        node.text = str(value)
 
     @property
     def xml(self):
@@ -90,6 +63,33 @@ class JobXML(object):
         :rtype: :class:`str`
         """
         return self._root.tag
+
+    @property
+    def quiet_period(self):
+        """Gets the delay, in seconds, this job waits in queue before running
+        a build
+
+        May return None if no custom quiet period is defined. At the time of
+        this writing the default value is 5 seconds however this may change
+        over time.
+
+        :rtype: :class:`int`
+        """
+        node = self._root.find("quietPeriod")
+        if node is None:
+            return None
+        return int(node.text)
+
+    @quiet_period.setter
+    def quiet_period(self, value):
+        """Changes the quiet period
+
+        :param int value: time, in seconds, to set the quiet period to
+        """
+        node = self._root.find("quietPeriod")
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'quietPeriod')
+        node.text = str(value)
 
     def disable_custom_workspace(self):
         """Disables a jobs use of a custom workspace
