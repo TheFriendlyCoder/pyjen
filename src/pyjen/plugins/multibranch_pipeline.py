@@ -11,7 +11,7 @@ class MultibranchPipelineJob(Job):
 
         :rtype: :class:`list` of :class:`~.pipelinejob.PipelineJob`
         """
-        data = self._api.get_api_data(query_params="depth=2")
+        data = self._api.get_api_data(query_params="depth=0")
 
         retval = list()
         for j in data["jobs"]:
