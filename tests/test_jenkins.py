@@ -4,6 +4,7 @@ import pytest
 from .utils import clean_view, clean_job
 from pyjen.plugins.listview import ListView
 from pyjen.plugins.freestylejob import FreestyleJob
+from pyjen.plugins.folderjob import FolderJob
 
 
 def test_simple_connection(jenkins_env):
@@ -171,6 +172,65 @@ def test_get_plugin_manager(jenkins_env):
     pm = jk.plugin_manager
 
     assert pm is not None
+
+
+def test_get_no_jobs(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    res = jk.jobs
+
+    assert res is not None
+    assert isinstance(res, list)
+    assert len(res) == 0
+
+
+def test_get_one_job(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_get_one_job", FreestyleJob)
+    with clean_job(jb):
+        res = jk.jobs
+
+        assert len(res) == 1
+        assert res[0] == jb
+
+
+def test_get_no_jobs_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    res = jk.all_jobs
+
+    assert res is not None
+    assert isinstance(res, list)
+    assert len(res) == 0
+
+
+def test_get_one_job_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb1 = jk.create_job("test_get_one_job_recursive_1", FolderJob)
+    with clean_job(jb1):
+        jb2 = jb1.create_job("test_get_one_job_recursive_2", FreestyleJob)
+        with clean_job(jb2):
+            assert len(jk.all_jobs) > len(jk.jobs)
+            res = jk.all_jobs
+            assert len(res) == 2
+            assert jb1 in res
+            assert jb2 in res
+
+
+def test_get_multi_nested_job_recursive(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb1 = jk.create_job("test_get_multi_nested_job_recursive_1", FolderJob)
+    with clean_job(jb1):
+        jb2 = jb1.create_job("test_get_multi_nested_job_recursive_2", FreestyleJob)
+        with clean_job(jb2):
+            jb3 = jb1.create_job("test_get_multi_nested_job_recursive_3", FolderJob)
+            with clean_job(jb3):
+                jb4 = jb3.create_job("test_get_multi_nested_job_recursive_4", FreestyleJob)
+                with clean_job(jb4):
+                    res = jk.all_jobs
+                    assert len(res) == 4
+                    assert jb1 in res
+                    assert jb2 in res
+                    assert jb3 in res
+                    assert jb4 in res
 
 
 def test_create_job(jenkins_env):

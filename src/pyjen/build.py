@@ -161,6 +161,24 @@ class Build(object):
             retval.append(url)
 
         return retval
+    
+    @property
+    def duration(self):
+        """ Total duration in milliseconds of how long the build took; Returns 0 if build hasn't finished
+        
+        :rtype: :class:`int`
+        """
+        data = self._api.get_api_data()
+        return data['duration']
+    
+    @property
+    def estimated_duration(self):
+        """ Estimate based off average duration of previous builds returned in milliseconds
+        
+        :rtype: :class:`int`
+        """
+        data = self._api.get_api_data()
+        return data['estimatedDuration']
 
     def abort(self):
         """Aborts this build before it completes"""

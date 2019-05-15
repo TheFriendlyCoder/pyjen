@@ -128,16 +128,25 @@ def _src_version(project):
     :rtype: :class:`str`
     """
     root_dir = os.path.dirname(__file__)
-    ver_path = os.path.join(root_dir, 'src', project, 'version.prop')
+    ver_path = os.path.join(root_dir, 'src', project, 'version.py')
     assert os.path.exists(ver_path)
 
     with open(ver_path) as prop_file:
-        data = prop_file.read()
-    retval = ast.literal_eval(data)
+        data = ast.parse(prop_file.read())
 
-    assert retval is not None
-    assert _verify_src_version(retval)
-    return retval
+    # The version.py file is expected to contain only a single statement
+    # of the form:
+    #       __version__ = "1.2.3"
+    assert len(data.body) == 1
+    statement = data.body[0]
+    assert isinstance(statement, ast.Assign)
+    assert len(statement.targets) == 1
+    assert statement.targets[0].id == "__version__"
+    assert isinstance(statement.value, ast.Str)
+
+    # If we get here we know the one statement in the version module has
+    # a string value with the version number in it, so we just return it here
+    return statement.value.s
 
 
 def get_version_number(project):
@@ -281,58 +290,59 @@ def load_project_properties():
     return ast.literal_eval(props)
 
 
-PROJECT = load_project_properties()
-PROJECT["VERSION"] = get_version_number(PROJECT["NAME"])
+def main():
+    """main entrypoint function"""
+    PROJECT["VERSION"] = get_version_number(PROJECT["NAME"])
 
-# Execute packaging logic
-setup(
-    name=PROJECT["NAME"],
-    version=PROJECT["VERSION"],
-    author='Kevin S. Phillips',
-    author_email='thefriendlycoder@gmail.com',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    description=PROJECT["DESCRIPTION"],
-    long_description=
-    generate_readme(PROJECT["NAME"], PROJECT["REPO"], PROJECT["VERSION"]),
-    url='https://github.com/TheFriendlyCoder/' + PROJECT["NAME"],
-    keywords=PROJECT["KEYWORDS"],
-    entry_points={
-        PROJECT["NAME"] + ".plugins" : load_plugins(PROJECT["NAME"]),
-        'console_scripts': load_console_scripts(PROJECT["NAME"]),
-    },
-    install_requires=PROJECT["DEPENDENCIES"],
-    python_requires=PROJECT["SUPPORTED_PYTHON_VERSION"],
-    extras_require={
-        'dev': PROJECT["DEV_DEPENDENCIES"],
-        'docs': PROJECT['DOCS_DEPENDENCIES'],
-    },
-    # The following support files are needed by this setup.py script
-    # These files are not deployed with the project when building a wheel
-    # file, and thus are only used by sdist builds. In turn, these are
-    # required by tox to run unit tests because tox does not currently
-    # support running tests from a dynamically generated wheel file.
-    data_files=[
-        ("", [
-            "project.prop",
-            os.path.join("src", PROJECT["NAME"], "version.prop")
-            ]
-        ),
-    ],
-    package_data={
-        PROJECT["NAME"]: ["version.prop"]
-    },
-    license="GPL",
-    # https://pypi.org/classifiers/
-    classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Environment :: Console",
-        "License :: OSI Approved :: "
-        "GNU General Public License v3 or later (GPLv3+)",
-        "Topic :: Software Development :: Libraries",
-        "Natural Language :: English",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 3",
-    ]
-)
+    # Execute packaging logic
+    setup(
+        name=PROJECT["NAME"],
+        version=PROJECT["VERSION"],
+        author='Kevin S. Phillips',
+        author_email='thefriendlycoder@gmail.com',
+        packages=find_packages('src'),
+        package_dir={'': 'src'},
+        description=PROJECT["DESCRIPTION"],
+        long_description=
+        generate_readme(PROJECT["NAME"], PROJECT["REPO"], PROJECT["VERSION"]),
+        url='https://github.com/TheFriendlyCoder/' + PROJECT["NAME"],
+        keywords=PROJECT["KEYWORDS"],
+        entry_points={
+            PROJECT["NAME"] + ".plugins" : load_plugins(PROJECT["NAME"]),
+            'console_scripts': load_console_scripts(PROJECT["NAME"]),
+        },
+        install_requires=PROJECT["DEPENDENCIES"],
+        python_requires=PROJECT["SUPPORTED_PYTHON_VERSION"],
+        extras_require={
+            'dev': PROJECT["DEV_DEPENDENCIES"],
+        },
+        # The following support files are needed by this setup.py script
+        # These files are not deployed with the project when building a wheel
+        # file, and thus are only used by sdist builds. In turn, these are
+        # required by tox to run unit tests because tox does not currently
+        # support running tests from a dynamically generated wheel file.
+        data_files=[
+            ("", [
+                "project.prop",
+                ]
+            ),
+        ],
+        license="GPL",
+        # https://pypi.org/classifiers/
+        classifiers=[
+            "Development Status :: 3 - Alpha",
+            "Environment :: Console",
+            "License :: OSI Approved :: "
+            "GNU General Public License v3 or later (GPLv3+)",
+            "Topic :: Software Development :: Libraries",
+            "Natural Language :: English",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python :: 2",
+            "Programming Language :: Python :: 3",
+        ]
+    )
+
+
+if __name__ == "__main__":
+    PROJECT = load_project_properties()
+    main()

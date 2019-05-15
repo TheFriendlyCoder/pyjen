@@ -16,8 +16,9 @@ class View(object):
     """
     def __init__(self, api):
         super(View, self).__init__()
-        self._log = logging.getLogger(self.__module__)
         self._api = api
+        self._xml_cache = None
+        self._log = logging.getLogger(self.__module__)
 
     def __repr__(self):
         """Serialized representation of this object"""
@@ -39,6 +40,204 @@ class View(object):
         """Hashing function, allowing object to be serialized and compared"""
         return hash(self._api.url)
 
+    @property
+    def name(self):
+        """Gets the display name for this view
+
+        This is the name as it appears in the tabbed view
+        of the main Jenkins dashboard
+
+        :returns: the name of the view
+        :rtype: :class:`str`
+        """
+        data = self._api.get_api_data()
+        return data['name']
+
+    @property
+    def jobs(self):
+        """Gets a list of jobs associated with this view
+
+        Views are simply filters to help organize jobs on the
+        Jenkins dashboard. This method returns the set of jobs
+        that meet the requirements of the filter associated
+        with this view.
+
+        :returns: list of 0 or more jobs that are included in this view
+        :rtype:  :class:`list` of :class:`~.job.Job` objects
+        """
+        data = self._api.get_api_data(query_params="depth=2")
+
+        view_jobs = data['jobs']
+
+        retval = []
+        for j in view_jobs:
+            retval.append(Job.instantiate(j, self._api))
+
+        return retval
+
+    def delete(self):
+        """Deletes this view from the dashboard"""
+        self._api.post(self._api.url + "doDelete")
+
+    def delete_all_jobs(self):
+        """allows callers to do bulk deletes of all jobs found in this view"""
+        for j in self.jobs:
+            j.delete()
+
+    def disable_all_jobs(self):
+        """allows caller to bulk-disable all jobs found in this view"""
+        for j in self.jobs:
+            j.disable()
+
+    def enable_all_jobs(self):
+        """allows caller to bulk-enable all jobs found in this view"""
+        for j in self.jobs:
+            j.enable()
+
+    @property
+    def view_metrics(self):
+        """Composes a report on the jobs contained within the view
+
+        :return: Dictionary containing metrics about the view
+        :rtype: :class:`dict`
+        """
+        data = self._api.get_api_data()
+
+        broken_jobs = []
+        disabled_jobs = []
+        unstable_jobs = []
+        broken_job_count = 0
+        disabled_jobs_count = 0
+        unstable_job_count = 0
+
+        for job in data["jobs"]:
+
+            temp_job = Job.instantiate(job, self._api)
+
+            if temp_job.is_failing:
+                broken_job_count += 1
+                broken_jobs.append(temp_job)
+            elif temp_job.is_disabled:
+                disabled_jobs_count += 1
+                disabled_jobs.append(temp_job)
+            elif temp_job.is_unstable:
+                unstable_job_count += 1
+                unstable_jobs.append(temp_job)
+
+        return {"broken_jobs_count": broken_job_count,
+                "disabled_jobs_count": disabled_jobs_count,
+                "unstable_jobs_count": unstable_job_count,
+                "broken_jobs": broken_jobs,
+                "unstable_jobs": unstable_jobs,
+                "disabled_jobs": disabled_jobs}
+
+    def _clone_view_helper(self, new_view_name):
+        # NOTE: In order to properly support views that may contain nested
+        #       views we have to do some URL manipulations to extrapolate the
+        #       REST API endpoint for the parent object to which the cloned
+        #       view is to be contained.
+        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = [cur_part for cur_part in parts if cur_part.strip()]
+        assert len(parts) >= 2
+        assert parts[-2] == "view"
+        parent_url = urllib_parse.urljoin(
+            self._api.url, "/" + "/".join(parts[:-2]))
+
+        # Ask the parent object to create a new view of the same type
+        # as the current view
+        parent_api = self._api.clone(parent_url)
+        create_view(parent_api, new_view_name, self.__class__)
+
+        # Save a backup copy of the original config XML with the view
+        # name changed
+        temp_view_xml = self._view_xml
+        temp_view_xml.rename(new_view_name)
+        updated_xml = temp_view_xml.xml
+
+        # Update our REST API object to point to the endpoint associated
+        # with the newly created view
+        new_url = urllib_parse.urljoin(
+            parent_api.url, "view/" + new_view_name)
+        updated_api = self._api.clone(new_url)
+
+        return updated_api, updated_xml
+
+    def clone(self, new_view_name):
+        """Make a copy of this view with the specified name
+
+        :param str new_view_name:
+            name to give the newly created view
+        :return: reference to the created view
+        :rtype: :class:`~.view.View`
+        """
+        updated_api, updated_xml = self._clone_view_helper(new_view_name)
+        retval = self.__class__(updated_api)
+        retval.config_xml = updated_xml
+        return retval
+
+    def rename(self, new_view_name):
+        """Changes the name of this view
+
+        :param str new_view_name:
+            new name for the selected source view
+        """
+        updated_api, updated_xml = self._clone_view_helper(new_view_name)
+
+        # Invalidate the current view
+        self.delete()
+
+        # Update our REST API object to point to the endpoint associated
+        # with the newly created view
+        self._api = updated_api
+
+        # Finally, make sure the full XML configuration from the original
+        # view is copied to the newly created view
+        self._xml_cache = None
+        self._view_xml.xml = updated_xml
+
+    # ---------------------------------------------- CONFIG XML BASED PROPERTIES
+    @property
+    def _view_xml(self):
+        if self._xml_cache is not None:
+            return self._xml_cache
+        self._xml_cache = self._xml_class(self._api)
+        return self._xml_cache
+
+    @property
+    def jenkins_plugin_name(self):
+        """Extracts the name of the Jenkins plugin associated with this View
+
+        The data returned by this helper property is extracted from the
+        config XML that defines this job.
+
+        :rtype: :class:`str`
+        """
+        return self._view_xml.plugin_name
+
+    @property
+    def config_xml(self):
+        """Gets the raw XML configuration for the view
+
+        Allows callers to manipulate the raw view configuration file as desired.
+
+        :returns: the full XML tree describing this view's configuration
+        :rtype: :class:`str`
+        """
+        return self._view_xml.xml
+
+    @config_xml.setter
+    def config_xml(self, new_xml):
+        """Allows a caller to manually override the entire view configuration
+
+        WARNING: This is an advanced method that should only be used in
+        rare circumstances. All configuration changes should normally
+        be handled using other methods provided on this class.
+
+        :param str new_xml: A complete XML tree compatible with the Jenkins API
+        """
+        self._view_xml.xml = new_xml
+
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def instantiate(json_data, rest_api):
         """Factory method for finding the appropriate PyJen view object based
@@ -104,193 +303,8 @@ class View(object):
         return retval
 
     @property
-    def jenkins_plugin_name(self):
-        """Extracts the name of the Jenkins plugin associated with this View
-
-        The data returned by this helper property is extracted from the
-        config XML that defines this job.
-
-        :rtype: :class:`str`
-        """
-        jxml = ViewXML(self.config_xml)
-        return jxml.plugin_name
-
-    @property
-    def name(self):
-        """Gets the display name for this view
-
-        This is the name as it appears in the tabbed view
-        of the main Jenkins dashboard
-
-        :returns: the name of the view
-        :rtype: :class:`str`
-        """
-        data = self._api.get_api_data()
-        return data['name']
-
-    @property
-    def jobs(self):
-        """Gets a list of jobs associated with this view
-
-        Views are simply filters to help organize jobs on the
-        Jenkins dashboard. This method returns the set of jobs
-        that meet the requirements of the filter associated
-        with this view.
-
-        :returns: list of 0 or more jobs that are included in this view
-        :rtype:  :class:`list` of :class:`~.job.Job` objects
-        """
-        data = self._api.get_api_data(query_params="depth=2")
-
-        view_jobs = data['jobs']
-
-        retval = []
-        for j in view_jobs:
-            retval.append(Job.instantiate(j, self._api))
-
-        return retval
-
-    @property
-    def config_xml(self):
-        """Gets the raw configuration data in XML format
-
-        This is an advanced function which allows the caller
-        to manually manipulate the raw configuration settings
-        of the view. Use with caution.
-
-        This method allows callers to dynamically update arbitrary properties
-        of this view.
-
-        :returns:
-            returns the raw XML of the views configuration in
-            a plain text string format
-        :rtype: :class:`str`
-        """
-        return self._api.get_text("/config.xml")
-
-    @config_xml.setter
-    def config_xml(self, new_xml):
-        """Updates the raw config of this view with a new set of properties
-
-        :param str new_xml:
-            XML encoded text string to be used as a replacement for the
-            current configuration being used by this view.
-
-            NOTE: It is assumed that this input text meets the schema
-            requirements for a Jenkins view.
-        """
-        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self._api.post(self._api.url + "config.xml", args)
-
-    def delete(self):
-        """Deletes this view from the dashboard"""
-        self._api.post(self._api.url + "doDelete")
-
-    def delete_all_jobs(self):
-        """allows callers to do bulk deletes of all jobs found in this view"""
-        for j in self.jobs:
-            j.delete()
-
-    def disable_all_jobs(self):
-        """allows caller to bulk-disable all jobs found in this view"""
-        for j in self.jobs:
-            j.disable()
-
-    def enable_all_jobs(self):
-        """allows caller to bulk-enable all jobs found in this view"""
-        for j in self.jobs:
-            j.enable()
-
-    @property
-    def view_metrics(self):
-        """Composes a report on the jobs contained within the view
-
-        :return: Dictionary containing metrics about the view
-        :rtype: :class:`dict`
-        """
-        data = self._api.get_api_data()
-
-        broken_jobs = []
-        disabled_jobs = []
-        unstable_jobs = []
-        broken_job_count = 0
-        disabled_jobs_count = 0
-        unstable_job_count = 0
-
-        for job in data["jobs"]:
-
-            temp_job = Job.instantiate(job, self._api)
-
-            if temp_job.is_failing:
-                broken_job_count += 1
-                broken_jobs.append(temp_job)
-            elif temp_job.is_disabled:
-                disabled_jobs_count += 1
-                disabled_jobs.append(temp_job)
-            elif temp_job.is_unstable:
-                unstable_job_count += 1
-                unstable_jobs.append(temp_job)
-
-        return {"broken_jobs_count": broken_job_count,
-                "disabled_jobs_count": disabled_jobs_count,
-                "unstable_jobs_count": unstable_job_count,
-                "broken_jobs": broken_jobs,
-                "unstable_jobs": unstable_jobs,
-                "disabled_jobs": disabled_jobs}
-
-    def clone(self, new_view_name):
-        """Make a copy of this view with the specified name
-
-        :param str new_view_name:
-            name to give the newly created view
-        :return: reference to the created view
-        :rtype: :class:`~.view.View`
-        """
-        # NOTE: In order to properly support views that may contain nested
-        #       views we have to do some URL manipulations to extrapolate the
-        #       REST API endpoint for the parent object to which the cloned
-        #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
-        parts = [cur_part for cur_part in parts if cur_part.strip()]
-        assert len(parts) >= 2
-        assert parts[-2] == "view"
-        parent_url = urllib_parse.urljoin(
-            self._api.url, "/" + "/".join(parts[:-2]))
-
-        parent_api = self._api.clone(parent_url)
-        create_view(parent_api, new_view_name, self.__class__)
-
-        new_url = urllib_parse.urljoin(
-            parent_api.url, "view/" + new_view_name)
-        temp_api = self._api.clone(new_url)
-        return self.__class__(temp_api)
-
-    def rename(self, new_view_name):
-        """Changes the name of this view
-
-        :param str new_view_name:
-            new name for the selected source view
-        """
-        # NOTE: In order to properly support views that may contain nested
-        #       views we have to do some URL manipulations to extrapolate the
-        #       REST API endpoint for the parent object to which the cloned
-        #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
-        parts = [cur_part for cur_part in parts if cur_part.strip()]
-        assert len(parts) >= 2
-        assert parts[-2] == "view"
-        parent_url = urllib_parse.urljoin(
-            self._api.url, "/" + "/".join(parts[:-2]))
-
-        parent_api = self._api.clone(parent_url)
-        create_view(parent_api, new_view_name, self.__class__)
-
-        self.delete()
-
-        new_url = urllib_parse.urljoin(
-            parent_api.url, "view/" + new_view_name)
-        temp_api = self._api.clone(new_url)
-        self._api = temp_api
+    def _xml_class(self):
+        return ViewXML
 
 
 if __name__ == "__main__":  # pragma: no cover

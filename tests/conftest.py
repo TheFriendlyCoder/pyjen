@@ -43,6 +43,8 @@ JENKINS_PLUGINS = [
     "conditional-buildstep",
     "parameterized-trigger",
     "build-blocker-plugin",
+    "jenkins-multijob-plugin",
+    "artifactdeployer",
 ]
 
 

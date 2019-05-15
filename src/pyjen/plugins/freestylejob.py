@@ -40,7 +40,7 @@ class FreestyleJob(Job):
         """Adds a new job publisher to this job
 
         :param publisher: job publisher to add"""
-        self._job_xml.add_publisher(publisher.node)
+        self._job_xml.add_publisher(publisher)
         self._job_xml.update()
 
     @property
@@ -196,12 +196,15 @@ class FreestyleXML(JobXML):
 
         return retval
 
-    def add_publisher(self, node):
+    def add_publisher(self, new_publisher):
         """Adds a new publisher node to the publisher section of the job XML
 
-        :param node: Elementree XML node for the publisher to assign"""
+        :param new_publisher:
+            PyJen plugin which supports the Jenkins publisher API
+        """
         pubs = self._root.find('publishers')
-        pubs.append(node)
+        pubs.append(new_publisher.node)
+        new_publisher.parent = self
 
     @property
     def scm(self):

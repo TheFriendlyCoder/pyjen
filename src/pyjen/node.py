@@ -47,6 +47,15 @@ class Node(object):
         """
         data = self._api.get_api_data()
         return data['idle']
+    
+    @property
+    def number_of_executors(self):
+        """Returns the number of executors this node provides
+        
+        :rtype: :class:`int`
+        """
+        data = self._api.get_api_data()
+        return data['numExecutors']
 
     def toggle_offline(self, message=None):
         """Toggles the online status of this Node

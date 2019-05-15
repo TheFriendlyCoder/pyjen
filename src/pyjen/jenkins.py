@@ -164,6 +164,48 @@ class Jenkins(object):
 
         return retval
 
+    @property
+    def jobs(self):
+        """Gets all jobs managed by this Jenkins instance
+
+        :rtype:  :class:`list` of :class:`~.job.Job` objects
+        """
+        data = self._api.get_api_data(query_params="depth=2")
+
+        retval = list()
+        for j in data['jobs']:
+            retval.append(Job.instantiate(j, self._api))
+
+        return retval
+
+    def _recursively_find_jobs(self, obj):
+        """Recursively locates all jobs managed by an arbitrary Jenkins object
+
+        :param obj:
+            An arbitrary Jenkins object which may contain jobs. The given object
+            may be one of any number of PyJen plugins, but it must expose
+            a 'jobs' property which can be used to load a list of jobs
+            managed by the object
+        :rtype: :class:`list` of :class:`~.job.Job` objects"""
+        retval = list()
+        for cur_job in obj.jobs:
+            retval.append(cur_job)
+            if isinstance(getattr(type(cur_job), "jobs", None), property):
+                retval.extend(self._recursively_find_jobs(cur_job))
+        return retval
+
+    @property
+    def all_jobs(self):
+        """Gets all jobs managed by this Jenkins instance, recursively
+
+        Unlike the :meth:`jobs` method, this method attempts to expose jobs
+        which are managed by custom jobs created from third party plugins which
+        support nesting jobs under sub-folders / sub-paths. Any job which
+        exposes a custom 'jobs' property.
+
+        :rtype: :class:`list` of :class:`~.job.Job` objects"""
+        return self._recursively_find_jobs(self)
+
     def prepare_shutdown(self):
         """Starts a "quiet down" and prevents new builds from executing
 

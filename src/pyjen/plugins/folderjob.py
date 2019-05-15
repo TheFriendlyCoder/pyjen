@@ -5,6 +5,20 @@ from pyjen.utils.helpers import create_job
 
 class FolderJob(Job):
     """Jenkins job of type 'folder'"""
+    @property
+    def jobs(self):
+        """Gets a list of all jobs contained in this folder
+
+        :rtype: :class:`list` of :class:`~.job.Job`
+        """
+        data = self._api.get_api_data()
+
+        retval = list()
+        for tjob in data['jobs']:
+            retval.append(Job.instantiate(tjob, self._api))
+
+        return retval
+
     def create_job(self, job_name, job_class):
         """Creates a new job on the Jenkins dashboard
 

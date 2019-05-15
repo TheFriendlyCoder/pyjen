@@ -41,6 +41,7 @@ class ListViewSection(XMLPlugin):
         if regex_node is None:
             regex_node = ElementTree.SubElement(self._root, 'includeRegex')
         regex_node.text = new_regex
+        self.update()
 
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod

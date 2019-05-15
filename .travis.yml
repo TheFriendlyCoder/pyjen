@@ -14,9 +14,7 @@ install:
   - pip install tox twine wheel python-coveralls
 
 script:
-  - echo $TRAVIS_PYTHON_VERSION
   - export PYVER=`echo $TRAVIS_PYTHON_VERSION | tr "." "\n" | head -n 1 | sed 's/^py//'`
-  - echo $PYVER
   # Here we build a wheel file for the project and have tox use that pre-built
   # package during testing. This ensures that we are testing all of the actual
   # deployment logic that may be customized in the actual wheel file
@@ -34,14 +32,14 @@ jobs:
       script:
         - python setup.py bdist_wheel
         - twine upload dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
-      if: tag IS true
+      if: tag IS true AND fork IS NOT true
     - stage: deploy-snapshot
       python: 3.6
       script:
         - python setup.py bdist_wheel
         - twine upload --repository-url https://test.pypi.org/legacy/
             dist/*.whl -u $DEPLOY_USER -p $DEPLOY_PASS
-      if: tag IS NOT true
+      if: tag IS NOT true AND fork IS NOT true
 
 after_success:
   - coveralls
