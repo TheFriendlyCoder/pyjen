@@ -65,7 +65,7 @@ class View(object):
         :returns: list of 0 or more jobs that are included in this view
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._api.get_api_data(query_params="depth=2")
+        data = self._api.get_api_data(query_params="depth=0")
 
         view_jobs = data['jobs']
 

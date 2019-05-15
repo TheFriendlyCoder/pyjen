@@ -170,7 +170,7 @@ class Jenkins(object):
 
         :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
-        data = self._api.get_api_data(query_params="depth=2")
+        data = self._api.get_api_data(query_params="depth=0")
 
         retval = list()
         for j in data['jobs']:
