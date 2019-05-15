@@ -1,10 +1,15 @@
 """Jenkins post-build publisher of type Parameterized Build Trigger"""
+import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import find_plugin
 
 
 class ParameterizedBuildTrigger(XMLPlugin):
-    """SCM plugin for Jobs with no source control configurations"""
+    """Custom job publisher that supports triggering other Jenkins jobs which
+    require 1 or more custom build parameters
+
+    https://plugins.jenkins.io/parameterized-trigger
+    """
 
     @property
     def triggers(self):
@@ -14,12 +19,17 @@ class ParameterizedBuildTrigger(XMLPlugin):
         """
         retval = list()
         configs_node = self._root.find('configs')
-        for config in configs_node:
-            plugin = find_plugin(config.tag)
-            if plugin is None:
-                self._log.warning("Skipping unsupported plugin: %s", config.tag)
+        for cur_node in configs_node:
+
+            plugin_class = find_plugin(cur_node.tag)
+            if not plugin_class:
+                self._log.warning("Skipping unsupported plugin " +
+                                  cur_node.tag)
                 continue
-            retval.append(plugin(config))
+            temp = plugin_class(cur_node)
+            temp.parent = self
+            retval.append(temp)
+
         return retval
 
     # --------------------------------------------------------------- PLUGIN API
@@ -32,7 +42,26 @@ class ParameterizedBuildTrigger(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "paramtrigger"
+        return "hudson.plugins.parameterizedtrigger.BuildTrigger"
+
+    @classmethod
+    def create(cls, triggers):
+        """Factory method for creating a new instances of this class
+
+        :param list triggers:
+            List of build trigger configuration objects
+        :rtype: :class:`ParameterizedBuildTrigger`
+        """
+        default_xml = """<hudson.plugins.parameterizedtrigger.BuildTrigger plugin="parameterized-trigger@2.35.2">
+        <configs/>
+        </hudson.plugins.parameterizedtrigger.BuildTrigger>"""
+        root_node = ElementTree.fromstring(default_xml)
+        configs_node = root_node.find("configs")
+
+        for cur_trig in triggers:
+            configs_node.append(cur_trig.node)
+
+        return cls(root_node)
 
 
 PluginClass = ParameterizedBuildTrigger
