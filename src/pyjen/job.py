@@ -251,10 +251,9 @@ class Job(object):
         """
         data = self._api.get_api_data()
 
-        last_build = data['lastBuild']
-
-        if last_build is None:
+        if 'lastBuild' not in data or data['lastBuild'] is None:
             return None
+        last_build = data['lastBuild']
 
         return Build(self._api.clone(last_build['url']))
 
