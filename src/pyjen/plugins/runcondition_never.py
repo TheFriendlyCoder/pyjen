@@ -1,15 +1,14 @@
-"""Plugin for the Conditional Builder plugin that defines a conditional build
-step that always executes regardless of any input condition
+"""Condition for the run condition plugin that always produces a False result
 """
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class AlwaysRun(XMLPlugin):
-    """Plugin for the Conditional Builder plugin that defines a conditional
-    build step that always executes regardless of any input condition
+class NeverRun(XMLPlugin):
+    """Condition for the run condition plugin that always produces a False
+    result
 
-    https://wiki.jenkins-ci.org/display/JENKINS/Conditional+BuildStep+Plugin
+    https://plugins.jenkins.io/run-condition
     """
 
     @staticmethod
@@ -21,7 +20,7 @@ class AlwaysRun(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "org.jenkins_ci.plugins.run_condition.core.AlwaysRun"
+        return "org.jenkins_ci.plugins.run_condition.core.NeverRun"
 
     @staticmethod
     def get_friendly_name():
@@ -32,18 +31,23 @@ class AlwaysRun(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "always"
+        return "never"
 
     @classmethod
     def create(cls):
+        """Factory method used to construct an instance of this class
+
+        :rtype: :class:`NeverRun`
+        """
         default_xml = '<condition class="{0}" plugin="run-condition@1.2"/>'
+
         default_xml = default_xml.format(cls.get_jenkins_plugin_name())
         root_node = ElementTree.fromstring(default_xml)
 
         return cls(root_node)
 
 
-PluginClass = AlwaysRun
+PluginClass = NeverRun
 
 
 if __name__ == "__main__":  # pragma: no cover

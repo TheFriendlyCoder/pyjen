@@ -1,10 +1,10 @@
 import pytest
 from pyjen.jenkins import Jenkins
 from pyjen.plugins.conditionalbuilder import ConditionalBuilder
-from pyjen.plugins.conditionalbuilder_always import AlwaysRun
-from pyjen.plugins.conditionalbuilder_never import NeverRun
-from pyjen.plugins.conditionalbuilder_and import AndCondition
-from pyjen.plugins.conditionalbuilder_not import NotCondition
+from pyjen.plugins.runcondition_always import AlwaysRun
+from pyjen.plugins.runcondition_never import NeverRun
+from pyjen.plugins.runcondition_and import AndCondition
+from pyjen.plugins.runcondition_not import NotCondition
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job, assert_elements_equal

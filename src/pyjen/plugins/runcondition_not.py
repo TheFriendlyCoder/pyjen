@@ -1,15 +1,15 @@
-"""Plugin for the Conditional Builder plugin that defines a conditional build
-step that never executes regardless of any input condition
+"""Condition for the run condition plugin that inverts the logical result of
+another build condition.
 """
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class NeverRun(XMLPlugin):
-    """Plugin for the Conditional Builder plugin that defines a conditional
-    build step that never executes regardless of any input condition
+class NotCondition(XMLPlugin):
+    """Condition for the run condition plugin that inverts the logical result
+    of another build condition.
 
-    https://wiki.jenkins-ci.org/display/JENKINS/Conditional+BuildStep+Plugin
+    https://plugins.jenkins.io/run-condition
     """
 
     @staticmethod
@@ -21,7 +21,7 @@ class NeverRun(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "org.jenkins_ci.plugins.run_condition.core.NeverRun"
+        return "org.jenkins_ci.plugins.run_condition.logic.Not"
 
     @staticmethod
     def get_friendly_name():
@@ -32,19 +32,24 @@ class NeverRun(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "never"
+        return "not"
 
     @classmethod
-    def create(cls):
-        default_xml = '<condition class="{0}" plugin="run-condition@1.2"/>'
+    def create(cls, condition):
+        """Factory method that constructs an instance of this class
 
+        :param condition:
+            Any PyJen plugin compatible with the Run Condition plugin
+        :rtype: :class:`NotCondition`
+        """
+        default_xml = '<condition class="{0}" plugin="run-condition@1.2"/>'
         default_xml = default_xml.format(cls.get_jenkins_plugin_name())
         root_node = ElementTree.fromstring(default_xml)
-
+        root_node.append(condition.node)
         return cls(root_node)
 
 
-PluginClass = NeverRun
+PluginClass = NotCondition
 
 
 if __name__ == "__main__":  # pragma: no cover

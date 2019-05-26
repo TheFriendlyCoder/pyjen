@@ -1,16 +1,16 @@
-"""Plugin for the Conditional Builder plugin that defines a conditional build
-step that performs a logical AND operation on 2 or more other conditions
+"""Condition for the run condition plugin that performs a logical AND operation
+on other build conditions
 """
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
 class AndCondition(XMLPlugin):
-    """Plugin for the Conditional Builder plugin that defines a conditional
-    build step that performs a logical AND operation on 2 or more other
-    conditions
+    """Build condition that combines 2 or more other conditions with a logical
+    AND operation. The associated operation using this condition will only run
+    if all of the contained conditions result in a "true" value.
 
-    https://wiki.jenkins-ci.org/display/JENKINS/Conditional+BuildStep+Plugin
+    https://plugins.jenkins.io/run-condition
     """
 
     @staticmethod
@@ -41,10 +41,9 @@ class AndCondition(XMLPlugin):
 
         :param list terms:
             List of 2 or more conditions to be combined using a logical AND
-            operation. Each element is expected to be an instance of
-            a :class:`pyjen.plugins.conditionalbuilder.
-            ConditionalBuilderCondition`
-        :rtype: :class:`~.And`
+            operation. Each element is expected to be an instance of a PyJen
+            plugin compatible with the Run Condition plugin.
+        :rtype: :class:`AndCondition`
         """
         assert len(terms) >= 2
 
