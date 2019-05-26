@@ -412,6 +412,14 @@ def test_get_builds_in_time_range_no_builds(jenkins_env):
         assert len(builds) == 0
 
 
+def test_no_quiet_period(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_quiet_period", FreestyleJob)
+    with clean_job(jb):
+        assert jb.quiet_period_enabled is False
+        assert jb.quiet_period == -1
+
+
 def test_quiet_period(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     jb = jk.create_job("test_quiet_period", FreestyleJob)
@@ -426,6 +434,7 @@ def test_quiet_period(jenkins_env):
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
 
+        assert jb.quiet_period_enabled is True
         assert jb.quiet_period == expected_duration
 
         # Launch a build and time how long it takes to complete
@@ -437,6 +446,80 @@ def test_quiet_period(jenkins_env):
 
         bld = jb.last_build
         assert expected_output in bld.console_output
+
+
+def test_disable_quiet_period(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_disable_quiet_period", FreestyleJob)
+    with clean_job(jb):
+        jb.quiet_period = 0
+
+        jb2 = jk.find_job(jb.name)
+        assert jb2 is not None
+        jb2.quiet_period = -1
+        assert jb2.quiet_period_enabled is False
+
+
+def test_no_custom_workspace(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_custom_workspace", FreestyleJob)
+    with clean_job(jb):
+        assert jb.custom_workspace_enabled is False
+        assert jb.custom_workspace == ""
+
+
+def test_custom_workspace(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_custom_workspace", FreestyleJob)
+    with clean_job(jb):
+        expected_workspace = "/delme"
+        jb.custom_workspace = expected_workspace
+
+        jb2 = jk.find_job(jb.name)
+        assert jb2.custom_workspace_enabled is True
+        assert jb2.custom_workspace == expected_workspace
+
+
+def test_disable_custom_workspace(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_disable_custom_workspace", FreestyleJob)
+    with clean_job(jb):
+        jb.custom_workspace = "/delme"
+
+        jb2 = jk.find_job(jb.name)
+        jb2.custom_workspace = ""
+        assert jb2.custom_workspace_enabled is False
+
+
+def test_no_assigned_node(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_no_assigned_node", FreestyleJob)
+    with clean_job(jb):
+        assert jb.assigned_node_enabled is False
+        assert jb.assigned_node == ""
+
+
+def test_assigned_node(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_assigned_node", FreestyleJob)
+    with clean_job(jb):
+        expected_label = "MyNodeLabel && UnknownLabel"
+        jb.assigned_node = expected_label
+
+        jb2 = jk.find_job(jb.name)
+        assert jb2.assigned_node_enabled is True
+        assert jb2.assigned_node == expected_label
+
+
+def test_disable_assigned_node(jenkins_env):
+    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jb = jk.create_job("test_disable_assigned_node", FreestyleJob)
+    with clean_job(jb):
+        jb.assigned_node = "MyNodeLabel && UnknownLabel"
+
+        jb2 = jk.find_job(jb.name)
+        jb2.assigned_node = ""
+        assert jb2.assigned_node_enabled is False
 
 
 def test_clone_job(jenkins_env):

@@ -74,21 +74,6 @@ class Job(object):
         self._job_xml.xml = new_xml
 
     @property
-    def quiet_period(self):
-        """
-        :returns:
-            the delay, in seconds, builds of this job wait in the queue before
-            being run
-        :rtype: :class:`int`
-        """
-        return self._job_xml.quiet_period
-
-    @quiet_period.setter
-    def quiet_period(self, value):
-        self._job_xml.quiet_period = value
-        self._job_xml.update()
-
-    @property
     def properties(self):
         """all plugins configured as extra configuration properties"""
         return self._job_xml.properties
