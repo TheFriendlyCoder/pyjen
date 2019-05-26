@@ -1,6 +1,6 @@
 import pytest
 from pyjen.jenkins import Jenkins
-from pyjen.plugins.conditionalbuilder_always import AlwaysRun
+from pyjen.plugins.runcondition_always import AlwaysRun
 from pyjen.plugins.flexiblepublish import FlexiblePublisher, ConditionalAction
 from pyjen.plugins.artifactarchiver import ArtifactArchiverPublisher
 from pyjen.plugins.freestylejob import FreestyleJob

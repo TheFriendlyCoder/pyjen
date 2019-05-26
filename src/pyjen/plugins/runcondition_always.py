@@ -1,15 +1,13 @@
-"""Plugin for the Conditional Builder plugin that defines a conditional build
-step that performs a logical NOT operation on another condition
+"""Condition for the run condition plugin that will always produce a true result
 """
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
-class NotCondition(XMLPlugin):
-    """Plugin for the Conditional Builder plugin that defines a conditional
-    build step that performs a logical NOT operation on another condition
+class AlwaysRun(XMLPlugin):
+    """Conditional build step that will always produce a true result
 
-    https://wiki.jenkins-ci.org/display/JENKINS/Conditional+BuildStep+Plugin
+    https://plugins.jenkins.io/run-condition
     """
 
     @staticmethod
@@ -21,7 +19,7 @@ class NotCondition(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "org.jenkins_ci.plugins.run_condition.logic.Not"
+        return "org.jenkins_ci.plugins.run_condition.core.AlwaysRun"
 
     @staticmethod
     def get_friendly_name():
@@ -32,26 +30,22 @@ class NotCondition(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "not"
+        return "always"
 
     @classmethod
-    def create(cls, condition):
-        """Creates a new instance of this condition
+    def create(cls):
+        """Factory method used to construct an instance of this class
 
-        :param condition:
-            Condition to be negated
-        :type condition:
-            :class:`~.conditionalbuilder.ConditionalBuilderCondition`
-        :rtype: :class:`~.And`
+        :rtype: :class:`AlwaysRun`
         """
         default_xml = '<condition class="{0}" plugin="run-condition@1.2"/>'
         default_xml = default_xml.format(cls.get_jenkins_plugin_name())
         root_node = ElementTree.fromstring(default_xml)
-        root_node.append(condition.node)
+
         return cls(root_node)
 
 
-PluginClass = NotCondition
+PluginClass = AlwaysRun
 
 
 if __name__ == "__main__":  # pragma: no cover
