@@ -45,6 +45,7 @@ JENKINS_PLUGINS = [
     "build-blocker-plugin",
     "jenkins-multijob-plugin",
     "artifactdeployer",
+    "flexible-publish",
 ]
 
 

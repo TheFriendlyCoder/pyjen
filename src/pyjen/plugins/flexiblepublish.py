@@ -1,33 +1,32 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
+import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
+from pyjen.utils.plugin_api import find_plugin
 
 
 class FlexiblePublisher(XMLPlugin):
     """Job plugin enabling conditional execution of post-build steps
 
-    https://wiki.jenkins-ci.org/display/JENKINS/Flexible+Publish+Plugin
+    https://plugins.jenkins.io/flexible-publish
     """
 
     @property
     def actions(self):
-        """list of publishers associated with this instance
+        """list of conditional actions associated with this instance
 
-        :returns:  list of publishers associated with this instance
-        :rtype: :class:`list` of :class:`ConditionalPublisher`
+        :rtype: :class:`list` of :class:`ConditionalAction`
         """
         nodes = self._root.find("publishers")
 
-        retval = []
-        for node in nodes:
-            plugin = create_xml_plugin(node)
-            if plugin is not None:
-                retval.append(plugin)
-            else:
-                self._log.warning("Flexible publisher plugin %s not found",
-                                  get_plugin_name(node))
+        retval = list()
+        for cur_node in nodes:
+            temp = ConditionalAction(cur_node)
+            temp.parent = self
+            retval.append(temp)
 
         return retval
 
+    # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin
@@ -37,32 +36,86 @@ class FlexiblePublisher(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "flexiblepublish"
+        return "org.jenkins_ci.plugins.flexible_publish.FlexiblePublisher"
+
+    @classmethod
+    def create(cls, actions):
+        """Factory method for creating a new instances of this class
+
+        :param actions:
+            list of conditional actions to perform under this publisher
+        :type actions:
+            :class:`list` of :class:`ConditionalAction`
+        :rtype: :class:`ParameterizedBuildTrigger`
+        """
+        default_xml = """
+<org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher plugin="flexible-publish@0.15.2">
+    <publishers/>
+</org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher>"""
+        root_node = ElementTree.fromstring(default_xml)
+        configs_node = root_node.find("publishers")
+
+        for cur_action in actions:
+            configs_node.append(cur_action.node)
+
+        return cls(root_node)
 
 
-class ConditionalPublisher(XMLPlugin):
-    """a single 'conditional' publisher contained within the flexible publisher
+class ConditionalAction(XMLPlugin):
+    """conditional action associated with a flexible publisher
+
+    Contains 1 or more publishers to be run if a certain set of
+    conditions is met.
     """
 
     @property
-    def publisher(self):
-        """action to be performed when the conditions of this publisher are met
+    def publishers(self):
+        """List of publishers to run should the conditions associated with this
+        action are met
 
-        :returns:
-            list of PyJen objects which control each conditional action to be
-            performed. Return None if an publisher plugin not currently
-            supported by PyJen is being used
-        :rtype: :class:`list` of PyJen objects,
-
+        :rtype: :class:`list`
         """
-        node = self._root.find("publisher")
-        plugin = create_xml_plugin(node)
+        nodes = self._root.find("publisherList")
+        retval = list()
+        for cur_node in nodes:
+            plugin_class = find_plugin(cur_node.tag)
+            if not plugin_class:
+                self._log.warning("Skipping unsupported plugin " +
+                                  cur_node.tag)
+                continue
+            temp = plugin_class(cur_node)
+            temp.parent = self
+            retval.append(temp)
 
-        if plugin is None:
-            self._log.warning("Publisher plugin %s referenced by Flexible "
-                              "Publisher not found", get_plugin_name(node))
+        return retval
 
-        return plugin
+    # --------------------------------------------------------------- PLUGIN API
+    @classmethod
+    def create(cls, condition, actions):
+        """Factory method for creating a new instances of this class
+
+        :param condition:
+            Flexible publish build condition pre-configured to control this publish operation
+        :param list actions:
+            List of 1 or more "build stage" plugins that you would like to use
+            in the publish phase of a Jenkins job
+        :rtype: :class:`ConditionalPublisher`
+        """
+        default_xml = """
+<org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>
+    <publisherList/>
+    <runner class="org.jenkins_ci.plugins.run_condition.BuildStepRunner$Fail" plugin="run-condition@1.2"/>
+    <executionStrategy class="org.jenkins_ci.plugins.flexible_publish.strategy.FailAtEndExecutionStrategy"/>
+</org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>
+"""
+        root_node = ElementTree.fromstring(default_xml)
+        root_node.append(condition.node)
+        configs_node = root_node.find("publisherList")
+
+        for cur_action in actions:
+            configs_node.append(cur_action.node)
+
+        return cls(root_node)
 
 
 PluginClass = FlexiblePublisher
