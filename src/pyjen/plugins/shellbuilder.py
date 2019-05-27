@@ -51,7 +51,7 @@ class ShellBuilder(XMLPlugin):
         return "hudson.tasks.Shell"
 
     @classmethod
-    def create(cls, script):
+    def instantiate(cls, script):
         """Factory method for creating a new shell build step
 
         :param str script: shell script to run as part of this build step

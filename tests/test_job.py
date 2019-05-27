@@ -192,10 +192,10 @@ def test_multiple_downstream_jobs_recursive(jenkins_env):
             expected_name2 = "test_multiple_downstream_jobs_recursive3"
             jb3 = jk.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
-                publisher1 = BuildTriggerPublisher.create([expected_name1])
+                publisher1 = BuildTriggerPublisher.instantiate([expected_name1])
                 jb.add_publisher(publisher1)
 
-                publisher2 = BuildTriggerPublisher.create([expected_name2])
+                publisher2 = BuildTriggerPublisher.instantiate([expected_name2])
                 jb2.add_publisher(publisher2)
 
                 async_assert(lambda: len(jb.all_downstream_jobs) == 2)
@@ -221,10 +221,10 @@ def test_multiple_upstream_jobs_recursive(jenkins_env):
             expected_name2 = "test_multiple_upstream_jobs_recursive3"
             jb3 = jk.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
-                publisher1 = BuildTriggerPublisher.create([expected_name1])
+                publisher1 = BuildTriggerPublisher.instantiate([expected_name1])
                 jb.add_publisher(publisher1)
 
-                publisher2 = BuildTriggerPublisher.create([expected_name2])
+                publisher2 = BuildTriggerPublisher.instantiate([expected_name2])
                 jb2.add_publisher(publisher2)
 
                 async_assert(lambda: len(jb3.all_upstream_jobs) == 2)
@@ -348,7 +348,7 @@ def test_get_last_failed_build(jenkins_env):
     jb = jk.create_job("test_get_last_failed_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
-        failing_step = ShellBuilder.create("exit -1")
+        failing_step = ShellBuilder.instantiate("exit -1")
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
 
@@ -368,7 +368,7 @@ def test_get_last_unsuccessful_build(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
-        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step = ShellBuilder.instantiate("exit " + str(rcode))
         failing_step.unstable_return_code = rcode
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
@@ -389,7 +389,7 @@ def test_is_unstable(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
-        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step = ShellBuilder.instantiate("exit " + str(rcode))
         failing_step.unstable_return_code = rcode
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
@@ -430,7 +430,7 @@ def test_quiet_period(jenkins_env):
         jb.quiet_period = expected_duration
 
         expected_output = "Testing my quiet period"
-        failing_step = ShellBuilder.create("echo " + expected_output)
+        failing_step = ShellBuilder.instantiate("echo " + expected_output)
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
 
@@ -529,7 +529,7 @@ def test_clone_job(jenkins_env):
         # add a builder to our source job so we can check to make sure the
         # configuration has been properly cloned
         expected_script = "echo Hello From TestCloneJob"
-        failing_step = ShellBuilder.create(expected_script)
+        failing_step = ShellBuilder.instantiate(expected_script)
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
 

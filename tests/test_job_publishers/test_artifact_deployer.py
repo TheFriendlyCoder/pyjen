@@ -10,7 +10,7 @@ def test_add_artifact_deployer_publisher(jenkins_env):
     job_name = "test_add_artifact_deployer_publisher"
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
-        publisher = ArtifactDeployer.create()
+        publisher = ArtifactDeployer.instantiate()
         jb.add_publisher(publisher)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -30,12 +30,12 @@ def test_add_artifact_deployer_publisher_entry(jenkins_env):
     job_name = "test_add_artifact_deployer_publisher_entry"
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
-        publisher = ArtifactDeployer.create()
+        publisher = ArtifactDeployer.instantiate()
         jb.add_publisher(publisher)
 
         expected_regex = "*.txt"
         expected_path = "/bin/data"
-        entry = ArtifactDeployerEntry.create(expected_regex, expected_path)
+        entry = ArtifactDeployerEntry.instantiate(expected_regex, expected_path)
         publisher.add_entry(entry)
 
         # Get a fresh copy of our job to ensure we have an up to date

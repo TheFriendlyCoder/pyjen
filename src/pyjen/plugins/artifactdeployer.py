@@ -10,7 +10,7 @@ class ArtifactDeployer(XMLPlugin):
     """
 
     @classmethod
-    def create(cls):
+    def instantiate(cls):
         """Factory method for creating a new artifact deployer
         :rtype: :class:`pyjen.plugins.artifactdeployer.ArtifactDeployer`
         """
@@ -67,7 +67,7 @@ class ArtifactDeployer(XMLPlugin):
 class ArtifactDeployerEntry(XMLPlugin):
     """a single artifacts to be deployed by an Artifact Deployer instance"""
     @classmethod
-    def create(cls, include_pattern, remote_path):
+    def instantiate(cls, include_pattern, remote_path):
         """Factory method used to instantiate instances of this class
 
         :param str include_pattern:

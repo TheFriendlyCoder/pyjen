@@ -15,12 +15,12 @@ def test_add_string_parameter(jenkins_env):
         expected_param_val = "fubar"
         expected_param_desc = "My Description"
         expected_param_trim = False
-        str_param = ParameterizedBuildStringParameter.create(
+        str_param = ParameterizedBuildStringParameter.instantiate(
             expected_param_name,
             expected_param_val,
             expected_param_desc,
             expected_param_trim)
-        build_params = ParameterizedBuild.create([str_param])
+        build_params = ParameterizedBuild.instantiate([str_param])
         jb.add_property(build_params)
 
         # Get a fresh copy of our job to ensure we have an up to date

@@ -12,7 +12,7 @@ def test_add_build_blocker(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_job_name = "MyCoolJob"
-        build_blocker = BuildBlockerProperty.create(expected_job_name)
+        build_blocker = BuildBlockerProperty.instantiate(expected_job_name)
         jb.add_property(build_blocker)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -31,7 +31,7 @@ def test_multiple_blocking_jobs(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
-        build_blocker = BuildBlockerProperty.create(["ShouldNotSeeMe"])
+        build_blocker = BuildBlockerProperty.instantiate(["ShouldNotSeeMe"])
         build_blocker.blockers = expected_jobs
         jb.add_property(build_blocker)
 
@@ -54,7 +54,7 @@ def test_default_queue_scan(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
-        build_blocker = BuildBlockerProperty.create(expected_jobs)
+        build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
         jb.add_property(build_blocker)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -73,7 +73,7 @@ def test_custom_queue_scan(jenkins_env):
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         expected_type = "ALL"
-        build_blocker = BuildBlockerProperty.create(expected_jobs)
+        build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
         build_blocker.queue_scan = expected_type
         jb.add_property(build_blocker)
 
@@ -88,7 +88,7 @@ def test_custom_queue_scan(jenkins_env):
 
 def test_invalid_queue_scan_type():
     expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
-    build_blocker = BuildBlockerProperty.create(expected_jobs)
+    build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
     with pytest.raises(ValueError):
         build_blocker.queue_scan = "FuBar"
 
@@ -99,7 +99,7 @@ def test_default_block_level(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
-        build_blocker = BuildBlockerProperty.create(expected_jobs)
+        build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
         jb.add_property(build_blocker)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -118,7 +118,7 @@ def test_custom_block_level(jenkins_env):
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         expected_type = "NODE"
-        build_blocker = BuildBlockerProperty.create(expected_jobs)
+        build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
         build_blocker.level = expected_type
         jb.add_property(build_blocker)
 
@@ -133,7 +133,7 @@ def test_custom_block_level(jenkins_env):
 
 def test_invalid_block_level():
     expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
-    build_blocker = BuildBlockerProperty.create(expected_jobs)
+    build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
     with pytest.raises(ValueError):
         build_blocker.level = "FuBar"
 
@@ -143,7 +143,7 @@ def test_disable_build_blocker(jenkins_env):
     job_name = "test_disable_build_blocker"
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
-        build_blocker = BuildBlockerProperty.create("MyJob")
+        build_blocker = BuildBlockerProperty.instantiate("MyJob")
         build_blocker.disable()
         jb.quiet_period = 0
         jb.add_property(build_blocker)
@@ -165,7 +165,7 @@ def test_build_blocker_functionality(jenkins_env):
         jb2 = jk.create_job(job_name2, FreestyleJob)
         with clean_job(jb2):
             expected_jobs = job_name2
-            build_blocker = BuildBlockerProperty.create(expected_jobs)
+            build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
             jb1.quiet_period = 0
             jb1.add_property(build_blocker)
 
@@ -173,7 +173,7 @@ def test_build_blocker_functionality(jenkins_env):
             # copy of the config.xml for the job
             async_assert(lambda: jk.find_job(job_name1).properties)
 
-            build_step = ShellBuilder.create("sleep 10")
+            build_step = ShellBuilder.instantiate("sleep 10")
             jb2.quiet_period = 0
             jb2.add_builder(build_step)
             async_assert(lambda: jb2.builders)
@@ -194,7 +194,7 @@ def test_edit_build_blocker(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
 
-        build_blocker = BuildBlockerProperty.create("MyCoolJob")
+        build_blocker = BuildBlockerProperty.instantiate("MyCoolJob")
         jb.add_property(build_blocker)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -221,7 +221,7 @@ def test_add_then_edit_build_blocker(jenkins_env):
     job_name = "test_add_then_edit_build_blocker"
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
-        build_blocker = BuildBlockerProperty.create("MyCoolJob")
+        build_blocker = BuildBlockerProperty.instantiate("MyCoolJob")
         jb.add_property(build_blocker)
 
         # edit the original build blocker object - changes should still get

@@ -35,7 +35,7 @@ class NotCondition(XMLPlugin):
         return "not"
 
     @classmethod
-    def create(cls, condition):
+    def instantiate(cls, condition):
         """Factory method that constructs an instance of this class
 
         :param condition:

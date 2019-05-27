@@ -125,7 +125,7 @@ class BuildBlockerProperty(XMLPlugin):
         return "hudson.plugins.buildblocker.BuildBlockerProperty"
 
     @classmethod
-    def create(cls, patterns):
+    def instantiate(cls, patterns):
         """Factory method used to instantiate an instance of this plugin
 
         :param patterns:

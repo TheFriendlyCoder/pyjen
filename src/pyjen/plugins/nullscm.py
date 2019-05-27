@@ -19,7 +19,7 @@ class NullSCM(XMLPlugin):
         return "hudson.scm.NullSCM"
 
     @classmethod
-    def create(cls):
+    def instantiate(cls):
         root_node = ElementTree.fromstring('<scm class="hudson.scm.NullSCM"/>')
         return cls(root_node)
 

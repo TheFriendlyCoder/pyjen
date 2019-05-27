@@ -39,7 +39,7 @@ class FlexiblePublisher(XMLPlugin):
         return "org.jenkins_ci.plugins.flexible_publish.FlexiblePublisher"
 
     @classmethod
-    def create(cls, actions):
+    def instantiate(cls, actions):
         """Factory method for creating a new instances of this class
 
         :param actions:
@@ -86,7 +86,7 @@ class ConditionalAction(XMLPlugin):
 
     # --------------------------------------------------------------- PLUGIN API
     @classmethod
-    def create(cls, condition, actions):
+    def instantiate(cls, condition, actions):
         """Factory method for creating a new instances of this class
 
         :param condition:

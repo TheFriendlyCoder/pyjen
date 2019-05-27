@@ -26,7 +26,7 @@ class ConditionalBuilder(XMLPlugin):
                "SingleConditionalBuilder"
 
     @classmethod
-    def create(cls, condition, builder):
+    def instantiate(cls, condition, builder):
         """Factory method for creating a new conditional build step
 
         :param builder:

@@ -33,7 +33,7 @@ class AlwaysRun(XMLPlugin):
         return "always"
 
     @classmethod
-    def create(cls):
+    def instantiate(cls):
         """Factory method used to construct an instance of this class
 
         :rtype: :class:`AlwaysRun`

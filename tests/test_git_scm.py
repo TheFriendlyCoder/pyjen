@@ -12,7 +12,7 @@ def test_add_git_scm(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
-        test_scm = GitSCM.create(expected_url)
+        test_scm = GitSCM.instantiate(expected_url)
         jb.scm = test_scm
 
         async_assert(lambda: isinstance(jb.scm, GitSCM))
@@ -31,7 +31,7 @@ def test_build_git_scm(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
-        test_scm = GitSCM.create(expected_url)
+        test_scm = GitSCM.instantiate(expected_url)
         jb.scm = test_scm
 
         async_assert(lambda: isinstance(jb.scm, GitSCM))
@@ -42,7 +42,7 @@ def test_build_git_scm(jenkins_env):
         # can therefore check to see if the SCM operation completed successfully
         # by looking for that file and setting a non-zero error code as part
         # of a shell builder operation
-        shell_builder = ShellBuilder.create("[ -f setup.py ]")
+        shell_builder = ShellBuilder.instantiate("[ -f setup.py ]")
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date

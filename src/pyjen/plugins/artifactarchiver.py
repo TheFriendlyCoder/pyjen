@@ -31,7 +31,7 @@ class ArtifactArchiverPublisher(XMLPlugin):
         return children_node.text
 
     @classmethod
-    def create(cls, file_pattern):
+    def instantiate(cls, file_pattern):
         """Factory method for creating a new artifact archiver
 
         :param str file_pattern:

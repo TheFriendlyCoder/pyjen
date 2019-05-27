@@ -12,7 +12,7 @@ def test_add_artifact_archiver_publisher(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_regex = "*.txt"
-        publisher = ArtifactArchiverPublisher.create(expected_regex)
+        publisher = ArtifactArchiverPublisher.instantiate(expected_regex)
         jb.add_publisher(publisher)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -31,14 +31,14 @@ def test_artifacts_archived(jenkins_env):
     job_name = "test_artifacts_archived_job"
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
-        publisher = ArtifactArchiverPublisher.create("*.txt")
+        publisher = ArtifactArchiverPublisher.instantiate("*.txt")
         jb.add_publisher(publisher)
 
         # Wait until our publisher config get's applied
         async_assert(lambda: jk.find_job(job_name).publishers)
 
         expected_file = "test_artifacts_archived_job.txt"
-        shell_builder = ShellBuilder.create("echo hello > " + expected_file)
+        shell_builder = ShellBuilder.instantiate("echo hello > " + expected_file)
         jb.add_builder(shell_builder)
 
         # Wait until our builder get's applied

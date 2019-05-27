@@ -13,8 +13,8 @@ def test_param_trigger(jenkins_env):
     jb = jk.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         downstream_name = "sample_job"
-        new_trigger = BuildTriggerConfig.create([downstream_name])
-        pub = ParameterizedBuildTrigger.create([new_trigger])
+        new_trigger = BuildTriggerConfig.instantiate([downstream_name])
+        pub = ParameterizedBuildTrigger.instantiate([new_trigger])
         jb.add_publisher(pub)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -41,10 +41,10 @@ def test_trigger_with_current_build_params(jenkins_env):
     jb = jk.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         downstream_name = "sample_job"
-        new_trigger = BuildTriggerConfig.create([downstream_name])
-        cur_bld_params = CurrentBuildParams.create()
+        new_trigger = BuildTriggerConfig.instantiate([downstream_name])
+        cur_bld_params = CurrentBuildParams.instantiate()
         new_trigger.add_build_param(cur_bld_params)
-        new_pub = ParameterizedBuildTrigger.create([new_trigger])
+        new_pub = ParameterizedBuildTrigger.instantiate([new_trigger])
         jb.add_publisher(new_pub)
 
         # Get a fresh copy of our job to ensure we have an up to date

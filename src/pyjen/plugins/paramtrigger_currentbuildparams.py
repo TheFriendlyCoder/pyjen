@@ -20,7 +20,7 @@ class CurrentBuildParams(XMLPlugin):
         return "hudson.plugins.parameterizedtrigger.CurrentBuildParameters"
 
     @classmethod
-    def create(cls):
+    def instantiate(cls):
         """Factory method for creating a new instances of this class
 
         :rtype: :class:`CurrentBuildParams`

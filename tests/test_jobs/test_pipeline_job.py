@@ -33,7 +33,7 @@ def test_git_scm_pipeline_job(jenkins_env):
     jb = jk.create_job("test_git_scm_pipeline_job", PipelineJob)
     with clean_job(jb):
         expected_url = "git@repo.com"
-        scm = GitSCM.create(expected_url)
+        scm = GitSCM.instantiate(expected_url)
         jb.scm_definition(scm)
 
         assert jb.script == ""
@@ -49,7 +49,7 @@ def test_overwrite_definition(jenkins_env):
     jb = jk.create_job("test_overwrite_definition", PipelineJob)
     with clean_job(jb):
         expected_url = "git@repo.com"
-        scm = GitSCM.create(expected_url)
+        scm = GitSCM.instantiate(expected_url)
         jb.scm_definition(scm)
 
         jb.quiet_period = 0

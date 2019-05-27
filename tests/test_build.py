@@ -75,7 +75,7 @@ def test_console_text(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         expected_output = "Here is my sample output..."
-        shell_builder = ShellBuilder.create("echo " + expected_output)
+        shell_builder = ShellBuilder.instantiate("echo " + expected_output)
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -97,7 +97,7 @@ def test_abort(jenkins_env):
 
     with clean_job(jb):
         jb.quiet_period = 0
-        shell_builder = ShellBuilder.create("echo 'waiting for sleep' && sleep 40")
+        shell_builder = ShellBuilder.instantiate("echo 'waiting for sleep' && sleep 40")
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date

@@ -17,9 +17,9 @@ def test_add_conditional_builder(jenkins_env):
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         expected_cmd = "echo " + expected_output
-        shell_builder = ShellBuilder.create(expected_cmd)
-        condition = AlwaysRun.create()
-        conditional_builder = ConditionalBuilder.create(condition, shell_builder)
+        shell_builder = ShellBuilder.instantiate(expected_cmd)
+        condition = AlwaysRun.instantiate()
+        conditional_builder = ConditionalBuilder.instantiate(condition, shell_builder)
         jb.add_builder(conditional_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -46,9 +46,9 @@ def test_always_run_condition(jenkins_env):
     with clean_job(jb):
         expected_output = "Here is my sample output..."
         expected_cmd = "echo " + expected_output
-        shell_builder = ShellBuilder.create(expected_cmd)
-        condition = AlwaysRun.create()
-        conditional_builder = ConditionalBuilder.create(condition, shell_builder)
+        shell_builder = ShellBuilder.instantiate(expected_cmd)
+        condition = AlwaysRun.instantiate()
+        conditional_builder = ConditionalBuilder.instantiate(condition, shell_builder)
         jb.add_builder(conditional_builder)
 
         # Wait until our job config has been applied successfully
@@ -72,9 +72,9 @@ def test_never_run_condition(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
-        shell_builder = ShellBuilder.create("echo " + expected_output)
-        condition = NeverRun.create()
-        conditional_builder = ConditionalBuilder.create(condition, shell_builder)
+        shell_builder = ShellBuilder.instantiate("echo " + expected_output)
+        condition = NeverRun.instantiate()
+        conditional_builder = ConditionalBuilder.instantiate(condition, shell_builder)
         jb.add_builder(conditional_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -104,11 +104,11 @@ def test_and_build_condition_true(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
-        shell_builder = ShellBuilder.create("echo " + expected_output)
-        condition1 = AlwaysRun.create()
-        condition2 = AlwaysRun.create()
-        condition = AndCondition.create([condition1, condition2])
-        conditional_builder = ConditionalBuilder.create(condition, shell_builder)
+        shell_builder = ShellBuilder.instantiate("echo " + expected_output)
+        condition1 = AlwaysRun.instantiate()
+        condition2 = AlwaysRun.instantiate()
+        condition = AndCondition.instantiate([condition1, condition2])
+        conditional_builder = ConditionalBuilder.instantiate(condition, shell_builder)
         jb.add_builder(conditional_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -138,11 +138,11 @@ def test_and_build_condition_false(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
-        shell_builder = ShellBuilder.create("echo " + expected_output)
-        condition1 = AlwaysRun.create()
-        condition2 = NeverRun.create()
-        condition = AndCondition.create([condition1, condition2])
-        conditional_builder = ConditionalBuilder.create(condition, shell_builder)
+        shell_builder = ShellBuilder.instantiate("echo " + expected_output)
+        condition1 = AlwaysRun.instantiate()
+        condition2 = NeverRun.instantiate()
+        condition = AndCondition.instantiate([condition1, condition2])
+        conditional_builder = ConditionalBuilder.instantiate(condition, shell_builder)
         jb.add_builder(conditional_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -172,10 +172,10 @@ def test_not_build_condition_true(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         expected_output = "Here is my sample output..."
-        shell_builder = ShellBuilder.create("echo " + expected_output)
-        nested_condition = NeverRun.create()
-        condition = NotCondition.create(nested_condition)
-        conditional_builder = ConditionalBuilder.create(condition, shell_builder)
+        shell_builder = ShellBuilder.instantiate("echo " + expected_output)
+        nested_condition = NeverRun.instantiate()
+        condition = NotCondition.instantiate(nested_condition)
+        conditional_builder = ConditionalBuilder.instantiate(condition, shell_builder)
         jb.add_builder(conditional_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date

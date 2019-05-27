@@ -84,7 +84,7 @@ class SectionedViewXML(ViewXML):
             raise NotImplementedError(
                 "Failed loading Sectioned View section: " +
                 section_type)
-        new_section = plugin_class.create(name)
+        new_section = plugin_class.instantiate(name)
         new_section.parent = self
         sections = self._root.find('sections')
         sections.append(new_section.node)

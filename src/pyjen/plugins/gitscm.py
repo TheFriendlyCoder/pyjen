@@ -26,7 +26,7 @@ class GitSCM(XMLPlugin):
         return "hudson.plugins.git.GitSCM"
 
     @classmethod
-    def create(cls, repository_url):
+    def instantiate(cls, repository_url):
         """Factory method for creating a new Git SCM code block
 
         :param str repository_url:
