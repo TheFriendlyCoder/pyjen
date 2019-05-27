@@ -4,7 +4,7 @@ from pkg_resources import iter_entry_points
 
 # Every PyJen plugin must have a class registered with the following Python
 # setup tools entrypoint
-PLUGIN_ENTRYPOINT_NAME = "pyjen.plugins"
+PLUGIN_ENTRYPOINT_NAME = "pyjen.plugins.v1.0"
 
 # PyJen plugins are expected to be implemented as Python classes, with
 # a static method named as shown below. This method is expected to return

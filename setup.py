@@ -293,7 +293,10 @@ def load_project_properties():
 def main():
     """main entrypoint function"""
     PROJECT["VERSION"] = get_version_number(PROJECT["NAME"])
-
+    _plugin_namespace = "{0}.plugins.v{1}".format(
+        PROJECT["NAME"],
+        PROJECT["PLUGIN_VER"]
+    )
     # Execute packaging logic
     setup(
         name=PROJECT["NAME"],
@@ -308,7 +311,7 @@ def main():
         url='https://github.com/TheFriendlyCoder/' + PROJECT["NAME"],
         keywords=PROJECT["KEYWORDS"],
         entry_points={
-            PROJECT["NAME"] + ".plugins" : load_plugins(PROJECT["NAME"]),
+            _plugin_namespace: load_plugins(PROJECT["NAME"]),
             'console_scripts': load_console_scripts(PROJECT["NAME"]),
         },
         install_requires=PROJECT["DEPENDENCIES"],
@@ -316,17 +319,6 @@ def main():
         extras_require={
             'dev': PROJECT["DEV_DEPENDENCIES"],
         },
-        # The following support files are needed by this setup.py script
-        # These files are not deployed with the project when building a wheel
-        # file, and thus are only used by sdist builds. In turn, these are
-        # required by tox to run unit tests because tox does not currently
-        # support running tests from a dynamically generated wheel file.
-        data_files=[
-            ("", [
-                "project.prop",
-                ]
-            ),
-        ],
         license="GPL",
         # https://pypi.org/classifiers/
         classifiers=[

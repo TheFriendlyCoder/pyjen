@@ -4,6 +4,7 @@
 {
     "NAME" : "pyjen",
     "REPO" : "pyjen",
+    "PLUGIN_VER": "1.0",
     "DEPENDENCIES" : [
         "requests",
         "six",
