@@ -2,7 +2,6 @@
 from pyjen.view import View
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.exceptions import PluginNotSupportedError
 
 
 class SectionedView(View):
@@ -82,8 +81,8 @@ class SectionedViewXML(ViewXML):
         """
         plugin_class = find_plugin(section_type)
         if not plugin_class:
-            raise PluginNotSupportedError(
-                "Failed loading Sectioned View section",
+            raise NotImplementedError(
+                "Failed loading Sectioned View section: " +
                 section_type)
         new_section = plugin_class.create(name)
         new_section.parent = self

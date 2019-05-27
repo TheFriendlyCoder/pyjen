@@ -1,5 +1,4 @@
 from pyjen.utils.user_params import JenkinsConfigParser
-from pyjen.exceptions import InvalidUserParamsError
 import pytest
 import os
 import platform
@@ -98,7 +97,7 @@ password=Password123
     else:
         test_obj.readfp(sample_config)
 
-    with pytest.raises(InvalidUserParamsError):
+    with pytest.raises(Exception):
         test_obj.get_credentials(test_url)
 
 
@@ -114,7 +113,7 @@ username=jdoe
     else:
         test_obj.readfp(sample_config)
 
-    with pytest.raises(InvalidUserParamsError):
+    with pytest.raises(Exception):
         test_obj.get_credentials(test_url)
 
 

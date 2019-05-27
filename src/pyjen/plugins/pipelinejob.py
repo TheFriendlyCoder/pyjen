@@ -3,7 +3,6 @@ from pyjen.job import Job
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.exceptions import PluginNotSupportedError
 
 
 class PipelineJob(Job):
@@ -162,8 +161,8 @@ class PipelineXML(JobXML):
         plugin_name = scm_node.attrib["class"]
         plugin = find_plugin(plugin_name)
         if plugin is None:
-            raise PluginNotSupportedError(
-                "PyJen has no plugin installed for Jenkins plugin ",
+            raise NotImplementedError(
+                "PyJen has no plugin installed for Jenkins plugin: " +
                 plugin_name)
         return plugin(scm_node)
 
