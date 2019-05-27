@@ -45,17 +45,6 @@ class JobXML(object):
         """
         return ElementTree.tostring(self._root).decode("utf-8")
 
-    @xml.setter
-    def xml(self, new_xml):
-        """Updates the job config from some new, statically defined XML source
-
-        :param str new_xml:
-            raw XML config data to be uploaded
-        """
-        args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
-        self._api.post(self._api.url + "config.xml", args)
-        self._cache = ElementTree.fromstring(new_xml)
-
     @property
     def plugin_name(self):
         """Gets the name of the Jenkins plugin associated with this view
@@ -63,100 +52,6 @@ class JobXML(object):
         :rtype: :class:`str`
         """
         return self._root.tag
-
-    @property
-    def quiet_period(self):
-        """Gets the delay, in seconds, this job waits in queue before running
-        a build
-
-        May return None if no custom quiet period is defined. At the time of
-        this writing the default value is 5 seconds however this may change
-        over time.
-
-        :rtype: :class:`int`
-        """
-        node = self._root.find("quietPeriod")
-        if node is None:
-            return None
-        return int(node.text)
-
-    @quiet_period.setter
-    def quiet_period(self, value):
-        """Changes the quiet period
-
-        :param int value: time, in seconds, to set the quiet period to
-        """
-        node = self._root.find("quietPeriod")
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'quietPeriod')
-        node.text = str(value)
-
-    def disable_custom_workspace(self):
-        """Disables a jobs use of a custom workspace
-
-        If the job is not currently using a custom workspace this method will
-        do nothing
-        """
-        node = self._root.find('customWorkspace')
-
-        if node is not None:
-            self._root.remove(node)
-
-    @property
-    def custom_workspace(self):
-        """Gets the local path for the custom workspace associated with this job
-
-        :returns:
-            the local path for the custom workspace associated with this job
-        :rtype: :class:`str`
-        """
-        node = self._root.find('customWorkspace')
-        if node is None:
-            return ""
-        return node.text
-
-    @custom_workspace.setter
-    def custom_workspace(self, path):
-        """Defines a new or modified custom workspace for a job
-
-        If the job already has a custom workspace it will be replaced with the
-        given path. If not then a new custom workspace will be created with the
-        given path
-
-        :param str path: path of the new or modified custom workspace
-        """
-        node = self._root.find('customWorkspace')
-
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'customWorkspace')
-
-        node.text = path
-
-    @property
-    def assigned_node(self):
-        """Gets the build agent label this job is associated with
-
-        :returns: the build agent label this job is associated with
-        :rtype: :class:`str`
-        """
-        node = self._root.find("assignedNode")
-        if node is None:
-            return ""
-        return node.text
-
-    @assigned_node.setter
-    def assigned_node(self, node_label):
-        """Sets the build agent label this job is associated with
-
-        :param str node_label:
-        the new build agent label to associate with this job
-        """
-        node = self._root.find('assignedNode')
-
-        if node is None:
-            node = ElementTree.SubElement(self._root, 'assignedNode')
-
-        node.text = node_label
 
     @property
     def properties(self):

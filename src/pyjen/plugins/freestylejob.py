@@ -1,8 +1,42 @@
 """Primitives that manage Jenkins job of type 'Freestyle'"""
+import xml.etree.ElementTree as ElementTree
 from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
 from pyjen.exceptions import PluginNotSupportedError
+
+"""<project>
+<description/>
+<keepDependencies>false</keepDependencies>
+<properties>
+<com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.12">
+<gitLabConnection/>
+</com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
+<com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.30">
+<autoRebuild>false</autoRebuild>
+<rebuildDisabled>false</rebuildDisabled>
+</com.sonyericsson.rebuild.RebuildSettings>
+<hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.1">
+<categories class="java.util.concurrent.CopyOnWriteArrayList"/>
+<throttleEnabled>false</throttleEnabled>
+<throttleOption>project</throttleOption>
+<limitOneJobWithMatchingParams>false</limitOneJobWithMatchingParams>
+<paramsToUseForLimit/>
+</hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+</properties>
+<scm class="hudson.scm.NullSCM"/>
+    <assignedNode>qfqwefqwfwfe</assignedNode>
+<canRoam>false</canRoam>
+<disabled>false</disabled>
+<blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+<triggers/>
+<concurrentBuild>false</concurrentBuild>
+<builders/>
+<publishers/>
+<buildWrappers/>
+</project>
+"""
 
 
 class FreestyleJob(Job):
@@ -45,19 +79,87 @@ class FreestyleJob(Job):
 
     @property
     def custom_workspace(self):
-        """
-        :returns: custom workspace associated with this job
+        """gets the custom workspace associated with this job
+
+        May return an empty character string if the custom workspace feature
+        is not currently enabled.
+
         :rtype: :class:`str`
         """
-        return self._job_xml.custom_workspace
+        return self._job_xml.custom_workspace or ""
 
     @custom_workspace.setter
     def custom_workspace(self, path):
         """Defines a new custom workspace for the job
 
-        :param str path: new custom workspace path
+        :param str path:
+            new custom workspace path. If given an empty string, the custom
+            workspace option will be disabled
         """
-        self._job_xml.custom_workspace = path
+        if path == "":
+            self._job_xml.disable_custom_workspace()
+        else:
+            self._job_xml.custom_workspace = path
+        self._job_xml.update()
+
+    @property
+    def custom_workspace_enabled(self):
+        """Checks to see if this job has the custom workspace option enabled
+
+        :rtype: :class:`bool`
+        """
+        return self._job_xml.custom_workspace is not None
+
+    @property
+    def quiet_period_enabled(self):
+        """Checks to see if a custom quiet period is defined on this job
+
+        :rtype: :class:`bool`
+        """
+        return self._job_xml.quiet_period is not None
+
+    @property
+    def quiet_period(self):
+        """
+        :returns:
+            the delay, in seconds, builds of this job wait in the queue before
+            being run. Returns -1 if there is no custom quiet period for this
+            job
+        :rtype: :class:`int`
+        """
+        return self._job_xml.quiet_period or -1
+
+    @quiet_period.setter
+    def quiet_period(self, value):
+        if value < 0:
+            self._job_xml.disable_quiet_period()
+        else:
+            self._job_xml.quiet_period = value
+        self._job_xml.update()
+
+    @property
+    def assigned_node_enabled(self):
+        """Checks to see if this job has a custom node restriction
+
+        :rtype: :class:`bool`
+        """
+        return self._job_xml.assigned_node is not None
+
+    @property
+    def assigned_node(self):
+        """Gets the custom node label restricting which nodes this job can
+        run against
+
+        :rtype: :class:`str`
+        """
+        return self._job_xml.assigned_node or ""
+
+    @assigned_node.setter
+    def assigned_node(self, value):
+        if value == "":
+            self._job_xml.disable_assigned_node()
+        else:
+            self._job_xml.assigned_node = value
         self._job_xml.update()
 
     # ---------------------------------------------------- JSON BASED PROPERTIES
@@ -269,6 +371,107 @@ class FreestyleXML(JobXML):
         pubs = self._root.find('builders')
         pubs.append(builder.node)
         builder.parent = self
+
+    @property
+    def quiet_period(self):
+        """Gets the delay, in seconds, this job waits in queue before running
+        a build
+
+        May return None if no custom quiet period is defined. At the time of
+        this writing the default value is 5 seconds however this may change
+        over time.
+
+        :rtype: :class:`int`
+        """
+        node = self._root.find("quietPeriod")
+        if node is None:
+            return None
+        return int(node.text)
+
+    @quiet_period.setter
+    def quiet_period(self, value):
+        """Changes the quiet period
+
+        :param int value: time, in seconds, to set the quiet period to
+        """
+        node = self._root.find("quietPeriod")
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'quietPeriod')
+        node.text = str(value)
+
+    def disable_quiet_period(self):
+        """Disables custom quiet period on a job"""
+        node = self._root.find("quietPeriod")
+        if node is not None:
+            self._root.remove(node)
+
+    @property
+    def custom_workspace(self):
+        """Gets the local path for the custom workspace associated with this job
+
+        returns None if the custom workspace option is not enabled
+        :rtype: :class:`str`
+        """
+        node = self._root.find('customWorkspace')
+        if node is None:
+            return None
+        return node.text
+
+    @custom_workspace.setter
+    def custom_workspace(self, path):
+        """Defines a new or modified custom workspace for a job
+
+        If the job already has a custom workspace it will be replaced with the
+        given path. If not then a new custom workspace will be created with the
+        given path
+
+        :param str path: path of the new or modified custom workspace
+        """
+        node = self._root.find('customWorkspace')
+
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'customWorkspace')
+
+        node.text = path
+
+    def disable_custom_workspace(self):
+        """Disables a jobs use of a custom workspace"""
+        node = self._root.find('customWorkspace')
+
+        if node is not None:
+            self._root.remove(node)
+
+    @property
+    def assigned_node(self):
+        """Gets the build agent label this job is associated with
+
+        :returns: the build agent label this job is associated with
+        :rtype: :class:`str`
+        """
+        node = self._root.find("assignedNode")
+        if node is None:
+            return None
+        return node.text
+
+    @assigned_node.setter
+    def assigned_node(self, node_label):
+        """Sets the build agent label this job is associated with
+
+        :param str node_label:
+            the new build agent label to associate with this job
+        """
+        node = self._root.find('assignedNode')
+
+        if node is None:
+            node = ElementTree.SubElement(self._root, 'assignedNode')
+
+        node.text = node_label
+
+    def disable_assigned_node(self):
+        """Disables a custom node assignment on this job"""
+        node = self._root.find('assignedNode')
+        if node is not None:
+            self._root.remove(node)
 
 
 PluginClass = FreestyleJob
