@@ -1,6 +1,6 @@
 """Primitives that manage Jenkins job of type 'pipeline'"""
-from pyjen.job import Job
 import xml.etree.ElementTree as ElementTree
+from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
 
@@ -54,6 +54,7 @@ class PipelineJob(Job):
     # --------------------------------------------------------------- PLUGIN API
     @property
     def _xml_class(self):
+        """Gets Python class used to manage config XML data for this object"""
         return PipelineXML
 
     @staticmethod
@@ -69,20 +70,28 @@ class PipelineJob(Job):
 
     @staticmethod
     def template_config_xml():
-        return """<flow-definition plugin="workflow-job@2.32">
+        """Gets template XML that can be used to create instances of this class
+
+        :rtype: :class:`str`
+        """
+        return """
+<flow-definition>
     <description/>
     <keepDependencies>false</keepDependencies>
     <properties/>
-    <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.64">
-    <script/>
-    <sandbox>true</sandbox>
+    <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition">
+        <script/>
+        <sandbox>true</sandbox>
     </definition>
     <triggers/>
     <disabled>false</disabled>
-    </flow-definition>"""
+</flow-definition>
+"""
 
 
 class PipelineXML(JobXML):
+    """Object that manages the config.xml for a pipeline job"""
+
     def scm_definition(self, scm, script_path, lightweight):
         """Defines the Pipeline groovy script used by this job from files
         stored in a source code repository
@@ -98,7 +107,8 @@ class PipelineXML(JobXML):
             check out the entire repository before running the Jenkinsfile.
         """
         definition_node = ElementTree.Element("definition")
-        definition_node.attrib["class"] = "org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition"
+        definition_node.attrib["class"] = \
+            "org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition"
         definition_node.attrib["plugin"] = "workflow-cps"
         definition_node.append(scm.node)
 
@@ -124,7 +134,8 @@ class PipelineXML(JobXML):
             environment.
         """
         definition_node = ElementTree.Element("definition")
-        definition_node.attrib["class"] = "org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition"
+        definition_node.attrib["class"] = \
+            "org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition"
         definition_node.attrib["plugin"] = "workflow-cps"
 
         script_node = ElementTree.Element("script")
@@ -171,7 +182,3 @@ PluginClass = PipelineJob
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-
-
-
-

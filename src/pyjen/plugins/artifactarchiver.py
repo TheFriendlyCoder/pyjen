@@ -37,14 +37,16 @@ class ArtifactArchiverPublisher(XMLPlugin):
         :param str file_pattern:
             regular expression matching files to be archived at the end of
             the build
-        :rtype: :class:`pyjen.plugins.artifactarchiver.ArtifactArchiverPublisher`
+        :rtype:
+            :class:`pyjen.plugins.artifactarchiver.ArtifactArchiverPublisher`
         """
-        default_xml = """<hudson.tasks.ArtifactArchiver>
-<allowEmptyArchive>false</allowEmptyArchive>
-<onlyIfSuccessful>false</onlyIfSuccessful>
-<fingerprint>false</fingerprint>
-<defaultExcludes>true</defaultExcludes>
-<caseSensitive>true</caseSensitive>
+        default_xml = """
+<hudson.tasks.ArtifactArchiver>
+    <allowEmptyArchive>false</allowEmptyArchive>
+    <onlyIfSuccessful>false</onlyIfSuccessful>
+    <fingerprint>false</fingerprint>
+    <defaultExcludes>true</defaultExcludes>
+    <caseSensitive>true</caseSensitive>
 </hudson.tasks.ArtifactArchiver>"""
         root_node = ElementTree.fromstring(default_xml)
         child = ElementTree.SubElement(root_node, "artifacts")

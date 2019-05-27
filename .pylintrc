@@ -60,7 +60,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=delslice-method,old-ne-operator,execfile-builtin,setslice-method,input-builtin,getslice-method,range-builtin-not-iterating,apply-builtin,raw_input-builtin,old-raise-syntax,backtick,coerce-method,unicode-builtin,dict-view-method,old-octal-literal,filter-builtin-not-iterating,reload-builtin,useless-suppression,round-builtin,metaclass-assignment,long-builtin,raising-string,map-builtin-not-iterating,standarderror-builtin,old-division,unpacking-in-except,parameter-unpacking,cmp-builtin,xrange-builtin,basestring-builtin,cmp-method,coerce-builtin,intern-builtin,oct-method,nonzero-method,print-statement,long-suffix,reduce-builtin,unichr-builtin,dict-iter-method,using-cmp-argument,indexing-exception,import-star-module-level,no-absolute-import,next-method-called,suppressed-message,hex-method,file-builtin,buffer-builtin,zip-builtin-not-iterating,too-few-public-methods,locally-disabled,useless-object-inheritance
+disable=delslice-method,old-ne-operator,execfile-builtin,setslice-method,input-builtin,getslice-method,range-builtin-not-iterating,apply-builtin,raw_input-builtin,old-raise-syntax,backtick,coerce-method,unicode-builtin,dict-view-method,old-octal-literal,filter-builtin-not-iterating,reload-builtin,useless-suppression,round-builtin,metaclass-assignment,long-builtin,raising-string,map-builtin-not-iterating,standarderror-builtin,old-division,unpacking-in-except,parameter-unpacking,cmp-builtin,xrange-builtin,basestring-builtin,cmp-method,coerce-builtin,intern-builtin,oct-method,nonzero-method,print-statement,long-suffix,reduce-builtin,unichr-builtin,dict-iter-method,using-cmp-argument,indexing-exception,import-star-module-level,no-absolute-import,next-method-called,suppressed-message,hex-method,file-builtin,buffer-builtin,zip-builtin-not-iterating,too-few-public-methods,locally-disabled,useless-object-inheritance,too-many-public-methods,fixme,duplicate-code
 
 
 [REPORTS]
@@ -256,7 +256,7 @@ ignored-classes=
 # List of members which are set dynamically and missed by pylint inference
 # system, and so shouldn't trigger E1101 when accessed. Python regular
 # expressions are accepted.
-generated-members=
+generated-members=requests.codes.*
 
 
 [LOGGING]
@@ -326,7 +326,7 @@ max-statements=50
 max-parents=7
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=8
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=2

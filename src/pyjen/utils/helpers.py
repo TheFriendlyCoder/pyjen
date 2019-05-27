@@ -1,3 +1,4 @@
+"""Misc helper methods shared across the library"""
 import json
 
 

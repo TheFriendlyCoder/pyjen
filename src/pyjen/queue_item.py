@@ -1,13 +1,14 @@
+"""Abstraction around a scheduled build contained in the Jenkins build queue"""
 import requests
+from requests.exceptions import HTTPError
 from six.moves import urllib_parse
 from six import PY2
-from requests.exceptions import HTTPError
 from pyjen.build import Build
 from pyjen.utils.plugin_api import find_plugin
 
 
 class QueueItem(object):
-    """Abstraction around the Jenkins build queue
+    """Abstraction around a scheduled build contained in the Jenkins build queue
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
@@ -26,7 +27,7 @@ class QueueItem(object):
         """
         if not isinstance(other, QueueItem):
             return False
-        return self._api.url == other._api.url
+        return self._api.url == other._api.url  # pylint: disable=protected-access
 
     def __ne__(self, other):
         """Equality operator
@@ -36,7 +37,7 @@ class QueueItem(object):
         """
         if not isinstance(other, QueueItem):
             return True
-        return self._api.url != other._api.url
+        return self._api.url != other._api.url  # pylint: disable=protected-access
 
     @property
     def _data(self):
@@ -55,7 +56,7 @@ class QueueItem(object):
             raise
 
     @property
-    def id(self):
+    def uid(self):
         """Gets the numeric identifier of this queued build
 
         Guaranteed to return a valid identifier, even when the queue item
@@ -184,7 +185,7 @@ class QueueItem(object):
             # Have to send a referrer in the header to circumvent this bug:
             # https://issues.jenkins-ci.org/browse/JENKINS-21311
             "headers": {'Referer': self._api.root_url},
-            "params": {"id": self.id},
+            "params": {"id": self.uid},
         }
         self._api.post(tmp_url, params)
 
@@ -199,7 +200,7 @@ class QueueItem(object):
 
         :rtype: :class:`bool`
         """
-        return True if self._data.keys() else False
+        return bool(self._data.keys())
 
 
 if __name__ == "__main__":  # pragma: no cover

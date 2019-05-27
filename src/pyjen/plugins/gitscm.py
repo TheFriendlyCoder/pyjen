@@ -33,21 +33,23 @@ class GitSCM(XMLPlugin):
             URI of the repository to check out during the build
         :rtype: :class:`pyjen.plugins.gitscm.GitSCM`
         """
-        default_xml = """<scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.3">
-        <configVersion>2</configVersion>
-        <branches>
-            <hudson.plugins.git.BranchSpec>
-                <name>*/master</name>
-            </hudson.plugins.git.BranchSpec>
-        </branches>
-        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-        <submoduleCfg class="list"/>
-        <extensions/>
-    </scm>"""
+        default_xml = """
+<scm class="hudson.plugins.git.GitSCM">
+    <configVersion>2</configVersion>
+    <branches>
+        <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+        </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+</scm>"""
         root_node = ElementTree.fromstring(default_xml)
 
         remotes = ElementTree.SubElement(root_node, "userRemoteConfigs")
-        config = ElementTree.SubElement(remotes, "hudson.plugins.git.UserRemoteConfig")
+        config = ElementTree.SubElement(
+            remotes, "hudson.plugins.git.UserRemoteConfig")
         url = ElementTree.SubElement(config, "url")
 
         url.text = repository_url

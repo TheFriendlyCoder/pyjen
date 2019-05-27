@@ -47,9 +47,10 @@ class ParameterizedBuildTrigger(XMLPlugin):
             List of build trigger configuration objects
         :rtype: :class:`ParameterizedBuildTrigger`
         """
-        default_xml = """<hudson.plugins.parameterizedtrigger.BuildTrigger plugin="parameterized-trigger@2.35.2">
-        <configs/>
-        </hudson.plugins.parameterizedtrigger.BuildTrigger>"""
+        default_xml = """
+<hudson.plugins.parameterizedtrigger.BuildTrigger>
+    <configs/>
+</hudson.plugins.parameterizedtrigger.BuildTrigger>"""
         root_node = ElementTree.fromstring(default_xml)
         configs_node = root_node.find("configs")
 

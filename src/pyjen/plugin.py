@@ -1,7 +1,8 @@
 """Interface for interacting with Jenkins plugins"""
 import os
-import requests
 import json
+import requests
+from six import PY2
 from tqdm import tqdm
 
 
@@ -98,7 +99,10 @@ class Plugin(object):
 
         # See if we need to overwrite the output file or not...
         if os.path.exists(output_file) and not overwrite:
-            raise FileExistsError("Output file already exists: " + output_file)
+            msg = "Output file already exists: " + output_file
+            if PY2:
+                raise Exception(msg)
+            raise FileExistsError(msg)  # pylint: disable=undefined-variable
 
         # Make sure our output folder exists...
         if not os.path.exists(output_folder):

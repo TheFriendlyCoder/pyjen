@@ -1,3 +1,4 @@
+"""Trigger parameter for the Parameterized Trigger plugin"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 

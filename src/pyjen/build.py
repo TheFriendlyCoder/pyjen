@@ -28,7 +28,7 @@ class Build(object):
         if not isinstance(obj, Build):
             return False
 
-        if obj.id != self.id:
+        if obj.uid != self.uid:
             return False
 
         return True
@@ -38,14 +38,14 @@ class Build(object):
         if not isinstance(obj, Build):
             return True
 
-        if obj.id != self.id:
+        if obj.uid != self.uid:
             return True
 
         return False
 
     def __hash__(self):
         """Hashing function, allowing object to be serialized and compared"""
-        return hash(self.id)
+        return hash(self.uid)
 
     @property
     def number(self):
@@ -138,7 +138,7 @@ class Build(object):
         return retval
 
     @property
-    def id(self):  # pylint: disable=invalid-name
+    def uid(self):
         """Gets the unique identifier associated with this build
 
         :rtype: :class:`str`
@@ -157,14 +157,17 @@ class Build(object):
         retval = []
 
         for node in artifacts_node:
-            url = urllib_parse.urljoin(self._api.url, "artifact/" + node['fileName'])
+            url = urllib_parse.urljoin(
+                self._api.url, "artifact/" + node['fileName'])
             retval.append(url)
 
         return retval
 
     @property
     def duration(self):
-        """ Total duration in milliseconds of how long the build took; Returns 0 if build hasn't finished
+        """Total runtime of the build, in milliseconds
+
+        Returns 0 if build hasn't finished
 
         :rtype: :class:`int`
         """
@@ -173,7 +176,10 @@ class Build(object):
 
     @property
     def estimated_duration(self):
-        """ Estimate based off average duration of previous builds returned in milliseconds
+        """Estimated runtime for a running build
+
+        Estimate is based off average duration of previous builds,
+        in milliseconds
 
         :rtype: :class:`int`
         """

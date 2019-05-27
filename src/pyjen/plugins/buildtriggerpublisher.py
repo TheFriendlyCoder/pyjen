@@ -36,16 +36,19 @@ class BuildTriggerPublisher(XMLPlugin):
 
         The default trigger will run when the parent job is successful
 
-        :param list project_names: List of 1 or more names of jobs to trigger
-        :rtype: :class:`pyjen.plugins.buildtriggerpublisher.BuildTriggerPublisher`
+        :param list project_names:
+            List of 1 or more names of jobs to trigger
+        :rtype:
+            :class:`pyjen.plugins.buildtriggerpublisher.BuildTriggerPublisher`
         """
-        default_xml = """<hudson.tasks.BuildTrigger>
-<threshold>
-<name>SUCCESS</name>
-<ordinal>0</ordinal>
-<color>BLUE</color>
-<completeBuild>true</completeBuild>
-</threshold>
+        default_xml = """
+<hudson.tasks.BuildTrigger>
+    <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+    </threshold>
 </hudson.tasks.BuildTrigger>"""
         root_node = ElementTree.fromstring(default_xml)
 

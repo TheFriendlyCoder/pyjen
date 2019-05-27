@@ -26,7 +26,7 @@ class TestSingleBuild:
 
     def test_build_id(self):
         bld = self.job.last_build
-        assert bld.id == '1'
+        assert bld.uid == '1'
 
     def test_build_equality(self):
         bld1 = self.job.all_builds[0]

@@ -81,7 +81,7 @@ def instantiate_xml_plugin(node, parent):
     log = logging.getLogger(__name__)
     plugin_class = find_plugin(node.tag)
     if not plugin_class:
-        log.warning("Skipping unsupported plugin " + node.tag)
+        log.warning("Skipping unsupported plugin %s", node.tag)
         return None
     retval = plugin_class(node)
     retval.parent = parent

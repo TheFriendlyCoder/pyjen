@@ -1,3 +1,4 @@
+"""Trigger configuration for a parameterized build trigger"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import instantiate_xml_plugin
@@ -69,13 +70,14 @@ class BuildTriggerConfig(XMLPlugin):
             this configuration object
         :rtype: :class:`BuildTriggerConfig`
         """
-        default_xml = """<hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
-            <configs/>
-            <projects/>
-            <condition>SUCCESS</condition>
-            <triggerWithNoParameters>true</triggerWithNoParameters>
-            <triggerFromChildProjects>false</triggerFromChildProjects>
-        </hudson.plugins.parameterizedtrigger.BuildTriggerConfig>"""
+        default_xml = """
+<hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+    <configs/>
+    <projects/>
+    <condition>SUCCESS</condition>
+    <triggerWithNoParameters>true</triggerWithNoParameters>
+    <triggerFromChildProjects>false</triggerFromChildProjects>
+</hudson.plugins.parameterizedtrigger.BuildTriggerConfig>"""
         root_node = ElementTree.fromstring(default_xml)
         projects_node = root_node.find("projects")
         projects_node.text = ",".join(job_names)

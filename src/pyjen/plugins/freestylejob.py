@@ -242,6 +242,7 @@ class FreestyleJob(Job):
 
 
 class FreestyleXML(JobXML):
+    """Abstraction around the config.xml for this type of Jenkins job"""
 
     @property
     def publishers(self):

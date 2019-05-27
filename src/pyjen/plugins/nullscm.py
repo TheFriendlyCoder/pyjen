@@ -20,6 +20,10 @@ class NullSCM(XMLPlugin):
 
     @classmethod
     def instantiate(cls):
+        """Factory method used to construct instances of this class
+
+        :rtype: :class:`NullSCM`
+        """
         root_node = ElementTree.fromstring('<scm class="hudson.scm.NullSCM"/>')
         return cls(root_node)
 
