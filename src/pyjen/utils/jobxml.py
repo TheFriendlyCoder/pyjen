@@ -45,6 +45,11 @@ class JobXML(object):
         """
         return ElementTree.tostring(self._root).decode("utf-8")
 
+    @xml.setter
+    def xml(self, value):
+        self._cache = ElementTree.fromstring(value)
+        self.update()
+
     @property
     def plugin_name(self):
         """Gets the name of the Jenkins plugin associated with this view
