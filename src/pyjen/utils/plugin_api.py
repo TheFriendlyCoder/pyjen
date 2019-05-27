@@ -67,5 +67,26 @@ def get_all_plugins():
     return retval
 
 
+def instantiate_xml_plugin(node, parent):
+    """Instantiates a PyJen XML plugin from an arbitrary XML node
+
+    :param node:
+        ElementTree node describing the plugin to be instantiated
+    :param parent:
+        ElementTree object that owns the plugin being instantiated
+    :returns:
+        Reference to the instantiated plugin, or None if the associated plugin
+        isn't currently implemented in PyJen yet
+    """
+    log = logging.getLogger(__name__)
+    plugin_class = find_plugin(node.tag)
+    if not plugin_class:
+        log.warning("Skipping unsupported plugin " + node.tag)
+        return None
+    retval = plugin_class(node)
+    retval.parent = parent
+    return retval
+
+
 if __name__ == "__main__":  # pragma: no cover
     pass

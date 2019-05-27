@@ -1,7 +1,7 @@
 """Jenkins post-build publisher of type Parameterized Build Trigger"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
-from pyjen.utils.plugin_api import find_plugin
+from pyjen.utils.plugin_api import instantiate_xml_plugin
 
 
 class ParameterizedBuildTrigger(XMLPlugin):
@@ -21,14 +21,9 @@ class ParameterizedBuildTrigger(XMLPlugin):
         configs_node = self._root.find('configs')
         for cur_node in configs_node:
 
-            plugin_class = find_plugin(cur_node.tag)
-            if not plugin_class:
-                self._log.warning("Skipping unsupported plugin " +
-                                  cur_node.tag)
-                continue
-            temp = plugin_class(cur_node)
-            temp.parent = self
-            retval.append(temp)
+            plugin = instantiate_xml_plugin(cur_node, self)
+            if plugin:
+                retval.append(plugin)
 
         return retval
 

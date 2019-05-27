@@ -161,20 +161,20 @@ class Build(object):
             retval.append(url)
 
         return retval
-    
+
     @property
     def duration(self):
         """ Total duration in milliseconds of how long the build took; Returns 0 if build hasn't finished
-        
+
         :rtype: :class:`int`
         """
         data = self._api.get_api_data()
         return data['duration']
-    
+
     @property
     def estimated_duration(self):
         """ Estimate based off average duration of previous builds returned in milliseconds
-        
+
         :rtype: :class:`int`
         """
         data = self._api.get_api_data()
@@ -187,6 +187,7 @@ class Build(object):
     def kill(self):
         """Performs hard kill on this build"""
         self._api.post(self._api.url + "kill")
+
 
 if __name__ == "__main__":  # pragma: no cover
     pass
