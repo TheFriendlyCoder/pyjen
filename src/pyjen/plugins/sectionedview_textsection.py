@@ -33,7 +33,7 @@ class TextSection(XMLPlugin):
         return "hudson.plugins.sectioned_view.TextSection"
 
     @classmethod
-    def create(cls, section_name):
+    def instantiate(cls, section_name):
         """Factory method for creating a new Git SCM code block
 
         :param str section_name:

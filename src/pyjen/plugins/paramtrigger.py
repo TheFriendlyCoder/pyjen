@@ -40,7 +40,7 @@ class ParameterizedBuildTrigger(XMLPlugin):
         return "hudson.plugins.parameterizedtrigger.BuildTrigger"
 
     @classmethod
-    def create(cls, triggers):
+    def instantiate(cls, triggers):
         """Factory method for creating a new instances of this class
 
         :param list triggers:

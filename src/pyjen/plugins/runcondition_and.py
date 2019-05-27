@@ -36,7 +36,7 @@ class AndCondition(XMLPlugin):
         return "and"
 
     @classmethod
-    def create(cls, terms):
+    def instantiate(cls, terms):
         """Creates a new instance of this condition
 
         :param list terms:

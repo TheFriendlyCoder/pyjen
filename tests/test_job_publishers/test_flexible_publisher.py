@@ -13,10 +13,10 @@ def test_basic_publisher(jenkins_env):
     jb = jk.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         expected_regex = "*.log"
-        new_condition = AlwaysRun.create()
-        new_pub = ArtifactArchiverPublisher.create(expected_regex)
-        new_action = ConditionalAction.create(new_condition, [new_pub])
-        pub = FlexiblePublisher.create([new_action])
+        new_condition = AlwaysRun.instantiate()
+        new_pub = ArtifactArchiverPublisher.instantiate(expected_regex)
+        new_action = ConditionalAction.instantiate(new_condition, [new_pub])
+        pub = FlexiblePublisher.instantiate([new_action])
         jb.add_publisher(pub)
 
         # Get a fresh copy of our job to ensure we have an up to date

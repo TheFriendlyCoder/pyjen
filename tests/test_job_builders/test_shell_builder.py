@@ -11,7 +11,7 @@ def test_add_simple_shell_builder(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_script = "echo hello"
-        shell_builder = ShellBuilder.create(expected_script)
+        shell_builder = ShellBuilder.instantiate(expected_script)
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -32,7 +32,7 @@ def test_unstable_return_code(jenkins_env):
     jb = jk.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         rcode = 12
-        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step = ShellBuilder.instantiate("exit " + str(rcode))
         failing_step.unstable_return_code = rcode
         jb.add_builder(failing_step)
         async_assert(lambda: jb.builders)
@@ -54,7 +54,7 @@ def test_edit_unstable_return_code(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
-        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step = ShellBuilder.instantiate("exit " + str(rcode))
         failing_step.unstable_return_code = 1
         jb.add_builder(failing_step)
 
@@ -82,7 +82,7 @@ def test_add_then_edit_unstable_return_code(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
-        failing_step = ShellBuilder.create("exit " + str(rcode))
+        failing_step = ShellBuilder.instantiate("exit " + str(rcode))
         failing_step.unstable_return_code = 1
         jb.add_builder(failing_step)
 

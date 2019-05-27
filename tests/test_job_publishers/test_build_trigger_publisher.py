@@ -13,7 +13,7 @@ def test_add_build_trigger_publisher(jenkins_env):
         downstream_name = "test_add_build_trigger_publisher2"
         jb2 = jk.create_job(downstream_name, FreestyleJob)
         with clean_job(jb2):
-            publisher = BuildTriggerPublisher.create([downstream_name])
+            publisher = BuildTriggerPublisher.instantiate([downstream_name])
             jb.add_publisher(publisher)
 
             # Get a fresh copy of our job to ensure we have an up to date
@@ -37,7 +37,7 @@ def test_one_downstream_job(jenkins_env):
         expected_name = "test_one_downstream_job2"
         jb2 = jk.create_job(expected_name, FreestyleJob)
         with clean_job(jb2):
-            publisher = BuildTriggerPublisher.create([expected_name])
+            publisher = BuildTriggerPublisher.instantiate([expected_name])
             jb.add_publisher(publisher)
 
             async_assert(lambda: jb.downstream_jobs)
@@ -59,7 +59,7 @@ def test_multiple_downstream_jobs(jenkins_env):
             jb3 = jk.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
                 all_names = [expected_name1,expected_name2]
-                publisher = BuildTriggerPublisher.create(all_names)
+                publisher = BuildTriggerPublisher.instantiate(all_names)
                 jb.add_publisher(publisher)
 
                 async_assert(lambda: jb.downstream_jobs)
@@ -79,7 +79,7 @@ def test_one_upstream_job(jenkins_env):
         child_job_name = "test_one_upstream_job2"
         jb2 = jk.create_job(child_job_name, FreestyleJob)
         with clean_job(jb2):
-            publisher = BuildTriggerPublisher.create([child_job_name])
+            publisher = BuildTriggerPublisher.instantiate([child_job_name])
             jb.add_publisher(publisher)
 
             async_assert(lambda: jb2.upstream_jobs)
@@ -102,7 +102,7 @@ def test_multiple_upstream_jobs(jenkins_env):
             jb3 = jk.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
                 all_names = [expected_name1,expected_name2]
-                publisher = BuildTriggerPublisher.create([child_job_name])
+                publisher = BuildTriggerPublisher.instantiate([child_job_name])
                 jb2.add_publisher(publisher)
                 jb3.add_publisher(publisher)
 

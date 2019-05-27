@@ -66,7 +66,7 @@ def test_node_busy(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
-        shell_builder = ShellBuilder.create("sleep 2")
+        shell_builder = ShellBuilder.instantiate("sleep 2")
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -94,7 +94,7 @@ def test_wait_for_idle(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
-        shell_builder = ShellBuilder.create("sleep 2")
+        shell_builder = ShellBuilder.instantiate("sleep 2")
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date
@@ -121,7 +121,7 @@ def test_wait_for_idle_timeout(jenkins_env):
     jb = jk.create_job(expected_job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
-        shell_builder = ShellBuilder.create("sleep 5")
+        shell_builder = ShellBuilder.instantiate("sleep 5")
         jb.add_builder(shell_builder)
 
         # Get a fresh copy of our job to ensure we have an up to date

@@ -61,7 +61,7 @@ class BuildTriggerConfig(XMLPlugin):
         param_config.parent = self
 
     @classmethod
-    def create(cls, job_names):
+    def instantiate(cls, job_names):
         """Factory method for creating a new instances of this class
 
         :param list job_names:

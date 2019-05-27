@@ -353,7 +353,7 @@ def test_builds(request, test_job):
 def test_builds_with_git(request, test_job):
     """Helper fixture that creates a job with a sample build with Git sources for testing"""
     expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
-    test_scm = GitSCM.create(expected_url)
+    test_scm = GitSCM.instantiate(expected_url)
     request.cls.job.scm = test_scm
 
     request.cls.job.quiet_period = 0

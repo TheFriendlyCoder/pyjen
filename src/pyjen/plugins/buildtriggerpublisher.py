@@ -31,7 +31,7 @@ class BuildTriggerPublisher(XMLPlugin):
         return [i.strip() for i in children_node.text.split(",")]
 
     @classmethod
-    def create(cls, project_names):
+    def instantiate(cls, project_names):
         """Factory method for creating a new build trigger
 
         The default trigger will run when the parent job is successful

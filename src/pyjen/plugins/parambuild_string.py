@@ -47,7 +47,7 @@ class ParameterizedBuildStringParameter(XMLPlugin):
 
     # --------------------------------------------------------------- PLUGIN API
     @classmethod
-    def create(cls, name, default_value, description, trim):
+    def instantiate(cls, name, default_value, description, trim):
         """Creates a new string build parameter
 
         :param str name:

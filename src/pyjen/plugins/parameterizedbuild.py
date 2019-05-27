@@ -21,7 +21,7 @@ class ParameterizedBuild(XMLPlugin):
 
     # --------------------------------------------------------------- PLUGIN API
     @classmethod
-    def create(cls, params):
+    def instantiate(cls, params):
         """Factory method for this class
 
         :param list params:
