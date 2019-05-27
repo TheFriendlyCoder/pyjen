@@ -49,7 +49,7 @@ class FlexiblePublisher(XMLPlugin):
         :rtype: :class:`ParameterizedBuildTrigger`
         """
         default_xml = """
-<org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher plugin="flexible-publish@0.15.2">
+<org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher>
     <publishers/>
 </org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher>"""
         root_node = ElementTree.fromstring(default_xml)
@@ -90,7 +90,8 @@ class ConditionalAction(XMLPlugin):
         """Factory method for creating a new instances of this class
 
         :param condition:
-            Flexible publish build condition pre-configured to control this publish operation
+            Flexible publish build condition pre-configured to control
+            this publish operation
         :param list actions:
             List of 1 or more "build stage" plugins that you would like to use
             in the publish phase of a Jenkins job
@@ -99,10 +100,10 @@ class ConditionalAction(XMLPlugin):
         default_xml = """
 <org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>
     <publisherList/>
-    <runner class="org.jenkins_ci.plugins.run_condition.BuildStepRunner$Fail" plugin="run-condition@1.2"/>
+    <runner class="org.jenkins_ci.plugins.run_condition.BuildStepRunner$Fail" />
     <executionStrategy class="org.jenkins_ci.plugins.flexible_publish.strategy.FailAtEndExecutionStrategy"/>
 </org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>
-"""
+"""  # pylint: disable=line-too-long
         root_node = ElementTree.fromstring(default_xml)
         root_node.append(condition.node)
         configs_node = root_node.find("publisherList")

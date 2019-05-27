@@ -591,7 +591,7 @@ def test_find_build_by_queue_id_match(jenkins_env):
         bld1 = q1.build
         assert bld1 is not None
 
-        bld2 = jb.find_build_by_queue_id(q1.id)
+        bld2 = jb.find_build_by_queue_id(q1.uid)
         assert bld1 == bld2
 
 
@@ -601,7 +601,7 @@ def test_find_build_by_queue_id_no_match(jenkins_env):
     with clean_job(jb):
         jb.quiet_period = 0
         q1 = jb.start_build()
-        test_id = q1.id + 50
+        test_id = q1.uid + 50
         async_assert(lambda: jb.last_build)
 
         bld = jb.find_build_by_queue_id(test_id)

@@ -29,43 +29,61 @@ class MultibranchPipelineJob(Job):
 
         :rtype: :class:`str`
         """
-        return "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject"
+        return \
+            "org.jenkinsci.plugins.workflow.multibranch." \
+            "WorkflowMultiBranchProject"
 
     @staticmethod
     def template_config_xml():
-        return """<org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject plugin="workflow-multibranch@2.21">
+        """Gets config xml data to instantiate a default instance of this job
+
+        :rtype: :class:`str`
+        """
+        return """
+<org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject>
     <actions/>
     <description/>
     <properties>
-        <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig plugin="pipeline-model-definition@1.3.8">
+        <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
             <dockerLabel/>
-            <registry plugin="docker-commons@1.14"/>
+            <registry/>
         </org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
     </properties>
-    <folderViews class="jenkins.branch.MultiBranchProjectViewHolder" plugin="branch-api@2.4.0">
-        <owner class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" reference="../.."/>
+    <folderViews class="jenkins.branch.MultiBranchProjectViewHolder">
+      <owner 
+  class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" 
+  reference="../.."/>
     </folderViews>
     <healthMetrics>
-        <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric plugin="cloudbees-folder@6.8">
+        <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
             <nonRecursive>false</nonRecursive>
         </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
     </healthMetrics>
-    <icon class="jenkins.branch.MetadataActionFolderIcon" plugin="branch-api@2.4.0">
-        <owner class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" reference="../.."/>
+    <icon class="jenkins.branch.MetadataActionFolderIcon">
+        <owner 
+  class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" 
+  reference="../.."/>
     </icon>
-    <orphanedItemStrategy class="com.cloudbees.hudson.plugins.folder.computed.DefaultOrphanedItemStrategy" plugin="cloudbees-folder@6.8">
+    <orphanedItemStrategy 
+class="com.cloudbees.hudson.plugins.folder.computed.DefaultOrphanedItemStrategy"
+>
         <pruneDeadBranches>true</pruneDeadBranches>
         <daysToKeep>-1</daysToKeep>
         <numToKeep>-1</numToKeep>
     </orphanedItemStrategy>
     <triggers/>
     <disabled>false</disabled>
-    <sources class="jenkins.branch.MultiBranchProject$BranchSourceList" plugin="branch-api@2.4.0">
+    <sources class="jenkins.branch.MultiBranchProject$BranchSourceList">
         <data/>
-        <owner class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" reference="../.."/>
+        <owner 
+  class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" 
+  reference="../.."/>
     </sources>
-    <factory class="org.jenkinsci.plugins.workflow.multibranch.WorkflowBranchProjectFactory">
-        <owner class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" reference="../.."/>
+    <factory 
+class="org.jenkinsci.plugins.workflow.multibranch.WorkflowBranchProjectFactory">
+        <owner 
+  class="org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" 
+  reference="../.."/>
         <scriptPath>Jenkinsfile</scriptPath>
     </factory>
 </org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject>"""
@@ -75,4 +93,3 @@ PluginClass = MultibranchPipelineJob
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-

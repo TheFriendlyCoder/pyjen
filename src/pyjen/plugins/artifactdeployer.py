@@ -14,9 +14,10 @@ class ArtifactDeployer(XMLPlugin):
         """Factory method for creating a new artifact deployer
         :rtype: :class:`pyjen.plugins.artifactdeployer.ArtifactDeployer`
         """
-        default_xml = """<org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher plugin="artifactdeployer@1.2">
-<entries class="empty-list"/>
-<deployEvenBuildFail>false</deployEvenBuildFail>
+        default_xml = """
+<org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher>
+    <entries class="empty-list"/>
+    <deployEvenBuildFail>false</deployEvenBuildFail>
 </org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher>"""
         root_node = ElementTree.fromstring(default_xml)
 
@@ -61,7 +62,8 @@ class ArtifactDeployer(XMLPlugin):
 
         :rtype: :class:`str`
         """
-        return "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher"
+        return \
+            "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher"
 
 
 class ArtifactDeployerEntry(XMLPlugin):
@@ -78,7 +80,8 @@ class ArtifactDeployerEntry(XMLPlugin):
             instance of the artifact deployer entry
         :rtype: :class:`ArtifactDeployerEntry`
         """
-        default_xml = """<org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry>
+        default_xml = """
+<org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry>
     <basedir/>
     <excludes/>
     <flatten>false</flatten>

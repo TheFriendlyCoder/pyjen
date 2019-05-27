@@ -1,10 +1,10 @@
 """Base class for all objects that interact with the Jenkins REST API"""
 import logging
 import json
+import xml.etree.ElementTree as ElementTree
 import requests
 from requests.exceptions import InvalidHeader
 from six.moves import urllib_parse
-import xml.etree.ElementTree as ElementTree
 
 
 class JenkinsAPI(object):
@@ -52,7 +52,7 @@ class JenkinsAPI(object):
         :rtype: :class:`~.utils.jenkins_api.JenkinsAPI`
         """
         retval = JenkinsAPI(api_url, self._creds, self._ssl_cert)
-        retval._jenkins_root_url = self._jenkins_root_url
+        retval._jenkins_root_url = self._jenkins_root_url  # pylint: disable=protected-access
         return retval
 
     @property

@@ -18,7 +18,7 @@ def test_waiting_build_queue(jenkins_env):
         assert isinstance(res, list)
         assert len(res) == 1
         assert res[0].stuck is False
-        assert isinstance(res[0].id, int)
+        assert isinstance(res[0].uid, int)
         qjob = res[0].job
         assert qjob == jb
 
@@ -148,7 +148,7 @@ def test_getters_from_invalid_queue_item():
     q1 = QueueItem(mock_api)
 
     # confirm the results
-    assert q1.id == expected_id
+    assert q1.uid == expected_id
     assert q1.stuck is None
     assert q1.blocked is None
     assert q1.buildable is None

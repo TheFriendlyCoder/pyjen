@@ -20,11 +20,16 @@ class MultiJob(Job):
 
     @staticmethod
     def template_config_xml():
-        return """<com.tikal.jenkins.plugins.multijob.MultiJobProject plugin="jenkins-multijob-plugin@1.32">
+        """Gets XML for a default implementation of this job type
+
+        :rtype: :class:`str`
+        """
+        return """
+<com.tikal.jenkins.plugins.multijob.MultiJobProject>
     <description/>
     <keepDependencies>false</keepDependencies>
     <properties>
-        <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
+        <hudson.plugins.buildblocker.BuildBlockerProperty>
             <useBuildBlocker>false</useBuildBlocker>
             <blockLevel>GLOBAL</blockLevel>
             <scanQueueFor>DISABLED</scanQueueFor>

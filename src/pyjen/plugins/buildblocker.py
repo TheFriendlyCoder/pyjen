@@ -133,10 +133,11 @@ class BuildBlockerProperty(XMLPlugin):
             execution of this one.
         :type patterns: either :class:`list` or :class:`str`
         """
-        default_xml = """<hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
-<useBuildBlocker>true</useBuildBlocker>
-<blockLevel>GLOBAL</blockLevel>
-<scanQueueFor>DISABLED</scanQueueFor>
+        default_xml = """
+<hudson.plugins.buildblocker.BuildBlockerProperty>
+    <useBuildBlocker>true</useBuildBlocker>
+    <blockLevel>GLOBAL</blockLevel>
+    <scanQueueFor>DISABLED</scanQueueFor>
 </hudson.plugins.buildblocker.BuildBlockerProperty>"""
 
         root_node = ElementTree.fromstring(default_xml)

@@ -40,9 +40,12 @@ class ConditionalBuilder(XMLPlugin):
         :rtype: :class:`~.ConditionalBuilder`
         """
         # TODO: add support for multi-condition builder
-        default_xml = """<org.jenkinsci.plugins.conditionalbuildstep.singlestep.SingleConditionalBuilder plugin="conditional-buildstep@1.3.6">
-    <runner class="org.jenkins_ci.plugins.run_condition.BuildStepRunner$Fail" plugin="run-condition@1.2"/>
-</org.jenkinsci.plugins.conditionalbuildstep.singlestep.SingleConditionalBuilder>"""
+        default_xml = """
+<org.jenkinsci.plugins.conditionalbuildstep.singlestep.SingleConditionalBuilder>
+    <runner class="org.jenkins_ci.plugins.run_condition.BuildStepRunner$Fail"/>
+</org.jenkinsci.plugins.conditionalbuildstep.singlestep.SingleConditionalBuilder>
+"""  # pylint: disable=line-too-long
+
         root_node = ElementTree.fromstring(default_xml)
         root_node.append(condition.node)
         build_step = ElementTree.SubElement(root_node, "buildStep")
@@ -78,11 +81,8 @@ class ConditionalBuilder(XMLPlugin):
         assert node is not None
         plugin = find_plugin(node.attrib["class"])
         if not plugin:
-            raise NotImplementedError(
-                "Conditional build step condition {0} not supported by PyJen.".format(
-                    node.attrib["class"]
-                )
-            )
+            msg = "Conditional build step condition {0} not supported by PyJen."
+            raise NotImplementedError(msg.format(node.attrib["class"]))
         return plugin(node)
 
     @property

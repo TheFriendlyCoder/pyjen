@@ -330,8 +330,6 @@ class Job(object):
         new_api = self._api.clone(node.text)
         return Build(new_api)
 
-        #tmp = "http://localhost/job/eoijeooivoif/api/xml?tree=builds%5Burl,queueId%5D&xpath=//build%5BqueueId=1166%5D"
-
     def disable(self):
         """Disables this job
 
@@ -374,7 +372,7 @@ class Job(object):
             0 or more named arguments to pass as build parameters to the
             job when triggering the build.
         """
-        if len(kwargs.keys()) == 0:
+        if not kwargs.keys():
             res = self._api.post(self._api.url + "build")
         else:
             params = {"params": kwargs}

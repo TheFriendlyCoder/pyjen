@@ -1,3 +1,4 @@
+"""Abstration around the Jenkins build queue"""
 from pyjen.queue_item import QueueItem
 
 

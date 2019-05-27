@@ -1,9 +1,11 @@
+"""Implementation for the parameterized build plugin"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import instantiate_xml_plugin
 
 
 class ParameterizedBuild(XMLPlugin):
+    """Plugin which allows custom build paramters to be passed to a job"""
     @property
     def parameters(self):
         """Gets a list of the build parameters associated with this property

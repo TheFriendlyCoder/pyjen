@@ -66,33 +66,36 @@ class FolderJob(Job):
             jobs of this type
         :rtype: :class:`str`
         """
-        xml = """<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.7">
-        <description/>
-        <properties>
-            <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig plugin="pipeline-model-definition@1.3.6">
+        xml = """
+<com.cloudbees.hudson.plugins.folder.Folder>
+    <description/>
+    <properties>
+        <org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
             <dockerLabel/>
-            <registry plugin="docker-commons@1.13"/>
-            </org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
-        </properties>
-        <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
-            <views>
-                <hudson.model.AllView>
-                    <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
-                    <name>All</name>
-                    <filterExecutors>false</filterExecutors>
-                    <filterQueue>false</filterQueue>
-                    <properties class="hudson.model.View$PropertyList"/>
-                </hudson.model.AllView>
-            </views>
-            <tabBar class="hudson.views.DefaultViewsTabBar"/>
-        </folderViews>
-        <healthMetrics>
-            <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
-                <nonRecursive>false</nonRecursive>
-            </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
-        </healthMetrics>
-        <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
-    </com.cloudbees.hudson.plugins.folder.Folder>"""
+            <registry/>
+        </org.jenkinsci.plugins.pipeline.modeldefinition.config.FolderConfig>
+    </properties>
+    <folderViews 
+      class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
+        <views>
+            <hudson.model.AllView>
+                <owner class="com.cloudbees.hudson.plugins.folder.Folder" 
+                  reference="../../../.."/>
+                <name>All</name>
+                <filterExecutors>false</filterExecutors>
+                <filterQueue>false</filterQueue>
+                <properties class="hudson.model.View$PropertyList"/>
+            </hudson.model.AllView>
+        </views>
+        <tabBar class="hudson.views.DefaultViewsTabBar"/>
+    </folderViews>
+    <healthMetrics>
+        <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+            <nonRecursive>false</nonRecursive>
+        </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+    </healthMetrics>
+    <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+</com.cloudbees.hudson.plugins.folder.Folder>"""
         return xml
 
     @staticmethod

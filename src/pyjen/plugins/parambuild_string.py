@@ -1,9 +1,10 @@
+"""String build parameter - plugin for parameterized build plugin"""
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
 class ParameterizedBuildStringParameter(XMLPlugin):
-
+    """String build parameter - plugin for parameterized build plugin"""
     @property
     def name(self):
         """Gets the friendly name assigned to this parameter
@@ -96,4 +97,3 @@ PluginClass = ParameterizedBuildStringParameter
 
 if __name__ == "__main__":  # pragma: no cover
     pass
-
