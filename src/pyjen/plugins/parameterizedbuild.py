@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
-from pyjen.utils.plugin_api import find_plugin
+from pyjen.utils.plugin_api import instantiate_xml_plugin
 
 
 class ParameterizedBuild(XMLPlugin):
@@ -14,14 +14,9 @@ class ParameterizedBuild(XMLPlugin):
         assert params_node is not None
         retval = list()
         for cur_param in params_node:
-            plugin = find_plugin(cur_param.tag)
-
-            if plugin is None:
-                self._log.warning(
-                    "Skipping unsupported plugin: %s", cur_param.tag)
-                continue
-
-            retval.append(plugin(cur_param))
+            plugin = instantiate_xml_plugin(cur_param, self)
+            if plugin:
+                retval.append(plugin)
         return retval
 
     # --------------------------------------------------------------- PLUGIN API

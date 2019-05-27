@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
-from pyjen.utils.plugin_api import find_plugin
+from pyjen.utils.plugin_api import instantiate_xml_plugin
 
 
 class BuildTriggerConfig(XMLPlugin):
@@ -43,14 +43,9 @@ class BuildTriggerConfig(XMLPlugin):
         retval = list()
         node = self.node.find("configs")
         for cur_child in node:
-            plugin_class = find_plugin(cur_child.tag)
-            if not plugin_class:
-                self._log.warning("Skipping unsupported plugin " +
-                                  cur_child.tag)
-                continue
-            temp = plugin_class(cur_child)
-            temp.parent = self
-            retval.append(temp)
+            plugin = instantiate_xml_plugin(cur_child, self)
+            if plugin:
+                retval.append(plugin)
         return retval
 
     def add_build_param(self, param_config):
