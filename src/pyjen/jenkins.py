@@ -7,7 +7,6 @@ from pyjen.job import Job
 from pyjen.user import User
 from pyjen.queue import Queue
 from pyjen.plugin_manager import PluginManager
-from pyjen.utils.user_params import JenkinsConfigParser
 from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.helpers import create_view, create_job
 
@@ -48,9 +47,7 @@ class Jenkins(object):
     :param str url: Full HTTP URL to the main Jenkins dashboard
     :param tuple credentials:
         Optional 2-tuple containing the username and password / api key to
-        authenticate with. If not provided, credentials will be loaded from any
-        PyJen config files detected on the system. If no config files can be
-        found, anonymous access will be assumed
+        authenticate with. If not provided, anonymous access will be assumed
     :param ssl_cert:
         Passed directly to the requests library when authenticating to the
         remote server. Maybe be a boolean indicating whether SSL verification
@@ -61,17 +58,7 @@ class Jenkins(object):
     def __init__(self, url, credentials=None, ssl_cert=True):
         super(Jenkins, self).__init__()
         self._log = logging.getLogger(__name__)
-
-        # If no explicit credentials provided,
-        # load credentials from any config files
-        if credentials is None:
-            config = JenkinsConfigParser()
-            config.read(JenkinsConfigParser.get_default_configfiles())
-            creds = config.get_credentials(url)
-        else:
-            creds = credentials
-
-        self._api = JenkinsAPI(url, creds, ssl_cert)
+        self._api = JenkinsAPI(url, credentials, ssl_cert)
 
     @property
     def connected(self):
