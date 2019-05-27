@@ -3,40 +3,6 @@ import xml.etree.ElementTree as ElementTree
 from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.exceptions import PluginNotSupportedError
-
-"""<project>
-<description/>
-<keepDependencies>false</keepDependencies>
-<properties>
-<com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.12">
-<gitLabConnection/>
-</com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
-<com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.30">
-<autoRebuild>false</autoRebuild>
-<rebuildDisabled>false</rebuildDisabled>
-</com.sonyericsson.rebuild.RebuildSettings>
-<hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@2.0.1">
-<categories class="java.util.concurrent.CopyOnWriteArrayList"/>
-<throttleEnabled>false</throttleEnabled>
-<throttleOption>project</throttleOption>
-<limitOneJobWithMatchingParams>false</limitOneJobWithMatchingParams>
-<paramsToUseForLimit/>
-</hudson.plugins.throttleconcurrents.ThrottleJobProperty>
-</properties>
-<scm class="hudson.scm.NullSCM"/>
-    <assignedNode>qfqwefqwfwfe</assignedNode>
-<canRoam>false</canRoam>
-<disabled>false</disabled>
-<blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-<triggers/>
-<concurrentBuild>false</concurrentBuild>
-<builders/>
-<publishers/>
-<buildWrappers/>
-</project>
-"""
 
 
 class FreestyleJob(Job):
@@ -328,8 +294,8 @@ class FreestyleXML(JobXML):
         node = self._root.find('scm')
         plugin_class = find_plugin(node.attrib["class"])
         if plugin_class is None:
-            raise PluginNotSupportedError("SCM XML plugin not found",
-                                          node.attrib["class"])
+            raise NotImplementedError(
+                "SCM XML plugin not found: " + node.attrib["class"])
         return plugin_class(node)
 
     @scm.setter

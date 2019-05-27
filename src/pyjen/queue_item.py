@@ -4,7 +4,6 @@ from six import PY2
 from requests.exceptions import HTTPError
 from pyjen.build import Build
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.exceptions import PluginNotSupportedError
 
 
 class QueueItem(object):
@@ -160,8 +159,8 @@ class QueueItem(object):
             return None
         plugin = find_plugin(job_data["_class"])
         if plugin is None:
-            raise PluginNotSupportedError(
-                "Job plugin not supported.", job_data["_class"])
+            raise NotImplementedError(
+                "Job plugin not supported: " + job_data["_class"])
         return plugin(self._api.clone(job_data["url"]))
 
     @property

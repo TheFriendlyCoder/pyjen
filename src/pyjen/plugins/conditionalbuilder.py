@@ -2,7 +2,6 @@
 """
 import xml.etree.ElementTree as ElementTree
 from pyjen.utils.plugin_api import find_plugin
-from pyjen.exceptions import PluginNotSupportedError
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
@@ -79,9 +78,10 @@ class ConditionalBuilder(XMLPlugin):
         assert node is not None
         plugin = find_plugin(node.attrib["class"])
         if not plugin:
-            raise PluginNotSupportedError(
-                "Conditional build step condition %s not supported by PyJen.",
-                node.attrib["class"]
+            raise NotImplementedError(
+                "Conditional build step condition {0} not supported by PyJen.".format(
+                    node.attrib["class"]
+                )
             )
         return plugin(node)
 
@@ -92,9 +92,10 @@ class ConditionalBuilder(XMLPlugin):
         build_step_node = self._root.find("buildStep")
         plugin = find_plugin(build_step_node.attrib["class"])
         if not plugin:
-            raise PluginNotSupportedError(
-                "Build step plugin %s is not supported by PyJen.",
-                build_step_node.attrib["class"]
+            raise NotImplementedError(
+                "Build step plugin {0} is not supported by PyJen.".format(
+                    build_step_node.attrib["class"]
+                )
             )
 
         # We have to reconstruct the XML for the build step from the

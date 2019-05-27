@@ -2,7 +2,6 @@
 import os
 import platform
 from six.moves import configparser
-from pyjen.exceptions import InvalidUserParamsError
 
 
 class JenkinsConfigParser(configparser.ConfigParser):  # pylint: disable=too-many-ancestors
@@ -63,10 +62,10 @@ class JenkinsConfigParser(configparser.ConfigParser):  # pylint: disable=too-man
             return None
 
         if not temp_username:
-            raise InvalidUserParamsError(
+            raise Exception(
                 "No username specified for password under " + section_name)
         if not temp_password:
-            raise InvalidUserParamsError("No password specified for user " +
+            raise Exception("No password specified for user " +
                                          temp_username + " under " +
                                          section_name)
         return temp_username, temp_password
