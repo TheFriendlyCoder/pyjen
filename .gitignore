@@ -69,9 +69,6 @@ target/
 # IPython Notebook
 .ipynb_checkpoints
 
-# pyenv
-.python-version
-
 # celery beat schedule file
 celerybeat-schedule
 
@@ -105,3 +102,9 @@ container_id.txt
 container_id.txt.token
 
 docs/api/*
+htmldocs/*
+
+# keep the single-version dependency lock file out of our repo
+poetry.lock
+
+pip-wheel-metadata/*

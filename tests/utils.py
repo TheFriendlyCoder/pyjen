@@ -41,7 +41,7 @@ def clean_view(jenkins_view, disable=False):
             jenkins_view.delete()
 
 
-def async_assert(test_func, duration=10):
+def async_assert(test_func, duration=15):
     """Runs a test function periodically
 
     Used to test asynchronous test operations that may take some time to

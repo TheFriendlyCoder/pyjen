@@ -1,10 +1,39 @@
+import pyjen
 from pyjen.jenkins import Jenkins
 from mock import MagicMock, patch
 import pytest
+import pkg_resources
+import ast
+import os
 from .utils import clean_view, clean_job
 from pyjen.plugins.listview import ListView
 from pyjen.plugins.freestylejob import FreestyleJob
 from pyjen.plugins.folderjob import FolderJob
+
+
+def test_package_version():
+    installed_ver = None
+    for cur_pkg in pkg_resources.working_set:
+        if cur_pkg.project_name != "pyjen":
+            continue
+        installed_ver = cur_pkg.version
+
+    assert installed_ver is not None
+    assert pyjen.__version__ == installed_ver
+
+    # Sanity check: make sure the version from our source repo matches
+    #               the installed version we are testing against
+    test_dir = os.path.dirname(os.path.realpath(__file__))
+    ver_file = os.path.abspath(os.path.join(test_dir, "..", "src", "pyjen", "version.py"))
+    with open(ver_file, 'r') as fh:
+        for tmp in ast.iter_fields(ast.parse(fh.read())):
+            assert len(tmp[1]) == 1
+            cur_field = tmp[1][0]
+            assert len(cur_field.targets) == 1
+            print(dir(cur_field.targets[0]))
+            assert cur_field.targets[0].id == "__version__"
+            src_ver = cur_field.value.s
+    assert src_ver == installed_ver
 
 
 def test_simple_connection(jenkins_env):
