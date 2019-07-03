@@ -48,6 +48,15 @@ class Build(object):
         return hash(self.uid)
 
     @property
+    def url(self):
+        """Gets the URL of this build
+
+        :returns: full url to this build
+        :rtype: :class:`str`
+        """
+        return self._api.url
+
+    @property
     def number(self):
         """Gets the sequence number of this build
 
