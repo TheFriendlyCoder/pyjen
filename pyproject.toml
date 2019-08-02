@@ -1,7 +1,11 @@
 # TODO:
 # figure out how to generate readme as was done in setup.py
-# test running tox against multiple Python versions on same machine with poetry
-#       - make sure lock file generated for one version doesn't interfere with the other
+#       probably need to just create one by hand
+# investigate the inter-play between poetry, pyenv and tox
+#       the lock file that is generated appears to only use the latest python version
+#       the version of dependencies installed by tox don't match those in the lock file
+#       `poetry shell` doesn't seem to respect the same Python version and installed packages that `poetry install` creates
+# see if there is a way to have poetry install "only" the dependencies of the proejct (ie: without the project itself)
 
 
 # TODO: Contributions
