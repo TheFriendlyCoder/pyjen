@@ -16,7 +16,7 @@ from .utils import async_assert
 
 # Default Docker container to use for testing
 # May be overloaded from the command prompt using '--jenkins-version'
-DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.173-alpine"
+DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.187-alpine"
 
 # Global flag used to see whether we've already attempted to run our Jenkins
 # containerized environment. Prevents redundant failures from slowing down

@@ -132,10 +132,17 @@ def test_find_plugin_by_shortname_doesnt_exist(jenkins_env):
 
 def test_find_plugin_by_shortname(jenkins_env):
     jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    result = jk.plugin_manager.find_plugin_by_shortname(jenkins_env["plugins"][0].split(":")[0])
+    # NOTE: For some reason the first plugin in our list of test plugins,
+    # "workflow-aggregator", doesn't always show up on the list of installed
+    # plugins. To ensure consistent behavior of this test we select the last
+    # plugin in our list of test plugins which should be a valid third-party
+    # plugin that should always appear in the list of those installed
+    plugin_long_name = jenkins_env["plugins"][-1]
+    expected_short_name = plugin_long_name.split(":")[0]
+    result = jk.plugin_manager.find_plugin_by_shortname(expected_short_name)
 
     assert result is not None
-    assert result.short_name == jenkins_env["plugins"][0].split(":")[0]
+    assert result.short_name == expected_short_name
 
 
 def test_download_plugin(jenkins_env, tmp_path):

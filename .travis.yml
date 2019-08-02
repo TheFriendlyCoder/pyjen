@@ -19,7 +19,14 @@ script:
   # package during testing. This ensures that we are testing all of the actual
   # deployment logic that may be customized in the actual wheel file
   - python setup.py bdist_wheel
-  - tox -e py$PYVER --installpkg ./dist/*.whl
+  # If we are building from a cron trigger, lets test against the latest
+  # Jenkins version. This will ensure the API continues to work with new
+  # Jenkins releases while ensuring we always build against a static version
+  # from tags and traditional CI builds, which ensures consistent behavior.
+  - echo Build trigger type is $TRAVIS_EVENT_TYPE
+  - '[ "$TRAVIS_EVENT_TYPE" == "cron" ] && export JK_VER="-- --jenkins-version=jenkins/jenkins:latest" || :'
+  - echo Building with jenkins version "$JK_VER"
+  - tox -e py$PYVER --installpkg ./dist/*.whl $JK_VER
 
 # Deploy to test.pypi.org for branches
 # Deploy to pypi.org for tags
