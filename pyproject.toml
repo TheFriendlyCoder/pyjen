@@ -1,0 +1,109 @@
+# TODO:
+# figure out how to generate readme as was done in setup.py
+#       probably need to just create one by hand
+# investigate the inter-play between poetry, pyenv and tox
+#       the lock file that is generated appears to only use the latest python version
+#       the version of dependencies installed by tox don't match those in the lock file
+#       `poetry shell` doesn't seem to respect the same Python version and installed packages that `poetry install` creates
+# see if there is a way to have poetry install "only" the dependencies of the proejct (ie: without the project itself)
+
+
+# TODO: Contributions
+# work on getting toml support added to pylint
+# work on getting toml support added to coverage/pytest-cov
+# work on getting proper toml support added to tox
+# create proposals for improving poetry
+#       - add support for multiple python versions
+#       - add support for plugins to customize readme dynamically at build time
+#       - add support for plugins to dynamically generate package name at build time
+#       - add support for plugins to dynamically generate version number at build time
+#       - (alt) add support for passing a build number to append to the version at build time
+#       - add support to "bump" version.py or __init__.py to `poetry version` command
+#       - add support for plugins to dynamically generate entry point scripts based on a pattern
+#       - create ticket to fix `poetry add` command (it seems to assume you are working with the latest version of each dependency which breaks when building against an older python version like v3.4)
+[tool.poetry]
+name = "pyjen"
+version = "1.0.1"
+description = "Python wrapper for the Jenkins CI REST API"
+authors = ["Kevin Phillips <thefriendlycoder@gmail.com>"]
+license = "GPL-3.0+"
+
+[tool.poetry.dependencies]
+python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+requests = "*"
+six = "*"
+tqdm = "*"
+
+[tool.poetry.plugins]
+[tool.poetry.plugins."pyjen.plugins.v1.0"]
+"allview" = "pyjen.plugins.allview:PluginClass"
+"artifactarchiver" = "pyjen.plugins.artifactarchiver:PluginClass"
+"artifactdeployer" = "pyjen.plugins.artifactdeployer:PluginClass"
+"buildblocker" = "pyjen.plugins.buildblocker:PluginClass"
+"buildtriggerpublisher" = "pyjen.plugins.buildtriggerpublisher:PluginClass"
+"conditionalbuilder" = "pyjen.plugins.conditionalbuilder:PluginClass"
+"flexiblepublish" = "pyjen.plugins.flexiblepublish:PluginClass"
+"folderjob" = "pyjen.plugins.folderjob:PluginClass"
+"freestylejob" = "pyjen.plugins.freestylejob:PluginClass"
+"gitscm" = "pyjen.plugins.gitscm:PluginClass"
+"listview" = "pyjen.plugins.listview:PluginClass"
+"mavenplugin" = "pyjen.plugins.mavenplugin:PluginClass"
+"multibranch_pipeline" = "pyjen.plugins.multibranch_pipeline:PluginClass"
+"multijob" = "pyjen.plugins.multijob:PluginClass"
+"myview" = "pyjen.plugins.myview:PluginClass"
+"nestedview" = "pyjen.plugins.nestedview:PluginClass"
+"nullscm" = "pyjen.plugins.nullscm:PluginClass"
+"parambuild_string" = "pyjen.plugins.parambuild_string:PluginClass"
+"parameterizedbuild" = "pyjen.plugins.parameterizedbuild:PluginClass"
+"paramtrigger" = "pyjen.plugins.paramtrigger:PluginClass"
+"paramtrigger_buildtrigger" = "pyjen.plugins.paramtrigger_buildtrigger:PluginClass"
+"paramtrigger_currentbuildparams" = "pyjen.plugins.paramtrigger_currentbuildparams:PluginClass"
+"pipelinejob" = "pyjen.plugins.pipelinejob:PluginClass"
+"runcondition_always" = "pyjen.plugins.runcondition_always:PluginClass"
+"runcondition_and" = "pyjen.plugins.runcondition_and:PluginClass"
+"runcondition_never" = "pyjen.plugins.runcondition_never:PluginClass"
+"runcondition_not" = "pyjen.plugins.runcondition_not:PluginClass"
+"sectionedview" = "pyjen.plugins.sectionedview:PluginClass"
+"sectionedview_listsection" = "pyjen.plugins.sectionedview_listsection:PluginClass"
+"sectionedview_textsection" = "pyjen.plugins.sectionedview_textsection:PluginClass"
+"shellbuilder" = "pyjen.plugins.shellbuilder:PluginClass"
+"statusview" = "pyjen.plugins.statusview:PluginClass"
+"subversion" = "pyjen.plugins.subversion:PluginClass"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-cov = "*"
+pytest-timeout = "*"
+mock = "*"
+pylint = "*"
+tox = "*"
+docker = "*"
+wheel = "*"
+sphinx = "*"
+sphinxcontrib-apidoc = "*"
+pathlib2 = "*"  # Transitive dependency for python 3.5 broken in pytest
+
+[tool.tox]
+legacy_tox_ini = """[tox]
+envlist = py2,py3,pypy,pypy3
+skip_missing_interpreters = False
+isolated_build = true
+usedevelop = true
+
+[testenv]
+whitelist_externals = poetry
+commands =
+    poetry install -v
+    poetry run pylint ./src/pyjen
+    poetry run pytest {posargs} ./tests -v --cov-report html --cov pyjen --no-cov-on-fail
+
+[testenv:docs]
+witelist_externals = poetry
+commands =
+    poetry install -v
+    poetry run sphinx-build -b html ./docs ./htmldocs
+"""
+
+[build-system]
+requires = ["poetry>=0.12", "setuptools >= 35.0.2", "wheel >= 0.29.0"]
+build-backend = "poetry.masonry.api"
