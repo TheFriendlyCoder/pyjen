@@ -16,6 +16,7 @@
         "mock",
         "pylint",
         "tox",
+        "tox-factor",
         "docker"
     ],
     "DESCRIPTION" : "Python wrapper for the Jenkins CI REST API",

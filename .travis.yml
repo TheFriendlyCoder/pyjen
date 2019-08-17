@@ -1,4 +1,5 @@
 language: python
+cache: pip
 services:
   docker
 
@@ -26,7 +27,11 @@ script:
   - echo Build trigger type is $TRAVIS_EVENT_TYPE
   - '[ "$TRAVIS_EVENT_TYPE" == "cron" ] && export JK_VER="-- --jenkins-version=jenkins/jenkins:latest" || :'
   - echo Building with jenkins version "$JK_VER"
-  - tox -e py$PYVER --installpkg ./dist/*.whl $JK_VER
+  - tox -e py$PYVER-lint --installpkg ./dist/*.whl $JK_VER
+  # Save on compute resources by running tests against the latest python versions only
+  - echo $TRAVIS_PYTHON_VERSION
+  - '[ "$TRAVIS_PYTHON_VERSION" == "3.6" ] && tox -e py$PYVER-test --installpkg ./dist/*.whl $JK_VER || :'
+  - '[ "$TRAVIS_PYTHON_VERSION" == "pypy3.5" ] && tox -e py$PYVER-test --installpkg ./dist/*.whl $JK_VER || :'
 
 # Deploy to test.pypi.org for branches
 # Deploy to pypi.org for tags
