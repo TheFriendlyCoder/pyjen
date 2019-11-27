@@ -1,4 +1,5 @@
 """Primitives for interacting with SCM changesets"""
+import json
 from pyjen.user import User
 
 
@@ -44,7 +45,7 @@ class Changeset(object):
         return retval
 
     def __str__(self):  # pragma: no cover
-        retval = ""
+        retval = json.dumps(self._data, indent=4)
         changes = self.affected_items
         if changes:
             for change in changes:
@@ -111,17 +112,27 @@ class ChangesetItem(object):
         """
         return self._data['msg']
 
-    def __str__(self):  # pragma: no cover
-        retval = "Author: {0}\nMessage: {1}\nRevision: {2}\n".format(
-            self._data['author'],
-            self._data['msg'],
-            self._data['commitId']
-        )
-        retval += "\nTouched Files:\n"
-        for path in self._data['changes']:
-            retval += path['file'] + "\n"
+    @property
+    def commit_id(self):
+        """Gets the SCM revision associated with this specific change
 
+        :rtype: :class:`str`
+        """
+        return self._data["commitId"]
+
+    @property
+    def affected_files(self):
+        """Gets a list of files modified in this commit
+
+        :rtype: :class:`list` of :class:`str`
+        """
+        retval = list()
+        for cur_item in self._data["paths"]:
+            retval.append(cur_item["file"])
         return retval
+
+    def __str__(self):  # pragma: no cover
+        return json.dumps(self._data, indent=4)
 
 
 if __name__ == "__main__":  # pragma: no cover
