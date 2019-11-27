@@ -350,7 +350,3 @@ class Jenkins(object):
         :rtype: :class:`~.queue.Queue`
         """
         return Queue(self._api.clone(self._api.url + 'queue'))
-
-
-if __name__ == '__main__':  # pragma: no cover
-    pass
