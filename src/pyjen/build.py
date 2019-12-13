@@ -146,6 +146,21 @@ class Build(object):
             return ""
         return retval
 
+    @description.setter
+    def description(self, value):
+        """Updates the build description to the value.
+
+        :param str value:
+            Text description to set for the build
+        """
+        args = {
+            'params': {
+                'description': value,
+                'Submit': "Submit"
+            }
+        }
+        self._api.post(self.url + '/submitDescription', args=args)
+
     @property
     def uid(self):
         """Gets the unique identifier associated with this build

@@ -20,6 +20,12 @@ class TestSingleBuild:
         bld = self.job.last_build
         assert bld.description == ''
 
+    def test_build_description_setter(self):
+        expected_description = 'Test description'
+        bld = self.job.last_build
+        bld.description = expected_description
+        assert bld.description == expected_description
+
     def test_build_result(self):
         bld = self.job.last_good_build
         assert bld.result == "SUCCESS"
