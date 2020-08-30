@@ -11,7 +11,7 @@ class QueueItem:
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     """
 
     def __init__(self, api):

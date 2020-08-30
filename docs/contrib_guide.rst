@@ -190,7 +190,7 @@ meet the following criteria:
 * the class declarations must be placed in a module under the src/pyjen/plugins
   subfolder
 * the class must derive, directly or indirectly, from the
-  :py:class:`~.utils.plugin_base.PluginBase` abstract base class
+  :py:class:`~.utils.xml_plugin.XMLPlugin` abstract base class
 
 This second requirement forces derived classes to implement specific criteria
 to implement the required abstract interface. Currently this interface simply
@@ -200,7 +200,7 @@ has two requirements:
   representation of the Jenkins plugin managed by the PyJen plugin
 * a constructor compatible with the type of plugin being managed
   (in most cases, this is a single parameter of type
-  :class:`xml.ElementTree.Element`.)
+  :class:`xml.etree.ElementTree.Element`.)
 
 Beyond that, plugin implementers can then proceed to implement public methods
 and properties on their plugin class to expose functionality particular to the
@@ -214,7 +214,8 @@ Any primitive or operation in Jenkins that supports a plugable interface is
 equally addressable by the associated PyJen interface without further
 customization by the plugin author. For example, to add support for a new type
 of 'builder', simply write your plugin class as described above and it will
-automatically be accessible from the :py:meth:`~.pyjen.job.Job.builders`
+automatically be accessible from the
+:py:meth:`~.pyjen.plugins.freestylejob.FreestyleJob.builders`
 property.
 
 This is accomplished by leveraging the metadata embedded in the Jenkins

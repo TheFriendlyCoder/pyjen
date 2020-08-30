@@ -23,9 +23,10 @@ class Jenkins:
     * :class:`~.job.Job` - abstraction for a Jenkins job, allowing manipulation
       of job settings and controlling builds of those jobs
     * :class:`~.build.Build` - abstraction for an instance of a build of a
-                               particular job
+      particular job
 
-    **Example:** finding a job ::
+    **Example:** finding a job
+    ::
 
         j = pyjen.Jenkins('http://localhost:8080')
         job = j.find_job('My Job')
@@ -35,7 +36,8 @@ class Jenkins:
             print ('job ' + job.name + ' found')
 
     **Example:** find the build number of the last good build of the first job
-                 on the default view ::
+    on the default view
+    ::
 
         j = pyjen.Jenkins('http://localhost:8080/')
         v = j.get_default_view()

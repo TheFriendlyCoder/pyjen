@@ -44,7 +44,7 @@ def get_all_plugins():
     """Returns a list of all PyJen plugins installed on the system
 
     :returns: list of 0 or more installed plugins
-    :rtype: :class:`list` of :class:`class`
+    :rtype: :class:`list` of classes
     """
     log = logging.getLogger(__name__)
     # First load all libraries that are registered with the PyJen plugin API

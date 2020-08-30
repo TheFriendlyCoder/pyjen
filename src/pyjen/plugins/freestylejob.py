@@ -290,7 +290,7 @@ class FreestyleXML(JobXML):
 
             Examples: :class:`~pyjen.plugins.subversion.Subversion`
 
-        :rtype: :class:`~.pluginapi.PluginBase`
+        :rtype: :class:`pyjen.utils.xml_plugin.XMLPlugin`
         """
         node = self._root.find('scm')
         plugin_class = find_plugin(node.attrib["class"])

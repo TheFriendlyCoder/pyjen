@@ -1,4 +1,4 @@
-"""Abstration around the Jenkins build queue"""
+"""Abstraction around the Jenkins build queue"""
 from pyjen.queue_item import QueueItem
 
 
@@ -7,7 +7,7 @@ class Queue:
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     """
 
     def __init__(self, api):
@@ -28,7 +28,7 @@ class Queue:
     def items(self):
         """Gets a list of scheduled builds waiting in the queue
 
-        :rtype: :class:`list` of :class:`QueueItem`
+        :rtype: :class:`list` of :class:`~.queue_item.QueueItem`
         """
         retval = list()
         for cur_item in self._data["items"]:

@@ -64,7 +64,7 @@ class ModuleLocation(XMLPlugin):
     def node(self):
         """Gets the XML node associated with this plugin
 
-        :rtype: :class:`ElementTree.Element`
+        :rtype: :class:`xml.etree.ElementTree.Element`
         """
         return self._root
 

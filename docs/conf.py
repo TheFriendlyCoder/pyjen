@@ -14,6 +14,7 @@
 import ast
 import sys
 import os
+from sphinx.ext.intersphinx import InventoryAdapter
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -286,4 +287,56 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'http://docs.python.org/': None,
+    "requests": ("https://requests.readthedocs.io/en/master/", None),
+}
+
+intersphinx_aliases = {
+    'py:exception': {
+        'requests.HTTPError': 'requests.exceptions.HTTPError'
+    }
+}
+
+
+def add_intersphinx_aliases_to_inv(app):
+    """Workaround for data type mismatches between intersphinx document sources
+    Implementation based on a workaround found here:
+    https://github.com/sphinx-doc/sphinx/issues/5603
+    The calling code need only define a dictionary that maps the source object
+    as it appears in the Sphinx object tree, to the actual location for the
+    object definition in an object.inv inventory file. The syntax looks like
+    this:
+    intersphinx_aliases = {
+        'dt-domain': {
+            'src-obj-name': 'target-obj-name'
+        }
+    }
+    TIP: when debugging intersphinx mapping problems, it is helpful to use
+    the sphobjinv tool:
+        https://pypi.org/project/sphobjinv/
+    Example use:
+    sphobjinv suggest https://requests.readthedocs.io/en/master/ HTTPError -su
+    """
+    inventories = InventoryAdapter(app.builder.env)
+
+    for domain, mapping in app.config.intersphinx_aliases.items():
+        if domain not in inventories.main_inventory:
+            raise NotImplementedError(
+                "Domain {0} not found in Sphinx inventory".format(domain)
+            )
+        for source, target in mapping.items():
+            if source not in inventories.main_inventory[domain]:
+                raise NotImplementedError(
+                    "Source object {0} not found in Sphinx domain {1}".format(
+                        source, domain
+                    )
+                )
+            inventories.main_inventory[domain][target] = \
+                inventories.main_inventory[domain][source]
+
+
+def setup(app):
+    """Custom Sphinx extention manager entry point method"""
+    app.add_config_value('intersphinx_aliases', {}, 'env')
+    app.connect('builder-inited', add_intersphinx_aliases_to_inv)
