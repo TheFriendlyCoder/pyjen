@@ -3,11 +3,7 @@ from pyjen.view import View
 
 
 class AllView(View):
-    """view which displays all jobs managed by this Jenkins instance
-
-    Instances of this class are typically instantiated directly or
-    indirectly through :py:meth:`~.view.View.create`
-    """
+    """view which displays all jobs managed by this Jenkins instance"""
     @staticmethod
     def get_jenkins_plugin_name():
         """Gets the name of the Jenkins plugin associated with this PyJen plugin

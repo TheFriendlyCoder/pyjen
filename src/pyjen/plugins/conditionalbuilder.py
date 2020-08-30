@@ -35,9 +35,8 @@ class ConditionalBuilder(XMLPlugin):
         :param condition:
             Condition to be applied to the build step. The build step will only
             be executed if the terms defined by this condition evaluate to True
-        :type condition: :class:`~.ConditionalBuilderCondition`
         :returns: newly created conditional build step
-        :rtype: :class:`~.ConditionalBuilder`
+        :rtype: :class:`ConditionalBuilder`
         """
         # TODO: add support for multi-condition builder
         default_xml = """

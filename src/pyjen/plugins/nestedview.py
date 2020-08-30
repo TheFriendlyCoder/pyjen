@@ -4,11 +4,7 @@ from pyjen.utils.helpers import create_view
 
 
 class NestedView(View):
-    """all Jenkins related 'view' information for views of type NestedView
-
-    Instances of this class are typically instantiated directly or indirectly
-    through :py:meth:`pyjen.View.create`
-    """
+    """all Jenkins related 'view' information for views of type NestedView"""
 
     @property
     def views(self):

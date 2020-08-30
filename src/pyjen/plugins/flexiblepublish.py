@@ -46,7 +46,7 @@ class FlexiblePublisher(XMLPlugin):
             list of conditional actions to perform under this publisher
         :type actions:
             :class:`list` of :class:`ConditionalAction`
-        :rtype: :class:`ParameterizedBuildTrigger`
+        :rtype: :class:`FlexiblePublisher`
         """
         default_xml = """
 <org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher>
@@ -95,7 +95,7 @@ class ConditionalAction(XMLPlugin):
         :param list actions:
             List of 1 or more "build stage" plugins that you would like to use
             in the publish phase of a Jenkins job
-        :rtype: :class:`ConditionalPublisher`
+        :rtype: :class:`ConditionalAction`
         """
         default_xml = """
 <org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>

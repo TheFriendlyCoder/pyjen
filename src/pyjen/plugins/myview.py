@@ -3,11 +3,7 @@ from pyjen.view import View
 
 
 class MyView(View):
-    """Interface to a view associated with a specific user
-
-    Instances of this class are typically instantiated directly or indirectly
-    through :py:meth:`pyjen.View.create`
-    """
+    """Interface to a view associated with a specific user"""
 
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod

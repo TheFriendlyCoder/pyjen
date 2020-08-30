@@ -15,7 +15,8 @@ class ParameterizedBuildTrigger(XMLPlugin):
     def triggers(self):
         """list of trigger operations defined for this instance of the plugin
 
-        :rtype: :class:`list` of :class:`BuildTriggerConfig` objects
+        :rtype: :class:`list` of
+                :class:`~.paramtrigger_buildtrigger.BuildTriggerConfig` objects
         """
         retval = list()
         configs_node = self._root.find('configs')

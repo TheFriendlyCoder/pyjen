@@ -3,11 +3,7 @@ from pyjen.view import View
 
 
 class ListView(View):
-    """all Jenkins related 'view' information for views of type ListView
-
-    Instances of this class are typically instantiated directly or indirectly
-    through :py:meth:`pyjen.View.create`
-    """
+    """all Jenkins related 'view' information for views of type ListView"""
 
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod

@@ -18,7 +18,7 @@ class JenkinsAPI:
     :param ssl_cert:
         Either a boolean controlling SSL verification, or a path to a cert
         authority bundle to use for SSL verification.
-    ."""
+    """
 
     def __init__(self, url, creds, ssl_cert):
         self._log = logging.getLogger(__name__)
@@ -200,7 +200,7 @@ class JenkinsAPI:
                         the target URL
             * 'params' - form data to be passed to the API endpoint
         :returns: reference to the response data returned by the post request
-        :rtype: :class:`requests.models.Response`
+        :rtype: :class:`requests.Response`
         """
         if args and "headers" in args:
             temp_headers = args["headers"]

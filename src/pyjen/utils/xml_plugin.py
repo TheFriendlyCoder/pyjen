@@ -17,6 +17,7 @@ class XMLPlugin:
 
     @classmethod
     def create(cls, ...):
+
         a factory method that takes 0 or more parameters (anything
         necessary to construct an instance of the derived class) and returns
         an instance of the class pre-constructed with relevant XML content. Used
@@ -24,6 +25,7 @@ class XMLPlugin:
 
     @staticmethod
     def get_jenkins_plugin_name():
+
         Helper method that returns a character string representation of the
         Jenkins plugin name the class is associated with. This is typically
         the Java class name of the Jenkins plugin the PyJen plugin is meant
@@ -31,7 +33,7 @@ class XMLPlugin:
 
     :param node:
         ElementTree XML node with the decoded XML data associated with a plugin
-    :type node: :class:`ElementTree.Element`
+    :type node: :class:`xml.etree.ElementTree.Element`
     """
     def __init__(self, node):
         self._parent = None
@@ -72,7 +74,7 @@ class XMLPlugin:
     def node(self):
         """Gets the encoded XML data associated with this plugin
 
-        :rtype: :class:`ElementTree.Element`
+        :rtype: :class:`xml.etree.ElementTree.Element`
         """
         return self._root
 

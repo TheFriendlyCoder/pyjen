@@ -12,7 +12,7 @@ class View:
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     """
     def __init__(self, api):
         super().__init__()
@@ -294,7 +294,7 @@ class View:
     def get_supported_plugins(cls):
         """Returns a list of PyJen plugins that derive from this class
 
-        :rtype: :class:`list` of :class:`class`
+        :rtype: :class:`list` of classes
         """
         retval = list()
         for cur_plugin in get_all_plugins():

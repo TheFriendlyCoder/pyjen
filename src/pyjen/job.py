@@ -14,7 +14,7 @@ class Job:
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     """
     def __init__(self, api):
         super().__init__()
@@ -310,7 +310,7 @@ class Job:
 
         :param int queue_id:
             ID of the build queue item to correlate with. Typically extracted
-            from the :meth:`pyjen.queue_item.QueueItem.id` property.
+            from the :meth:`pyjen.queue_item.QueueItem.uid` property.
         :returns:
             reference to the build associated with the specified queue id
             None if no such reference exsts
@@ -412,9 +412,9 @@ class Job:
         """ Returns a list of all of the builds for a job that
             occurred between the specified start and end times
 
-            :param datetime start_time:
+            :param datetime.datetime start_time:
                 starting time index for range of builds to find
-            :param datetime end_time:
+            :param datetime.datetime end_time:
                 ending time index for range of builds to find
             :returns: a list of 0 or more builds
             :rtype: :class:`list` of :class:`~.build.Build` objects
@@ -572,7 +572,7 @@ class Job:
     def get_supported_plugins(cls):
         """Returns a list of PyJen plugins that derive from this class
 
-        :rtype: :class:`list` of :class:`class`
+        :rtype: :class:`list` of classes
         """
         retval = list()
         for cur_plugin in get_all_plugins():

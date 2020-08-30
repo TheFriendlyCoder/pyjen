@@ -8,6 +8,7 @@ class Plugin:
     """Abstraction around one Jenkins plugin"""
     def __init__(self, plugin_config):
         """Constructor
+
         :param dict plugin_config:
             Parsed Jenkins API data associated with this plugin. Typically
             this content is produced by the Jenkins plugin manager API.

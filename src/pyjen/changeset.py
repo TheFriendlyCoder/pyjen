@@ -10,7 +10,7 @@ class Changeset:
 
     :param api:
         Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
+    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     :param dict data:
         Dictionary of data elements typically parsed from the "changeSet" node
         of a builds source data as provided by the Jenkins REST API. Should have
