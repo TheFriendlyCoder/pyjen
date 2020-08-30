@@ -106,3 +106,5 @@ container_id.txt.token
 
 docs/api/*
 htmldocs
+.coverage
+.coverage.*
