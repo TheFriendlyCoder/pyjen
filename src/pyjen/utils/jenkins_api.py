@@ -1,13 +1,13 @@
 """Base class for all objects that interact with the Jenkins REST API"""
+from urllib.parse import urljoin
 import logging
 import json
 import xml.etree.ElementTree as ElementTree
 import requests
 from requests.exceptions import InvalidHeader
-from six.moves import urllib_parse
 
 
-class JenkinsAPI(object):
+class JenkinsAPI:
     """Abstraction around the raw Jenkins REST API
 
     :param str url:
@@ -86,7 +86,7 @@ class JenkinsAPI(object):
 
         :rtype: :class:`dict`"""
         if self._jenkins_headers_cache is None:
-            temp_path = urllib_parse.urljoin(self.root_url, "api/python")
+            temp_path = urljoin(self.root_url, "api/python")
             req = requests.get(
                 temp_path,
                 auth=self._creds,
@@ -128,7 +128,7 @@ class JenkinsAPI(object):
         if target_url is None:
             target_url = self.url
 
-        temp_url = urllib_parse.urljoin(target_url, "api/json")
+        temp_url = urljoin(target_url, "api/json")
 
         if query_params is not None:
             # TODO: Update this to pass 'params' key to get method
@@ -156,7 +156,7 @@ class JenkinsAPI(object):
         """
         temp_url = self.url
         if path is not None:
-            temp_url = urllib_parse.urljoin(temp_url, path.lstrip("/\\"))
+            temp_url = urljoin(temp_url, path.lstrip("/\\"))
 
         req = requests.get(
             temp_url,
@@ -179,7 +179,7 @@ class JenkinsAPI(object):
         """
         temp_url = self.url
         if path is not None:
-            temp_url = urllib_parse.urljoin(temp_url, path.lstrip("/\\"))
+            temp_url = urljoin(temp_url, path.lstrip("/\\"))
         temp_url += "/api/xml"
         text = self.get_text(temp_url, params)
         return ElementTree.fromstring(text)

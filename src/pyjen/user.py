@@ -1,7 +1,7 @@
 """Primitives for interacting with Jenkins users"""
 
 
-class User(object):
+class User:
     """Interface to all primitives associated with a Jenkins user
 
     .. seealso:: :py:meth:`~.changeset.ChangesetItem.author`
@@ -13,7 +13,7 @@ class User(object):
     """
 
     def __init__(self, api):
-        super(User, self).__init__()
+        super().__init__()
         self._api = api
 
     @property

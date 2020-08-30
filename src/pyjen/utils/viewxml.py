@@ -3,7 +3,7 @@ import logging
 import xml.etree.ElementTree as ElementTree
 
 
-class ViewXML(object):
+class ViewXML:
     """Wrapper around the config.xml for a Jenkins view
 
     Loaded from the ./view/config.xml REST API endpoint for any arbitrary
@@ -14,7 +14,7 @@ class ViewXML(object):
     """
 
     def __init__(self, api):
-        super(ViewXML, self).__init__()
+        super().__init__()
         self._api = api
         self._log = logging.getLogger(__name__)
         self._cache = None

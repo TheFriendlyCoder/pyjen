@@ -1,13 +1,13 @@
 """Primitives for interacting with Jenkins views"""
 import logging
-from six.moves import urllib_parse
+from urllib.parse import urljoin, urlsplit
 from pyjen.job import Job
 from pyjen.utils.viewxml import ViewXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 from pyjen.utils.helpers import create_view
 
 
-class View(object):
+class View:
     """generic Jenkins views providing interfaces common to all view types
 
     :param api:
@@ -15,7 +15,7 @@ class View(object):
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
     def __init__(self, api):
-        super(View, self).__init__()
+        super().__init__()
         self._api = api
         self._xml_cache = None
         self._log = logging.getLogger(self.__module__)
@@ -136,11 +136,11 @@ class View(object):
         #       views we have to do some URL manipulations to extrapolate the
         #       REST API endpoint for the parent object to which the cloned
         #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = urlsplit(self._api.url).path.split("/")
         parts = [cur_part for cur_part in parts if cur_part.strip()]
         assert len(parts) >= 2
         assert parts[-2] == "view"
-        parent_url = urllib_parse.urljoin(
+        parent_url = urljoin(
             self._api.url, "/" + "/".join(parts[:-2]))
 
         # Ask the parent object to create a new view of the same type
@@ -156,7 +156,7 @@ class View(object):
 
         # Update our REST API object to point to the endpoint associated
         # with the newly created view
-        new_url = urllib_parse.urljoin(
+        new_url = urljoin(
             parent_api.url, "view/" + new_view_name)
         updated_api = self._api.clone(new_url)
 

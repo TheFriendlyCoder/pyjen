@@ -3,7 +3,7 @@ import json
 from pyjen.user import User
 
 
-class Changeset(object):
+class Changeset:
     """Represents a set of changes associated with a build of a Jenkins job
 
     .. seealso:: :class:`~.build.Build`

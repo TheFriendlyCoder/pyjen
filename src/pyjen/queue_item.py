@@ -1,13 +1,12 @@
 """Abstraction around a scheduled build contained in the Jenkins build queue"""
+from urllib.parse import urlsplit
 import requests
 from requests.exceptions import HTTPError
-from six.moves import urllib_parse
-from six import PY2
 from pyjen.build import Build
 from pyjen.utils.plugin_api import find_plugin
 
 
-class QueueItem(object):
+class QueueItem:
     """Abstraction around a scheduled build contained in the Jenkins build queue
 
     :param api:
@@ -16,7 +15,7 @@ class QueueItem(object):
     """
 
     def __init__(self, api):
-        super(QueueItem, self).__init__()
+        super().__init__()
         self._api = api
 
     def __eq__(self, other):
@@ -71,11 +70,9 @@ class QueueItem(object):
         #
         # Queue items are defined by a URL that look something like this:
         #       https://server/queue/item/1234
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = urlsplit(self._api.url).path.split("/")
         parts = [cur_part for cur_part in parts if cur_part.strip()]
         queue_id = parts[-1]
-        if PY2:
-            queue_id = queue_id.decode("utf-8")
         assert queue_id.isnumeric()
 
         return int(queue_id)

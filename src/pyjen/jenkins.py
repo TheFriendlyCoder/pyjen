@@ -11,7 +11,7 @@ from pyjen.utils.jenkins_api import JenkinsAPI
 from pyjen.utils.helpers import create_view, create_job
 
 
-class Jenkins(object):
+class Jenkins:
     """Python wrapper managing the Jenkins primary dashboard
 
     Generally you should use this class as the primary entry point to the PyJen
@@ -56,7 +56,7 @@ class Jenkins(object):
     """
 
     def __init__(self, url, credentials=None, ssl_cert=True):
-        super(Jenkins, self).__init__()
+        super().__init__()
         self._log = logging.getLogger(__name__)
         self._api = JenkinsAPI(url, credentials, ssl_cert)
 

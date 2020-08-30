@@ -2,7 +2,7 @@
 from pyjen.queue_item import QueueItem
 
 
-class Queue(object):
+class Queue:
     """Abstraction around the Jenkins build queue
 
     :param api:
@@ -11,7 +11,7 @@ class Queue(object):
     """
 
     def __init__(self, api):
-        super(Queue, self).__init__()
+        super().__init__()
         self._api = api
 
     @property

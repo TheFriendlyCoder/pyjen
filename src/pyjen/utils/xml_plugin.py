@@ -3,7 +3,7 @@ import logging
 import xml.etree.ElementTree as ElementTree
 
 
-class XMLPlugin(object):
+class XMLPlugin:
     """Base class for all PyJen plugins that extend Jenkins config.xml
 
     Plugins derived from this base class are always instantiated with a
@@ -77,5 +77,5 @@ class XMLPlugin(object):
         return self._root
 
 
-if __name__ == "__main__":  # pylint: no cover
+if __name__ == "__main__":  # pragma: no cover
     pass

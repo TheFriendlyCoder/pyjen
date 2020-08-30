@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ElementTree
 from pyjen.utils.plugin_api import find_plugin
 
 
-class JobXML(object):
+class JobXML:
     """ Wrapper around the config.xml for a Jenkins job
 
     The source xml can be loaded from nearly any URL by
@@ -14,7 +14,7 @@ class JobXML(object):
         Rest API for the Jenkins XML configuration managed by this object
     """
     def __init__(self, api):
-        super(JobXML, self).__init__()
+        super().__init__()
         self._api = api
         self._log = logging.getLogger(__name__)
         self._cache = None
