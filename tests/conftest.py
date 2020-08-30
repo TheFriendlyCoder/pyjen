@@ -16,7 +16,7 @@ from .utils import async_assert
 
 # Default Docker container to use for testing
 # May be overloaded from the command prompt using '--jenkins-version'
-DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.187-alpine"
+DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.254-alpine"
 
 # Global flag used to see whether we've already attempted to run our Jenkins
 # containerized environment. Prevents redundant failures from slowing down
@@ -38,7 +38,6 @@ JENKINS_PLUGINS = [
 
     # Needed to test PyJen plugins that ship with the core framework
     "nested-view",
-    "status-view",
     "sectioned-view",
     "conditional-buildstep",
     "parameterized-trigger",
@@ -133,17 +132,17 @@ def _workspace_dir():
     return os.path.abspath(os.path.join(cur_path, ".."))
 
 
-def docker_logger(client, container_id):
+def docker_logger(container_id):
     """Helper method that redirects Docker logs to Python logger
 
     This helper method is intended to be used as a background daemon to
     redirect all log messages from a given Docker container to the Python
     logging subsystem.
 
-    :param client: docker-py API client object
     :param str container_id: ID for the container to check logs for
     """
     log = logging.getLogger(__name__)
+    client = docker.APIClient(version="auto")
     for cur_log in client.logs(container_id, stream=True, follow=True):
         log.debug(cur_log.decode("utf-8").strip())
 
@@ -248,20 +247,26 @@ def jenkins_env(request, configure_logger):
 
         # Launch a container from the built Docker image
         res = client.create_container(
-            image_id, host_config=hc, volumes=["/var/jenkins_home"]
+            image_id, host_config=hc, volumes=["/var/jenkins_home"],
+            # Needed to disable the CSRF security enhancements introduced here
+            # https://www.jenkins.io/doc/upgrade-guide/2.176/#SECURITY-626
+            environment={
+                "JAVA_OPTS": "-Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true"
+            }
         )
         container_id = res["Id"]
         log.debug("Container %s created", container_id)
 
-    # Setup background thread for redirecting log output to Python logger
-    d = multiprocessing.Process(
-        name='docker_logger',
-        target=docker_logger,
-        args=(client, container_id))
-    d.daemon = True
-    d.start()
-
     try:
+        # Setup background thread for redirecting log output to Python logger
+        d = multiprocessing.Process(
+            name='docker_logger',
+            target=docker_logger,
+            args=tuple(container_id)
+        )
+        d.daemon = True
+        d.start()
+
         log.info("Starting Jenkins Docker container...")
         client.start(container_id)
 
