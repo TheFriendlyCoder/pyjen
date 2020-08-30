@@ -10,20 +10,14 @@ class ShellBuilder(XMLPlugin):
     """
     @property
     def script(self):
-        """Gets the shell script associated with this builder
-
-        :rtype: :class:`str`
-        """
+        """str: the shell script associated with this builder"""
 
         command_node = self._root.find('command')
         return command_node.text
 
     @property
     def unstable_return_code(self):
-        """Gets the return code that marks the build as unstable
-
-        :rtype: :class:`int`
-        """
+        """int: the return code that marks the build as unstable"""
         retval = self._root.findtext('unstableReturn')
         if not retval:
             return None
@@ -31,7 +25,6 @@ class ShellBuilder(XMLPlugin):
 
     @unstable_return_code.setter
     def unstable_return_code(self, value):
-        """Changes the return code that marks the build as unstable"""
         rcode_node = self._root.find('unstableReturn')
         if not rcode_node:
             rcode_node = ElementTree.SubElement(self._root, "unstableReturn")
@@ -41,12 +34,10 @@ class ShellBuilder(XMLPlugin):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.tasks.Shell"
 
@@ -54,7 +45,11 @@ class ShellBuilder(XMLPlugin):
     def instantiate(cls, script):
         """Factory method for creating a new shell build step
 
-        :param str script: shell script to run as part of this build step
+        Args:
+            script (str): shell script to run as part of this build step
+
+        Returns:
+            ShellBuilder: instance of this class
         """
         default_xml = """<hudson.tasks.Shell></hudson.tasks.Shell>"""
         root_node = ElementTree.fromstring(default_xml)

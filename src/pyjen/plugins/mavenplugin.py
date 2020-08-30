@@ -8,12 +8,11 @@ class MavenPlugin(Job):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def template_config_xml():
-        """XML configuration template to when instantiating jobs of this type
-
-        :returns:
-            a basic XML configuration template for use when instantiating
-            jobs of this type
-        :rtype: :class:`str`
+        """
+        Returns:
+            str:
+                a basic XML configuration template for use when instantiating
+                jobs of this type
         """
         xml = """<maven2-moduleset plugin="maven-plugin@2.6">
 <actions/>
@@ -56,12 +55,10 @@ class MavenPlugin(Job):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "mavenplugin"
 

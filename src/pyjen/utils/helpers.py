@@ -5,14 +5,14 @@ import json
 def create_view(api, view_name, view_class):
     """Creates a new view on the Jenkins dashboard
 
-    :param api:
-        Jenkins rest api connection to use for creation of the view`
-    :param str view_name:
-        the name for this new view
-        This name should be unique, different from any other views currently
-        managed by the Jenkins instance
-    :param view_class:
-        PyJen plugin class associated with the type of view to be created
+    Args:
+        api (JenkinsAPI):
+            Jenkins rest api connection to use for creation of the view`
+        view_name (str):
+            The name for this new view. This name should be unique, different
+            from any other views currently managed by the Jenkins instance
+        view_class:
+            PyJen plugin class associated with the type of view to be created
     """
     view_type = view_class.get_jenkins_plugin_name()
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -34,14 +34,14 @@ def create_view(api, view_name, view_class):
 def create_job(api, job_name, job_class):
     """Creates a new job on the Jenkins dashboard
 
-    :param api:
-        Jenkins rest api connection to use for creation of the view`
-    :param str job_name:
-        the name for this new job
-        This name should be unique, different from any other jobs currently
-        managed by the Jenkins instance
-    :param job_class:
-        PyJen plugin class associated with the type of job to be created
+    Args:
+        api (JenkinsAPI):
+            Jenkins rest api connection to use for creation of the view`
+        job_name (str):
+            The name for this new job. This name should be unique, different
+            from any other jobs currently managed by the Jenkins instance
+        job_class:
+            PyJen plugin class associated with the type of job to be created
     """
     headers = {'Content-Type': 'text/xml'}
 

@@ -13,11 +13,8 @@ class ParameterizedBuildTrigger(XMLPlugin):
 
     @property
     def triggers(self):
-        """list of trigger operations defined for this instance of the plugin
-
-        :rtype: :class:`list` of
-                :class:`~.paramtrigger_buildtrigger.BuildTriggerConfig` objects
-        """
+        """list (BuildTriggerConfig): list of trigger operations defined for
+        this instance of the plugin"""
         retval = list()
         configs_node = self._root.find('configs')
         for cur_node in configs_node:
@@ -31,12 +28,10 @@ class ParameterizedBuildTrigger(XMLPlugin):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.plugins.parameterizedtrigger.BuildTrigger"
 
@@ -44,9 +39,13 @@ class ParameterizedBuildTrigger(XMLPlugin):
     def instantiate(cls, triggers):
         """Factory method for creating a new instances of this class
 
-        :param list triggers:
-            List of build trigger configuration objects
-        :rtype: :class:`ParameterizedBuildTrigger`
+        Args:
+            triggers (:class:`list` of :class:`~.utils.xml_plugin.XMLPlugin`):
+                List of build trigger configuration objects
+
+        Returns:
+            ParameterizedBuildTrigger:
+                instance of this class
         """
         default_xml = """
 <hudson.plugins.parameterizedtrigger.BuildTrigger>

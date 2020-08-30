@@ -9,20 +9,18 @@ class MultiJob(Job):
     """
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "com.tikal.jenkins.plugins.multijob.MultiJobProject"
 
     @staticmethod
     def template_config_xml():
-        """Gets XML for a default implementation of this job type
-
-        :rtype: :class:`str`
+        """
+        Returns:
+            str: XML for a default implementation of this job type
         """
         return """
 <com.tikal.jenkins.plugins.multijob.MultiJobProject>

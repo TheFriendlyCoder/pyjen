@@ -10,13 +10,8 @@ class Subversion(XMLPlugin):
     """
     @property
     def locations(self):
-        """Gets the list of SVN URLs associated with this plugin instance
-
-        :returns:
-            set of 0 or more ModuleLocation objects describing the SVN
-            parameters for this module.
-        :rtype: :class:`list` of :class:`ModuleLocation` objects
-        """
+        """list (ModuleLocation): set of 0 or more ModuleLocation objects
+        describing the SVN parameters for this module."""
         retval = list()
 
         locations_node = self._root.find("locations")
@@ -27,10 +22,8 @@ class Subversion(XMLPlugin):
 
     @property
     def included_regions(self):
-        """patterns of the regions of the SVN repo to include in SCM operations
-
-        :rtype: :class:`list` of :class:`str`
-        """
+        """list (str): patterns of the regions of the SVN repo to include in
+        SCM operations"""
         temp = self._root.find("includedRegions").text
         if temp is None:
             return []
@@ -38,21 +31,15 @@ class Subversion(XMLPlugin):
 
     @included_regions.setter
     def included_regions(self, new_regions):
-        """patterns of regions in an SVN repo to include in SCM operations
-
-        :param list new_regions: list of paths to include in SCM operations
-        """
         self._root.find("includedRegions").text = "\n".join(new_regions)
 
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "subversion"
 
@@ -62,62 +49,37 @@ class ModuleLocation(XMLPlugin):
 
     @property
     def node(self):
-        """Gets the XML node associated with this plugin
-
-        :rtype: :class:`xml.etree.ElementTree.Element`
-        """
+        """xml.etree.ElementTree.Element: the XML node associated with this
+        plugin"""
         return self._root
 
     @property
     def url(self):
-        """SVN URL where the source code for this module can be found
-
-        :rtype: :class:`str`
-        """
+        """str: SVN URL where the source code for this module can be found"""
         return self._root.find('remote').text
 
     @url.setter
     def url(self, new_url):
-        """Sets the SVN URL where the source code for this module can be found
-
-        :param str new_url:
-            the SVN URL where the source code for this module can be found
-        """
         self._root.find('remote').text = new_url
 
     @property
     def local_dir(self):
-        """local folder where the source code for this module is checked out to
-
-        :rtype: :class:`str`
+        """str: folder where the source code for this module is checked out to
         """
         return self._root.find('local').text
 
     @local_dir.setter
     def local_dir(self, new_dir):
-        """Sets the local folder to checkout the source code for this module
-
-        :param str new_dir:
-            New, relative path within the workspace to checkout the source for
-            this module
-        """
         self._root.find('local').text = new_dir
 
     @property
     def depth_option(self):
-        """
-        :returns: the current SVN 'depth' options associated with this module
-        :rtype: :class:`str`
-        """
+        """str: the current SVN 'depth' options associated with this module"""
         return self._root.find('depthOption').text
 
     @property
     def ignore_externals(self):
-        """see whether the 'ignore externals' option is enabled on this job
-
-        :returns: True if ignore externals is enabled, otherwise False
-        :rtype: :class:`bool`
-        """
+        """bool: True if ignore externals is enabled, otherwise False"""
         temp = self._root.find('ignoreExternalsOption').text
         assert temp.lower() == "true" or temp.lower() == "false"
         return temp.lower() == "true"

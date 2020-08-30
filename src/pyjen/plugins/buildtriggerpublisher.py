@@ -11,20 +11,16 @@ class BuildTriggerPublisher(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.tasks.BuildTrigger"
 
     @property
     def job_names(self):
-        """Gets the names of 0 or more downstream jobs managed by this config
-
-        :rtype: :class:`list` of :class:`str`
+        """list (str): names of 0 or more downstream jobs managed by this config
         """
 
         children_node = self._root.find('childProjects')
@@ -36,10 +32,13 @@ class BuildTriggerPublisher(XMLPlugin):
 
         The default trigger will run when the parent job is successful
 
-        :param list project_names:
-            List of 1 or more names of jobs to trigger
-        :rtype:
-            :class:`pyjen.plugins.buildtriggerpublisher.BuildTriggerPublisher`
+        Args:
+            project_names (:class:`list` of :class:`str`):
+                List of 1 or more names of jobs to trigger
+
+        Returns:
+            BuildTriggerPublisher:
+                reference to the newly instantiated object
         """
         default_xml = """
 <hudson.tasks.BuildTrigger>

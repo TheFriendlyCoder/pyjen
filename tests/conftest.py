@@ -75,12 +75,16 @@ def extract_file(client, container, path):
     Extraction is performed in-memory to improve performance and minimize
     disk dependency
 
-    :param client: Docker API connection to the service
-    :param int container: ID of the container to work with
-    :param str path:
-        path within the container where the file to extract
-    :returns: contents of the specified file
-    :rtype: :class:`str`
+    Args:
+        client:
+            Docker API connection to the service
+        container (int):
+            ID of the container to work with
+        path (str):
+            path within the container where the file to extract
+
+    Returns:
+        str: contents of the specified file
     """
     log = logging.getLogger(__name__)
 
@@ -104,12 +108,15 @@ def extract_file(client, container, path):
 def inject_file(client, container, local_file_path, container_path):
     """Adds a single file to a Docker container
 
-    :param client: Docker API connection to the service
-    :param int container: ID of the container to work with
-    :param str local_file_path:
-        path to the local file to add to the container
-    :param str container_path:
-        path within the container to inject the file to
+    Args:
+        client:
+            Docker API connection to the service
+        container (int):
+            ID of the container to work with
+        local_file_path (str):
+            path to the local file to add to the container
+        container_path (str):
+            path within the container to inject the file to
     """
     if os.path.exists("temp.tar"):
         os.unlink("temp.tar")
@@ -124,9 +131,9 @@ def inject_file(client, container, local_file_path, container_path):
 
 
 def _workspace_dir():
-    """Gets the absolute path to the root folder of the workspace
-
-    :rtype: :class:`str`
+    """
+    Returns:
+        str: the absolute path to the root folder of the workspace
     """
     cur_path = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(cur_path, ".."))
@@ -139,7 +146,8 @@ def docker_logger(container_id):
     redirect all log messages from a given Docker container to the Python
     logging subsystem.
 
-    :param str container_id: ID for the container to check logs for
+    Args:
+        container_id (str): ID for the container to check logs for
     """
     log = logging.getLogger(__name__)
     client = docker.APIClient(version="auto")

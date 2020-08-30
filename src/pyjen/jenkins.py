@@ -16,59 +16,32 @@ class Jenkins:
 
     Generally you should use this class as the primary entry point to the PyJen
     APIs. Finer grained control of each aspect of the Jenkins dashboard is then
-    provided by the objects exposed by this class including:
-
-    * :class:`~.view.View` - abstraction for a view on the dashboard, allowing
-      jobs to be filtered based on different criteria like job name.
-    * :class:`~.job.Job` - abstraction for a Jenkins job, allowing manipulation
-      of job settings and controlling builds of those jobs
-    * :class:`~.build.Build` - abstraction for an instance of a build of a
-      particular job
-
-    **Example:** finding a job
-    ::
-
-        j = pyjen.Jenkins('http://localhost:8080')
-        job = j.find_job('My Job')
-        if job is None:
-            print ('no job by that name found')
-        else:
-            print ('job ' + job.name + ' found')
-
-    **Example:** find the build number of the last good build of the first job
-    on the default view
-    ::
-
-        j = pyjen.Jenkins('http://localhost:8080/')
-        v = j.get_default_view()
-        jobs = v.get_jobs()
-        lgb = jobs[0].last_good_build
-        print ('last good build of the first job in the default view is ' +
-            lgb.get_build_number())
-
-    :param str url: Full HTTP URL to the main Jenkins dashboard
-    :param tuple credentials:
-        Optional 2-tuple containing the username and password / api key to
-        authenticate with. If not provided, anonymous access will be assumed
-    :param ssl_cert:
-        Passed directly to the requests library when authenticating to the
-        remote server. Maybe be a boolean indicating whether SSL verification
-        is enabled or disabled, or may be a path to a certificate authority
-        bundle.
+    provided by the objects exposed by this class including
+    :class:`~.view.View`, :class:`~.job.Job` and :class:`~.build.Build`.
     """
 
     def __init__(self, url, credentials=None, ssl_cert=True):
+        """
+        Args:
+            url (str):
+                Full HTTP URL to the main Jenkins dashboard
+            credentials (tuple):
+                Optional 2-tuple containing the username and password / api
+                key to authenticate with. If not provided, anonymous access
+                will be assumed
+            ssl_cert (str):
+                Passed directly to the requests library when authenticating to
+                the remote server. Maybe be a boolean indicating whether SSL
+                verification is enabled or disabled, or may be a path to a
+                certificate authority bundle.
+        """
         super().__init__()
         self._log = logging.getLogger(__name__)
         self._api = JenkinsAPI(url, credentials, ssl_cert)
 
     @property
     def connected(self):
-        """make sure the connection to the Jenkins REST API was successful
-
-        :returns: True if connected, false if not
-        :rtype: :class:`bool`
-        """
+        """bool: True if API still connected to the service, False if not"""
         try:
             if self._api.jenkins_headers:
                 return True
@@ -79,33 +52,20 @@ class Jenkins:
 
     @property
     def version(self):
-        """Gets the version of Jenkins pointed to by this object
-
-        :return: Version number of the currently running Jenkins instance
-        :rtype: :class:`tuple`
-        """
+        """tuple: version of Jenkins service, parsed into a tuple of integers"""
         return self._api.jenkins_version
 
     @property
     def is_shutting_down(self):
-        """Is the Jenkins master is in the process of shutting down.
-
-        :returns:
-            If the Jenkins master is preparing to shutdown
-            (ie: in quiet down state), return True, otherwise returns False.
-        :rtype: :class:`bool`
-        """
+        """bool: True if the Jenkins master is scheduled for a shutdown, False
+        if not"""
         data = self._api.get_api_data()
 
         return data['quietingDown']
 
     @property
     def nodes(self):
-        """gets the list of nodes (aka: agents) managed by this Jenkins master
-
-        :returns: list of 0 or more Node objects managed by this Jenkins master
-        :rtype: :class:`list` of :class:`~.node.Node` objects
-        """
+        """list (Node): list of build agents"""
         data = self._api.get_api_data(target_url=self._api.url + "computer/")
         nodes = data['computer']
         retval = []
@@ -121,13 +81,11 @@ class Jenkins:
 
     @property
     def default_view(self):
-        """returns a reference to the primary / default Jenkins view
+        """View: the primary / default Jenkins view
 
         The default view is the one displayed when navigating to
-        the main URL. Typically this will be the "All" view.
-
-        :returns: object that manages the default Jenkins view
-        :rtype: :class:`~.view.View`
+        the main URL. Typically this will be the "All" view, but this may be
+        customized by the user at runtime.
         """
         data = self._api.get_api_data()
 
@@ -135,15 +93,7 @@ class Jenkins:
 
     @property
     def views(self):
-        """Gets a list of all views directly managed by the Jenkins dashboard
-
-        To retrieve all views managed by this Jenkins instance, including
-        recursing into views that support sub-views, see the
-        :py:meth:`.all_views` property
-
-        :returns: list of one or more views defined on this Jenkins instance.
-        :rtype: :class:`list` of :class:`~.view.View` objects
-        """
+        """list (View): all views directly managed by this Jenkins instance"""
         retval = list()
 
         data = self._api.get_api_data()
@@ -155,10 +105,7 @@ class Jenkins:
 
     @property
     def jobs(self):
-        """Gets all jobs managed by this Jenkins instance
-
-        :rtype:  :class:`list` of :class:`~.job.Job` objects
-        """
+        """list (Job): all jobs managed by this Jenkins instance"""
         data = self._api.get_api_data(query_params="depth=0")
 
         retval = list()
@@ -170,12 +117,17 @@ class Jenkins:
     def _recursively_find_jobs(self, obj):
         """Recursively locates all jobs managed by an arbitrary Jenkins object
 
-        :param obj:
-            An arbitrary Jenkins object which may contain jobs. The given object
-            may be one of any number of PyJen plugins, but it must expose
-            a 'jobs' property which can be used to load a list of jobs
-            managed by the object
-        :rtype: :class:`list` of :class:`~.job.Job` objects"""
+        Args:
+            obj:
+                An arbitrary Jenkins object which may contain jobs. The given
+                object may be one of any number of PyJen plugins, but it must
+                expose a 'jobs' property which can be used to load a list of
+                jobs managed by the object
+
+        Returns:
+            list (Job):
+                list of jobs nested within other jobs, recursively
+        """
         retval = list()
         for cur_job in obj.jobs:
             retval.append(cur_job)
@@ -185,14 +137,12 @@ class Jenkins:
 
     @property
     def all_jobs(self):
-        """Gets all jobs managed by this Jenkins instance, recursively
+        """list (Job): all jobs managed by this Jenkins instance, recursively
 
         Unlike the :meth:`jobs` method, this method attempts to expose jobs
         which are managed by custom jobs created from third party plugins which
         support nesting jobs under sub-folders / sub-paths. Any job which
-        exposes a custom 'jobs' property.
-
-        :rtype: :class:`list` of :class:`~.job.Job` objects"""
+        exposes a custom 'jobs' property."""
         return self._recursively_find_jobs(self)
 
     def prepare_shutdown(self):
@@ -217,13 +167,16 @@ class Jenkins:
     def find_job(self, job_name):
         """Searches all jobs managed by this Jenkins instance for a specific job
 
-        .. seealso: :py:meth:`.get_job`
+        Some plugins allow jobs to be nested within other jobs. To perform a
+        recursive search across all such entities, see :py:meth:`.all_jobs`.
 
-        :param str job_name: the name of the job to search for
-        :returns:
-            If a job with the specified name can be found, and object to manage
-            the job will be returned, otherwise None
-        :rtype: :class:`~.job.Job`
+        Args:
+            job_name (str): the name of the job to search for
+
+        Returns:
+            Job:
+                If a job with the specified name can be found, and object to
+                manage the job will be returned, otherwise None
         """
         data = self._api.get_api_data()
 
@@ -236,13 +189,13 @@ class Jenkins:
     def find_view(self, view_name):
         """Searches views for a specific one
 
-        .. seealso: :py:meth:`.get_view`
+        Args:
+            view_name (str): the name of the view to search for
 
-        :param str view_name: the name of the view to search for
-        :returns:
-            If a view with the specified name can be found, an object to manage
-            the view will be returned, otherwise None
-        :rtype: :class:`~.view.View`
+        Returns:
+            View:
+                If a view with the specified name can be found, an object to
+                manage the view will be returned, otherwise returns None
         """
         data = self._api.get_api_data()
 
@@ -256,14 +209,17 @@ class Jenkins:
     def create_view(self, view_name, view_class):
         """Creates a new view on the Jenkins dashboard
 
-        :param str view_name:
-            the name for this new view
-            This name should be unique, different from any other views currently
-            managed by the Jenkins instance
-        :param view_class:
-            PyJen plugin class associated with the type of view to be created
-        :returns: An object to manage the newly created view
-        :rtype: :class:`~.view.View`
+        Args:
+            view_name (str):
+                The name for this new view. This name should be unique,
+                different from any other views currently managed by the Jenkins
+                instance
+            view_class:
+                PyJen plugin class associated with the type of view to be
+                created
+
+        Returns:
+            View: An object to manage the newly created view
         """
 
         create_view(self._api, view_name, view_class)
@@ -274,14 +230,16 @@ class Jenkins:
     def create_job(self, job_name, job_class):
         """Creates a new job on the Jenkins dashboard
 
-        :param str job_name:
-            the name for this new job
-            This name should be unique, different from any other jobs currently
-            managed by the Jenkins instance
-        :param job_class:
-            PyJen plugin class associated with the type of job to be created
-        :returns: An object to manage the newly created job
-        :rtype: :class:`~.job.Job`
+        Args:
+            job_name (str):
+                The name for this new job. This name should be unique,
+                different from any other jobs currently managed by the
+                Jenkins instance
+            job_class:
+                PyJen plugin class associated with the type of job to be created
+
+        Returns:
+            Job: An object to manage the newly created job
         """
         create_job(self._api, job_name, job_class)
 
@@ -292,10 +250,13 @@ class Jenkins:
     def find_user(self, username):
         """Locates a user with the given username on this Jenkins instance
 
-        :param str username: name of user to locate
-        :returns:
-            reference to Jenkins object that manages this users information.
-        :rtype: :class:`~.user.User` or None if user not found
+        Args:
+            username (str): name of user to locate
+
+        Returns:
+            User:
+                reference to Jenkins object that manages this users information,
+                or None if no user with the specified name can be found
         """
         # TODO: Rework 'users' property to cache the user name for all users in
         #       one query, so we can rework this implementation to simply call
@@ -312,10 +273,14 @@ class Jenkins:
     def find_node(self, nodename):
         """Locates a Jenkins build agent with the given name
 
-        :param str nodename: name of node to locate
-        :returns:
-            reference to Jenkins object that manages this node's information.
-        :rtype: :class:`~.node.Node` or None if node not found
+        Args:
+            nodename (str): name of node to locate
+
+        Returns:
+            Node:
+                reference to Jenkins object that manages this node's
+                information, or None if no node with the given name can be
+                found
         """
         if nodename == "master":
             temp_nodename = "(master)"
@@ -337,18 +302,15 @@ class Jenkins:
 
     @property
     def plugin_manager(self):
-        """object which manages the plugins installed on this Jenkins
-
-        :returns:
-            reference to Jenkins object that manages plugins on this instance
-        :rtype: :class:`~.plugin_manager.PluginManager`
-        """
+        """PluginManager: interface for managing the plugins installed on this
+        Jenkins instance"""
         return PluginManager(self._api.clone(self._api.url + 'pluginManager'))
 
     @property
     def build_queue(self):
-        """object that describes / manages the queued builds
-
-        :rtype: :class:`~.queue.Queue`
-        """
+        """Queue: interface for managing the Jenkins build queue"""
         return Queue(self._api.clone(self._api.url + 'queue'))
+
+
+if __name__ == "__main__":  # pragma: no cover
+    pass

@@ -5,13 +5,12 @@ from pyjen.utils.plugin_api import instantiate_xml_plugin
 
 
 class ParameterizedBuild(XMLPlugin):
-    """Plugin which allows custom build paramters to be passed to a job"""
+    """Plugin which allows custom build parameters to be passed to a job"""
+
     @property
     def parameters(self):
-        """Gets a list of the build parameters associated with this property
-
-        :rtype: :class:`list` of build parameters
-        """
+        """list (XMLPlugin): list of the build parameters associated with the
+        job"""
         params_node = self._root.find("parameterDefinitions")
         assert params_node is not None
         retval = list()
@@ -26,12 +25,16 @@ class ParameterizedBuild(XMLPlugin):
     def instantiate(cls, params):
         """Factory method for this class
 
-        :param list params:
-            List of parameters to add to this build property
-            Each element must be associated with a parameter type supported
-            by the parameterized build plugin
-        :returns: an instance of this class
-        :rtype: :class:`ParameterizedBuild`
+        Args:
+            params (:class:`list` of :class:`~.utils.xml_plugin.XMLPlugin`):
+
+                List of parameters to add to this build property
+                Each element must be associated with a parameter type supported
+                by the parameterized build plugin
+
+        Returns:
+            ParameterizedBuild:
+                an instance of this class
         """
         default_xml = """<hudson.model.ParametersDefinitionProperty>
 </hudson.model.ParametersDefinitionProperty>
@@ -44,12 +47,10 @@ class ParameterizedBuild(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.model.ParametersDefinitionProperty"
 

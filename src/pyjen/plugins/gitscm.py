@@ -8,7 +8,7 @@ class GitSCM(XMLPlugin):
 
     @property
     def url(self):
-        """Gets the repository URL for the git config"""
+        """str: the repository URL for the git config"""
         branches_node = self._root.find("userRemoteConfigs")
         remotes_node = branches_node.find("hudson.plugins.git.UserRemoteConfig")
         url_node = remotes_node.find("url")
@@ -16,12 +16,10 @@ class GitSCM(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.plugins.git.GitSCM"
 
@@ -29,9 +27,13 @@ class GitSCM(XMLPlugin):
     def instantiate(cls, repository_url):
         """Factory method for creating a new Git SCM code block
 
-        :param str repository_url:
-            URI of the repository to check out during the build
-        :rtype: :class:`pyjen.plugins.gitscm.GitSCM`
+        Args:
+            repository_url (str):
+                URI of the repository to check out during the build
+
+        Returns:
+            GitSCM:
+                reference to the newly instantiated object
         """
         default_xml = """
 <scm class="hudson.plugins.git.GitSCM">

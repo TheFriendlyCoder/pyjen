@@ -11,21 +11,16 @@ class ArtifactArchiverPublisher(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.tasks.ArtifactArchiver"
 
     @property
     def artifact_regex(self):
-        """Gets the regular expression used to locate files to archive
-
-        :rtype: :class:`str`
-        """
+        """str: the regular expression used to locate files to archive"""
 
         children_node = self._root.find('artifacts')
         return children_node.text
@@ -34,11 +29,14 @@ class ArtifactArchiverPublisher(XMLPlugin):
     def instantiate(cls, file_pattern):
         """Factory method for creating a new artifact archiver
 
-        :param str file_pattern:
-            regular expression matching files to be archived at the end of
-            the build
-        :rtype:
-            :class:`pyjen.plugins.artifactarchiver.ArtifactArchiverPublisher`
+        Args:
+            file_pattern (str):
+                regular expression matching files to be archived at the end of
+                the build
+
+        returns:
+            ArtifactArchiverPublisher:
+                Reference to the newly created publisher
         """
         default_xml = """
 <hudson.tasks.ArtifactArchiver>

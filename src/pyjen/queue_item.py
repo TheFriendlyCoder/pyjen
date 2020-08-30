@@ -8,44 +8,33 @@ from pyjen.utils.plugin_api import find_plugin
 
 class QueueItem:
     """Abstraction around a scheduled build contained in the Jenkins build queue
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     """
 
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Pre-initialized connection to the Jenkins REST API
+        """
         super().__init__()
         self._api = api
 
     def __eq__(self, other):
-        """Equality operator
-
-        :param other: other object to be compared to this one
-        :rtype: :class:`bool`
-        """
         if not isinstance(other, QueueItem):
             return False
         return self._api.url == other._api.url  # pylint: disable=protected-access
 
     def __ne__(self, other):
-        """Equality operator
-
-        :param other: other object to be compared to this one
-        :rtype: :class:`bool`
-        """
         if not isinstance(other, QueueItem):
             return True
         return self._api.url != other._api.url  # pylint: disable=protected-access
 
     @property
     def _data(self):
-        """Gets the API data describing the current state of the queued build
+        """dict: API data describing the current state of the queued build
 
         May return an empty dictionary if the object is no longer backed by a
         valid REST API endpoint.
-
-        :rtype: :class:`dict`
         """
         try:
             return self._api.get_api_data()
@@ -56,12 +45,10 @@ class QueueItem:
 
     @property
     def uid(self):
-        """Gets the numeric identifier of this queued build
+        """int: unique numeric identifier of this queued build
 
         Guaranteed to return a valid identifier, even when the queue item
         this object refers to has been invalidated by Jenkins.
-
-        :rtype: :class:`int`
         """
         # We could try and pull the item ID from the "id" field of our response
         # data, but to ensure we always have the ability to return a valid
@@ -79,41 +66,38 @@ class QueueItem:
 
     @property
     def stuck(self):
-        """Is this scheduled build blocked / unable to build?
+        """bool: Is this scheduled build blocked / unable to build?
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`bool`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         return self._data.get("stuck")
 
     @property
     def blocked(self):
-        """Is this scheduled build waiting for some other event to complete?
+        """bool: Is this scheduled build waiting for some other event to
+        complete?
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`bool`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         return self._data.get("blocked")
 
     @property
     def buildable(self):
-        """TBD
+        """bool: is this queued build able to be built on this build farm?
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`bool`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         return self._data.get("buildable")
 
     @property
     def reason(self):
-        """Descriptive text explaining why this build is still in the queue
+        """str: Descriptive text explaining why this build is still in the queue
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`str`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         if not self._data.keys():
             return None
@@ -121,11 +105,10 @@ class QueueItem:
 
     @property
     def waiting(self):
-        """Is this queue item still waiting in the queue?
+        """bool: Is this queue item still waiting in the queue?
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`bool`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         temp = self._data.get("_class")
         if temp is None:
@@ -134,11 +117,10 @@ class QueueItem:
 
     @property
     def cancelled(self):
-        """Has this queued build been cancelled?
+        """bool: Has this queued build been cancelled?
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`bool`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         if not self._data.keys():
             return None
@@ -146,11 +128,10 @@ class QueueItem:
 
     @property
     def job(self):
-        """Gets the Jenkins job associated with this scheduled build
+        """Job: the Jenkins job associated with this scheduled build
 
-        May return None if this queue item has been invalidated by Jenkins
-
-        :rtype: :class:`pyjen.job.Job`
+        Warning:
+            May return None if this queue item has been invalidated by Jenkins
         """
         job_data = self._data.get("task")
         if job_data is None:
@@ -163,12 +144,12 @@ class QueueItem:
 
     @property
     def build(self):
-        """Once this scheduled build leaves the queue, this property returns
-        a reference to the running build. While the item is still queued, this
-        property returns None.
+        """Build: Once this scheduled build leaves the queue, this property
+        returns a reference to the running build. While the item is still
+        queued, this property returns None.
 
-        See the 'waiting' property on this object for a way to detect whether
-        a queued item has left the queue or not.
+        See the :py:meth:`.waiting` property on this object for a way to detect
+        whether a queued item has left the queue or not.
         """
         exe_info = self._data.get("executable")
         if exe_info is None:
@@ -187,15 +168,14 @@ class QueueItem:
         self._api.post(tmp_url, params)
 
     def is_valid(self):
-        """Checks to make sure the queue item this object manages still exists
+        """bool: Checks to make sure the queue item this object manages still
+        exists
 
         Jenkins periodically expires / invalidates queue items server-side.
         There is no way for us to detect or predict when this will happen. When
         it does, this client-side queue item object will no longer refer to
         a valid REST API endpoint. This helper method helps users of the PyJen
         library check to see if the object still points to a valid queue item.
-
-        :rtype: :class:`bool`
         """
         return bool(self._data.keys())
 

@@ -6,54 +6,42 @@ from urllib.parse import quote
 class Node:
     """Wrapper around a Jenkins build agent (aka: Node) configuration
 
-    Use this class to manipulate agents managed by a Jenkins master
-
-    .. seealso: :py:meth:`~.jenkins.Jenkins.find_node`
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
+    See :py:meth:`~.jenkins.Jenkins.find_node` for more details
     """
 
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Pre-initialized connection to the Jenkins REST API
+        """
         super().__init__()
         self._api = api
 
     @property
     def name(self):
-        """Gets the display name of this Node
-
-        :rtype: :class:`str`
-        """
+        """str: the display name of this Node"""
         data = self._api.get_api_data()
 
         return data['displayName']
 
     @property
     def is_offline(self):
-        """Checks to see whether this Node is currently offline or not
-
-        :rtype: :class:`bool`
-        """
+        """bool: checks to see whether this Node is currently offline or not"""
         data = self._api.get_api_data()
 
         return data['offline']
 
     @property
     def is_idle(self):
-        """Checks to see whether any executors are in use on this Node or not
-
-        :rtype: :class:`bool`
-        """
+        """bool: checks to see whether any executors are in use on this Node
+        or not"""
         data = self._api.get_api_data()
         return data['idle']
 
     @property
     def number_of_executors(self):
-        """Returns the number of executors this node provides
-
-        :rtype: :class:`int`
-        """
+        """int: the number of executors this node provides"""
         data = self._api.get_api_data()
         return data['numExecutors']
 
@@ -63,9 +51,10 @@ class Node:
         If the current state of this Node is "offline" it will be toggled to
         "online" and vice-versa.
 
-        :param str message:
-            optional descriptive message explaining the reason this node has
-            been taken offline.
+        Args:
+            message (str):
+                optional descriptive message explaining the reason this node has
+                been taken offline.
         """
         post_cmd = self._api.url + "toggleOffline"
         if message is not None:
@@ -76,14 +65,16 @@ class Node:
     def wait_for_idle(self, max_timeout=None):
         """Blocks execution until this Node enters an idle state
 
-        :param int max_timeout:
-            The maximum amount of time, in seconds, to wait for an idle state.
-            If this value is undefined, this method will block indefinitely.
+        Args:
+            max_timeout (int):
+                Optional amount of time, in seconds, to wait for an idle
+                state. If this value is undefined, this method will block
+                indefinitely.
 
-        :returns:
-            True if the Node has entered idle state before returning
-            otherwise returns False
-        :rtype: :class:`bool`
+        Returns:
+            bool:
+                True if the Node has entered idle state before returning
+                otherwise returns False
         """
         polling_period_in_seconds = 1
 

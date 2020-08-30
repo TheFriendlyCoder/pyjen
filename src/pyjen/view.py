@@ -8,62 +8,49 @@ from pyjen.utils.helpers import create_view
 
 
 class View:
-    """generic Jenkins views providing interfaces common to all view types
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
-    """
+    """generic Jenkins views providing interfaces common to all view types"""
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Pre-initialized connection to the Jenkins REST API
+        """
         super().__init__()
         self._api = api
         self._xml_cache = None
         self._log = logging.getLogger(self.__module__)
 
     def __repr__(self):
-        """Serialized representation of this object"""
         return self._api.url
 
     def __eq__(self, other):
-        """equality operator"""
         if not isinstance(other, type(self)):
             return False
         return other.name == self.name
 
     def __ne__(self, other):
-        """inequality operator"""
         if not isinstance(other, type(self)):
             return True
         return other.name != self.name
 
     def __hash__(self):
-        """Hashing function, allowing object to be serialized and compared"""
         return hash(self._api.url)
 
     @property
     def name(self):
-        """Gets the display name for this view
-
-        This is the name as it appears in the tabbed view
-        of the main Jenkins dashboard
-
-        :returns: the name of the view
-        :rtype: :class:`str`
-        """
+        """str: the name as it appears in the tabbed view of the main Jenkins
+        dashboard"""
         data = self._api.get_api_data()
         return data['name']
 
     @property
     def jobs(self):
-        """Gets a list of jobs associated with this view
+        """list (Job): list of 0 or more jobs associated with this view
 
         Views are simply filters to help organize jobs on the
         Jenkins dashboard. This method returns the set of jobs
         that meet the requirements of the filter associated
         with this view.
-
-        :returns: list of 0 or more jobs that are included in this view
-        :rtype:  :class:`list` of :class:`~.job.Job` objects
         """
         data = self._api.get_api_data(query_params="depth=0")
 
@@ -80,27 +67,23 @@ class View:
         self._api.post(self._api.url + "doDelete")
 
     def delete_all_jobs(self):
-        """allows callers to do bulk deletes of all jobs found in this view"""
+        """Batch operation that deletes all jobs found in this view"""
         for j in self.jobs:
             j.delete()
 
     def disable_all_jobs(self):
-        """allows caller to bulk-disable all jobs found in this view"""
+        """Batch operation that disables all jobs found in this view"""
         for j in self.jobs:
             j.disable()
 
     def enable_all_jobs(self):
-        """allows caller to bulk-enable all jobs found in this view"""
+        """Batch operation that enables all jobs found in this view"""
         for j in self.jobs:
             j.enable()
 
     @property
     def view_metrics(self):
-        """Composes a report on the jobs contained within the view
-
-        :return: Dictionary containing metrics about the view
-        :rtype: :class:`dict`
-        """
+        """dict: Composes a report on the jobs contained within the view"""
         data = self._api.get_api_data()
 
         broken_jobs = []
@@ -132,6 +115,20 @@ class View:
                 "disabled_jobs": disabled_jobs}
 
     def _clone_view_helper(self, new_view_name):
+        """Internal helper method used by the :py:meth:`.clone` method.
+        Generates the XML definition for the view being created as part
+        of the clone operation
+
+        Args:
+            new_view_name (str):
+                name of the new view being created
+
+        Returns:
+            tuple:
+                Reference to the :class:`~.utils.jenkins_api.JenkinsAPI` and
+                :class:`~.utils.viewxml.ViewXML` defining the configuration for
+                the new view to be created from this one.
+        """
         # NOTE: In order to properly support views that may contain nested
         #       views we have to do some URL manipulations to extrapolate the
         #       REST API endpoint for the parent object to which the cloned
@@ -165,10 +162,14 @@ class View:
     def clone(self, new_view_name):
         """Make a copy of this view with the specified name
 
-        :param str new_view_name:
-            name to give the newly created view
-        :return: reference to the created view
-        :rtype: :class:`~.view.View`
+        Args:
+            new_view_name (str):
+                name to give the newly created view
+
+        Returns:
+            View:
+                reference to the created view, with the same configuration
+                options as this one
         """
         updated_api, updated_xml = self._clone_view_helper(new_view_name)
         retval = self.__class__(updated_api)
@@ -178,8 +179,9 @@ class View:
     def rename(self, new_view_name):
         """Changes the name of this view
 
-        :param str new_view_name:
-            new name for the selected source view
+        Args:
+            new_view_name (str):
+                new name for this view
         """
         updated_api, updated_xml = self._clone_view_helper(new_view_name)
 
@@ -198,6 +200,8 @@ class View:
     # ---------------------------------------------- CONFIG XML BASED PROPERTIES
     @property
     def _view_xml(self):
+        """ViewXML: reference to the object that can parse and manipulate the
+        raw XML definition for this view"""
         if self._xml_cache is not None:
             return self._xml_cache
         self._xml_cache = self._xml_class(self._api)
@@ -205,36 +209,27 @@ class View:
 
     @property
     def jenkins_plugin_name(self):
-        """Extracts the name of the Jenkins plugin associated with this View
+        """str: Extracts the name of the Jenkins plugin associated with this
+        View
 
         The data returned by this helper property is extracted from the
         config XML that defines this job.
-
-        :rtype: :class:`str`
         """
         return self._view_xml.plugin_name
 
     @property
     def config_xml(self):
-        """Gets the raw XML configuration for the view
+        """str: the raw XML configuration for the view
 
         Allows callers to manipulate the raw view configuration file as desired.
 
-        :returns: the full XML tree describing this view's configuration
-        :rtype: :class:`str`
+        Warning:
+            For advanced use only.
         """
         return self._view_xml.xml
 
     @config_xml.setter
     def config_xml(self, new_xml):
-        """Allows a caller to manually override the entire view configuration
-
-        WARNING: This is an advanced method that should only be used in
-        rare circumstances. All configuration changes should normally
-        be handled using other methods provided on this class.
-
-        :param str new_xml: A complete XML tree compatible with the Jenkins API
-        """
         self._view_xml.xml = new_xml
 
     # --------------------------------------------------------------- PLUGIN API
@@ -243,15 +238,17 @@ class View:
         """Factory method for finding the appropriate PyJen view object based
         on data loaded from the Jenkins REST API
 
-        :param dict json_data:
-            data loaded from the Jenkins REST API summarizing the view to be
-            instantiated
-        :param rest_api:
-            PyJen REST API configured for use by the parent container. Will
-            be used to instantiate the PyJen view that is returned.
-        :returns:
-            PyJen view object wrapping the REST API for the given Jenkins view
-        :rtype: :class:`~.view.View`
+        Args:
+            json_data (dict):
+                data loaded from the Jenkins REST API summarizing the view to be
+                instantiated
+            rest_api (JenkinsAPI):
+                PyJen REST API configured for use by the parent container. Will
+                be used to instantiate the PyJen view that is returned.
+
+        Returns:
+            View:
+                PyJen view object wrapping the REST API for the given view
         """
         # TODO: Find some way to cache the json data given inside the view so
         #       we can lazy-load API data. For example, the name of the view
@@ -292,10 +289,8 @@ class View:
 
     @classmethod
     def get_supported_plugins(cls):
-        """Returns a list of PyJen plugins that derive from this class
-
-        :rtype: :class:`list` of classes
-        """
+        """list: list of PyJen plugin classes that may be used to instantiate
+        views on this Jenkins instance"""
         retval = list()
         for cur_plugin in get_all_plugins():
             if issubclass(cur_plugin, cls):
@@ -304,6 +299,8 @@ class View:
 
     @property
     def _xml_class(self):
+        """ViewXML: class that is able to parse and manipulate the raw XML
+        that defines the configuration for this view"""
         return ViewXML
 
 

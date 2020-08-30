@@ -12,20 +12,14 @@ class ListViewSection(XMLPlugin):
     """
     @property
     def name(self):
-        """Gets the title text of this section
-
-        :rtype: :class:`str`
-        """
+        """str: the title text of this section"""
         name_node = self._root.find("name")
         assert name_node is not None
         return name_node.text
 
     @property
     def include_regex(self):
-        """regular filter for jobs to be shown in this section
-
-        :rtype: :class:`str`
-        """
+        """str: regular filter for jobs to be shown in this section"""
         regex_node = self._root.find("includeRegex")
         if regex_node is None:
             return ""
@@ -33,10 +27,6 @@ class ListViewSection(XMLPlugin):
 
     @include_regex.setter
     def include_regex(self, new_regex):
-        """Sets the filter to use for jobs shown in this section
-
-        :param str new_regex: a new regular expression to use for the filter
-        """
         regex_node = self._root.find("includeRegex")
         if regex_node is None:
             regex_node = ElementTree.SubElement(self._root, 'includeRegex')
@@ -46,12 +36,10 @@ class ListViewSection(XMLPlugin):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.plugins.sectioned_view.ListViewSection"
 
@@ -59,9 +47,13 @@ class ListViewSection(XMLPlugin):
     def instantiate(cls, section_name):
         """Factory method for creating a new Git SCM code block
 
-        :param str section_name:
-            Text to appear at the top of the section
-        :rtype: :class:`pyjen.plugins.sectionedview_listsection.ListViewSection`
+        Args:
+            section_name (str):
+                Text to appear at the top of the section
+
+        Returns:
+            ListViewSection:
+                instance of this class
         """
         default_xml = """<hudson.plugins.sectioned__view.ListViewSection>
     <jobNames>

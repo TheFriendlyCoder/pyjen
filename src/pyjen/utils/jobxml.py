@@ -9,23 +9,26 @@ class JobXML:
 
     The source xml can be loaded from nearly any URL by
     appending "/config.xml" to it, as in "http://server/jobs/job1/config.xml"
-
-    :param api:
-        Rest API for the Jenkins XML configuration managed by this object
     """
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Rest API for the Jenkins XML configuration managed by this
+                object
+        """
         super().__init__()
         self._api = api
         self._log = logging.getLogger(__name__)
         self._cache = None
 
     def __str__(self):
-        """String representation of the configuration XML"""
         return self.xml
 
     @property
     def _root(self):
-        """Gets the decoded root node from the config xml"""
+        """xml.etree.ElementTree.Element: the encoded root node from the
+        config xml"""
         if self._cache is not None:
             return self._cache
         text = self._api.get_text("/config.xml")
@@ -39,10 +42,8 @@ class JobXML:
 
     @property
     def xml(self):
-        """Raw XML in plain-text format
-
-        :rtype: :class:`str`
-        """
+        """str: Raw XML representation describing the configuration of this
+        plugin, in plain-text format"""
         return ElementTree.tostring(self._root).decode("utf-8")
 
     @xml.setter
@@ -52,18 +53,18 @@ class JobXML:
 
     @property
     def plugin_name(self):
-        """Gets the name of the Jenkins plugin associated with this view
-
-        :rtype: :class:`str`
+        """str: the name of the Jenkins plugin associated with XML definition
         """
         return self._root.tag
 
     @property
     def properties(self):
-        """Gets a list of 0 or more Jenkins properties associated with this job
+        """list (XMLPlugin): list of 0 or more Jenkins properties associated
+        with this job
 
-        :returns: a list of customizable properties associated with this job
-        :rtype: :class:`list` of property plugins supported by this job
+        Each element in the list will be a reference to a PyJen plugin which is
+        able to manipulate each job property. Any properties not supported by
+        the PyJen plugins currently installed will be ignored.
         """
         retval = list()
         nodes = self._root.find('properties')
@@ -81,8 +82,9 @@ class JobXML:
     def add_property(self, prop):
         """Adds a new job property to the configuration
 
-        :param prop:
-            PyJen plugin associated with the job property to add
+        Args:
+            prop (XMLPlugin):
+                PyJen plugin associated with the job property to add
         """
         props_node = self._root.find('properties')
         props_node.append(prop.node)

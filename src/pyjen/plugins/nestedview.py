@@ -8,13 +8,10 @@ class NestedView(View):
 
     @property
     def views(self):
-        """Gets all views contained within this view, non-recursively
+        """list (View): all views contained within this view, non-recursively
 
         To get a recursive list of all child views and their children use
         :py:meth:`all_views`.
-
-        :returns: list of all views contained within this view
-        :rtype: :class:`list` of :class:`pyjen.view.View`
         """
         retval = list()
 
@@ -35,9 +32,13 @@ class NestedView(View):
         then there are no matches for the given name anywhere in this
         view's sub-tree.
 
-        :param str view_name: the name of the sub-view to locate
-        :returns: List of 0 or more views with the given name
-        :rtype: :class:`list` of :class:`pyjen.view.View`
+        Args:
+            view_name (str):
+                the name of the sub-view to locate
+
+        Returns:
+            list (View):
+                0 or more views with the given name
         """
         retval = list()
         for cur_view in self.views:
@@ -48,13 +49,7 @@ class NestedView(View):
 
     @property
     def all_views(self):
-        """Gets all views contained within this view, recursively
-
-        :returns:
-            list of all views contained within this view and it's children,
-            recursively
-        :rtype: :class:`list` of :class:`pyjen.view.View`
-        """
+        """list (View): all views contained within this view, recursively"""
         retval = list()
         for cur_view in self.views:
 
@@ -78,9 +73,13 @@ class NestedView(View):
         then there are no matches for the given name anywhere in this
         view's sub-tree.
 
-        :param str view_name: the name of the sub-view to locate
-        :returns: List of 0 or more views with the given name
-        :rtype: :class:`list` of :class:`pyjen.view.View`
+        Args:
+            view_name (str):
+                the name of the sub-view to locate
+
+        Returns:
+            list (View):
+                0 or more views with the given name
         """
         retval = list()
         for cur_view in self.all_views:
@@ -92,11 +91,16 @@ class NestedView(View):
     def create_view(self, view_name, view_class):
         """Creates a new sub-view within this nested view
 
-        :param str view_name: name of the new sub-view to create
-        :param view_class:
-            PyJen plugin class associated with the type of view to be created
-        :returns: reference to the newly created view
-        :rtype: :class:`pyjen.view.View`
+        Args:
+            view_name (str):
+                name of the new sub-view to create
+            view_class:
+                PyJen plugin class associated with the type of view to be
+                created
+
+        Returns:
+            View:
+                reference to the newly created view
         """
         create_view(self._api, view_name, view_class)
         result = self.find_view(view_name)
@@ -116,12 +120,10 @@ class NestedView(View):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.plugins.nested_view.NestedView"
 
