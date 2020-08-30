@@ -2,11 +2,9 @@
 import os
 import json
 import requests
-from six import PY2
-from tqdm import tqdm
 
 
-class Plugin(object):
+class Plugin:
     """Abstraction around one Jenkins plugin"""
     def __init__(self, plugin_config):
         """Constructor
@@ -78,8 +76,7 @@ class Plugin(object):
                 retval.append(tmp)
         return retval
 
-    def download(self, output_folder, overwrite=False,
-                 show_progress=False):
+    def download(self, output_folder, overwrite=False):
         """Downloads the plugin installation file for this plugin
 
         :param str output_folder:
@@ -87,11 +84,7 @@ class Plugin(object):
         :param bool overwrite:
             indicates whether existing plugin files should be overwritten in
             the target folder
-        :param bool show_progress:
-            indicates whether a progress bar should be displayed as the
-            plugin is downloaded
         """
-
         # Construct an absolute path for our output file based on a meaningful
         # naming convention
         output_filename = "{0}-{1}.hpi".format(self.short_name, self.version)
@@ -100,9 +93,7 @@ class Plugin(object):
         # See if we need to overwrite the output file or not...
         if os.path.exists(output_file) and not overwrite:
             msg = "Output file already exists: " + output_file
-            if PY2:
-                raise Exception(msg)
-            raise FileExistsError(msg)  # pylint: disable=undefined-variable
+            raise FileExistsError(msg)
 
         # Make sure our output folder exists...
         if not os.path.exists(output_folder):
@@ -115,15 +106,10 @@ class Plugin(object):
         # Download data in 100KB chunks
         buff_size = 100 * 1024
 
-        # Configure our progress indicator
-        file_size = int(response.headers['content-length'])
-        with tqdm(desc=output_filename, unit='B', unit_scale=True,
-                  disable=not show_progress, total=file_size) as progress:
-            # Save our streaming data
-            with open(output_file, "wb") as handle:
-                for data in response.iter_content(buff_size):
-                    progress.update(buff_size)
-                    handle.write(data)
+        # Save our streaming data
+        with open(output_file, "wb") as handle:
+            for data in response.iter_content(buff_size):
+                handle.write(data)
 
 
 if __name__ == "__main__":  # pragma: no cover

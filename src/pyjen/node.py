@@ -1,9 +1,9 @@
 """Declarations for the abstraction of a Jenkins build agent"""
 import time
-from six.moves import urllib_parse
+from urllib.parse import quote
 
 
-class Node(object):
+class Node:
     """Wrapper around a Jenkins build agent (aka: Node) configuration
 
     Use this class to manipulate agents managed by a Jenkins master
@@ -16,7 +16,7 @@ class Node(object):
     """
 
     def __init__(self, api):
-        super(Node, self).__init__()
+        super().__init__()
         self._api = api
 
     @property
@@ -69,7 +69,7 @@ class Node(object):
         """
         post_cmd = self._api.url + "toggleOffline"
         if message is not None:
-            post_cmd += "?offlineMessage=" + urllib_parse.quote(message)
+            post_cmd += "?offlineMessage=" + quote(message)
 
         self._api.post(post_cmd)
 

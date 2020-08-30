@@ -2,7 +2,7 @@
 from pyjen.plugin import Plugin
 
 
-class PluginManager(object):
+class PluginManager:
     """Abstraction around Jenkins plugin management interfaces
 
     Supports adding, removing and querying information about Jenkins plugins
@@ -13,7 +13,7 @@ class PluginManager(object):
     """
 
     def __init__(self, api):
-        super(PluginManager, self).__init__()
+        super().__init__()
         self._api = api
 
     @property

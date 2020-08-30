@@ -1,6 +1,6 @@
 """Primitives for interacting with Jenkins jobs"""
 import logging
-from six.moves import urllib_parse
+from urllib.parse import urlsplit, urljoin
 import requests
 from requests.exceptions import HTTPError
 from pyjen.build import Build
@@ -9,7 +9,7 @@ from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 
 
-class Job(object):
+class Job:
     """Abstraction for operations common to all job types on Jenkins
 
     :param api:
@@ -17,7 +17,7 @@ class Job(object):
     :type api: :class:`~/utils/jenkins_api/JenkinsAPI`
     """
     def __init__(self, api):
-        super(Job, self).__init__()
+        super().__init__()
         self._api = api
         self._xml_cache = None
         self._log = logging.getLogger(self.__module__)
@@ -427,7 +427,7 @@ class Job(object):
         for run in self.all_builds:
             if run.start_time < start_time:
                 break
-            elif end_time >= run.start_time >= start_time:
+            if end_time >= run.start_time >= start_time:
                 builds.append(run)
         return builds
 
@@ -466,11 +466,11 @@ class Job(object):
         #       jobs we have to do some URL manipulations to extrapolate the
         #       REST API endpoint for the parent object to which the cloned
         #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = urlsplit(self._api.url).path.split("/")
         parts = [cur_part for cur_part in parts if cur_part.strip()]
         assert len(parts) >= 2
         assert parts[-2] == "job"
-        parent_url = urllib_parse.urljoin(
+        parent_url = urljoin(
             self._api.url, "/" + "/".join(parts[:-2]))
 
         parent_api = self._api.clone(parent_url)
@@ -507,11 +507,11 @@ class Job(object):
         #       jobs we have to do some URL manipulations to extrapolate the
         #       REST API endpoint for the parent object to which the cloned
         #       view is to be contained.
-        parts = urllib_parse.urlsplit(self._api.url).path.split("/")
+        parts = urlsplit(self._api.url).path.split("/")
         parts = [cur_part for cur_part in parts if cur_part.strip()]
         assert len(parts) >= 2
         assert parts[-2] == "job"
-        new_url = urllib_parse.urljoin(
+        new_url = urljoin(
             self._api.url, "/" + "/".join(parts[:-2]))
         new_url += "/job/" + new_job_name
         self._api = self._api.clone(new_url)

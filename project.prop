@@ -7,17 +7,23 @@
     "PLUGIN_VER": "1.0",
     "DEPENDENCIES" : [
         "requests",
-        "six",
-        "tqdm",
     ],
     "DEV_DEPENDENCIES" : [
         "pytest",
+        "pytest-cov",
         "pytest-timeout",
         "mock",
         "pylint",
         "tox",
         "tox-factor",
-        "docker"
+        "tox-pyenv",
+        "docker",
+        "sphinx",
+        "sphinxcontrib-apidoc",
+        "sphinx-rtd-theme",
+        # pinning coverage package until bugs with coveralls plugin is fixed
+        # https://github.com/z4r/python-coveralls/issues/73
+        "coverage<5.0",
     ],
     "DESCRIPTION" : "Python wrapper for the Jenkins CI REST API",
     "KEYWORDS" : "jenkins jenkins-ci api wrapper library",

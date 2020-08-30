@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""Document generation script"""
 #
 # PyJen documentation build configuration file, created by
 # sphinx-quickstart on Thu Nov  6 22:18:24 2014.
@@ -53,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-copyright = '2019, Kevin S. Phillips'
+copyright = '2019, Kevin S. Phillips'  # pylint: disable=redefined-builtin
 author = 'Kevin S. Phillips'
 _proj_props = ast.literal_eval(open('../project.prop').read())
 _proj_dir = os.path.join(_src_dir, _proj_props["NAME"])

@@ -1,11 +1,11 @@
 """Primitives for interacting with Jenkins builds"""
 from datetime import datetime
 import logging
-from six.moves import urllib_parse
+from urllib.parse import urljoin
 from pyjen.changeset import Changeset
 
 
-class Build(object):
+class Build:
     """information about a single build / run of a :class:`~.job.Job`
 
     Builds are executions of jobs and thus instances of this class are
@@ -19,7 +19,7 @@ class Build(object):
     """
 
     def __init__(self, api):
-        super(Build, self).__init__()
+        super().__init__()
         self._api = api
         self._log = logging.getLogger(__name__)
 
@@ -181,7 +181,7 @@ class Build(object):
         retval = []
 
         for node in artifacts_node:
-            url = urllib_parse.urljoin(
+            url = urljoin(
                 self._api.url, "artifact/" + node['fileName'])
             retval.append(url)
 
