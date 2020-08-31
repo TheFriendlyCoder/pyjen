@@ -8,24 +8,27 @@ class ViewXML:
 
     Loaded from the ./view/config.xml REST API endpoint for any arbitrary
     Jenkins view.
-
-    :param api:
-        Rest API for the Jenkins XML configuration managed by this object
     """
 
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Rest API for the Jenkins XML configuration managed by this
+                object
+        """
         super().__init__()
         self._api = api
         self._log = logging.getLogger(__name__)
         self._cache = None
 
     def __str__(self):
-        """String representation of the configuration XML"""
         return self.xml
 
     @property
     def _root(self):
-        """Gets the decoded root node from the config xml"""
+        """xml.etree.ElementTree.Element: the encoded root node from the
+        config xml"""
         if self._cache is not None:
             return self._cache
         text = self._api.get_text("/config.xml")
@@ -39,35 +42,28 @@ class ViewXML:
 
     @property
     def xml(self):
-        """Raw XML in plain-text format
-
-        :rtype: :class:`str`
-        """
+        """str: Raw XML representation describing the configuration of this
+        plugin, in plain-text format"""
         return ElementTree.tostring(self._root).decode("utf-8")
 
     @xml.setter
     def xml(self, new_xml):
-        """Updates the job config from some new, statically defined XML source
-
-        :param str new_xml:
-            raw XML config data to be uploaded
-        """
         args = {'data': new_xml, 'headers': {'Content-Type': 'text/xml'}}
         self._api.post(self._api.url + "config.xml", args)
         self._cache = ElementTree.fromstring(new_xml)
 
     @property
     def plugin_name(self):
-        """Gets the name of the Jenkins plugin associated with this view
-
-        :rtype: :class:`str`
+        """str: the name of the Jenkins plugin associated with XML definition
         """
         return self._root.tag
 
     def rename(self, new_name):
         """Changes the name of the view
 
-        :param str new_name: The new name for the view
+        Args:
+            new_name (str):
+                The new name for the view
         """
         node = self._root.find('name')
         node.text = new_name

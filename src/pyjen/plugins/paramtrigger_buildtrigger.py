@@ -12,34 +12,26 @@ class BuildTriggerConfig(XMLPlugin):
     """
     @property
     def condition(self):
-        """The state the current job must be in before the downstream job will
-        be triggered
-
-        :rtype: :class:`str`
-        """
+        """str: The state the current job must be in before the downstream job
+        will be triggered"""
         node = self._root.find('condition')
         return node.text
 
     @property
     def job_names(self):
-        """List of downstream jobs to be triggered
-
-        :rtype: :class:`list` of :class:`str`
-        """
+        """list (str): list of the names of downstream jobs to be triggered"""
         node = self.node.find("projects")
         retval = node.text.split(",")
         return [i.strip() for i in retval]
 
     @property
     def build_params(self):
-        """List of parameter definitions used to configure the build trigger
-        for the downstream jobs associated with this trigger
+        """list (XMLPlugin): List of parameter definitions used to configure
+        the build trigger for the downstream jobs associated with this trigger
 
         Each element in the list may be of any number of derived types, each
         supporting a different type of custom behavior on how the parameters
         for the downstream job should be created / set.
-
-        :rtype: :class:`list`
         """
         retval = list()
         node = self.node.find("configs")
@@ -53,9 +45,11 @@ class BuildTriggerConfig(XMLPlugin):
         """Adds a new configuration option for customizing the build parameters
         passed to the jobs that are triggered by this configuration
 
-        :param param_config:
-            One of several supported plugins which offer unique customizations
-            on how build parameters for the downstream jobs being triggered
+        Args:
+            param_config (XMLPlugin):
+                One of several supported plugins which offer unique
+                customizations on how build parameters for the downstream jobs
+                being triggered
         """
         parent = self.node.find("configs")
         parent.append(param_config.node)
@@ -65,10 +59,14 @@ class BuildTriggerConfig(XMLPlugin):
     def instantiate(cls, job_names):
         """Factory method for creating a new instances of this class
 
-        :param list job_names:
-            List of the names of 1 or more Jenkins jobs to be triggered by
-            this configuration object
-        :rtype: :class:`BuildTriggerConfig`
+        Args:
+            job_names (:class:`list` of :class:`str`):
+                List of the names of 1 or more Jenkins jobs to be triggered by
+                this configuration object
+
+        Returns:
+            BuildTriggerConfig:
+                instance of this class
         """
         default_xml = """
 <hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
@@ -85,12 +83,10 @@ class BuildTriggerConfig(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.plugins.parameterizedtrigger.BuildTriggerConfig"
 

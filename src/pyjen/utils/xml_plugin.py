@@ -30,24 +30,25 @@ class XMLPlugin:
         Jenkins plugin name the class is associated with. This is typically
         the Java class name of the Jenkins plugin the PyJen plugin is meant
         to work with.
-
-    :param node:
-        ElementTree XML node with the decoded XML data associated with a plugin
-    :type node: :class:`xml.etree.ElementTree.Element`
     """
     def __init__(self, node):
+        """
+        Args:
+            node (xml.etree.ElementTree.Element):
+                XML node with the decoded XML data associated with a plugin
+        """
         self._parent = None
         self._root = node
         self._log = logging.getLogger(self.__module__)
 
     @property
     def parent(self):
-        """Gets the parent XML tree this node belongs to"""
+        """XMLPlugin: Object that manages an outer XML code block containing
+        the nodes managed by this object."""
         return self._parent
 
     @parent.setter
     def parent(self, value):
-        """Associates this XML node with an existing XML tree"""
         self._parent = value
 
     def update(self):
@@ -57,25 +58,15 @@ class XMLPlugin:
         self._parent.update()
 
     def __str__(self):
-        """String representation of XML node managed by this class
-
-        :rtype: :class:`str`
-        """
         return ElementTree.tostring(self._root, encoding="utf-8")
 
     def __repr__(self):
-        """Serialized representation of the XML node managed by this class
-
-        :rtype: :class:`str`
-        """
         return ElementTree.tostring(self._root, encoding="utf-8")
 
     @property
     def node(self):
-        """Gets the encoded XML data associated with this plugin
-
-        :rtype: :class:`xml.etree.ElementTree.Element`
-        """
+        """xml.etree.ElementTree.Element: the encoded XML data associated with
+        this plugin"""
         return self._root
 
 

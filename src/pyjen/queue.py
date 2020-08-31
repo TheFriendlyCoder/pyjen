@@ -3,33 +3,27 @@ from pyjen.queue_item import QueueItem
 
 
 class Queue:
-    """Abstraction around the Jenkins build queue
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
-    """
+    """Abstraction around the Jenkins build queue"""
 
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Pre-initialized connection to the Jenkins REST API
+        """
         super().__init__()
         self._api = api
 
     @property
     def _data(self):
-        """Gets the API data describing the current state of the build queue
-
-        :rtype: :class:`dict`
-        """
+        """dict: API data describing the current state of the build queue"""
         retval = self._api.get_api_data()
         assert retval["_class"] == "hudson.model.Queue"
         return retval
 
     @property
     def items(self):
-        """Gets a list of scheduled builds waiting in the queue
-
-        :rtype: :class:`list` of :class:`~.queue_item.QueueItem`
-        """
+        """list (QueueItem): list of scheduled builds waiting in the queue"""
         retval = list()
         for cur_item in self._data["items"]:
             queue_api = self._api.clone(self._api.root_url + cur_item["url"])

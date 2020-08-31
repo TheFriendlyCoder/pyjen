@@ -12,7 +12,10 @@ class ArtifactDeployer(XMLPlugin):
     @classmethod
     def instantiate(cls):
         """Factory method for creating a new artifact deployer
-        :rtype: :class:`pyjen.plugins.artifactdeployer.ArtifactDeployer`
+
+        Returns:
+            ArtifactDeployer:
+                reference to the newly created deployer
         """
         default_xml = """
 <org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher>
@@ -25,13 +28,8 @@ class ArtifactDeployer(XMLPlugin):
 
     @property
     def entries(self):
-        """Gets the list of deployment options associated with this plugin
-
-        :returns:
-            list of configuration options for each set of artifacts managed by
-            this instance
-        :rtype: :class:`list` of :class:`ArtifactDeployerEntry` objects
-        """
+        """list (ArtifactDeployerEntry): list of deployment
+        options associated with this plugin"""
 
         nodes = self._root.find("entries")
 
@@ -44,9 +42,9 @@ class ArtifactDeployer(XMLPlugin):
     def add_entry(self, new_entry):
         """Adds a new deployer entry to this publisher
 
-        :param new_entry:
-            New publisher descriptor entry to be added
-        :type new_entry: :class:`~.ArtifactDeployerEntry`
+        Args:
+            new_entry (ArtifactDeployerEntry):
+                New publisher descriptor entry to be added
         """
         entries_node = self._root.find('entries')
         entries_node.append(new_entry.node)
@@ -55,12 +53,10 @@ class ArtifactDeployer(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return \
             "org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerPublisher"
@@ -72,13 +68,15 @@ class ArtifactDeployerEntry(XMLPlugin):
     def instantiate(cls, include_pattern, remote_path):
         """Factory method used to instantiate instances of this class
 
-        :param str include_pattern:
-            Path or regular expression of the file(s) to be published
-        :param str remote_path:
-            Path to remote share where files are to be published
-        :returns:
-            instance of the artifact deployer entry
-        :rtype: :class:`ArtifactDeployerEntry`
+        Args:
+            include_pattern (str):
+                Path or regular expression of the file(s) to be published
+            remote_path (str):
+                Path to remote share where files are to be published
+
+        Returns:
+            ArtifactDeployerEntry:
+                instance of the artifact deployer entry
         """
         default_xml = """
 <org.jenkinsci.plugins.artifactdeployer.ArtifactDeployerEntry>
@@ -100,18 +98,13 @@ class ArtifactDeployerEntry(XMLPlugin):
 
     @property
     def remote(self):
-        """Gets the remote location where these artifacts are to be published
-
-        :rtype: :class:`str`
-        """
+        """str: the remote location where these artifacts are to be published"""
         node = self._root.find("remote")
         return node.text
 
     @property
     def includes(self):
-        """Gets the path or regular expression describing files to be published
-
-        :rtype: :class:`str`
+        """str: the path or regular expression describing files to be published
         """
         node = self._root.find("includes")
         return node.text

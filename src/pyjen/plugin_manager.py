@@ -6,22 +6,21 @@ class PluginManager:
     """Abstraction around Jenkins plugin management interfaces
 
     Supports adding, removing and querying information about Jenkins plugins
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
     """
 
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Pre-initialized connection to the Jenkins REST API
+        """
         super().__init__()
         self._api = api
 
     @property
     def plugins(self):
-        """list of all installed plugins from the current Jenkins instance
-
-        :returns: list of 0 or more plugins installed on the Jenkins instance
-        :rtype: List of 0 or more :class:`~.plugin.Plugin` objects"""
+        """list (Plugin): interfaces describing the plugins installed on the
+        current Jenkins instance"""
         res = self._api.get_api_data(query_params='depth=2')
 
         retval = []
@@ -34,12 +33,14 @@ class PluginManager:
     def find_plugin_by_shortname(self, short_name):
         """Finds an installed plugin based on it's abbreviated name
 
-        :param str short_name:
-            abbreviated form of the plugin name to locate
+        Args:
+            short_name (str):
+                abbreviated form of the plugin name to locate
 
-        :returns:
-            reference to the given plugin, or None if no such plugin found
-        :rtype: :class:`~.plugin.Plugin`
+        Returns:
+            Plugin:
+                reference to the given plugin, or None if no plugin with the
+                specified short name could be found
         """
         for cur_plugin in self.plugins:
             if cur_plugin.short_name == short_name:
@@ -55,7 +56,9 @@ class PluginManager:
         that Jenkins will refuse connections if too many uploads are running
         in parallel.
 
-        :param str plugin_file: path to the HPI/JPI file to install
+        Args:
+            plugin_file (str):
+                path to the HPI/JPI file to install
         """
         with open(plugin_file, 'rb') as handle:
             files = {'file': handle}

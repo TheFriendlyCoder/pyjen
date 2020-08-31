@@ -14,23 +14,21 @@ class NotCondition(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "org.jenkins_ci.plugins.run_condition.logic.Not"
 
     @staticmethod
     def get_friendly_name():
-        """Gets the user friendly display name for this condition
-
-        This typically reflects the text found in the Jenkins UI for the
-        condition
-
-        :rtype: :class:`str`
+        """
+        Returns:
+            str:
+                The user friendly display name for this condition. This
+                typically reflects the text found in the Jenkins UI for the
+                condition
         """
         return "not"
 
@@ -38,9 +36,13 @@ class NotCondition(XMLPlugin):
     def instantiate(cls, condition):
         """Factory method that constructs an instance of this class
 
-        :param condition:
-            Any PyJen plugin compatible with the Run Condition plugin
-        :rtype: :class:`NotCondition`
+        Args:
+            condition (XMLPlugin):
+                Any PyJen plugin compatible with the Run Condition plugin
+
+        Returns:
+            NotCondition:
+                instance of this class
         """
         default_xml = '<condition class="{0}" plugin="run-condition@1.2"/>'
         default_xml = default_xml.format(cls.get_jenkins_plugin_name())

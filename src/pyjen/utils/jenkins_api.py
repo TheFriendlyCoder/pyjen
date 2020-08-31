@@ -8,19 +8,20 @@ from requests.exceptions import InvalidHeader
 
 
 class JenkinsAPI:
-    """Abstraction around the raw Jenkins REST API
-
-    :param str url:
-        URL of the Jenkins REST API endpoint to manage
-    :param tuple creds:
-        username and password pair to authenticate with when accessing
-        the REST API
-    :param ssl_cert:
-        Either a boolean controlling SSL verification, or a path to a cert
-        authority bundle to use for SSL verification.
-    """
+    """Abstraction around the raw Jenkins REST API"""
 
     def __init__(self, url, creds, ssl_cert):
+        """
+        Args:
+            url (str):
+                URL of the Jenkins REST API endpoint to manage
+            creds (tuple):
+                username and password pair to authenticate with when accessing
+                the REST API
+            ssl_cert (bool, str):
+                Either a boolean controlling SSL verification, or a path to a
+                CA bundle to use for SSL verification.
+        """
         self._log = logging.getLogger(__name__)
 
         self._url = url.rstrip("/\\") + "/"
@@ -35,21 +36,21 @@ class JenkinsAPI:
         self._jenkins_headers_cache = None
 
     def __str__(self):
-        """String representation of the job"""
         return self.url
 
     def __repr__(self):
-        """Encoded state of the job usable for serialization"""
         return "({0}: {1})".format(type(self), self.url)
 
     def clone(self, api_url):
         """Creates a copy of this instance, for a new endpoint URL
 
-        :param str api_url:
-            URL for the new REST API endpoint to be managed
-        :returns:
-            newly created JenkinsAPI
-        :rtype: :class:`~.utils.jenkins_api.JenkinsAPI`
+        Args:
+            api_url (str):
+                URL for the new REST API endpoint to be managed
+
+        Returns:
+            JenkinsAPI:
+                reference to the newly created API interface
         """
         retval = JenkinsAPI(api_url, self._creds, self._ssl_cert)
         retval._jenkins_root_url = self._jenkins_root_url  # pylint: disable=protected-access
@@ -57,34 +58,31 @@ class JenkinsAPI:
 
     @property
     def url(self):
-        """Gets the URL for the REST API endpoint managed by this object
+        """str: the URL for the REST API endpoint managed by this object
 
         NOTE: The URL returned by this property is guaranteed to end with a
         trailing slash character
-
-        :rtype: :class:`str`"""
+        """
         return self._url
 
     @property
     def root_url(self):
-        """URL of the main Jenkins dashboard associated with the current object
+        """str: URL of the main Jenkins dashboard associated with the current
+        object
 
         NOTE: The URL returned by this property is guaranteed to end with a
         trailing slash character
-
-        :rtype: :class:`str`
         """
         return self._jenkins_root_url
 
     @property
     def jenkins_headers(self):
-        """HTTP headers from the main Jenkins dashboard using the REST API
+        """dict: HTTP headers from the main Jenkins dashboard using the REST API
 
         The dashboard headers contain metadata describing the Jenkins instance
         hosting the REST API, including details such as version number, current
         UI theme, and others.
-
-        :rtype: :class:`dict`"""
+        """
         if self._jenkins_headers_cache is None:
             temp_path = urljoin(self.root_url, "api/python")
             req = requests.get(
@@ -99,12 +97,12 @@ class JenkinsAPI:
 
     @property
     def jenkins_version(self):
-        """Gets the version number of the Jenkins server hosting this REST API
+        """tuple: version number of the Jenkins server hosting this REST API,
+        parsed into a tuple of integers
 
         Typically returns a 3 tuple with the major, minor and update digits of
         the version number
-
-        :rtype: :class:`tuple`"""
+        """
         if 'x-jenkins' not in self.jenkins_headers:
             raise InvalidHeader("Jenkins header has no x-jenkins metadata "
                                 "attached to it. Can not load version info.")
@@ -115,15 +113,18 @@ class JenkinsAPI:
     def get_api_data(self, target_url=None, query_params=None):
         """retrieves the Jenkins API specific data from the specified URL
 
-        :param str target_url:
-            Full URL to the REST API endpoint to be queried. If not provided,
-            data will be loaded from the default 'url' for this object
-        :param str query_params:
-            optional set of query parameters to customize the returned data
-        :returns:
-            The set of Jenkins attributes, converted to Python objects,
-            associated with the given URL.
-        :rtype: :class:`dict`
+        Args:
+            target_url (str):
+                Full URL to the REST API endpoint to be queried. If not
+                provided, data will be loaded from the default 'url' for this
+                object
+            query_params (str):
+                optional set of query parameters to customize the returned data
+
+        Returns:
+            dict:
+                The set of Jenkins attributes, converted to Python objects,
+                associated with the given URL.
         """
         if target_url is None:
             target_url = self.url
@@ -146,13 +147,16 @@ class JenkinsAPI:
     def get_text(self, path=None, params=None):
         """ gets the raw text data from a Jenkins URL
 
-        :param str path:
-            optional extension path to append to the root URL managed by this
-            object when performing the get operation
-        :param dict params:
-            optional query parameters to be passed to the request
-        :returns: the text loaded from this objects' URL
-        :rtype: :class:`str`
+        Args:
+            path (str):
+                optional extension path to append to the root URL managed by
+                this object when performing the get operation
+            params (dict):
+                optional query parameters to be passed to the request
+
+        Returns:
+            str:
+                the text loaded from this objects' URL
         """
         temp_url = self.url
         if path is not None:
@@ -170,12 +174,16 @@ class JenkinsAPI:
     def get_api_xml(self, path=None, params=None):
         """Gets api XML data from a given REST API endpoint
 
-        :param str path:
-            optional extension path to append to the root URL managed by this
-            object when performing the get operation
-        :param dict params:
-            optional query parameters to be passed to the request
-        :returns: parsed XML data
+        Args:
+            path (str):
+                optional extension path to append to the root URL managed by
+                this object when performing the get operation
+            params (dict):
+                optional query parameters to be passed to the request
+
+        Returns:
+            xml.etree.ElementTree.Element:
+                parsed XML data
         """
         temp_url = self.url
         if path is not None:
@@ -187,20 +195,16 @@ class JenkinsAPI:
     def post(self, target_url, args=None):
         """sends data to or triggers an operation via a Jenkins URL
 
-        :param str target_url: Full URL to sent post request to
-        :param dict args:
-            optional set of data arguments to be sent with the post operation.
-            Supported keys are as follows:
+        Args:
+            target_url (str):
+                Full URL to sent post request to
+            args (dict):
+                optional set of data arguments to be sent with the post
+                operation.
 
-            * 'headers' - dictionary of HTTP header properties and their
-                          associated values
-            * 'data' - dictionary of assorted / misc data properties and
-                       their values
-            * 'files' - dictionary of file names and handles to be uploaded to
-                        the target URL
-            * 'params' - form data to be passed to the API endpoint
-        :returns: reference to the response data returned by the post request
-        :rtype: :class:`requests.Response`
+        Returns:
+            requests.Response:
+                reference to the response data returned by the post request
         """
         if args and "headers" in args:
             temp_headers = args["headers"]
@@ -223,19 +227,19 @@ class JenkinsAPI:
 
     @property
     def crumb(self):
-        """Gets a unique "crumb" identifier required by all POST operations
+        """dict: unique "crumb" identifier required by all POST operations
 
         Introduced in Jenkins v2
 
         Output from this helper can be used directly in post operations as an
         HTTP header, something like this:
 
+        ::
+
             requests.post(... headers=self.crumb)
 
         reference: https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API
         (see CSRF protection section)
-
-        :rtype: :class:`dict`
         """
         if self._crumb_cache is None:
             # Query the REST API for the crumb token

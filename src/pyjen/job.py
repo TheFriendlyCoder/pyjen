@@ -10,41 +10,38 @@ from pyjen.utils.plugin_api import find_plugin, get_all_plugins
 
 
 class Job:
-    """Abstraction for operations common to all job types on Jenkins
-
-    :param api:
-        Pre-initialized connection to the Jenkins REST API
-    :type api: :class:`~.utils.jenkins_api.JenkinsAPI`
-    """
+    """Abstraction for operations common to all job types on Jenkins"""
     def __init__(self, api):
+        """
+        Args:
+            api (JenkinsAPI):
+                Pre-initialized connection to the Jenkins REST API
+        """
         super().__init__()
         self._api = api
         self._xml_cache = None
         self._log = logging.getLogger(self.__module__)
 
     def __repr__(self):
-        """Serialized representation of this object"""
         return self._api.url
 
     def __eq__(self, other):
-        """equality operator"""
         if not isinstance(other, type(self)):
             return False
         return other.name == self.name
 
     def __ne__(self, other):
-        """inequality operator"""
         if not isinstance(other, type(self)):
             return True
         return other.name != self.name
 
     def __hash__(self):
-        """Hashing function, allowing object to be serialized and compared"""
         return hash(self._api.url)
 
     # ---------------------------------------------- CONFIG XML BASED PROPERTIES
     @property
     def _job_xml(self):
+        """JobXML: XML definition for the job configuration"""
         if self._xml_cache is not None:
             return self._xml_cache
         self._xml_cache = self._xml_class(self._api)
@@ -52,105 +49,81 @@ class Job:
 
     @property
     def config_xml(self):
-        """Gets the raw XML configuration for the job
+        """str: raw XML configuration for the job
 
-        Allows callers to manipulate the raw job configuration file as desired.
+        Allows callers to manipulate the raw job configuration definition
+        without relying on the PyJen abstractions.
 
-        :returns: the full XML tree describing this jobs configuration
-        :rtype: :class:`str`
+        Warning:
+            For advanced use only.
         """
         return self._job_xml.xml
 
     @config_xml.setter
     def config_xml(self, new_xml):
-        """Allows a caller to manually override the entire job configuration
-
-        WARNING: This is an advanced method that should only be used in
-        rare circumstances. All configuration changes should normally
-        be handled using other methods provided on this class.
-
-        :param str new_xml: A complete XML tree compatible with the Jenkins API
-        """
         self._job_xml.xml = new_xml
 
     @property
     def properties(self):
-        """all plugins configured as extra configuration properties"""
+        """list (XMLPlugin): custom properties associated with this job,
+        typically describing features of the job provided by third party plugins
+        """
         return self._job_xml.properties
 
     def add_property(self, new_property):
         """Adds a new job property to the configuration
 
-        :param new_property:
-            Custom job property to be added.
-            May be any PyJen plugin that supports the Jenkins job property
-            plugin API.
+        Args:
+            new_property (XMLPlugin):
+                Custom job property to be added. May be any PyJen plugin that
+                supports the Jenkins job property plugin API.
         """
         self._job_xml.add_property(new_property)
         self._job_xml.update()
 
     @property
     def jenkins_plugin_name(self):
-        """Extracts the name of the Jenkins plugin associated with this job
+        """str: Extracts the name of the Jenkins plugin providing the features
+        associated with this job. May reference any number of third party
+        plugins supported by the Jenkins instance being managed.
 
         The data returned by this helper property is extracted from the
         config XML that defines this job.
-
-        :rtype: :class:`str`
         """
         return self._job_xml.plugin_name
 
     # ---------------------------------------------------- JSON BASED PROPERTIES
     @property
     def name(self):
-        """Returns the name of the job managed by this object
-
-        :returns: The name of the job
-        :rtype: :class:`str`
-        """
+        """str: the name of the Jenkins job"""
         data = self._api.get_api_data()
         return data['name']
 
     @property
     def is_disabled(self):
-        """Indicates whether this job is disabled or not
-
-        :returns: True if the job is disabled, otherwise False
-        :rtype: :class:`bool`
-        """
+        """bool: True if the job is disabled, otherwise False"""
         data = self._api.get_api_data()
 
         return data['color'] == "disabled"
 
     @property
     def is_unstable(self):
-        """Indicates whether the current state of this job is 'unstable'
-
-        :returns:
-            True if the latest build of the job is unsable, otherwise False
-        :rtype: :class:`bool`
-        """
+        """bool: True if the latest build of the job is unstable, otherwise
+        False"""
         data = self._api.get_api_data()
 
         return data['color'] == "yellow"
 
     @property
     def is_failing(self):
-        """Indicates whether the current state of the job is 'failed'
-
-        :returns:
-            True if the latest build of the job is a failure, otherwise False
-        :rtype: :class:`bool`
-        """
+        """bool: True if the latest build of the job is a failure, otherwise
+        False"""
         data = self._api.get_api_data()
         return data['color'] == "red"
 
     @property
     def has_been_built(self):
-        """Checks to see whether this job has ever been built or not
-
-        :returns: True if the job has been built at least once, otherwise false
-        :rtype: :class:`bool`
+        """bool: True if the job has been built at least once, otherwise False
         """
         data = self._api.get_api_data()
 
@@ -158,15 +131,12 @@ class Job:
 
     @property
     def recent_builds(self):
-        """Gets a list of the most recent builds for this job
+        """list (Build): list of the most recent builds of this job
 
         Rather than returning all data on all available builds, this
         method only returns the latest 20 or 30 builds. This list is
         synonymous with the short list provided on the main info
         page for the job on the dashboard.
-
-        :returns: a list of the most recent builds for this job
-        :rtype: :class:`list` of :class:`~.build.Build` objects
         """
         data = self._api.get_api_data(query_params="depth=2")
 
@@ -181,11 +151,7 @@ class Job:
 
     @property
     def all_builds(self):
-        """Gets all recorded builds for this job
-
-        :returns: all recorded builds for this job
-        :rtype: :class:`list` of :class:`~.build.Build` objects
-        """
+        """list (Build): all recorded builds for this job"""
         data = self._api.get_api_data(query_params="tree=allBuilds[url]")
 
         builds = data['allBuilds']
@@ -199,17 +165,10 @@ class Job:
 
     @property
     def last_good_build(self):
-        """Gets the most recent successful build of this job
+        """Build: the most recent successful build of this job
 
         Synonymous with the "Last successful build" permalink on the
         jobs' main status page
-
-        :returns:
-            object that provides information and control for the
-            last build which completed with a status of 'success'
-            If there are no such builds in the build history,
-            this method returns None
-        :rtype: :class:`~.build.Build`
         """
         data = self._api.get_api_data()
 
@@ -222,17 +181,10 @@ class Job:
 
     @property
     def last_build(self):
-        """Returns a reference to the most recent build of this job
+        """Build: the most recent build of this job
 
         Synonymous with the "Last Build" permalink on the jobs'
         main status page
-
-        :returns:
-            object that provides information and control for the
-            most recent build of this job.
-            If there are no such builds in the build history,
-            this method returns None
-        :rtype: :class:`~.build.Build`
         """
         data = self._api.get_api_data()
 
@@ -244,15 +196,10 @@ class Job:
 
     @property
     def last_failed_build(self):
-        """the most recent build of this job with a status of "failed"
+        """Build: the most recent build of this job with a status of "failed"
 
         Synonymous with the "Last failed build" permalink on the jobs'
         main status page
-
-        :returns:
-            Most recent build with a status of 'failed'. If there are no such
-            builds in the build history, this method returns None
-        :rtype: :class:`~.build.Build`
         """
         data = self._api.get_api_data()
 
@@ -265,15 +212,10 @@ class Job:
 
     @property
     def last_stable_build(self):
-        """the most recent build of this job with a status of "stable"
+        """Build: the most recent build of this job with a status of "stable"
 
         Synonymous with the "Last stable build" permalink on the jobs'
         main status page
-
-        :returns:
-            Most recent build with a status of 'stable'. If there are no such
-            builds in the build history, this method returns None
-        :rtype: :class:`~.build.Build`
         """
         data = self._api.get_api_data()
 
@@ -286,15 +228,10 @@ class Job:
 
     @property
     def last_unsuccessful_build(self):
-        """the most recent build of this job with a status of "unstable"
+        """Build: the most recent build of this job with a status of "unstable"
 
         Synonymous with the "Last unsuccessful build" permalink on the jobs'
         main status page
-
-        :returns:
-            Most recent build with a status of 'unstable' If there are no such
-            builds in the build history, this method returns None
-        :rtype: :class:`~.build.Build`
         """
         data = self._api.get_api_data()
 
@@ -306,14 +243,18 @@ class Job:
         return Build(self._api.clone(bld['url']))
 
     def find_build_by_queue_id(self, queue_id):
-        """Gets the build of this job which correlates to a specific queue item
+        """the build of this job which correlates to a specific queue item
 
-        :param int queue_id:
-            ID of the build queue item to correlate with. Typically extracted
-            from the :meth:`pyjen.queue_item.QueueItem.uid` property.
-        :returns:
-            reference to the build associated with the specified queue id
-            None if no such reference exsts
+        Args:
+            queue_id (int):
+
+                ID of the build queue item to correlate with. Typically
+                extracted from the :meth:`~.queue_item.QueueItem.uid` property.
+
+        Returns:
+            Build:
+                reference to the build associated with the specified queue id or
+                None if no such build exists
         """
         data = {
             "tree": "builds[url,queueId]",
@@ -331,10 +272,7 @@ class Job:
         return Build(new_api)
 
     def disable(self):
-        """Disables this job
-
-        Sets the state of this job to disabled so as to prevent the
-        job from being triggered.
+        """Disables this job to prevent new builds from being executed
 
         Use in conjunction with :py:meth:`.enable` and :py:attr:`.is_disabled`
         to control the state of the job.
@@ -368,9 +306,15 @@ class Job:
         appropriate build queue where it will be scheduled
         for execution on the next available agent + executor.
 
-        :param kwargs:
-            0 or more named arguments to pass as build parameters to the
-            job when triggering the build.
+        Args:
+            kwargs (dict):
+                0 or more named arguments to pass as build parameters to the
+                job when triggering the build.
+
+        Returns:
+            QueueItem:
+                Reference to the Jenkins queue item that tracks the progress
+                of the triggered build prior to the build actually running.
         """
         if not kwargs.keys():
             res = self._api.post(self._api.url + "build")
@@ -383,13 +327,15 @@ class Job:
     def get_build_by_number(self, build_number):
         """Gets a specific build of this job from the build history
 
-        :param int build_number:
-            Numeric identifier of the build to retrieve
-            Value is typically non-negative
-        :returns:
-            Build object for the build with the given numeric identifier
-            If such a build does not exist, returns None
-        :rtype: :class:`~.build.Build`
+        Args:
+            build_number (int):
+                Numeric identifier of the build to retrieve
+                Value is typically non-negative
+
+        Returns:
+            Build:
+                Reference to the build with the given numeric identifier, or
+                None if no such build exists
         """
         # Generate URL where the specified build "should" be
         # TODO: Find some way to efficiently search through all builds to
@@ -409,15 +355,19 @@ class Job:
         return retval
 
     def get_builds_in_time_range(self, start_time, end_time):
-        """ Returns a list of all of the builds for a job that
-            occurred between the specified start and end times
+        """Returns a list of all of the builds for a job that occurred between
+        the specified start and end times
 
-            :param datetime.datetime start_time:
+        Args:
+            start_time (datetime.datetime):
                 starting time index for range of builds to find
-            :param datetime.datetime end_time:
+            end_time (datetime.datetime):
                 ending time index for range of builds to find
-            :returns: a list of 0 or more builds
-            :rtype: :class:`list` of :class:`~.build.Build` objects
+
+        Returns:
+            list (Build):
+                list of 0 or more builds of this job that began during the
+                time range provided
         """
         if start_time > end_time:
             end_time, start_time = start_time, end_time
@@ -433,13 +383,10 @@ class Job:
 
     @property
     def build_health(self):
-        """Gets the percentage of good builds from recorded history of this job
+        """int: the percentage of good builds from recorded history of this job
 
         This metric is associated with the "weather" icon that can be shown
         next to jobs in certain views
-
-        :return: percentage of good builds on record for this job
-        :rtype: :class:`int`
         """
         data = self._api.get_api_data()
 
@@ -454,13 +401,17 @@ class Job:
     def clone(self, new_job_name, disable=True):
         """"Create a new job with the same configuration as this one
 
-        :param str new_job_name: Name of the new job to be created
-        :param bool disable:
-            Indicates whether the newly created job should be disabled after
-            creation to prevent builds from accidentally triggering
-            immediately after creation
-        :returns: reference to the newly created job
-        :rtype: :class:`pyjen.job.Job`
+        Args:
+            new_job_name (str):
+                Name of the new job to be created
+            disable (bool):
+                Indicates whether the newly created job should be disabled after
+                creation to prevent builds from accidentally triggering
+                immediately after creation
+
+        Returns:
+            Job:
+                reference to the newly created job
         """
         # NOTE: In order to properly support jobs that may contain nested
         #       jobs we have to do some URL manipulations to extrapolate the
@@ -493,8 +444,9 @@ class Job:
     def rename(self, new_job_name):
         """Changes the name of this job
 
-        :param str new_job_name:
-            new name to assign to this job
+        Args:
+            new_job_name (str):
+                new name to assign to this job
         """
         args = {
             "params": {
@@ -524,15 +476,17 @@ class Job:
         """Factory method for finding the appropriate PyJen view object based
         on data loaded from the Jenkins REST API
 
-        :param dict json_data:
-            data loaded from the Jenkins REST API summarizing the view to be
-            instantiated
-        :param rest_api:
-            PyJen REST API configured for use by the parent container. Will
-            be used to instantiate the PyJen view that is returned.
-        :returns:
-            PyJen view object wrapping the REST API for the given Jenkins view
-        :rtype: :class:`~.view.View`
+        Args:
+            json_data (dict):
+                data loaded from the Jenkins REST API summarizing the view to be
+                instantiated
+            rest_api (JenkinsAPI):
+                PyJen REST API configured for use by the parent container. Will
+                be used to instantiate the PyJen view that is returned.
+
+        Returns:
+            Job:
+                PyJen job object wrapping the REST API for the given job
         """
         # TODO: Find some way to cache the json data given inside the view so
         #       we can lazy-load API data. For example, the name of the view
@@ -570,10 +524,7 @@ class Job:
 
     @classmethod
     def get_supported_plugins(cls):
-        """Returns a list of PyJen plugins that derive from this class
-
-        :rtype: :class:`list` of classes
-        """
+        """list: list of PyJen plugin classes that derive from this class"""
         retval = list()
         for cur_plugin in get_all_plugins():
             if issubclass(cur_plugin, cls):
@@ -582,6 +533,8 @@ class Job:
 
     @property
     def _xml_class(self):
+        """JobXML: reference to the class used to parse and manipulate the raw
+        XML definition for this job type"""
         return JobXML
 
 

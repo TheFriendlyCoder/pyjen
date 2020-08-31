@@ -15,12 +15,10 @@ class ConditionalBuilder(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "org.jenkinsci.plugins.conditionalbuildstep.singlestep." \
                "SingleConditionalBuilder"
@@ -29,14 +27,18 @@ class ConditionalBuilder(XMLPlugin):
     def instantiate(cls, condition, builder):
         """Factory method for creating a new conditional build step
 
-        :param builder:
-            Nested job build step to be executed conditionally
-            May be any PyJen plugin that defines / manages a Job build step
-        :param condition:
-            Condition to be applied to the build step. The build step will only
-            be executed if the terms defined by this condition evaluate to True
-        :returns: newly created conditional build step
-        :rtype: :class:`ConditionalBuilder`
+        Args:
+            condition (XMLPlugin):
+                Condition to be applied to the build step. The build step will
+                only be executed if the terms defined by this condition
+                evaluate to True
+            builder (XMLPlugin):
+                Nested job build step to be executed conditionally
+                May be any PyJen plugin that defines / manages a Job build step
+
+        Returns:
+            ConditionalBuilder:
+                newly created conditional build step
         """
         # TODO: add support for multi-condition builder
         default_xml = """
@@ -75,7 +77,8 @@ class ConditionalBuilder(XMLPlugin):
 
     @property
     def condition(self):
-        """Gets the object describing the conditions for this build step"""
+        """XMLPlugin: PyJen plugin describing the conditions for this build step
+        """
         node = self._root.find("condition")
         assert node is not None
         plugin = find_plugin(node.attrib["class"])
@@ -86,8 +89,8 @@ class ConditionalBuilder(XMLPlugin):
 
     @property
     def builder(self):
-        """Gets the build step managed by this condition
-        """
+        """XMLPlugin: PyJen plugin describing the build step associated with
+        this condition"""
         build_step_node = self._root.find("buildStep")
         plugin = find_plugin(build_step_node.attrib["class"])
         if not plugin:

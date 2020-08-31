@@ -15,7 +15,7 @@ class AndCondition(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
@@ -26,12 +26,12 @@ class AndCondition(XMLPlugin):
 
     @staticmethod
     def get_friendly_name():
-        """Gets the user friendly display name for this condition
-
-        This typically reflects the text found in the Jenkins UI for the
-        condition
-
-        :rtype: :class:`str`
+        """
+        Returns:
+            str:
+                The user friendly display name for this condition. This
+                typically reflects the text found in the Jenkins UI for the
+                condition
         """
         return "and"
 
@@ -39,11 +39,15 @@ class AndCondition(XMLPlugin):
     def instantiate(cls, terms):
         """Creates a new instance of this condition
 
-        :param list terms:
-            List of 2 or more conditions to be combined using a logical AND
-            operation. Each element is expected to be an instance of a PyJen
-            plugin compatible with the Run Condition plugin.
-        :rtype: :class:`AndCondition`
+        Args:
+            terms (:class:`list` of :class:`~.utils.xml_plugin.XMLPlugin`):
+                List of 2 or more conditions to be combined using a logical AND
+                operation. Each element is expected to be an instance of a PyJen
+                plugin compatible with the Run Condition plugin.
+
+        Returns:
+            AndCondition:
+                instance of this class
         """
         assert len(terms) >= 2
 

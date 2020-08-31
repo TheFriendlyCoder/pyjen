@@ -12,10 +12,8 @@ class FlexiblePublisher(XMLPlugin):
 
     @property
     def actions(self):
-        """list of conditional actions associated with this instance
-
-        :rtype: :class:`list` of :class:`ConditionalAction`
-        """
+        """list (ConditionalAction): list of conditional actions associated with
+         this publisher"""
         nodes = self._root.find("publishers")
 
         retval = list()
@@ -29,12 +27,10 @@ class FlexiblePublisher(XMLPlugin):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "org.jenkins_ci.plugins.flexible_publish.FlexiblePublisher"
 
@@ -42,11 +38,12 @@ class FlexiblePublisher(XMLPlugin):
     def instantiate(cls, actions):
         """Factory method for creating a new instances of this class
 
-        :param actions:
-            list of conditional actions to perform under this publisher
-        :type actions:
-            :class:`list` of :class:`ConditionalAction`
-        :rtype: :class:`FlexiblePublisher`
+        Args:
+            actions (:class:`list` of :class:`ConditionalAction`):
+                list of conditional actions to perform under this publisher
+        Returns:
+            FlexiblePublisher:
+                reference to the newly instantiated object
         """
         default_xml = """
 <org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher>
@@ -70,11 +67,8 @@ class ConditionalAction(XMLPlugin):
 
     @property
     def publishers(self):
-        """List of publishers to run should the conditions associated with this
-        action are met
-
-        :rtype: :class:`list`
-        """
+        """list (XMLPlugin): publishers to run should the conditions associated
+        with this action are met"""
         nodes = self._root.find("publisherList")
         retval = list()
         for cur_node in nodes:
@@ -89,13 +83,17 @@ class ConditionalAction(XMLPlugin):
     def instantiate(cls, condition, actions):
         """Factory method for creating a new instances of this class
 
-        :param condition:
-            Flexible publish build condition pre-configured to control
-            this publish operation
-        :param list actions:
-            List of 1 or more "build stage" plugins that you would like to use
-            in the publish phase of a Jenkins job
-        :rtype: :class:`ConditionalAction`
+        Args:
+            condition (XMLPlugin):
+                Flexible publish build condition pre-configured to control
+                this publish operation
+            actions (:class:`list` of :class:`~.utils.xml_plugin.XMLPlugin`):
+                List of 1 or more "build stage" plugins that you would like to
+                use in the publish phase of a Jenkins job
+
+        Returns:
+            ConditionalAction:
+                reference to the newly instantiated object
         """
         default_xml = """
 <org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>

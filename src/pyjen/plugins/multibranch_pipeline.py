@@ -7,10 +7,8 @@ class MultibranchPipelineJob(Job):
 
     @property
     def jobs(self):
-        """Gets all branch jobs managed by this multibranch pipeline
-
-        :rtype: :class:`list` of :class:`~.pipelinejob.PipelineJob`
-        """
+        """list (PipelineJob): all branch jobs managed by this multibranch
+        pipeline"""
         data = self._api.get_api_data(query_params="depth=0")
 
         retval = list()
@@ -22,12 +20,10 @@ class MultibranchPipelineJob(Job):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return \
             "org.jenkinsci.plugins.workflow.multibranch." \
@@ -35,9 +31,10 @@ class MultibranchPipelineJob(Job):
 
     @staticmethod
     def template_config_xml():
-        """Gets config xml data to instantiate a default instance of this job
-
-        :rtype: :class:`str`
+        """
+        Returns:
+            str:
+                config xml data to instantiate a default instance of this job
         """
         return """
 <org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject>

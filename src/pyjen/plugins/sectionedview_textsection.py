@@ -12,10 +12,7 @@ class TextSection(XMLPlugin):
     """
     @property
     def name(self):
-        """Gets the title text of this section
-
-        :rtype: :class:`str`
-        """
+        """str: the title text of this section"""
         name_node = self._root.find("name")
         assert name_node is not None
         return name_node.text
@@ -23,12 +20,10 @@ class TextSection(XMLPlugin):
     # --------------------------------------------------------------- PLUGIN API
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.plugins.sectioned_view.TextSection"
 
@@ -36,9 +31,13 @@ class TextSection(XMLPlugin):
     def instantiate(cls, section_name):
         """Factory method for creating a new Git SCM code block
 
-        :param str section_name:
-            Text to appear at the top of the section
-        :rtype: :class:`pyjen.plugins.sectionedview_textsection.TextSection`
+        Args:
+            section_name (str):
+                Text to appear at the top of the section
+
+        Returns:
+            TextSection:
+                instance of this class
         """
         default_xml = """<hudson.plugins.sectioned__view.TextSection>
     <jobNames>

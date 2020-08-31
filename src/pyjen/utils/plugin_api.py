@@ -15,9 +15,11 @@ PLUGIN_METHOD_NAME = "get_jenkins_plugin_name"
 def find_plugin(plugin_name):
     """Locates the PyJen class associated with a given Jenkins plugin
 
-    :param str plugin_name:
-        Name of the Jenkins plugin to find the associated
-    :returns:
+    Args:
+        plugin_name (str):
+            Name of the Jenkins plugin to find the associated
+
+    Returns:
         reference to the PyJen plugin class associated with the given Jenkins
         plugin, if one exists. If one doesn't exist, returns None.
     """
@@ -43,8 +45,9 @@ def find_plugin(plugin_name):
 def get_all_plugins():
     """Returns a list of all PyJen plugins installed on the system
 
-    :returns: list of 0 or more installed plugins
-    :rtype: :class:`list` of classes
+    Returns:
+        list:
+            0 or more PyJen plugins installed on this system
     """
     log = logging.getLogger(__name__)
     # First load all libraries that are registered with the PyJen plugin API
@@ -70,13 +73,17 @@ def get_all_plugins():
 def instantiate_xml_plugin(node, parent):
     """Instantiates a PyJen XML plugin from an arbitrary XML node
 
-    :param node:
-        ElementTree node describing the plugin to be instantiated
-    :param parent:
-        ElementTree object that owns the plugin being instantiated
-    :returns:
-        Reference to the instantiated plugin, or None if the associated plugin
-        isn't currently implemented in PyJen yet
+    Args:
+        node (xml.etree.ElementTree.Element):
+            ElementTree node describing the plugin to be instantiated
+        parent (XMLPlugin):
+            PyJen plugin that owns the XML for the plugin being instantiated.
+            Used for managing plugins that support nesting of other plugins
+
+    Returns:
+        XMLPlugin:
+            Reference to the instantiated plugin, or None if the associated
+            plugin isn't currently implemented in PyJen yet
     """
     log = logging.getLogger(__name__)
     plugin_class = find_plugin(node.tag)

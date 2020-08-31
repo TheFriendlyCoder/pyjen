@@ -17,31 +17,22 @@ class ParameterizedBuildStringParameter(XMLPlugin):
 
     @property
     def description(self):
-        """Gets the descriptive text associated with this parameter
-
-        :rtype: :class:`str`
-        """
+        """str: the descriptive text associated with this parameter"""
         node = self._root.find("description")
         assert node is not None
         return node.text
 
     @property
     def default_value(self):
-        """Gets the default value for this parameter
-
-        :rtype: :class:`str`
-        """
+        """str: the default value for this parameter"""
         node = self._root.find("defaultValue")
         assert node is not None
         return node.text
 
     @property
     def trim(self):
-        """Checks to see if the value for this parameter should have whitespace
-        stripped from the start and end automatically
-
-        :rtype: :class:`bool`
-        """
+        """bool: Checks to see if the value for this parameter should have
+        whitespace stripped from the start and end automatically"""
         node = self._root.find("trim")
         assert node is not None
         return node.text.lower().strip() == "true"
@@ -49,18 +40,24 @@ class ParameterizedBuildStringParameter(XMLPlugin):
     # --------------------------------------------------------------- PLUGIN API
     @classmethod
     def instantiate(cls, name, default_value, description, trim):
-        """Creates a new string build parameter
+        """Factory method for creating a new string build parameter
 
-        :param str name:
-            Friendly name to give this build parameter
-        :param str default_value:
-            Text to assign this parameter when no user defined value is given
-        :param str description:
-            Descriptive text to show on the Jenkins UI explaining the purpose
-            of this parameter
-        :param bool trim:
-            Indicates whether leading and trailing whitespace should be stripped
-            from values entered into this field at build time
+        Args:
+            name (str):
+                Friendly name to give this build parameter
+            default_value (str):
+                Text to assign this parameter when no user defined value is
+                given
+            description (str):
+                Descriptive text to show on the Jenkins UI explaining the
+                purpose of this parameter
+            trim (bool):
+                Indicates whether leading and trailing whitespace should be
+                stripped from values entered into this field at build time
+
+        Returns:
+            ParameterizedBuildStringParameter:
+                instance of this class
         """
         default_xml = """<hudson.model.StringParameterDefinition>
 </hudson.model.StringParameterDefinition>"""
@@ -82,12 +79,10 @@ class ParameterizedBuildStringParameter(XMLPlugin):
 
     @staticmethod
     def get_jenkins_plugin_name():
-        """Gets the name of the Jenkins plugin associated with this PyJen plugin
+        """str: the name of the Jenkins plugin associated with this PyJen plugin
 
         This static method is used by the PyJen plugin API to associate this
         class with a specific Jenkins plugin, as it is encoded in the config.xml
-
-        :rtype: :class:`str`
         """
         return "hudson.model.StringParameterDefinition"
 

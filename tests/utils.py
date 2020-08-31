@@ -9,12 +9,13 @@ from contextlib import contextmanager
 def clean_job(jenkins_job, disable=False):
     """Helper context manager that deletes a Jenkins job even when tests fail
 
-    :param jenkins_job: Jenkins job to manage
-    :type jenkins_job: :class:`pyjen.job.Job`
-    :param bool disable:
-        indicates whether the clean operation should be disabled. Defaults to
-        False. When set to True, the entity managed by this context manager
-        will be preserved. This is useful for debugging purposes.
+    Args:
+        jenkins_job (pyjen.job.Job):
+            Jenkins job to manage
+        disable (bool):
+            indicates whether the clean operation should be disabled. Defaults
+            to False. When set to True, the entity managed by this context
+            manager will be preserved. This is useful for debugging purposes.
     """
     try:
         yield
@@ -27,12 +28,13 @@ def clean_job(jenkins_job, disable=False):
 def clean_view(jenkins_view, disable=False):
     """Helper context manager that deletes a Jenkins view even when tests fail
 
-    :param jenkins_view: Jenkins view to manage
-    :type jenkins_view: :class:`pyjen.view.View`
-    :param bool disable:
-        indicates whether the clean operation should be disabled. Defaults to
-        False. When set to True, the entity managed by this context manager
-        will be preserved. This is useful for debugging purposes.
+    Args:
+        jenkins_view (pyjen.view.View):
+            Jenkins view to manage
+        disable (bool):
+            indicates whether the clean operation should be disabled. Defaults
+            to False. When set to True, the entity managed by this context
+            manager will be preserved. This is useful for debugging purposes.
     """
     try:
         yield
@@ -47,17 +49,21 @@ def async_assert(test_func, duration=20):
     Used to test asynchronous test operations that may take some time to
     complete.
 
-    example: async_test(lambda: job.is_healthy)
+    Example:
+    ::
 
-    :param test_func:
-        lambda function that is expected to return a truthy value for a test
-        operation. If the lambda returns a falsey value, this helper will
-        sleep briefly before repeating the check. After several failed
-        attempts, the helper will assert false. Otherwise control returns
-        to the caller.
-    :param int duration:
-        number of seconds to wait to see if the operation completes
-        Defaults to 10 seconds
+        async_test(lambda: job.is_healthy)
+
+    Args:
+        test_func:
+            lambda function that is expected to return a truthy value for a test
+            operation. If the lambda returns a falsey value, this helper will
+            sleep briefly before repeating the check. After several failed
+            attempts, the helper will assert false. Otherwise control returns
+            to the caller.
+        duration (int):
+            number of seconds to wait to see if the operation completes
+            Defaults to 10 seconds
     """
     for i in range(duration):
         if test_func():
@@ -67,9 +73,9 @@ def async_assert(test_func, duration=20):
 
 
 def count_plugins():
-    """Counts the number of plugin modules in the project folder
-
-    :rtype: :class:`int`
+    """
+    Returns:
+        int: Counts the number of plugin modules in the project folder
     """
     test_dir = os.path.dirname(__file__)
     workspace_dir = os.path.abspath(os.path.join(test_dir, ".."))
@@ -95,8 +101,12 @@ def assert_elements_equal(element1, element2):
 
     If the nodes differ in any way an assertion failure will be raised
 
-    :param element1: the first XML node to compare
-    :param element2: the second XML node to compare"""
+    Args:
+        element1 (xml.etree.ElementTree.Element):
+            the first XML node to compare
+        element2 (xml.etree.ElementTree.Element):
+            the second XML node to compare
+    """
     assert element1.tag == element2.tag
     # Sometimes text elements may be `None`, other times they may be empty
     # strings. Other times still they may be strings with nothing but empty
