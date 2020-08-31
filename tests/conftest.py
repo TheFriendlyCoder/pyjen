@@ -256,11 +256,6 @@ def jenkins_env(request, configure_logger):
         # Launch a container from the built Docker image
         res = client.create_container(
             image_id, host_config=hc, volumes=["/var/jenkins_home"],
-            # Needed to disable the CSRF security enhancements introduced here
-            # https://www.jenkins.io/doc/upgrade-guide/2.176/#SECURITY-626
-            environment={
-                "JAVA_OPTS": "-Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true"
-            }
         )
         container_id = res["Id"]
         log.debug("Container %s created", container_id)
