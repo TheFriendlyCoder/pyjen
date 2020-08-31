@@ -4,7 +4,7 @@ branch = True
 
 [report]
 # fail the build if less than 0% of the code is covered by tests
-fail_under = 0
+fail_under = 90
 
 # Regexes for lines to exclude from consideration
 exclude_lines =

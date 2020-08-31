@@ -2,15 +2,13 @@ import pytest
 from mock import MagicMock
 from .utils import async_assert, clean_job
 from requests.exceptions import HTTPError
-from pyjen.jenkins import Jenkins
 from pyjen.queue_item import QueueItem
 from pyjen.plugins.freestylejob import FreestyleJob
 
 
-def test_waiting_build_queue(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    queue = jk.build_queue
-    jb = jk.create_job("test_waiting_build_queue", FreestyleJob)
+def test_waiting_build_queue(jenkins_api):
+    queue = jenkins_api.build_queue
+    jb = jenkins_api.create_job("test_waiting_build_queue", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 5
         jb.start_build()
@@ -23,10 +21,9 @@ def test_waiting_build_queue(jenkins_env):
         assert qjob == jb
 
 
-def test_out_of_queue(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    queue = jk.build_queue
-    jb = jk.create_job("test_waiting_build_queue", FreestyleJob)
+def test_out_of_queue(jenkins_api):
+    queue = jenkins_api.build_queue
+    jb = jenkins_api.create_job("test_waiting_build_queue", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 1
         jb.start_build()
@@ -40,10 +37,9 @@ def test_out_of_queue(jenkins_env):
         assert item.waiting is False
 
 
-def test_cancel_queued_build(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    queue = jk.build_queue
-    jb = jk.create_job("test_cancel_queued_build", FreestyleJob)
+def test_cancel_queued_build(jenkins_api):
+    queue = jenkins_api.build_queue
+    jb = jenkins_api.create_job("test_cancel_queued_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 10
         jb.start_build()
@@ -56,10 +52,9 @@ def test_cancel_queued_build(jenkins_env):
         assert item.cancelled is True
 
 
-def test_get_build_after_queued(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    queue = jk.build_queue
-    jb = jk.create_job("test_get_build_after_queued", FreestyleJob)
+def test_get_build_after_queued(jenkins_api):
+    queue = jenkins_api.build_queue
+    jb = jenkins_api.create_job("test_get_build_after_queued", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 1
         jb.start_build()
@@ -73,10 +68,9 @@ def test_get_build_after_queued(jenkins_env):
         assert item.build == jb.last_build
 
 
-def test_start_build_returned_queue_item(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    queue = jk.build_queue
-    jb = jk.create_job("test_start_build_returned_queue_item", FreestyleJob)
+def test_start_build_returned_queue_item(jenkins_api):
+    queue = jenkins_api.build_queue
+    jb = jenkins_api.create_job("test_start_build_returned_queue_item", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 1
         item = jb.start_build()
@@ -86,9 +80,8 @@ def test_start_build_returned_queue_item(jenkins_env):
         assert queue.items[0] == item
 
 
-def test_queue_get_build(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_queue_get_build", FreestyleJob)
+def test_queue_get_build(jenkins_api):
+    jb = jenkins_api.create_job("test_queue_get_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         item = jb.start_build()
@@ -100,9 +93,8 @@ def test_queue_get_build(jenkins_env):
         assert bld == jb.last_build
 
 
-def test_is_valid(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_is_valid", FreestyleJob)
+def test_is_valid(jenkins_api):
+    jb = jenkins_api.create_job("test_is_valid", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         item = jb.start_build()
@@ -114,9 +106,8 @@ def test_is_valid(jenkins_env):
 
 
 @pytest.mark.skip("Disabling long-running sanity test")
-def test_is_not_valid(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_is_not_valid", FreestyleJob)
+def test_is_not_valid(jenkins_api):
+    jb = jenkins_api.create_job("test_is_not_valid", FreestyleJob)
     from time import sleep
     with clean_job(jb):
         jb.quiet_period = 0
@@ -157,7 +148,3 @@ def test_getters_from_invalid_queue_item():
     assert q1.cancelled is None
     assert q1.job is None
     assert q1.build is None
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

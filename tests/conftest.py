@@ -331,6 +331,18 @@ def jenkins_env(request, configure_logger):
             log.info("Done Docker cleanup")
 
 
+@pytest.fixture(scope="function")
+def jenkins_api(jenkins_env):
+    """Test fixture that creates a connection to the Jenkins test server
+
+    The API connection will use a basic-auth protocol using the connection
+    parameters provided by the jenkins_env test fixture
+    """
+    jk = Jenkins.basic_auth(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+
+    yield jk
+
+
 @pytest.fixture(scope="class")
 def test_job(request, jenkins_env):
     """Test fixture that creates a Jenkins Freestyle job for testing purposes
@@ -343,7 +355,7 @@ def test_job(request, jenkins_env):
     only perform read operations on the job and will not change it's state.
     This will ensure the tests within the suite don't affect one another.
     """
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+    jk = Jenkins.basic_auth(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
     request.cls.jenkins = jk
     request.cls.job = jk.create_job(request.cls.__name__ + "Job", FreestyleJob)
     assert request.cls.job is not None

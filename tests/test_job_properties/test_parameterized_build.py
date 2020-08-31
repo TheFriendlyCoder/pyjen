@@ -1,15 +1,12 @@
-import pytest
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.parameterizedbuild import ParameterizedBuild
 from pyjen.plugins.parambuild_string import ParameterizedBuildStringParameter
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
-def test_add_string_parameter(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_add_string_parameter(jenkins_api):
     job_name = "test_add_string_parameter"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_param_name = "param1"
         expected_param_val = "fubar"
@@ -25,8 +22,8 @@ def test_add_string_parameter(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         assert isinstance(properties, list)
         assert len(properties) == 1
@@ -40,7 +37,3 @@ def test_add_string_parameter(jenkins_env):
         assert act_param.default_value == expected_param_val
         assert act_param.description == expected_param_desc
         assert act_param.trim == expected_param_trim
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

@@ -1,5 +1,3 @@
-import pytest
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.runcondition_always import AlwaysRun
 from pyjen.plugins.flexiblepublish import FlexiblePublisher, ConditionalAction
 from pyjen.plugins.artifactarchiver import ArtifactArchiverPublisher
@@ -7,10 +5,9 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
-def test_basic_publisher(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_basic_publisher(jenkins_api):
     upstream_name = "test_basic_publisher"
-    jb = jk.create_job(upstream_name, FreestyleJob)
+    jb = jenkins_api.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         expected_regex = "*.log"
         new_condition = AlwaysRun.instantiate()
@@ -21,8 +18,8 @@ def test_basic_publisher(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(upstream_name).publishers)
-        pubs = jk.find_job(upstream_name).publishers
+        async_assert(lambda: jenkins_api.find_job(upstream_name).publishers)
+        pubs = jenkins_api.find_job(upstream_name).publishers
 
         assert isinstance(pubs, list)
         assert len(pubs) == 1
@@ -37,7 +34,3 @@ def test_basic_publisher(jenkins_env):
         cur_nested_pub = cur_action.publishers[0]
         assert isinstance(cur_nested_pub, ArtifactArchiverPublisher)
         assert cur_nested_pub.artifact_regex == expected_regex
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

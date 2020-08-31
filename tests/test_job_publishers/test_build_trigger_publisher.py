@@ -1,25 +1,22 @@
-import pytest
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.buildtriggerpublisher import BuildTriggerPublisher
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
-def test_add_build_trigger_publisher(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_add_build_trigger_publisher(jenkins_api):
     upstream_name = "test_add_build_trigger_publisher1"
-    jb = jk.create_job(upstream_name, FreestyleJob)
+    jb = jenkins_api.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         downstream_name = "test_add_build_trigger_publisher2"
-        jb2 = jk.create_job(downstream_name, FreestyleJob)
+        jb2 = jenkins_api.create_job(downstream_name, FreestyleJob)
         with clean_job(jb2):
             publisher = BuildTriggerPublisher.instantiate([downstream_name])
             jb.add_publisher(publisher)
 
             # Get a fresh copy of our job to ensure we have an up to date
             # copy of the config.xml for the job
-            async_assert(lambda: jk.find_job(upstream_name).publishers)
-            pubs = jk.find_job(upstream_name).publishers
+            async_assert(lambda: jenkins_api.find_job(upstream_name).publishers)
+            pubs = jenkins_api.find_job(upstream_name).publishers
 
             assert isinstance(pubs, list)
             assert len(pubs) == 1
@@ -30,12 +27,11 @@ def test_add_build_trigger_publisher(jenkins_env):
             assert names[0] == downstream_name
 
 
-def test_one_downstream_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_one_downstream_job1", FreestyleJob)
+def test_one_downstream_job(jenkins_api):
+    jb = jenkins_api.create_job("test_one_downstream_job1", FreestyleJob)
     with clean_job(jb):
         expected_name = "test_one_downstream_job2"
-        jb2 = jk.create_job(expected_name, FreestyleJob)
+        jb2 = jenkins_api.create_job(expected_name, FreestyleJob)
         with clean_job(jb2):
             publisher = BuildTriggerPublisher.instantiate([expected_name])
             jb.add_publisher(publisher)
@@ -48,15 +44,14 @@ def test_one_downstream_job(jenkins_env):
             assert res[0].name == expected_name
 
 
-def test_multiple_downstream_jobs(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_multiple_downstream_jobs1", FreestyleJob)
+def test_multiple_downstream_jobs(jenkins_api):
+    jb = jenkins_api.create_job("test_multiple_downstream_jobs1", FreestyleJob)
     with clean_job(jb):
         expected_name1 = "test_multiple_downstream_jobs2"
-        jb2 = jk.create_job(expected_name1, FreestyleJob)
+        jb2 = jenkins_api.create_job(expected_name1, FreestyleJob)
         with clean_job(jb2):
             expected_name2 = "test_multiple_downstream_jobs3"
-            jb3 = jk.create_job(expected_name2, FreestyleJob)
+            jb3 = jenkins_api.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
                 all_names = [expected_name1,expected_name2]
                 publisher = BuildTriggerPublisher.instantiate(all_names)
@@ -71,13 +66,12 @@ def test_multiple_downstream_jobs(jenkins_env):
                 assert res[1].name in all_names
 
 
-def test_one_upstream_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_one_upstream_job(jenkins_api):
     parent_job_name = "test_one_upstream_job1"
-    jb = jk.create_job(parent_job_name, FreestyleJob)
+    jb = jenkins_api.create_job(parent_job_name, FreestyleJob)
     with clean_job(jb):
         child_job_name = "test_one_upstream_job2"
-        jb2 = jk.create_job(child_job_name, FreestyleJob)
+        jb2 = jenkins_api.create_job(child_job_name, FreestyleJob)
         with clean_job(jb2):
             publisher = BuildTriggerPublisher.instantiate([child_job_name])
             jb.add_publisher(publisher)
@@ -90,16 +84,15 @@ def test_one_upstream_job(jenkins_env):
             assert res[0].name == parent_job_name
 
 
-def test_multiple_upstream_jobs(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_multiple_upstream_jobs(jenkins_api):
     child_job_name = "test_multiple_upstream_jobs1"
-    jb = jk.create_job(child_job_name, FreestyleJob)
+    jb = jenkins_api.create_job(child_job_name, FreestyleJob)
     with clean_job(jb):
         expected_name1 = "test_multiple_upstream_jobs2"
-        jb2 = jk.create_job(expected_name1, FreestyleJob)
+        jb2 = jenkins_api.create_job(expected_name1, FreestyleJob)
         with clean_job(jb2):
             expected_name2 = "test_multiple_upstream_jobs3"
-            jb3 = jk.create_job(expected_name2, FreestyleJob)
+            jb3 = jenkins_api.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
                 all_names = [expected_name1,expected_name2]
                 publisher = BuildTriggerPublisher.instantiate([child_job_name])
@@ -113,7 +106,3 @@ def test_multiple_upstream_jobs(jenkins_env):
                 assert len(res) == 2
                 assert res[0].name in all_names
                 assert res[1].name in all_names
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])
