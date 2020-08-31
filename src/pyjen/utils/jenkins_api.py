@@ -3,31 +3,24 @@ from urllib.parse import urljoin
 import logging
 import json
 import xml.etree.ElementTree as ElementTree
-import requests
 from requests.exceptions import InvalidHeader
 
 
 class JenkinsAPI:
     """Abstraction around the raw Jenkins REST API"""
 
-    def __init__(self, url, creds, ssl_cert):
+    def __init__(self, url, session):
         """
         Args:
             url (str):
-                URL of the Jenkins REST API endpoint to manage
-            creds (tuple):
-                username and password pair to authenticate with when accessing
-                the REST API
-            ssl_cert (bool, str):
-                Either a boolean controlling SSL verification, or a path to a
-                CA bundle to use for SSL verification.
+                URL of the Jenkins API endpoint to manage
+            session (requests.Session):
+                HTTP session to use for interacting with the Jenkins REST API
         """
         self._log = logging.getLogger(__name__)
+        self._session = session
 
         self._url = url.rstrip("/\\") + "/"
-        self._creds = creds
-        self._ssl_cert = ssl_cert
-
         self._jenkins_root_url = self._url
 
         # Internal data members used for caching certain API response data
@@ -52,7 +45,7 @@ class JenkinsAPI:
             JenkinsAPI:
                 reference to the newly created API interface
         """
-        retval = JenkinsAPI(api_url, self._creds, self._ssl_cert)
+        retval = JenkinsAPI(api_url, self._session)
         retval._jenkins_root_url = self._jenkins_root_url  # pylint: disable=protected-access
         return retval
 
@@ -85,10 +78,7 @@ class JenkinsAPI:
         """
         if self._jenkins_headers_cache is None:
             temp_path = urljoin(self.root_url, "api/python")
-            req = requests.get(
-                temp_path,
-                auth=self._creds,
-                verify=self._ssl_cert)
+            req = self._session.get(temp_path)
             req.raise_for_status()
 
             self._jenkins_headers_cache = req.headers
@@ -135,10 +125,7 @@ class JenkinsAPI:
             # TODO: Update this to pass 'params' key to get method
             temp_url += "?" + query_params
 
-        req = requests.get(
-            temp_url,
-            auth=self._creds,
-            verify=self._ssl_cert)
+        req = self._session.get(temp_url)
         req.raise_for_status()
         retval = req.json()
         self._log.debug(json.dumps(retval, indent=4))
@@ -162,11 +149,7 @@ class JenkinsAPI:
         if path is not None:
             temp_url = urljoin(temp_url, path.lstrip("/\\"))
 
-        req = requests.get(
-            temp_url,
-            auth=self._creds,
-            verify=self._ssl_cert,
-            params=params)
+        req = self._session.get(temp_url, params=params)
         req.raise_for_status()
 
         return req.text
@@ -215,10 +198,8 @@ class JenkinsAPI:
         if self.jenkins_version >= (2, 0, 0) and self.crumb:
             temp_headers.update(self.crumb)
 
-        req = requests.post(
+        req = self._session.post(
             target_url,
-            auth=self._creds,
-            verify=self._ssl_cert,
             headers=temp_headers,
             **args if args else dict())
 
@@ -243,10 +224,7 @@ class JenkinsAPI:
         """
         if self._crumb_cache is None:
             # Query the REST API for the crumb token
-            req = requests.get(
-                self.root_url + 'crumbIssuer/api/json',
-                auth=self._creds,
-                verify=self._ssl_cert)
+            req = self._session.get(self.root_url + 'crumbIssuer/api/json')
 
             if req.status_code == 404:
                 # If we get a 404 error, endpoint not found, assume the Cross

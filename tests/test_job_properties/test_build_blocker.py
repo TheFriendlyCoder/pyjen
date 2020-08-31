@@ -1,15 +1,13 @@
 import pytest
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.buildblocker import BuildBlockerProperty
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
-def test_add_build_blocker(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_add_build_blocker(jenkins_api):
     job_name = "test_add_build_blocker"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_job_name = "MyCoolJob"
         build_blocker = BuildBlockerProperty.instantiate(expected_job_name)
@@ -17,18 +15,17 @@ def test_add_build_blocker(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         assert isinstance(properties, list)
         assert len(properties) == 1
         assert isinstance(properties[0], BuildBlockerProperty)
 
 
-def test_multiple_blocking_jobs(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_multiple_blocking_jobs(jenkins_api):
     job_name = "test_multiple_blocking_jobs"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         build_blocker = BuildBlockerProperty.instantiate(["ShouldNotSeeMe"])
@@ -37,8 +34,8 @@ def test_multiple_blocking_jobs(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         prop = properties[0]
         blockers = prop.blockers
@@ -48,10 +45,9 @@ def test_multiple_blocking_jobs(jenkins_env):
         assert expected_jobs[1] in blockers
 
 
-def test_default_queue_scan(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_default_queue_scan(jenkins_api):
     job_name = "test_default_queue_scan"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
@@ -59,17 +55,16 @@ def test_default_queue_scan(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         prop = properties[0]
         assert prop.queue_scan == "DISABLED"
 
 
-def test_custom_queue_scan(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_custom_queue_scan(jenkins_api):
     job_name = "test_custom_queue_scan"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         expected_type = "ALL"
@@ -79,8 +74,8 @@ def test_custom_queue_scan(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         prop = properties[0]
         assert prop.queue_scan == expected_type
@@ -93,10 +88,9 @@ def test_invalid_queue_scan_type():
         build_blocker.queue_scan = "FuBar"
 
 
-def test_default_block_level(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_default_block_level(jenkins_api):
     job_name = "test_default_block_level"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
@@ -104,17 +98,16 @@ def test_default_block_level(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         prop = properties[0]
         assert prop.level == "GLOBAL"
 
 
-def test_custom_block_level(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_custom_block_level(jenkins_api):
     job_name = "test_custom_block_level"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_jobs = ["MyCoolJob1", "MyCoolJob2"]
         expected_type = "NODE"
@@ -124,8 +117,8 @@ def test_custom_block_level(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         prop = properties[0]
         assert prop.level == expected_type
@@ -138,10 +131,9 @@ def test_invalid_block_level():
         build_blocker.level = "FuBar"
 
 
-def test_disable_build_blocker(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_disable_build_blocker(jenkins_api):
     job_name = "test_disable_build_blocker"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         build_blocker = BuildBlockerProperty.instantiate("MyJob")
         build_blocker.disable()
@@ -150,19 +142,18 @@ def test_disable_build_blocker(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         assert properties[0].is_enabled is False
 
 
-def test_build_blocker_functionality(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_build_blocker_functionality(jenkins_api):
     job_name1 = "test_build_blocker_functionality1"
-    jb1 = jk.create_job(job_name1, FreestyleJob)
+    jb1 = jenkins_api.create_job(job_name1, FreestyleJob)
     with clean_job(jb1):
         job_name2 = "test_build_blocker_functionality2"
-        jb2 = jk.create_job(job_name2, FreestyleJob)
+        jb2 = jenkins_api.create_job(job_name2, FreestyleJob)
         with clean_job(jb2):
             expected_jobs = job_name2
             build_blocker = BuildBlockerProperty.instantiate(expected_jobs)
@@ -171,7 +162,7 @@ def test_build_blocker_functionality(jenkins_env):
 
             # Get a fresh copy of our job to ensure we have an up to date
             # copy of the config.xml for the job
-            async_assert(lambda: jk.find_job(job_name1).properties)
+            async_assert(lambda: jenkins_api.find_job(job_name1).properties)
 
             build_step = ShellBuilder.instantiate("sleep 10")
             jb2.quiet_period = 0
@@ -188,10 +179,9 @@ def test_build_blocker_functionality(jenkins_env):
             assert queue1.waiting is False
 
 
-def test_edit_build_blocker(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_edit_build_blocker(jenkins_api):
     job_name = "test_edit_build_blocker"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
 
         build_blocker = BuildBlockerProperty.instantiate("MyCoolJob")
@@ -199,15 +189,15 @@ def test_edit_build_blocker(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
-        properties = jk.find_job(job_name).properties
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
+        properties = jenkins_api.find_job(job_name).properties
 
         # edit the build blocker
         expected_job_names = ["SomeOtherJob1", "SomeOtherJob2"]
         properties[0].blockers = expected_job_names
 
         # Now, get a clean reference to the job
-        jb2 = jk.find_job(job_name)
+        jb2 = jenkins_api.find_job(job_name)
         props = jb2.properties
         blockers = props[0].blockers
         assert isinstance(blockers, list)
@@ -216,10 +206,9 @@ def test_edit_build_blocker(jenkins_env):
         assert expected_job_names[1] in blockers
 
 
-def test_add_then_edit_build_blocker(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_add_then_edit_build_blocker(jenkins_api):
     job_name = "test_add_then_edit_build_blocker"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         build_blocker = BuildBlockerProperty.instantiate("MyCoolJob")
         jb.add_property(build_blocker)
@@ -231,17 +220,13 @@ def test_add_then_edit_build_blocker(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).properties)
+        async_assert(lambda: jenkins_api.find_job(job_name).properties)
 
         # Now, get a clean reference to the job
-        jb2 = jk.find_job(job_name)
+        jb2 = jenkins_api.find_job(job_name)
         props = jb2.properties
         blockers = props[0].blockers
         assert isinstance(blockers, list)
         assert len(blockers) == 2
         assert expected_job_names[0] in blockers
         assert expected_job_names[1] in blockers
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

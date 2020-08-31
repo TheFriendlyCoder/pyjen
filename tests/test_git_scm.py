@@ -1,15 +1,12 @@
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.gitscm import GitSCM
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.freestylejob import FreestyleJob
-import pytest
 from .utils import clean_job, async_assert
 
 
-def test_add_git_scm(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_add_git_scm(jenkins_api):
     job_name = "test_add_git_scm"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
         test_scm = GitSCM.instantiate(expected_url)
@@ -17,17 +14,16 @@ def test_add_git_scm(jenkins_env):
 
         async_assert(lambda: isinstance(jb.scm, GitSCM))
 
-        jb2 = jk.find_job(job_name)
+        jb2 = jenkins_api.find_job(job_name)
 
         result = jb2.scm
         assert result is not None
         assert isinstance(result, GitSCM)
 
 
-def test_build_git_scm(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_build_git_scm(jenkins_api):
     job_name = "test_build_git_scm"
-    jb = jk.create_job(job_name, FreestyleJob)
+    jb = jenkins_api.create_job(job_name, FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
@@ -47,13 +43,9 @@ def test_build_git_scm(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(job_name).builders)
+        async_assert(lambda: jenkins_api.find_job(job_name).builders)
 
         jb.start_build()
         async_assert(lambda: jb.last_good_build or jb.last_failed_build)
 
         assert jb.last_good_build is not None
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

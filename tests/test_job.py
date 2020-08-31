@@ -4,7 +4,6 @@ from datetime import datetime
 from datetime import timedelta
 import xml.etree.ElementTree as ElementTree
 from .utils import async_assert, clean_job
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.freestylejob import FreestyleJob
 from pyjen.build import Build
 from pyjen.plugins.buildtriggerpublisher import BuildTriggerPublisher
@@ -12,25 +11,22 @@ from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.nullscm import NullSCM
 
 
-def test_create_freestyle_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_create_freestyle_job", FreestyleJob)
+def test_create_freestyle_job(jenkins_api):
+    jb = jenkins_api.create_job("test_create_freestyle_job", FreestyleJob)
     with clean_job(jb):
         assert jb is not None
 
 
-def test_delete_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_delete_job(jenkins_api):
     expected_name = "test_delete_job"
-    jb = jk.create_job(expected_name, FreestyleJob)
+    jb = jenkins_api.create_job(expected_name, FreestyleJob)
     jb.delete()
-    res = jk.find_job(expected_name)
+    res = jenkins_api.find_job(expected_name)
     assert res is None
 
 
-def test_start_build(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_start_build", FreestyleJob)
+def test_start_build(jenkins_api):
+    jb = jenkins_api.create_job("test_start_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         jb.start_build()
@@ -151,9 +147,8 @@ class TestJobReadOperations(object):
         assert isinstance(result, NullSCM)
 
 
-def test_get_all_builds(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_all_builds", FreestyleJob)
+def test_get_all_builds(jenkins_api):
+    jb = jenkins_api.create_job("test_get_all_builds", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         jb.start_build()
@@ -165,32 +160,29 @@ def test_get_all_builds(jenkins_env):
         assert builds[0].number == 1
 
 
-def test_disable(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable", FreestyleJob)
+def test_disable(jenkins_api):
+    jb = jenkins_api.create_job("test_disable", FreestyleJob)
     with clean_job(jb):
         jb.disable()
         assert jb.is_disabled
 
 
-def test_enable(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_enable", FreestyleJob)
+def test_enable(jenkins_api):
+    jb = jenkins_api.create_job("test_enable", FreestyleJob)
     with clean_job(jb):
         jb.disable()
         jb.enable()
         assert not jb.is_disabled
 
 
-def test_multiple_downstream_jobs_recursive(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_multiple_downstream_jobs_recursive1", FreestyleJob)
+def test_multiple_downstream_jobs_recursive(jenkins_api):
+    jb = jenkins_api.create_job("test_multiple_downstream_jobs_recursive1", FreestyleJob)
     with clean_job(jb):
         expected_name1 = "test_multiple_downstream_jobs_recursive2"
-        jb2 = jk.create_job(expected_name1, FreestyleJob)
+        jb2 = jenkins_api.create_job(expected_name1, FreestyleJob)
         with clean_job(jb2):
             expected_name2 = "test_multiple_downstream_jobs_recursive3"
-            jb3 = jk.create_job(expected_name2, FreestyleJob)
+            jb3 = jenkins_api.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
                 publisher1 = BuildTriggerPublisher.instantiate([expected_name1])
                 jb.add_publisher(publisher1)
@@ -210,16 +202,15 @@ def test_multiple_downstream_jobs_recursive(jenkins_env):
                 assert isinstance(res[1], FreestyleJob)
 
 
-def test_multiple_upstream_jobs_recursive(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_multiple_upstream_jobs_recursive(jenkins_api):
     parent_job_name = "test_multiple_upstream_jobs_recursive1"
-    jb = jk.create_job(parent_job_name, FreestyleJob)
+    jb = jenkins_api.create_job(parent_job_name, FreestyleJob)
     with clean_job(jb):
         expected_name1 = "test_multiple_upstream_jobs_recursive2"
-        jb2 = jk.create_job(expected_name1, FreestyleJob)
+        jb2 = jenkins_api.create_job(expected_name1, FreestyleJob)
         with clean_job(jb2):
             expected_name2 = "test_multiple_upstream_jobs_recursive3"
-            jb3 = jk.create_job(expected_name2, FreestyleJob)
+            jb3 = jenkins_api.create_job(expected_name2, FreestyleJob)
             with clean_job(jb3):
                 publisher1 = BuildTriggerPublisher.instantiate([expected_name1])
                 jb.add_publisher(publisher1)
@@ -343,9 +334,8 @@ class TestJobBuilds:
         assert builds[0].number == bld.number
 
 
-def test_get_last_failed_build(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_failed_build", FreestyleJob)
+def test_get_last_failed_build(jenkins_api):
+    jb = jenkins_api.create_job("test_get_last_failed_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         failing_step = ShellBuilder.instantiate("exit -1")
@@ -362,9 +352,8 @@ def test_get_last_failed_build(jenkins_env):
         assert bld.result == "FAILURE"
 
 
-def test_get_last_unsuccessful_build(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_last_unsuccessful_build", FreestyleJob)
+def test_get_last_unsuccessful_build(jenkins_api):
+    jb = jenkins_api.create_job("test_get_last_unsuccessful_build", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
@@ -383,9 +372,8 @@ def test_get_last_unsuccessful_build(jenkins_env):
         assert bld.result == "UNSTABLE"
 
 
-def test_is_unstable(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_is_unstable_job", FreestyleJob)
+def test_is_unstable(jenkins_api):
+    jb = jenkins_api.create_job("test_is_unstable_job", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         rcode = 12
@@ -400,9 +388,8 @@ def test_is_unstable(jenkins_env):
         assert jb.is_unstable
 
 
-def test_get_builds_in_time_range_no_builds(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_get_builds_in_time_range_no_builds", FreestyleJob)
+def test_get_builds_in_time_range_no_builds(jenkins_api):
+    jb = jenkins_api.create_job("test_get_builds_in_time_range_no_builds", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         start_time = datetime.now() - timedelta(days=1)
@@ -412,17 +399,15 @@ def test_get_builds_in_time_range_no_builds(jenkins_env):
         assert len(builds) == 0
 
 
-def test_no_quiet_period(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_no_quiet_period", FreestyleJob)
+def test_no_quiet_period(jenkins_api):
+    jb = jenkins_api.create_job("test_no_quiet_period", FreestyleJob)
     with clean_job(jb):
         assert jb.quiet_period_enabled is False
         assert jb.quiet_period == -1
 
 
-def test_quiet_period(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_quiet_period", FreestyleJob)
+def test_quiet_period(jenkins_api):
+    jb = jenkins_api.create_job("test_quiet_period", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         # first set our quiet period
@@ -448,83 +433,75 @@ def test_quiet_period(jenkins_env):
         assert expected_output in bld.console_output
 
 
-def test_disable_quiet_period(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable_quiet_period", FreestyleJob)
+def test_disable_quiet_period(jenkins_api):
+    jb = jenkins_api.create_job("test_disable_quiet_period", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
 
-        jb2 = jk.find_job(jb.name)
+        jb2 = jenkins_api.find_job(jb.name)
         assert jb2 is not None
         jb2.quiet_period = -1
         assert jb2.quiet_period_enabled is False
 
 
-def test_no_custom_workspace(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_no_custom_workspace", FreestyleJob)
+def test_no_custom_workspace(jenkins_api):
+    jb = jenkins_api.create_job("test_no_custom_workspace", FreestyleJob)
     with clean_job(jb):
         assert jb.custom_workspace_enabled is False
         assert jb.custom_workspace == ""
 
 
-def test_custom_workspace(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_custom_workspace", FreestyleJob)
+def test_custom_workspace(jenkins_api):
+    jb = jenkins_api.create_job("test_custom_workspace", FreestyleJob)
     with clean_job(jb):
         expected_workspace = "/delme"
         jb.custom_workspace = expected_workspace
 
-        jb2 = jk.find_job(jb.name)
+        jb2 = jenkins_api.find_job(jb.name)
         assert jb2.custom_workspace_enabled is True
         assert jb2.custom_workspace == expected_workspace
 
 
-def test_disable_custom_workspace(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable_custom_workspace", FreestyleJob)
+def test_disable_custom_workspace(jenkins_api):
+    jb = jenkins_api.create_job("test_disable_custom_workspace", FreestyleJob)
     with clean_job(jb):
         jb.custom_workspace = "/delme"
 
-        jb2 = jk.find_job(jb.name)
+        jb2 = jenkins_api.find_job(jb.name)
         jb2.custom_workspace = ""
         assert jb2.custom_workspace_enabled is False
 
 
-def test_no_assigned_node(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_no_assigned_node", FreestyleJob)
+def test_no_assigned_node(jenkins_api):
+    jb = jenkins_api.create_job("test_no_assigned_node", FreestyleJob)
     with clean_job(jb):
         assert jb.assigned_node_enabled is False
         assert jb.assigned_node == ""
 
 
-def test_assigned_node(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_assigned_node", FreestyleJob)
+def test_assigned_node(jenkins_api):
+    jb = jenkins_api.create_job("test_assigned_node", FreestyleJob)
     with clean_job(jb):
         expected_label = "MyNodeLabel && UnknownLabel"
         jb.assigned_node = expected_label
 
-        jb2 = jk.find_job(jb.name)
+        jb2 = jenkins_api.find_job(jb.name)
         assert jb2.assigned_node_enabled is True
         assert jb2.assigned_node == expected_label
 
 
-def test_disable_assigned_node(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_disable_assigned_node", FreestyleJob)
+def test_disable_assigned_node(jenkins_api):
+    jb = jenkins_api.create_job("test_disable_assigned_node", FreestyleJob)
     with clean_job(jb):
         jb.assigned_node = "MyNodeLabel && UnknownLabel"
 
-        jb2 = jk.find_job(jb.name)
+        jb2 = jenkins_api.find_job(jb.name)
         jb2.assigned_node = ""
         assert jb2.assigned_node_enabled is False
 
 
-def test_clone_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job", FreestyleJob)
+def test_clone_job(jenkins_api):
+    jb = jenkins_api.create_job("test_clone_job", FreestyleJob)
     with clean_job(jb):
         # add a builder to our source job so we can check to make sure the
         # configuration has been properly cloned
@@ -549,9 +526,8 @@ def test_clone_job(jenkins_env):
             assert results[0].script == expected_script
 
 
-def test_clone_job_enabled(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_clone_job_enabled", FreestyleJob)
+def test_clone_job_enabled(jenkins_api):
+    jb = jenkins_api.create_job("test_clone_job_enabled", FreestyleJob)
     with clean_job(jb):
         jb_clone = jb.clone("test_clone_job2", False)
         with clean_job(jb_clone):
@@ -559,31 +535,29 @@ def test_clone_job_enabled(jenkins_env):
             assert jb_clone.is_disabled is False
 
 
-def test_rename_job(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_rename_job(jenkins_api):
     original_job_name = "test_rename_job1"
     new_job_name = "test_rename_job2"
-    jb = jk.create_job(original_job_name, FreestyleJob)
+    jb = jenkins_api.create_job(original_job_name, FreestyleJob)
     try:
         jb.rename(new_job_name)
-        assert jk.find_job(original_job_name) is None
-        jb_copy = jk.find_job(new_job_name)
+        assert jenkins_api.find_job(original_job_name) is None
+        jb_copy = jenkins_api.find_job(new_job_name)
         assert jb_copy is not None
         assert jb.name == new_job_name
         assert jb_copy == jb
     finally:
-        tmp = jk.find_job(original_job_name)
+        tmp = jenkins_api.find_job(original_job_name)
         if tmp:
             tmp.delete()
 
-        tmp = jk.find_job(new_job_name)
+        tmp = jenkins_api.find_job(new_job_name)
         if tmp:
             tmp.delete()
 
 
-def test_find_build_by_queue_id_match(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_find_build_by_queue_id_match", FreestyleJob)
+def test_find_build_by_queue_id_match(jenkins_api):
+    jb = jenkins_api.create_job("test_find_build_by_queue_id_match", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         q1 = jb.start_build()
@@ -595,9 +569,8 @@ def test_find_build_by_queue_id_match(jenkins_env):
         assert bld1 == bld2
 
 
-def test_find_build_by_queue_id_no_match(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    jb = jk.create_job("test_find_build_by_queue_id_no_match", FreestyleJob)
+def test_find_build_by_queue_id_no_match(jenkins_api):
+    jb = jenkins_api.create_job("test_find_build_by_queue_id_no_match", FreestyleJob)
     with clean_job(jb):
         jb.quiet_period = 0
         q1 = jb.start_build()
@@ -606,7 +579,3 @@ def test_find_build_by_queue_id_no_match(jenkins_env):
 
         bld = jb.find_build_by_queue_id(test_id)
         assert bld is None
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

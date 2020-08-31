@@ -1,5 +1,3 @@
-import pytest
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.paramtrigger import ParameterizedBuildTrigger
 from pyjen.plugins.paramtrigger_currentbuildparams import CurrentBuildParams
 from pyjen.plugins.paramtrigger_buildtrigger import BuildTriggerConfig
@@ -7,10 +5,9 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
-def test_param_trigger(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_param_trigger(jenkins_api):
     upstream_name = "test_param_trigger"
-    jb = jk.create_job(upstream_name, FreestyleJob)
+    jb = jenkins_api.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         downstream_name = "sample_job"
         new_trigger = BuildTriggerConfig.instantiate([downstream_name])
@@ -19,8 +16,8 @@ def test_param_trigger(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(upstream_name).publishers)
-        pubs = jk.find_job(upstream_name).publishers
+        async_assert(lambda: jenkins_api.find_job(upstream_name).publishers)
+        pubs = jenkins_api.find_job(upstream_name).publishers
 
         assert isinstance(pubs, list)
         assert len(pubs) == 1
@@ -35,10 +32,9 @@ def test_param_trigger(jenkins_env):
         assert triggers[0].condition == "SUCCESS"
 
 
-def test_trigger_with_current_build_params(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_trigger_with_current_build_params(jenkins_api):
     upstream_name = "test_trigger_with_current_build_params"
-    jb = jk.create_job(upstream_name, FreestyleJob)
+    jb = jenkins_api.create_job(upstream_name, FreestyleJob)
     with clean_job(jb):
         downstream_name = "sample_job"
         new_trigger = BuildTriggerConfig.instantiate([downstream_name])
@@ -49,8 +45,8 @@ def test_trigger_with_current_build_params(jenkins_env):
 
         # Get a fresh copy of our job to ensure we have an up to date
         # copy of the config.xml for the job
-        async_assert(lambda: jk.find_job(upstream_name).publishers)
-        pubs = jk.find_job(upstream_name).publishers
+        async_assert(lambda: jenkins_api.find_job(upstream_name).publishers)
+        pubs = jenkins_api.find_job(upstream_name).publishers
 
         assert len(pubs) == 1
         cur_pub = pubs[0]
@@ -60,7 +56,3 @@ def test_trigger_with_current_build_params(jenkins_env):
         cur_param_cfg = cur_trig.build_params[0]
 
         assert isinstance(cur_param_cfg, CurrentBuildParams)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

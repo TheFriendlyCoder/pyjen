@@ -1,4 +1,3 @@
-import pytest
 from mock import patch, MagicMock
 from .utils import count_plugins
 from pyjen.utils.plugin_api import find_plugin, get_all_plugins
@@ -96,7 +95,3 @@ def test_load_all_view_plugins():
         view = cur_plugin(mock_api)
         assert view.name == expected_name
         assert isinstance(view, View)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

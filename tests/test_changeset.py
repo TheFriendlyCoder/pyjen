@@ -24,7 +24,3 @@ class TestBuildsWithGit(object):
         chgset = bld.changeset
         assert isinstance(chgset.affected_items, list)
         assert len(chgset.affected_items) == 0
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

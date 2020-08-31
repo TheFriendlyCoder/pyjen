@@ -99,7 +99,9 @@ class Plugin:
 
         # Stream the download of the plugin installer from the online Jenkins
         # plugin database
-        response = requests.get(self.download_url, stream=True, verify=False)
+        # TODO: update this code to use the same session object that is used
+        #       for the Jenkins serve connection
+        response = requests.get(self.download_url, stream=True, verify=True)
 
         # Download data in 100KB chunks
         buff_size = 100 * 1024

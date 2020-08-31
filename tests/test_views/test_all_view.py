@@ -1,15 +1,8 @@
-from pyjen.jenkins import Jenkins
 from pyjen.plugins.allview import AllView
-import pytest
 
 
-def test_find_view(jenkins_env):
-    jk = Jenkins(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
+def test_find_view(jenkins_api):
     expected_name = "all"
-    v = jk.find_view(expected_name)
+    v = jenkins_api.find_view(expected_name)
 
     assert isinstance(v, AllView)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

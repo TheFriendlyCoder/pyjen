@@ -1,6 +1,8 @@
 """Primitives for interacting with the main Jenkins dashboard"""
 import logging
 from requests.exceptions import RequestException
+from requests.sessions import Session
+from requests.auth import HTTPBasicAuth
 from pyjen.view import View
 from pyjen.node import Node
 from pyjen.job import Job
@@ -20,8 +22,26 @@ class Jenkins:
     :class:`~.view.View`, :class:`~.job.Job` and :class:`~.build.Build`.
     """
 
-    def __init__(self, url, credentials=None, ssl_cert=True):
+    def __init__(self, url, session):
         """
+        Args:
+            url (str):
+                URL of the Jenkins service to connect to
+            session (requests.Session):
+                pre-configured HTTP session to use for communicating to the
+                Jenkins REST API. This session may be user defined, or built
+                using one of the factory methods associated with this class
+                such as :py:meth:`basic_auth`.
+        """
+        super().__init__()
+        self._log = logging.getLogger(__name__)
+        self._api = JenkinsAPI(url, session)
+
+    @classmethod
+    def basic_auth(cls, url, credentials=None, ssl_cert=None):
+        """Factory method used to instantiate a connection to a Jenkins server
+        using HTTP basic auth protocol
+
         Args:
             url (str):
                 Full HTTP URL to the main Jenkins dashboard
@@ -34,10 +54,17 @@ class Jenkins:
                 the remote server. Maybe be a boolean indicating whether SSL
                 verification is enabled or disabled, or may be a path to a
                 certificate authority bundle.
+
+        Returns:
+            Jenkins:
+                instance of this class, preconfigured to connect to the
+                specified Jenkins service using an HTTP basic auth connection
         """
-        super().__init__()
-        self._log = logging.getLogger(__name__)
-        self._api = JenkinsAPI(url, credentials, ssl_cert)
+        session = Session()
+        if credentials:
+            session.auth = HTTPBasicAuth(credentials[0], credentials[1])
+        session.verify = ssl_cert or True
+        return cls(url, session)
 
     @property
     def connected(self):
