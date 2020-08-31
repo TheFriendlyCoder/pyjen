@@ -1,4 +1,5 @@
 """Primitives for interacting with Jenkins users"""
+import json
 
 
 class User:
@@ -17,6 +18,9 @@ class User:
         """
         super().__init__()
         self._api = api
+
+    def __str__(self):
+        return json.dumps(self._api.get_api_data(), indent=4)
 
     @property
     def user_id(self):
@@ -47,6 +51,39 @@ class User:
                 return prop['address']
 
         return None
+
+    def create_api_token(self, token_name):
+        """Creates a new REST API access token for the user
+
+        NOTE: the API token can not be retrieved independently from the REST
+        API, so make sure to store / preserve the API token returned from this
+        method for later use.
+
+        Implementation is based on the curl examples found here:
+        https://support.cloudbees.com/hc/en-us/articles/115003090592-How-to-re-generate-my-Jenkins-user-token#usingtherestapi
+
+        Args:
+            token_name (str): friendly name associated with the new token
+
+        Returns:
+            str: copy of the newly generated token
+        """
+        params = {
+            "data": {
+                "newTokenName": token_name
+            }
+        }
+        temp_url = self._api.url + \
+                   "descriptorByName/jenkins.security.ApiTokenProperty/" \
+                   "generateNewToken"
+        resp = self._api.post(temp_url, params)
+
+        data = resp.json()
+        if data.get("status", "").lower() != "ok":
+            raise Exception(
+                "Error creating API token: " + data.get("status", ""))
+
+        return data["data"]["tokenValue"]
 
 
 if __name__ == "__main__":  # pragma: no cover
