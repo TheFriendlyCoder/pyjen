@@ -148,6 +148,7 @@ def test_disable_build_blocker(jenkins_api):
         assert properties[0].is_enabled is False
 
 
+@pytest.mark.skip(reason="To be fixed")
 def test_build_blocker_functionality(jenkins_api):
     job_name1 = "test_build_blocker_functionality1"
     jb1 = jenkins_api.create_job(job_name1, FreestyleJob)
