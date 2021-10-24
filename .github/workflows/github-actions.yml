@@ -22,8 +22,7 @@ jobs:
           tox -e py38-lint
       - name: Unit tests
         run: |
-          # tox -e py38-test
-          echo Fubar
+          tox -e py38-test
       - name: Publish Pre-release
         run: |
           python -m pip install twine wheel
