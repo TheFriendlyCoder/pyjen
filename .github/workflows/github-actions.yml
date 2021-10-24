@@ -23,4 +23,9 @@ jobs:
       - name: Unit tests
         run: |
           tox -e py38-test
+      - name: Publish Pre-release
+        run: |
+          pip install twine
+          python setup.py bdist_wheel
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/*.whl -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_TOKEN }}
 
