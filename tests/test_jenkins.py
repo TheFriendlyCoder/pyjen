@@ -122,14 +122,14 @@ def test_get_nodes(jenkins_api):
     assert nodes is not None
     assert isinstance(nodes, list)
     assert len(nodes) == 1
-    assert nodes[0].name == "master"
+    assert nodes[0].name == "Built-In Node"
 
 
 def test_find_node(jenkins_api):
-    node = jenkins_api.find_node("master")
+    node = jenkins_api.find_node("Built-In Node")
 
     assert node is not None
-    assert node.name == "master"
+    assert node.name == "Built-In Node"
 
 
 def test_find_node_not_exists(jenkins_api):

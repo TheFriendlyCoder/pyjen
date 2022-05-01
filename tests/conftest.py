@@ -16,7 +16,7 @@ from .utils import async_assert
 
 # Default Docker container to use for testing
 # May be overloaded from the command prompt using '--jenkins-version'
-DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.254-alpine"
+DEFAULT_JENKINS_VERSION = "jenkins/jenkins:2.345-alpine"
 
 # Global flag used to see whether we've already attempted to run our Jenkins
 # containerized environment. Prevents redundant failures from slowing down
@@ -265,7 +265,7 @@ def jenkins_env(request, configure_logger):
         d = multiprocessing.Process(
             name='docker_logger',
             target=docker_logger,
-            args=tuple(container_id)
+            args=[container_id]
         )
         d.daemon = True
         d.start()

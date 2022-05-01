@@ -12,7 +12,7 @@ def test_get_nodes(jenkins_api):
 
 
 def test_find_node(jenkins_api):
-    expected_name = "master"
+    expected_name = "Built-In Node"
     result = jenkins_api.find_node(expected_name)
 
     assert result is not None

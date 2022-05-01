@@ -99,6 +99,8 @@ class Jenkins:
         for cur_node in nodes:
             if cur_node['displayName'] == 'master':
                 node_url = self._api.url + 'computer/(master)'
+            elif cur_node['displayName'] == 'Built-In Node':
+                node_url = self._api.url + 'computer/(built-in)'
             else:
                 node_url = self._api.url + 'computer/' + cur_node['displayName']
 
@@ -311,6 +313,8 @@ class Jenkins:
         """
         if nodename == "master":
             temp_nodename = "(master)"
+        elif nodename == "Built-In Node":
+            temp_nodename = "(built-in)"
         else:
             temp_nodename = nodename
 
