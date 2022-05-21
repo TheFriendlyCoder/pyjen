@@ -12,6 +12,7 @@
         "pytest",
         "pytest-cov",
         "pytest-timeout",
+        "pytest-recording",
         "mock",
         "pylint",
         "tox",

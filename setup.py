@@ -227,9 +227,9 @@ def generate_readme(project, repo=None, version=None):
     headers = []
     headers.append({
         "image":
-            f"https://travis-ci.org/TheFriendlyCoder/{repo}.svg?{branch}",
+            f"https://github.com/TheFriendlyCoder/{repo}/actions/workflows/github-actions.yml/badge.svg?branch={branch}",
         "target":
-            f"https://travis-ci.org/TheFriendlyCoder/{repo}",
+            f"https://github.com/TheFriendlyCoder/{repo}/actions/workflows/github-actions.yml",
         "text": "Build Automation"
     })
     headers.append({
@@ -250,15 +250,6 @@ def generate_readme(project, repo=None, version=None):
                  f"?version={version}",
         "target": f"http://{project}.readthedocs.io/en/{version}",
         "text": "Documentation Status"
-    })
-    headers.append({
-        "image":
-            f"https://requires.io/github/TheFriendlyCoder/{repo}/"
-            f"requirements.svg?{branch}",
-        "target":
-            f"https://requires.io/github/TheFriendlyCoder/{repo}/"
-            f"requirements/?{branch}",
-        "text": "Requirements Status"
     })
     headers.append({
         "image": f"https://img.shields.io/pypi/format/{project}.svg",
