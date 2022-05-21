@@ -9,6 +9,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job, assert_elements_equal
 
 
+@pytest.mark.vcr()
 def test_add_conditional_builder(jenkins_api):
     expected_job_name = "test_add_conditional_builder"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -64,6 +65,7 @@ def test_always_run_condition(jenkins_api):
         assert expected_output in jb.last_build.console_output
 
 
+@pytest.mark.vcr()
 def test_never_run_condition(jenkins_api):
     expected_job_name = "test_never_run_condition"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -129,6 +131,7 @@ def test_and_build_condition_true(jenkins_api):
         assert expected_output in jb.last_build.console_output
 
 
+@pytest.mark.vcr()
 def test_and_build_condition_false(jenkins_api):
     expected_job_name = "test_and_build_condition_false"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)

@@ -1,8 +1,10 @@
+import pytest
 from pyjen.plugins.nestedview import NestedView
 from pyjen.plugins.listview import ListView
 from ..utils import clean_view
 
 
+@pytest.mark.vcr()
 def test_create_parent_nested_view(jenkins_api):
     expected_view_name = "test_create_parent_nested_view"
     v = jenkins_api.create_view(expected_view_name, NestedView)
@@ -12,6 +14,7 @@ def test_create_parent_nested_view(jenkins_api):
         assert v.name == expected_view_name
 
 
+@pytest.mark.vcr()
 def test_create_sub_view(jenkins_api):
     parent = jenkins_api.create_view("test_create_sub_view", NestedView)
     with clean_view(parent):
@@ -22,6 +25,7 @@ def test_create_sub_view(jenkins_api):
             assert child.name == expected_view_name
 
 
+@pytest.mark.vcr()
 def test_nested_views_empty(jenkins_api):
     parent = jenkins_api.create_view("test_all_nested_views_empty", NestedView)
     with clean_view(parent):
@@ -31,6 +35,7 @@ def test_nested_views_empty(jenkins_api):
         assert len(result) == 0
 
 
+@pytest.mark.vcr()
 def test_find_non_existent_view(jenkins_api):
     parent = jenkins_api.create_view("test_find_non_existent_view", NestedView)
     with clean_view(parent):
@@ -40,6 +45,7 @@ def test_find_non_existent_view(jenkins_api):
         assert len(result) == 0
 
 
+@pytest.mark.vcr()
 def test_find_sub_view(jenkins_api):
     parent = jenkins_api.create_view("test_find_sub_view", NestedView)
     with clean_view(parent):
@@ -54,6 +60,7 @@ def test_find_sub_view(jenkins_api):
             assert result[0].name == child.name
 
 
+@pytest.mark.vcr()
 def test_find_nested_sub_view(jenkins_api):
     parent = jenkins_api.create_view("test_find_nested_sub_view", NestedView)
     with clean_view(parent):
@@ -71,6 +78,7 @@ def test_find_nested_sub_view(jenkins_api):
                 assert result[0].name == expected_view_name
 
 
+@pytest.mark.vcr()
 def test_find_multiple_nested_sub_views(jenkins_api):
     parent1 = jenkins_api.create_view("test_find_multiple_nested_sub_views_parent1", NestedView)
     with clean_view(parent1):
@@ -97,6 +105,7 @@ def test_find_multiple_nested_sub_views(jenkins_api):
                     assert results[1].name == expected_view_name
 
 
+@pytest.mark.vcr()
 def test_all_views_empty(jenkins_api):
     v = jenkins_api.create_view("test_all_views_empty", NestedView)
     with clean_view(v):
@@ -106,6 +115,7 @@ def test_all_views_empty(jenkins_api):
         assert len(result) == 0
 
 
+@pytest.mark.vcr()
 def test_all_views_sub_view(jenkins_api):
     parent = jenkins_api.create_view("test_all_views_sub_view", NestedView)
     with clean_view(parent):
@@ -120,6 +130,7 @@ def test_all_views_sub_view(jenkins_api):
             assert result[0].name == child.name
 
 
+@pytest.mark.vcr()
 def test_all_views_nested_sub_view(jenkins_api):
     parent = jenkins_api.create_view("test_all_views_nested_sub_view_parent", NestedView)
     with clean_view(parent):
@@ -139,6 +150,7 @@ def test_all_views_nested_sub_view(jenkins_api):
                 assert results[1].name in [expected_view_name1, expected_view_name2]
 
 
+@pytest.mark.vcr()
 def test_clone_sub_view(jenkins_api):
     parent = jenkins_api.create_view("test_clone_sub_view_parent", NestedView)
     with clean_view(parent):
@@ -154,6 +166,7 @@ def test_clone_sub_view(jenkins_api):
                 assert isinstance(child2, type(child1))
 
 
+@pytest.mark.vcr()
 def test_rename_view(jenkins_api):
     parent_view_name = "test_rename_view1"
     parent = jenkins_api.create_view(parent_view_name, NestedView)

@@ -1,7 +1,9 @@
+import pytest
 from pyjen.plugins.sectionedview import SectionedView
 from ..utils import clean_view
 
 
+@pytest.mark.vcr()
 def test_create_sectioned_view(jenkins_api):
     expected_view_name = "test_create_sectioned_view"
     v = jenkins_api.create_view(expected_view_name, SectionedView)
@@ -11,6 +13,7 @@ def test_create_sectioned_view(jenkins_api):
         assert v.name == expected_view_name
 
 
+@pytest.mark.vcr()
 def test_get_sections_empty(jenkins_api):
     expected_view_name = "test_get_sections_empty"
     v = jenkins_api.create_view(expected_view_name, SectionedView)
@@ -22,6 +25,7 @@ def test_get_sections_empty(jenkins_api):
         assert len(result) == 0
 
 
+@pytest.mark.vcr()
 def test_add_list_section(jenkins_api):
     v = jenkins_api.create_view("test_add_list_section", SectionedView)
     with clean_view(v):
@@ -37,6 +41,7 @@ def test_add_list_section(jenkins_api):
         assert tmp.name == expected_name
 
 
+@pytest.mark.vcr()
 def test_list_section_no_regex(jenkins_api):
     v = jenkins_api.create_view("test_list_section_no_regex", SectionedView)
     with clean_view(v):
@@ -46,6 +51,7 @@ def test_list_section_no_regex(jenkins_api):
         assert section.include_regex == ""
 
 
+@pytest.mark.vcr()
 def test_list_section_set_regex(jenkins_api):
     v = jenkins_api.create_view("test_list_section_set_regex", SectionedView)
     with clean_view(v):
@@ -57,6 +63,7 @@ def test_list_section_set_regex(jenkins_api):
         assert v.sections[0].include_regex == expected_regex
 
 
+@pytest.mark.vcr()
 def test_add_text_section(jenkins_api):
     v = jenkins_api.create_view("test_add_text_section", SectionedView)
     with clean_view(v):
@@ -71,6 +78,7 @@ def test_add_text_section(jenkins_api):
         assert result[0].name == expected_name
 
 
+@pytest.mark.vcr()
 def test_rename_view(jenkins_api):
     original_view_name = "test_rename_view"
     v = jenkins_api.create_view(original_view_name, SectionedView)
@@ -101,6 +109,7 @@ def test_rename_view(jenkins_api):
         assert result[0].name == expected_section_name
 
 
+@pytest.mark.vcr()
 def test_clone_view(jenkins_api):
     original_view_name = "test_clone_view"
     vw1 = jenkins_api.create_view(original_view_name, SectionedView)

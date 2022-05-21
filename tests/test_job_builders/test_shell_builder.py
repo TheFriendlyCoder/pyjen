@@ -1,8 +1,10 @@
+import pytest
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_add_simple_shell_builder(jenkins_api):
     job_name = "test_add_simple_shell_builder"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -23,6 +25,7 @@ def test_add_simple_shell_builder(jenkins_api):
         assert builders[0].unstable_return_code is None
 
 
+@pytest.mark.vcr()
 def test_unstable_return_code(jenkins_api):
     job_name = "test_unstable_return_code"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -43,6 +46,7 @@ def test_unstable_return_code(jenkins_api):
         assert builders[0].unstable_return_code == rcode
 
 
+@pytest.mark.vcr()
 def test_edit_unstable_return_code(jenkins_api):
     job_name = "test_edit_unstable_return_code"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -70,6 +74,7 @@ def test_edit_unstable_return_code(jenkins_api):
         assert bld.result == "UNSTABLE"
 
 
+@pytest.mark.vcr()
 def test_add_then_edit_unstable_return_code(jenkins_api):
     job_name = "test_add_then_edit_unstable_return_code"
     jb = jenkins_api.create_job(job_name, FreestyleJob)

@@ -4,6 +4,7 @@ from pyjen.plugins.gitscm import GitSCM
 from pyjen.plugins.pipelinejob import PipelineJob
 
 
+@pytest.mark.vcr()
 def test_create_pipeline_job(jenkins_api):
     jb = jenkins_api.create_job("test_create_pipeline_job", PipelineJob)
     with clean_job(jb):
@@ -26,6 +27,7 @@ def test_groovy_script_pipeline_job(jenkins_api):
         assert expected_output in jb.last_build.console_output
 
 
+@pytest.mark.vcr()
 def test_git_scm_pipeline_job(jenkins_api):
     jb = jenkins_api.create_job("test_git_scm_pipeline_job", PipelineJob)
     with clean_job(jb):

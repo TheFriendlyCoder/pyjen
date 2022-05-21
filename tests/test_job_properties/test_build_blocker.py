@@ -5,6 +5,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_add_build_blocker(jenkins_api):
     job_name = "test_add_build_blocker"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -23,6 +24,7 @@ def test_add_build_blocker(jenkins_api):
         assert isinstance(properties[0], BuildBlockerProperty)
 
 
+@pytest.mark.vcr()
 def test_multiple_blocking_jobs(jenkins_api):
     job_name = "test_multiple_blocking_jobs"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -45,6 +47,7 @@ def test_multiple_blocking_jobs(jenkins_api):
         assert expected_jobs[1] in blockers
 
 
+@pytest.mark.vcr()
 def test_default_queue_scan(jenkins_api):
     job_name = "test_default_queue_scan"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -62,6 +65,7 @@ def test_default_queue_scan(jenkins_api):
         assert prop.queue_scan == "DISABLED"
 
 
+@pytest.mark.vcr()
 def test_custom_queue_scan(jenkins_api):
     job_name = "test_custom_queue_scan"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -88,6 +92,7 @@ def test_invalid_queue_scan_type():
         build_blocker.queue_scan = "FuBar"
 
 
+@pytest.mark.vcr()
 def test_default_block_level(jenkins_api):
     job_name = "test_default_block_level"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -105,6 +110,7 @@ def test_default_block_level(jenkins_api):
         assert prop.level == "GLOBAL"
 
 
+@pytest.mark.vcr()
 def test_custom_block_level(jenkins_api):
     job_name = "test_custom_block_level"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -131,6 +137,7 @@ def test_invalid_block_level():
         build_blocker.level = "FuBar"
 
 
+@pytest.mark.vcr()
 def test_disable_build_blocker(jenkins_api):
     job_name = "test_disable_build_blocker"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -180,6 +187,7 @@ def test_build_blocker_functionality(jenkins_api):
             assert queue1.waiting is False
 
 
+@pytest.mark.vcr()
 def test_edit_build_blocker(jenkins_api):
     job_name = "test_edit_build_blocker"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -207,6 +215,7 @@ def test_edit_build_blocker(jenkins_api):
         assert expected_job_names[1] in blockers
 
 
+@pytest.mark.vcr()
 def test_add_then_edit_build_blocker(jenkins_api):
     job_name = "test_add_then_edit_build_blocker"
     jb = jenkins_api.create_job(job_name, FreestyleJob)

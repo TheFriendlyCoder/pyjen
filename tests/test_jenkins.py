@@ -1,3 +1,4 @@
+import pytest
 from pyjen.jenkins import Jenkins
 from mock import MagicMock
 from .utils import clean_view, clean_job
@@ -6,6 +7,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from pyjen.plugins.folderjob import FolderJob
 
 
+@pytest.mark.vcr()
 def test_simple_connection(jenkins_api):
     assert jenkins_api.connected
 
@@ -28,21 +30,25 @@ def test_failed_connection_check():
     mock_session.get.assert_called_once()
 
 
+@pytest.mark.vcr()
 def test_get_version(jenkins_api):
     assert jenkins_api.version
     assert isinstance(jenkins_api.version, tuple)
 
 
+@pytest.mark.vcr()
 def test_is_shutting_down(jenkins_api):
     assert not jenkins_api.is_shutting_down
 
 
+@pytest.mark.vcr()
 def test_cancel_shutdown_not_quietdown_mode(jenkins_api):
     assert not jenkins_api.is_shutting_down
     jenkins_api.cancel_shutdown()
     assert not jenkins_api.is_shutting_down
 
 
+@pytest.mark.vcr()
 def test_cancel_shutdown(jenkins_api):
     try:
         jenkins_api.prepare_shutdown()
@@ -53,6 +59,7 @@ def test_cancel_shutdown(jenkins_api):
         jenkins_api.cancel_shutdown()
 
 
+@pytest.mark.vcr()
 def test_prepare_shutdown(jenkins_api):
     try:
         jenkins_api.prepare_shutdown()
@@ -61,17 +68,20 @@ def test_prepare_shutdown(jenkins_api):
         jenkins_api.cancel_shutdown()
 
 
+@pytest.mark.vcr()
 def test_find_non_existent_job(jenkins_api):
     jb = jenkins_api.find_job("DoesNotExistJob")
     assert jb is None
 
 
+@pytest.mark.vcr()
 def test_get_default_view(jenkins_api):
     v = jenkins_api.default_view
     assert v is not None
     assert v.name == "all"
 
 
+@pytest.mark.vcr()
 def test_get_views(jenkins_api):
     v = jenkins_api.views
 
@@ -81,6 +91,7 @@ def test_get_views(jenkins_api):
     assert v[0].name == "all"
 
 
+@pytest.mark.vcr()
 def test_get_multiple_views(jenkins_api):
     test_view_name = "test_get_multiple_views_view"
     vw = jenkins_api.create_view(test_view_name, ListView)
@@ -95,6 +106,7 @@ def test_get_multiple_views(jenkins_api):
         assert v[0].name != v[1].name
 
 
+@pytest.mark.vcr()
 def test_find_view(jenkins_api):
     expected_name = "all"
     v = jenkins_api.find_view(expected_name)
@@ -103,6 +115,7 @@ def test_find_view(jenkins_api):
     assert v.name == expected_name
 
 
+@pytest.mark.vcr()
 def test_create_view(jenkins_api):
     vw = jenkins_api.create_view("test_create_view", ListView)
     with clean_view(vw):
@@ -110,12 +123,14 @@ def test_create_view(jenkins_api):
         assert vw.name == "test_create_view"
 
 
+@pytest.mark.vcr()
 def test_find_missing_view(jenkins_api):
     v = jenkins_api.find_view("DoesNotExist")
 
     assert v is None
 
 
+@pytest.mark.vcr()
 def test_get_nodes(jenkins_api):
     nodes = jenkins_api.nodes
 
@@ -125,6 +140,7 @@ def test_get_nodes(jenkins_api):
     assert nodes[0].name == "Built-In Node"
 
 
+@pytest.mark.vcr()
 def test_find_node(jenkins_api):
     node = jenkins_api.find_node("Built-In Node")
 
@@ -132,29 +148,34 @@ def test_find_node(jenkins_api):
     assert node.name == "Built-In Node"
 
 
+@pytest.mark.vcr()
 def test_find_node_not_exists(jenkins_api):
     node = jenkins_api.find_node("NodeDoesNotExist")
 
     assert node is None
 
 
+@pytest.mark.vcr()
 def test_find_user(jenkins_env, jenkins_api):
     user = jenkins_api.find_user(jenkins_env["admin_user"])
     assert user is not None
     assert user.full_name == jenkins_env["admin_user"]
 
 
+@pytest.mark.vcr()
 def test_find_user_not_exists(jenkins_api):
     user = jenkins_api.find_user("UserDoesNotExist")
     assert user is None
 
 
+@pytest.mark.vcr()
 def test_get_plugin_manager(jenkins_api):
     pm = jenkins_api.plugin_manager
 
     assert pm is not None
 
 
+@pytest.mark.vcr()
 def test_get_no_jobs(jenkins_api):
     res = jenkins_api.jobs
 
@@ -163,6 +184,7 @@ def test_get_no_jobs(jenkins_api):
     assert len(res) == 0
 
 
+@pytest.mark.vcr()
 def test_get_one_job(jenkins_api):
     jb = jenkins_api.create_job("test_get_one_job", FreestyleJob)
     with clean_job(jb):
@@ -172,6 +194,7 @@ def test_get_one_job(jenkins_api):
         assert res[0] == jb
 
 
+@pytest.mark.vcr()
 def test_get_no_jobs_recursive(jenkins_api):
     res = jenkins_api.all_jobs
 
@@ -180,6 +203,7 @@ def test_get_no_jobs_recursive(jenkins_api):
     assert len(res) == 0
 
 
+@pytest.mark.vcr()
 def test_get_one_job_recursive(jenkins_api):
     jb1 = jenkins_api.create_job("test_get_one_job_recursive_1", FolderJob)
     with clean_job(jb1):
@@ -192,6 +216,7 @@ def test_get_one_job_recursive(jenkins_api):
             assert jb2 in res
 
 
+@pytest.mark.vcr()
 def test_get_multi_nested_job_recursive(jenkins_api):
     jb1 = jenkins_api.create_job("test_get_multi_nested_job_recursive_1", FolderJob)
     with clean_job(jb1):
@@ -209,12 +234,14 @@ def test_get_multi_nested_job_recursive(jenkins_api):
                     assert jb4 in res
 
 
+@pytest.mark.vcr()
 def test_create_job(jenkins_api):
     jb = jenkins_api.create_job("test_create_job", FreestyleJob)
     with clean_job(jb):
         assert jb is not None
 
 
+@pytest.mark.vcr()
 def test_build_queue(jenkins_api):
     queue = jenkins_api.build_queue
     assert queue is not None

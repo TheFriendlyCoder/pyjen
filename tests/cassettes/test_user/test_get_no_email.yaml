@@ -1,0 +1,154 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/user/admin/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.User","absoluteUrl":"http://localhost:62540/user/admin","description":null,"fullName":"admin","id":"admin","property":[{"_class":"jenkins.security.ApiTokenProperty"},{"_class":"com.cloudbees.plugins.credentials.UserCredentialsProvider$UserCredentialsProperty"},{"_class":"hudson.tasks.Mailer$UserProperty","address":null},{"_class":"hudson.model.MyViewsProperty"},{"_class":"org.jenkinsci.plugins.displayurlapi.user.PreferredProviderUserProperty"},{"_class":"hudson.model.PaneStatusProperties"},{"_class":"jenkins.security.seed.UserSeedProperty"},{"_class":"hudson.search.UserSearchProperty","insensitiveSearch":true},{"_class":"hudson.model.TimeZoneProperty"},{"_class":"hudson.security.HudsonPrivateSecurityRealm$Details"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:37:45 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '750'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/user/admin/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.User","absoluteUrl":"http://localhost:62540/user/admin","description":null,"fullName":"admin","id":"admin","property":[{"_class":"jenkins.security.ApiTokenProperty"},{"_class":"com.cloudbees.plugins.credentials.UserCredentialsProvider$UserCredentialsProperty"},{"_class":"hudson.tasks.Mailer$UserProperty","address":null},{"_class":"hudson.model.MyViewsProperty"},{"_class":"org.jenkinsci.plugins.displayurlapi.user.PreferredProviderUserProperty"},{"_class":"hudson.model.PaneStatusProperties"},{"_class":"jenkins.security.seed.UserSeedProperty"},{"_class":"hudson.search.UserSearchProperty","insensitiveSearch":true},{"_class":"hudson.model.TimeZoneProperty"},{"_class":"hudson.security.HudsonPrivateSecurityRealm$Details"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:37:45 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '750'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/user/admin/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.User","absoluteUrl":"http://localhost:64171/user/admin","description":null,"fullName":"admin","id":"admin","property":[{"_class":"jenkins.security.ApiTokenProperty"},{"_class":"com.cloudbees.plugins.credentials.UserCredentialsProvider$UserCredentialsProperty"},{"_class":"hudson.tasks.Mailer$UserProperty","address":null},{"_class":"hudson.model.MyViewsProperty"},{"_class":"org.jenkinsci.plugins.displayurlapi.user.PreferredProviderUserProperty"},{"_class":"hudson.model.PaneStatusProperties"},{"_class":"jenkins.security.seed.UserSeedProperty"},{"_class":"hudson.search.UserSearchProperty","insensitiveSearch":true},{"_class":"hudson.model.TimeZoneProperty"},{"_class":"hudson.security.HudsonPrivateSecurityRealm$Details"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '750'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/user/admin/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.User","absoluteUrl":"http://localhost:64171/user/admin","description":null,"fullName":"admin","id":"admin","property":[{"_class":"jenkins.security.ApiTokenProperty"},{"_class":"com.cloudbees.plugins.credentials.UserCredentialsProvider$UserCredentialsProperty"},{"_class":"hudson.tasks.Mailer$UserProperty","address":null},{"_class":"hudson.model.MyViewsProperty"},{"_class":"org.jenkinsci.plugins.displayurlapi.user.PreferredProviderUserProperty"},{"_class":"hudson.model.PaneStatusProperties"},{"_class":"jenkins.security.seed.UserSeedProperty"},{"_class":"hudson.search.UserSearchProperty","insensitiveSearch":true},{"_class":"hudson.model.TimeZoneProperty"},{"_class":"hudson.security.HudsonPrivateSecurityRealm$Details"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '750'
+    status:
+      code: 200
+      message: OK
+version: 1

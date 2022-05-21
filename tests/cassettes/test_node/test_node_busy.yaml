@@ -1,0 +1,2068 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/computer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.ComputerSet","busyExecutors":0,"computer":[{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":true,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":267075584,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818239,"path":"/tmp","size":53007716352},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818259,"path":"/var/jenkins_home","size":53007716352},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653160818257,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}],"displayName":"Nodes","totalExecutors":2}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:42:59 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1521'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:42:59 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:42:59 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions/>\n    <description/>\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties/>\n    <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+      \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '486'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      Jenkins-Crumb:
+      - f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/createItem?name=test_node_busy_job
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:42:59 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:42:59 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+        \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Content-Length:
+      - '524'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 19:43:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:43:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders
+      />\n    <publishers />\n    <buildWrappers />\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '522'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      Jenkins-Crumb:
+      - f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:43:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>sleep
+      2</command></hudson.tasks.Shell></builders>\n    <publishers />\n    <buildWrappers
+      />\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '598'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      Jenkins-Crumb:
+      - f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:43:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:01 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>sleep
+        2</command></hudson.tasks.Shell></builders>\n    <publishers/>\n    <buildWrappers/>\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Content-Length:
+      - '629'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 19:43:01 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:01 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>sleep
+        2</command></hudson.tasks.Shell></builders>\n    <publishers/>\n    <buildWrappers/>\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Content-Length:
+      - '629'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 19:43:01 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      Jenkins-Crumb:
+      - f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_node_busy_job/build
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:43:01 GMT
+      Location:
+      - http://localhost:62540/queue/item/1/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:02 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:02 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/computer/(built-in)/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":false,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":267075584,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818239,"path":"/tmp","size":53007716352},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818259,"path":"/var/jenkins_home","size":53007716352},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653160818257,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:02 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1412'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:03 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:04 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:05 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1690'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:62540/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_node_busy_job/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:43:05 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1690'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      Jenkins-Crumb:
+      - f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_node_busy_job/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:43:05 GMT
+      Location:
+      - http://localhost:62540/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0a05t6qhj0a2c131kbx9o6ejhq36.node0
+      Jenkins-Crumb:
+      - f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/a2435505\" data-rooturl=\"\"
+        data-resurl=\"/static/a2435505\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/a2435505/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f1182ae18d3de96120c1dcc5530e7b6c36439cf02962efc8b851cbe6e78aa46c\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/a2435505/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/a2435505/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/a2435505/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/a2435505/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/a2435505/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/a2435505/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/event/event-min.js\"></script><script src=\"/static/a2435505/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/a2435505/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/a2435505/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/a2435505/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/a2435505/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/a2435505/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 19:43:06 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA41bTk0LdefFLdGHNus3YOYPK43Xr3bL/YpZOPCQ9Jyam/bxrxAbu/WqPI0DosgkRs92muO32leUlzLyIB4lqGlUIxP9UIrpBZe2RwF1KoPIuun2XpUINfH2HwJ/ck1HBXrI1NfeyqMVRF++g9xP7Ipn77hCN1DjFWH0aAHtiUGIQ1QTltVfu1p66qDNN5rAhE5EW9gfNKkc09f4LX+fSPuXM3re9JOQjBOWmZqepGadu3yrDLdeCTBi+S6cjxarFQ9O3xrFuBEGRDJITWUtxbtwU+KByneBMmQGnVIsFBdqT2RWEW/66IJFjDQuDZiESCaPD/phCKt6TgFVYm3qo0wIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/computer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.ComputerSet","busyExecutors":0,"computer":[{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":true,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":991535104,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981567,"path":"/tmp","size":53735116800},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981581,"path":"/var/jenkins_home","size":53735116800},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653165981574,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}],"displayName":"Nodes","totalExecutors":2}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:07 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1521'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:50:08 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:08 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions/>\n    <description/>\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties/>\n    <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+      \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '486'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      Jenkins-Crumb:
+      - c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/createItem?name=test_node_busy_job
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:50:08 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:08 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+        \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Content-Length:
+      - '524'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 20:50:08 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:50:08 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:09 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders
+      />\n    <publishers />\n    <buildWrappers />\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '522'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      Jenkins-Crumb:
+      - c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:50:09 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>sleep
+      2</command></hudson.tasks.Shell></builders>\n    <publishers />\n    <buildWrappers
+      />\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '598'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      Jenkins-Crumb:
+      - c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:50:09 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:09 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>sleep
+        2</command></hudson.tasks.Shell></builders>\n    <publishers/>\n    <buildWrappers/>\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Content-Length:
+      - '629'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 20:50:09 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:10 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '730'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>sleep
+        2</command></hudson.tasks.Shell></builders>\n    <publishers/>\n    <buildWrappers/>\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Content-Length:
+      - '629'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 20:50:10 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      Jenkins-Crumb:
+      - c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_node_busy_job/build
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:50:10 GMT
+      Location:
+      - http://localhost:64171/queue/item/24/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:10 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:10 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/computer/(built-in)/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":false,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":991535104,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981567,"path":"/tmp","size":53735116800},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981581,"path":"/var/jenkins_home","size":53735116800},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653165981574,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:11 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1412'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:11 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1250'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:13 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1690'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_node_busy_job/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_node_busy_job","displayNameOrNull":null,"fullDisplayName":"test_node_busy_job","fullName":"test_node_busy_job","name":"test_node_busy_job","url":"http://localhost:64171/job/test_node_busy_job/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_node_busy_job/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:13 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1690'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      Jenkins-Crumb:
+      - c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_node_busy_job/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:50:13 GMT
+      Location:
+      - http://localhost:64171/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0v93kapv43w0j615r66bfoej553.node0
+      Jenkins-Crumb:
+      - c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/92a9e902\" data-rooturl=\"\"
+        data-resurl=\"/static/92a9e902\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/92a9e902/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"c39b9b8bf080bb1999ee30ebc9637c101b64f2000d2571ed019caf31dc2a2e1c\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/92a9e902/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/92a9e902/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/92a9e902/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/92a9e902/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/event/event-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/92a9e902/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/92a9e902/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/92a9e902/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:50:14 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1CFIfooRWpcSli0tzcRY8tpw8pNdhaixfM95EtoHSZ6ja1zR5wSTLb/nz0Y3D2nSabgNtGnxW0f0j92YBWpvTOCficKW67g5g8GIeAoig7aci0a3p4kuZbi/p7FTHvkd7QvCx04vWd33o/hUWrpvF6a6QskTksgUOGiEm8Iqq+0BswIm9SFGEqFUgvS+MsqK+Mh5X5bW+CgNz+QtgC/78zhtpAIWZtJJiXonpmzhiymJMspVd/ECSkQDPkrkqA6Nk6CLdJu6NWgttvhTQu4Sw7uJHgiWv8k7kZ1k4CMK2pgeWnLPrDd8SZXg3l6VNSaGXSjfLGvdGJjv/JpGr5ebQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+version: 1

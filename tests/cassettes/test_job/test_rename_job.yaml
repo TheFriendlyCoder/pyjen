@@ -1,0 +1,2502 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:48:32 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:33 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions/>\n    <description/>\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties/>\n    <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+      \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '486'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      Jenkins-Crumb:
+      - f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/createItem?name=test_rename_job1
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:48:33 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job1","url":"http://localhost:62540/job/test_rename_job1/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:33 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job1","url":"http://localhost:62540/job/test_rename_job1/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:48:34 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:34 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      Jenkins-Crumb:
+      - f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_rename_job1/doRename?newName=test_rename_job2
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:48:34 GMT
+      Location:
+      - http://localhost:62540/job/test_rename_job2
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      Jenkins-Crumb:
+      - f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_rename_job2
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:48:36 GMT
+      Location:
+      - http://localhost:62540/job/test_rename_job2/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      Jenkins-Crumb:
+      - f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_rename_job2/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/a2435505\" data-rooturl=\"\"
+        data-resurl=\"/static/a2435505\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/a2435505/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680\">\n
+        \   \n    \n\n    <title>test_rename_job2 [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/a2435505/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/a2435505/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/a2435505/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/a2435505/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/a2435505/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/a2435505/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/event/event-min.js\"></script><script src=\"/static/a2435505/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/a2435505/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/a2435505/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"alternate\" href=\"rssAll\"
+        title=\"Jenkins:test_rename_job2 (all builds)\" type=\"application/atom+xml\"><link
+        rel=\"alternate\" href=\"rssAll?flavor=rss20\" title=\"Jenkins:test_rename_job2
+        (all builds) (RSS 2.0)\" type=\"application/rss+xml\"><link rel=\"alternate\"
+        href=\"rssFailed\" title=\"Jenkins:test_rename_job2 (failed builds)\" type=\"application/atom+xml\"><link
+        rel=\"alternate\" href=\"rssFailed?flavor=rss20\" title=\"Jenkins:test_rename_job2
+        (failed builds) (RSS 2.0)\" type=\"application/rss+xml\"><link rel=\"alternate\"
+        href=\"rssChangelog\" title=\"Jenkins:test_rename_job2 (changelog)\" type=\"application/rss+xml\"><link
+        rel=\"alternate\" href=\"rssChangelog?flavor=rss20\" title=\"Jenkins:test_rename_job2
+        (changelog) (RSS 2.0)\" type=\"application/rss+xml\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/plugin/sectioned-view/sectioned-view.css\" type=\"text/css\"><script
+        src=\"/static/a2435505/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"hudson.model.FreeStyleProject\" id=\"jenkins\" class=\"yui-skin-sam
+        two-column jenkins-2.345\" data-version=\"2.345\"><a href=\"#skip2content\"
+        class=\"skiplink\">Skip to content</a><header id=\"page-header\" class=\"page-header\"><div
+        class=\"page-header__brand\"><div class=\"logo\"><a id=\"jenkins-home-link\"
+        href=\"/\"><img src=\"/static/a2435505/images/svgs/logo.svg\" alt=\"[Jenkins]\"
+        id=\"jenkins-head-icon\"><img src=\"/static/a2435505/images/title.svg\" alt=\"Jenkins\"
+        width=\"139\" id=\"jenkins-name-icon\" height=\"34\"></a></div><a href=\"/\"
+        class=\"page-header__brand-link\"><img src=\"/static/a2435505/images/svgs/logo.svg\"
+        alt=\"[Jenkins]\" class=\"page-header__brand-image\"><span class=\"page-header__brand-name\">Jenkins</span></a></div><div
+        class=\"searchbox hidden-xs\"><form role=\"search\" method=\"get\" name=\"search\"
+        action=\"/job/test_rename_job2/search/\" style=\"position:relative;\" class=\"no-json\"><div
+        id=\"search-box-sizer\"></div><div id=\"searchform\"><input role=\"searchbox\"
+        name=\"q\" placeholder=\"Search\" id=\"search-box\" class=\"main-search__input\"><span
+        class=\"main-search__icon-leading\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><title></title><path
+        d=\"M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z\"
+        fill=\"none\" stroke=\"currentColor\" stroke-miterlimit=\"10\" stroke-width=\"32\"/><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M338.29 338.29L448 448\"/></svg></span><a href=\"https://www.jenkins.io/redirect/search-box\"
+        class=\"main-search__icon-trailing\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path d=\"M256
+        40a216 216 0 10216 216A216 216 0 00256 40z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"38\"/><path d=\"M200 202.29s.84-17.5
+        19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45
+        10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296\"
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"38\"/><circle cx=\"250\" cy=\"360\" r=\"25\" fill=\"currentColor\"/></svg></a><div
+        id=\"search-box-completion\"></div><script>createSearchBox(\"/job/test_rename_job2/search/\");</script></div></form></div><div
+        class=\"login page-header__hyperlinks\"><div id=\"visible-am-insertion\" class=\"page-header__am-wrapper\"></div><div
+        id=\"visible-sec-am-insertion\" class=\"page-header__am-wrapper\"></div><a
+        href=\"/user/admin\" class=\"model-link\"><svg viewBox=\"0 0 24 24\" focusable=\"false\"
+        class=\"svg-icon am-monitor-icon\"><use href=\"/static/a2435505/images/material-icons/svg-sprite-social-symbol.svg#ic_person_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">admin</span></a><a href=\"/logout\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/material-icons/svg-sprite-action-symbol.svg#ic_input_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">log out</span></a></div></header><div id=\"breadcrumbBar\"><script
+        src='/adjuncts/a2435505/lib/layout/breadcrumbs.js' type='text/javascript'></script><div
+        class=\"top-sticker noedge\"><div class=\"top-sticker-inner\"><div class=\"jenkins-breadcrumbs\"><ul
+        id=\"breadcrumbs\"><li class=\"item\"><a href=\"/\" class=\"model-link\">Dashboard</a></li><li
+        href=\"/\" class=\"children\"></li><li class=\"item\"><a href=\"/job/test_rename_job2/\"
+        class=\"model-link\">test_rename_job2</a></li><li href=\"/job/test_rename_job2/\"
+        class=\"children\"></li></ul><div id=\"breadcrumb-menu-target\"></div></div></div></div></div><div
+        id=\"page-body\" class=\"clear\"><div id=\"side-panel\"><div id=\"tasks\"><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/\" class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"icon-up
+        icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M112
+        244l144-144 144 144M256 120v292\"/></svg></span><span class=\"task-link-text\">Back
+        to Dashboard</span></a></span></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/job/test_rename_job2/\" class=\"task-link
+        task-link--active\"><span class=\"task-icon-link\"><svg class=\"\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><rect x=\"96\" y=\"48\" width=\"320\" height=\"416\"
+        rx=\"48\" ry=\"48\" fill=\"none\" stroke=\"currentColor\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M176 128h160M176 208h160M176
+        288h80\"/></svg></span><span class=\"task-link-text\">Status</span></a></span><div
+        class=\"subtasks\"></div></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/job/test_rename_job2/changes\" class=\"task-link
+        \"><span class=\"task-icon-link\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M160 368L32 256l128-112M352 368l128-112-128-112M304
+        96l-96 320\"/></svg></span><span class=\"task-link-text\">Changes</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/job/test_rename_job2/ws/\" class=\"task-link \"><span class=\"task-icon-link\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M440 432H72a40
+        40 0 01-40-40V120a40 40 0 0140-40h75.89a40 40 0 0122.19 6.72l27.84 18.56a40
+        40 0 0022.19 6.72H440a40 40 0 0140 40v240a40 40 0 01-40 40zM32 192h448\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">Workspace</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        onclick=\"return build_id595(this)\" href=\"/job/test_rename_job2/build?delay=0sec\"
+        class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"icon-clock
+        icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        width=\"512\" height=\"512\" viewBox=\"0 0 512 512\"><title></title><path
+        d=\"M112,111V401c0,17.44,17,28.52,31,20.16l247.9-148.37c12.12-7.25,12.12-26.33,0-33.58L143,90.84C129,82.48,112,93.56,112,111Z\"
+        style=\"fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:32px\"/></svg></span><span
+        class=\"task-link-text\">Build Now</span></a></span></div><script>function
+        build_id595(a) {\n                new Ajax.Request(a.href);\n                hoverNotification('Build
+        scheduled',a.parentNode);\n                return false;\n            }</script><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/job/test_rename_job2/configure\" class=\"task-link \"><span class=\"task-icon-link\"><?xml
+        version=\"1.0\" encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\"
+        width=\"512px\" height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\">\n        <g transform=\"translate(50.378500,
+        42.000000)\" stroke=\"currentColor\" stroke-width=\"32\">\n            <path
+        d=\"M211.9115,150.31 C185.005783,147.652748 159.332619,162.189611 147.769706,186.628874
+        C136.206793,211.068138 141.24875,240.137201 160.366525,259.254975 C179.484299,278.37275
+        208.553362,283.414707 232.992626,271.851794 C257.431889,260.288881 271.968752,234.615717
+        269.3115,207.71 C266.263249,177.360931 242.260569,153.358251 211.9115,150.31
+        L211.9115,150.31 Z M410.9165,277.125 C411.707607,281.564887 410.903766,286.141508
+        408.647035,290.04607 L372.853966,351.97469 C370.607176,355.862053 367.040281,358.81433
+        362.8015,360.295 C358.482479,361.803699 353.868429,362.272089 349.334332,361.662103
+        L320.522752,357.785994 C299.879684,355.00882 279.988607,366.61094 272.243485,385.946453
+        L261.688643,412.296365 C259.969284,416.588704 257.239668,420.402837 253.7315,423.415
+        C250.285888,426.373452 245.894629,428 241.353189,428 L169.796876,428 C165.308275,428
+        160.960823,426.431216 157.5065,423.565 C153.996701,420.652754 151.25415,416.924675
+        149.518855,412.70702 L138.358864,385.582532 C130.453683,366.368896 110.519057,354.968685
+        89.9503733,357.89869 L61.8696222,361.898788 C57.3434346,362.543543 52.7286498,362.09476
+        48.4115003,360.59 C44.1729946,359.112652 40.6059709,356.162306 38.3598585,352.276117
+        L2.56596537,290.34607 C0.309233973,286.441508 -0.494606827,281.864887 0.296500273,277.425
+        C1.10103427,272.909758 2.99390287,268.65863 5.81124857,265.039618 L23.4896432,242.330895
+        C36.4067894,225.738218 36.3997393,202.490855 23.4725314,185.906016 L5.73914207,163.155131
+        C2.93726987,159.560495 1.06449867,155.330725 0.286500273,150.84 C-0.479118527,146.420732
+        0.330889273,141.87293 2.57525137,137.989769 L38.3890342,76.0253095 C40.6358245,72.1379474
+        44.2027191,69.1856702 48.4415003,67.705 C52.7614677,66.1959703 57.3747149,65.7192136
+        61.9119868,66.3128907 L91.2373143,70.1499486 C111.792442,72.839474 131.546967,61.2195013
+        139.18365,41.9470371 L149.578712,15.7133384 C151.281675,11.4156234 154.004147,7.5964633
+        157.5115,4.585 C160.957112,1.6265481 165.348371,0 169.889811,0 L241.446124,0
+        C245.934725,0 250.282177,1.5687841 253.7365,4.435 C257.245602,7.3466683 259.982278,11.0789954
+        261.704008,15.3012287 L272.612929,42.053395 C280.490247,61.3711009 300.470109,72.8820729
+        321.133157,70.007291 L349.370217,66.0787615 C353.899388,65.4486329 358.513486,65.904939
+        362.8315,67.41 C367.070006,68.8873483 370.637029,71.837694 372.883142,75.7238833
+        L408.677035,137.65393 C410.933766,141.558492 411.737607,146.135113 410.9465,150.575
+        C410.140427,155.098876 408.314604,159.379748 405.607548,163.092841 L385.561411,190.588825
+        C373.755974,206.781577 374.583692,228.954539 387.563545,244.222054 L405.168289,264.929585
+        C408.130553,268.41394 410.114244,272.622543 410.9165,277.125 Z\"></path>\n
+        \       </g>\n    </g>\n</svg></span><span class=\"task-link-text\">Configure</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        data-message=\"Delete the Project \u2018test_rename_job2\u2019?\" data-post=\"true\"
+        href=\"#\" class=\"task-link  confirmation-link\" data-url=\"/job/test_rename_job2/doDelete\"><span
+        class=\"task-icon-link\"><svg class=\"icon-edit-delete icon-md\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><path d=\"M112 112l20 320c.95 18.49 14.4 32 32
+        32h184c17.67 0 30.87-13.51 32-32l20-320\" fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M80 112h352\"/><path d=\"M192 112V72h0a23.93 23.93
+        0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8
+        224\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span>Delete Project</span></a><script src='/adjuncts/a2435505/lib/layout/confirmationLink/adjunct.js'
+        type='text/javascript'></script></span></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/job/test_rename_job2/confirm-rename\"
+        class=\"task-link \"><span class=\"task-icon-link\"><?xml version=\"1.0\"
+        encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\" width=\"512px\"
+        height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <title></title>\n    <g
+        stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n
+        \       <path d=\"M399.608914,57 C413.784791,57 427.960684,62.4078333 438.776426,73.2235621
+        C449.592141,84.0392638 455,98.2149574 455,112.390686 C455,126.566468 449.592105,140.742274
+        438.776426,151.558078 L438.776426,151.558078 L191.040603,399.293596 C182.232434,408.101755
+        171.575528,414.840664 159.841736,419.022244 L159.841736,419.022244 L58.9309718,454.983885
+        C58.3980325,455.005817 57.9083807,454.793595 57.5574476,454.442654 C57.2063668,454.091565
+        56.9941379,453.601684 57.0161199,453.068522 L57.0161199,453.068522 L92.977296,352.157786
+        C97.1588787,340.423838 103.897856,329.766792 112.706129,320.958529 L112.706129,320.958529
+        L360.441401,73.2235621 C371.257143,62.4078333 385.433036,57 399.608914,57
+        Z\" stroke=\"currentColor\" stroke-width=\"32\" fill-rule=\"nonzero\"></path>\n
+        \       <polyline fill=\"currentColor\" transform=\"translate(362.692388,
+        154.192388) rotate(45.000000) translate(-362.692388, -154.192388) \" points=\"308.192388
+        138.192388 359.945436 138.192388 417.192388 138.192388 417.192388 170.192388
+        360.652543 170.192388 308.192388 170.192388\"></polyline>\n    </g>\n</svg></span><span
+        class=\"task-link-text\">Rename</span></a></span></div></div><div page-has-up=\"false\"
+        page-has-down=\"false\" id=\"buildHistoryPage\" page-ajax=\"/job/test_rename_job2/buildHistory/ajax\"
+        page-entry-newest=\"-9223372036854775808\" page-entry-oldest=\"9223372036854775807\"><div
+        id=\"buildHistoryPageNav\"><div class=\"buildHistoryPageNav__item buildHistoryPageNav__item--page-one
+        pageOne\" title=\"Page 1 (Newest/Latest Builds)\"><div class=\"buildHistoryPageNav__item-page-one-top\"></div><svg
+        viewBox=\"0 0 16 16\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/svgs/go-up.svg#arrow\"></use></svg></div><div
+        class=\"buildHistoryPageNav__item pageUp\" title=\"Newer Builds\"><svg viewBox=\"0
+        0 16 16\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/svgs/go-up.svg#arrow\"></use></svg></div><div
+        class=\"buildHistoryPageNav__item pageDown\" title=\"Older Builds\"><svg viewBox=\"0
+        0 16 16\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/svgs/go-down.svg#arrow\"></use></svg></div></div><div
+        id=\"buildHistory\" class=\"container-fluid pane-frame track-mouse expanded\"><div
+        class=\"row\"><div class=\"col-xs-24 pane-header\"><span class=\"pane-header-title\"><div
+        class=\"jenkins-pane__header--build-history\"><div data=\"100\" class=\"jenkins-table__cell--tight
+        jenkins-table__icon healthReport\"><div class=\"jenkins-table__cell__button-wrapper\"><svg
+        viewBox=\"0 0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/build-status/weather-sprite.svg#weather-sunny\"></use></svg></div></div>\n
+        \     Build History\n      <a href=\"/job/test_rename_job2/buildTimeTrend\">trend</a></div></span><a
+        href=\"/toggleCollapse?paneId=buildHistory\" title=\"collapse\" class=\"collapse\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"48\" d=\"M112
+        184l144 144 144-144\"/></svg></a></div></div><div class=\"row pane-content\"><table
+        class=\"pane jenkins-pane stripped\"><tr class=\"build-search-row\"><td><div
+        class=\"jenkins-search\"><input placeholder=\"Filter builds...\" type=\"search\"
+        class=\"jenkins-search__input\"><div class=\"jenkins-search__icon\"><svg class=\"\"
+        class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\"
+        viewBox=\"0 0 512 512\"><title></title><path d=\"M221.09 64a157.09 157.09
+        0 10157.09 157.09A157.1 157.1 0 00221.09 64z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"32\"/><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-miterlimit=\"10\" stroke-width=\"32\" d=\"M338.29
+        338.29L448 448\"/></svg></div></div><div style=\"\" id=\"no-builds\" class=\"jenkins-pane__information\">No
+        builds</div></td></tr><div id=\"properties\" page-next-build=\"1\"></div></table></div><div
+        class=\"row\"><div class=\"col-xs-24 pane-footer\"><span class=\"build-rss-links\"><a
+        href=\"/job/test_rename_job2/rssAll\" class=\"build-rss-all-link\"><span class=\"build-rss-all-icon\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" width=\"460px\" height=\"460px\"
+        viewBox=\"0 0 460 460\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\"><g transform=\"translate(56.440081, 56.222063)\"
+        stroke=\"currentColor\"><path d=\"M51.8355914,263.237609 C60.9709503,263.260732
+        69.2414786,266.967806 75.2384778,272.952922 C81.2358437,278.938404 84.9594026,287.202208
+        85.0001926,296.338927 C84.9725106,305.421743 81.2764727,313.639618 75.3166433,319.590173
+        C69.3466112,325.550914 61.1050301,329.236566 52.0036901,329.237536 C42.9023476,329.238505
+        34.6599806,325.554606 28.6886687,319.595137 C22.7173419,313.635654 19.017079,305.400589
+        18.9999666,296.299365 C18.9829135,287.198016 22.6522367,278.949119 28.6011501,272.967262
+        C34.5402452,266.995277 42.7514145,263.282855 51.8355914,263.237609 Z\" stroke-width=\"38\"
+        fill-rule=\"nonzero\"></path><path d=\"M15.5639188,0 C189.695661,18.9886079
+        327.916779,157.508264 346.44594,331.777403\" stroke-width=\"40\" stroke-linecap=\"round\"></path><path
+        d=\"M16.5639188,121.777403 C126.781388,133.796328 214.269067,221.472967 225.997183,331.777403\"
+        stroke-width=\"40\" stroke-linecap=\"round\"></path></g></g></svg></span>\n
+        \         Atom feed for all\n        </a><a href=\"/job/test_rename_job2/rssFailed\"
+        class=\"build-rss-failed-link\"><span class=\"build-rss-failed-icon\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" width=\"460px\" height=\"460px\"
+        viewBox=\"0 0 460 460\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\"><g transform=\"translate(56.440081, 56.222063)\"
+        stroke=\"currentColor\"><path d=\"M51.8355914,263.237609 C60.9709503,263.260732
+        69.2414786,266.967806 75.2384778,272.952922 C81.2358437,278.938404 84.9594026,287.202208
+        85.0001926,296.338927 C84.9725106,305.421743 81.2764727,313.639618 75.3166433,319.590173
+        C69.3466112,325.550914 61.1050301,329.236566 52.0036901,329.237536 C42.9023476,329.238505
+        34.6599806,325.554606 28.6886687,319.595137 C22.7173419,313.635654 19.017079,305.400589
+        18.9999666,296.299365 C18.9829135,287.198016 22.6522367,278.949119 28.6011501,272.967262
+        C34.5402452,266.995277 42.7514145,263.282855 51.8355914,263.237609 Z\" stroke-width=\"38\"
+        fill-rule=\"nonzero\"></path><path d=\"M15.5639188,0 C189.695661,18.9886079
+        327.916779,157.508264 346.44594,331.777403\" stroke-width=\"40\" stroke-linecap=\"round\"></path><path
+        d=\"M16.5639188,121.777403 C126.781388,133.796328 214.269067,221.472967 225.997183,331.777403\"
+        stroke-width=\"40\" stroke-linecap=\"round\"></path></g></g></svg></span>\n
+        \         Atom feed for failures\n        </a></span></div></div></div></div><script
+        src=\"/static/a2435505/jsbundles/filter-build-history.js\" type=\"text/javascript\"></script></div><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><h1 class=\"job-index-headline
+        page-headline\">Project test<wbr>_rename<wbr>_job2</h1><div id=\"description\"><div></div><div
+        class=\"jenkins-buttons-row jenkins-buttons-row--invert\"><a class=\"yui-button
+        link-button\" id=\"description-link\" href=\"editDescription\" onclick=\"return
+        replaceDescription();\"><span class=\"leading-icon\"><?xml version=\"1.0\"
+        encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\" width=\"512px\"
+        height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <title></title>\n    <g
+        stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n
+        \       <path d=\"M399.608914,57 C413.784791,57 427.960684,62.4078333 438.776426,73.2235621
+        C449.592141,84.0392638 455,98.2149574 455,112.390686 C455,126.566468 449.592105,140.742274
+        438.776426,151.558078 L438.776426,151.558078 L191.040603,399.293596 C182.232434,408.101755
+        171.575528,414.840664 159.841736,419.022244 L159.841736,419.022244 L58.9309718,454.983885
+        C58.3980325,455.005817 57.9083807,454.793595 57.5574476,454.442654 C57.2063668,454.091565
+        56.9941379,453.601684 57.0161199,453.068522 L57.0161199,453.068522 L92.977296,352.157786
+        C97.1588787,340.423838 103.897856,329.766792 112.706129,320.958529 L112.706129,320.958529
+        L360.441401,73.2235621 C371.257143,62.4078333 385.433036,57 399.608914,57
+        Z\" stroke=\"currentColor\" stroke-width=\"32\" fill-rule=\"nonzero\"></path>\n
+        \       <polyline fill=\"currentColor\" transform=\"translate(362.692388,
+        154.192388) rotate(45.000000) translate(-362.692388, -154.192388) \" points=\"308.192388
+        138.192388 359.945436 138.192388 417.192388 138.192388 417.192388 170.192388
+        360.652543 170.192388 308.192388 170.192388\"></polyline>\n    </g>\n</svg></span>Add
+        description</a></div></div><div align=\"right\"><form method=\"post\" id=\"disable-project\"
+        action=\"disable\"><input name=\"Submit\" type=\"submit\" value=\"Disable
+        Project\" class=\"submit-button primary \"></form></div><div style=\"float:right\"></div><table
+        style=\"margin-top: 1em; margin-left:1em;\"><tr class=\"app-summary\"><td><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M440 432H72a40
+        40 0 01-40-40V120a40 40 0 0140-40h75.89a40 40 0 0122.19 6.72l27.84 18.56a40
+        40 0 0022.19 6.72H440a40 40 0 0140 40v240a40 40 0 01-40 40zM32 192h448\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></td><td style=\"vertical-align:middle\"><a href=\"ws/\">Workspace</a></td></tr><tr
+        class=\"app-summary\"><td><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M160 368L32 256l128-112M352 368l128-112-128-112M304
+        96l-96 320\"/></svg></td><td style=\"vertical-align:middle\"><a href=\"changes\">Recent
+        Changes</a></td></tr></table><h2 class=\"permalinks-header\">Permalinks</h2><ul
+        class=\"permalinks-list\"></ul></div></div><footer class=\"page-footer\"><div
+        class=\"container-fluid\"><div class=\"page-footer__flex-row\"><div class=\"page-footer__footer-id-placeholder\"
+        id=\"footer\"></div><link rel='stylesheet' href='/adjuncts/a2435505/jenkins/management/AdministrativeMonitorsDecorator/resources.css'
+        type='text/css' /><script src='/adjuncts/a2435505/jenkins/management/AdministrativeMonitorsDecorator/resources.js'
+        type='text/javascript'></script><div id=\"visible-am-container\" class=\"am-container\"><a
+        id=\"visible-am-button\" href=\"#\" title=\"There are 3 active administrative
+        monitors.\" class=\"am-button\" data-href=\"/administrativeMonitorsApi/nonSecurityPopupContent\"><svg
+        viewBox=\"0 0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/material-icons/svg-sprite-social-symbol.svg#ic_notifications_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">3</span></a><div
+        id=\"visible-am-list\" class=\"am-list\"></div></div><div id=\"visible-sec-am-container\"
+        class=\"am-container\"><a id=\"visible-sec-am-button\" href=\"#\" title=\"There
+        are 2 active security administrative monitors.\" class=\"am-button security-am\"
+        data-href=\"/administrativeMonitorsApi/securityPopupContent\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/a2435505/images/material-icons/svg-sprite-action-symbol.svg#ic_warning_shield_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">2</span></a><div
+        id=\"visible-sec-am-list\" class=\"am-list\"></div></div><script type=\"text/javascript\">\n
+        \           (function() {\n                var amContainer = document.getElementById(\"visible-am-container\");\n
+        \               var amInsertion = document.getElementById(\"visible-am-insertion\");\n\n
+        \               if (amInsertion) {\n                    amInsertion.appendChild(amContainer);\n
+        \               }\n\n                var secAmContainer = document.getElementById(\"visible-sec-am-container\");\n
+        \               var secAmInsertion = document.getElementById(\"visible-sec-am-insertion\");\n\n
+        \               if (secAmInsertion) {\n                    secAmInsertion.appendChild(secAmContainer);\n
+        \               }\n            })();\n        </script><script type=\"text/javascript\">\n
+        \   var defaultUpdateSiteId = 'default';\n    var setupWizardExtensions =
+        [];\n    var onSetupWizardInitialized = function(extension) {\n      setupWizardExtensions.push(extension);\n
+        \   };\n  </script><script src=\"/static/a2435505/jsbundles/pluginSetupWizard.js\"
+        type=\"text/javascript\"></script><link rel=\"stylesheet\" href=\"/static/a2435505/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"><div class=\"page-footer__links rest_api hidden-xs\"><a
+        href=\"api/\">REST API</a></div><div class=\"page-footer__links page-footer__links--white
+        jenkins_ver\"><a rel=\"noopener noreferrer\" href=\"https://www.jenkins.io/\"
+        target=\"_blank\">Jenkins 2.345</a></div></div></div></footer></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 19:48:36 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA41bTk0LdefFLdGHNus3YOYPK43Xr3bL/YpZOPCQ9Jyam/bxrxAbu/WqPI0DosgkRs92muO32leUlzLyIB4lqGlUIxP9UIrpBZe2RwF1KoPIuun2XpUINfH2HwJ/ck1HBXrI1NfeyqMVRF++g9xP7Ipn77hCN1DjFWH0aAHtiUGIQ1QTltVfu1p66qDNN5rAhE5EW9gfNKkc09f4LX+fSPuXM3re9JOQjBOWmZqepGadu3yrDLdeCTBi+S6cjxarFQ9O3xrFuBEGRDJITWUtxbtwU+KByneBMmQGnVIsFBdqT2RWEW/66IJFjDQuDZiESCaPD/phCKt6TgFVYm3qo0wIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '28529'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:36 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:37 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:37 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:37 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:37 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:37 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:62540/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:48:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:48:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      Jenkins-Crumb:
+      - f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_rename_job2/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:48:38 GMT
+      Location:
+      - http://localhost:62540/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node0nzbj7frcn2kv19mq8hyzfo21h64.node0
+      Jenkins-Crumb:
+      - f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/a2435505\" data-rooturl=\"\"
+        data-resurl=\"/static/a2435505\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/a2435505/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f6fb4e5a6a22c69257ccc311998b9bb18f7ee99c6ddcfc6d350458a4ab175680\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/a2435505/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/a2435505/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/a2435505/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/a2435505/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/a2435505/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/a2435505/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/event/event-min.js\"></script><script src=\"/static/a2435505/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/a2435505/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/a2435505/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/a2435505/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/a2435505/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/a2435505/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 19:48:39 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA41bTk0LdefFLdGHNus3YOYPK43Xr3bL/YpZOPCQ9Jyam/bxrxAbu/WqPI0DosgkRs92muO32leUlzLyIB4lqGlUIxP9UIrpBZe2RwF1KoPIuun2XpUINfH2HwJ/ck1HBXrI1NfeyqMVRF++g9xP7Ipn77hCN1DjFWH0aAHtiUGIQ1QTltVfu1p66qDNN5rAhE5EW9gfNKkc09f4LX+fSPuXM3re9JOQjBOWmZqepGadu3yrDLdeCTBi+S6cjxarFQ9O3xrFuBEGRDJITWUtxbtwU+KByneBMmQGnVIsFBdqT2RWEW/66IJFjDQuDZiESCaPD/phCKt6TgFVYm3qo0wIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:49:53 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:53 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions/>\n    <description/>\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties/>\n    <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+      \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '486'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      Jenkins-Crumb:
+      - f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/createItem?name=test_rename_job1
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:54 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job1","url":"http://localhost:64171/job/test_rename_job1/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:54 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job1","url":"http://localhost:64171/job/test_rename_job1/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:49:54 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:54 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      Jenkins-Crumb:
+      - f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_rename_job1/doRename?newName=test_rename_job2
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:54 GMT
+      Location:
+      - http://localhost:64171/job/test_rename_job2
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      Jenkins-Crumb:
+      - f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_rename_job2
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:54 GMT
+      Location:
+      - http://localhost:64171/job/test_rename_job2/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      Jenkins-Crumb:
+      - f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_rename_job2/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/92a9e902\" data-rooturl=\"\"
+        data-resurl=\"/static/92a9e902\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/92a9e902/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df\">\n
+        \   \n    \n\n    <title>test_rename_job2 [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/92a9e902/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/92a9e902/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/92a9e902/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/92a9e902/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/event/event-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"alternate\" href=\"rssAll\"
+        title=\"Jenkins:test_rename_job2 (all builds)\" type=\"application/atom+xml\"><link
+        rel=\"alternate\" href=\"rssAll?flavor=rss20\" title=\"Jenkins:test_rename_job2
+        (all builds) (RSS 2.0)\" type=\"application/rss+xml\"><link rel=\"alternate\"
+        href=\"rssFailed\" title=\"Jenkins:test_rename_job2 (failed builds)\" type=\"application/atom+xml\"><link
+        rel=\"alternate\" href=\"rssFailed?flavor=rss20\" title=\"Jenkins:test_rename_job2
+        (failed builds) (RSS 2.0)\" type=\"application/rss+xml\"><link rel=\"alternate\"
+        href=\"rssChangelog\" title=\"Jenkins:test_rename_job2 (changelog)\" type=\"application/rss+xml\"><link
+        rel=\"alternate\" href=\"rssChangelog?flavor=rss20\" title=\"Jenkins:test_rename_job2
+        (changelog) (RSS 2.0)\" type=\"application/rss+xml\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/plugin/sectioned-view/sectioned-view.css\" type=\"text/css\"><script
+        src=\"/static/92a9e902/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"hudson.model.FreeStyleProject\" id=\"jenkins\" class=\"yui-skin-sam
+        two-column jenkins-2.345\" data-version=\"2.345\"><a href=\"#skip2content\"
+        class=\"skiplink\">Skip to content</a><header id=\"page-header\" class=\"page-header\"><div
+        class=\"page-header__brand\"><div class=\"logo\"><a id=\"jenkins-home-link\"
+        href=\"/\"><img src=\"/static/92a9e902/images/svgs/logo.svg\" alt=\"[Jenkins]\"
+        id=\"jenkins-head-icon\"><img src=\"/static/92a9e902/images/title.svg\" alt=\"Jenkins\"
+        width=\"139\" id=\"jenkins-name-icon\" height=\"34\"></a></div><a href=\"/\"
+        class=\"page-header__brand-link\"><img src=\"/static/92a9e902/images/svgs/logo.svg\"
+        alt=\"[Jenkins]\" class=\"page-header__brand-image\"><span class=\"page-header__brand-name\">Jenkins</span></a></div><div
+        class=\"searchbox hidden-xs\"><form role=\"search\" method=\"get\" name=\"search\"
+        action=\"/job/test_rename_job2/search/\" style=\"position:relative;\" class=\"no-json\"><div
+        id=\"search-box-sizer\"></div><div id=\"searchform\"><input role=\"searchbox\"
+        name=\"q\" placeholder=\"Search\" id=\"search-box\" class=\"main-search__input\"><span
+        class=\"main-search__icon-leading\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><title></title><path
+        d=\"M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z\"
+        fill=\"none\" stroke=\"currentColor\" stroke-miterlimit=\"10\" stroke-width=\"32\"/><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M338.29 338.29L448 448\"/></svg></span><a href=\"https://www.jenkins.io/redirect/search-box\"
+        class=\"main-search__icon-trailing\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path d=\"M256
+        40a216 216 0 10216 216A216 216 0 00256 40z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"38\"/><path d=\"M200 202.29s.84-17.5
+        19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45
+        10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296\"
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"38\"/><circle cx=\"250\" cy=\"360\" r=\"25\" fill=\"currentColor\"/></svg></a><div
+        id=\"search-box-completion\"></div><script>createSearchBox(\"/job/test_rename_job2/search/\");</script></div></form></div><div
+        class=\"login page-header__hyperlinks\"><div id=\"visible-am-insertion\" class=\"page-header__am-wrapper\"></div><div
+        id=\"visible-sec-am-insertion\" class=\"page-header__am-wrapper\"></div><a
+        href=\"/user/admin\" class=\"model-link\"><svg viewBox=\"0 0 24 24\" focusable=\"false\"
+        class=\"svg-icon am-monitor-icon\"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-social-symbol.svg#ic_person_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">admin</span></a><a href=\"/logout\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-action-symbol.svg#ic_input_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">log out</span></a></div></header><div id=\"breadcrumbBar\"><script
+        src='/adjuncts/92a9e902/lib/layout/breadcrumbs.js' type='text/javascript'></script><div
+        class=\"top-sticker noedge\"><div class=\"top-sticker-inner\"><div class=\"jenkins-breadcrumbs\"><ul
+        id=\"breadcrumbs\"><li class=\"item\"><a href=\"/\" class=\"model-link\">Dashboard</a></li><li
+        href=\"/\" class=\"children\"></li><li class=\"item\"><a href=\"/job/test_rename_job2/\"
+        class=\"model-link\">test_rename_job2</a></li><li href=\"/job/test_rename_job2/\"
+        class=\"children\"></li></ul><div id=\"breadcrumb-menu-target\"></div></div></div></div></div><div
+        id=\"page-body\" class=\"clear\"><div id=\"side-panel\"><div id=\"tasks\"><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/\" class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"icon-up
+        icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M112
+        244l144-144 144 144M256 120v292\"/></svg></span><span class=\"task-link-text\">Back
+        to Dashboard</span></a></span></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/job/test_rename_job2/\" class=\"task-link
+        task-link--active\"><span class=\"task-icon-link\"><svg class=\"\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><rect x=\"96\" y=\"48\" width=\"320\" height=\"416\"
+        rx=\"48\" ry=\"48\" fill=\"none\" stroke=\"currentColor\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M176 128h160M176 208h160M176
+        288h80\"/></svg></span><span class=\"task-link-text\">Status</span></a></span><div
+        class=\"subtasks\"></div></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/job/test_rename_job2/changes\" class=\"task-link
+        \"><span class=\"task-icon-link\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M160 368L32 256l128-112M352 368l128-112-128-112M304
+        96l-96 320\"/></svg></span><span class=\"task-link-text\">Changes</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/job/test_rename_job2/ws/\" class=\"task-link \"><span class=\"task-icon-link\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M440 432H72a40
+        40 0 01-40-40V120a40 40 0 0140-40h75.89a40 40 0 0122.19 6.72l27.84 18.56a40
+        40 0 0022.19 6.72H440a40 40 0 0140 40v240a40 40 0 01-40 40zM32 192h448\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">Workspace</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        onclick=\"return build_id113(this)\" href=\"/job/test_rename_job2/build?delay=0sec\"
+        class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"icon-clock
+        icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        width=\"512\" height=\"512\" viewBox=\"0 0 512 512\"><title></title><path
+        d=\"M112,111V401c0,17.44,17,28.52,31,20.16l247.9-148.37c12.12-7.25,12.12-26.33,0-33.58L143,90.84C129,82.48,112,93.56,112,111Z\"
+        style=\"fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:32px\"/></svg></span><span
+        class=\"task-link-text\">Build Now</span></a></span></div><script>function
+        build_id113(a) {\n                new Ajax.Request(a.href);\n                hoverNotification('Build
+        scheduled',a.parentNode);\n                return false;\n            }</script><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/job/test_rename_job2/configure\" class=\"task-link \"><span class=\"task-icon-link\"><?xml
+        version=\"1.0\" encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\"
+        width=\"512px\" height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\">\n        <g transform=\"translate(50.378500,
+        42.000000)\" stroke=\"currentColor\" stroke-width=\"32\">\n            <path
+        d=\"M211.9115,150.31 C185.005783,147.652748 159.332619,162.189611 147.769706,186.628874
+        C136.206793,211.068138 141.24875,240.137201 160.366525,259.254975 C179.484299,278.37275
+        208.553362,283.414707 232.992626,271.851794 C257.431889,260.288881 271.968752,234.615717
+        269.3115,207.71 C266.263249,177.360931 242.260569,153.358251 211.9115,150.31
+        L211.9115,150.31 Z M410.9165,277.125 C411.707607,281.564887 410.903766,286.141508
+        408.647035,290.04607 L372.853966,351.97469 C370.607176,355.862053 367.040281,358.81433
+        362.8015,360.295 C358.482479,361.803699 353.868429,362.272089 349.334332,361.662103
+        L320.522752,357.785994 C299.879684,355.00882 279.988607,366.61094 272.243485,385.946453
+        L261.688643,412.296365 C259.969284,416.588704 257.239668,420.402837 253.7315,423.415
+        C250.285888,426.373452 245.894629,428 241.353189,428 L169.796876,428 C165.308275,428
+        160.960823,426.431216 157.5065,423.565 C153.996701,420.652754 151.25415,416.924675
+        149.518855,412.70702 L138.358864,385.582532 C130.453683,366.368896 110.519057,354.968685
+        89.9503733,357.89869 L61.8696222,361.898788 C57.3434346,362.543543 52.7286498,362.09476
+        48.4115003,360.59 C44.1729946,359.112652 40.6059709,356.162306 38.3598585,352.276117
+        L2.56596537,290.34607 C0.309233973,286.441508 -0.494606827,281.864887 0.296500273,277.425
+        C1.10103427,272.909758 2.99390287,268.65863 5.81124857,265.039618 L23.4896432,242.330895
+        C36.4067894,225.738218 36.3997393,202.490855 23.4725314,185.906016 L5.73914207,163.155131
+        C2.93726987,159.560495 1.06449867,155.330725 0.286500273,150.84 C-0.479118527,146.420732
+        0.330889273,141.87293 2.57525137,137.989769 L38.3890342,76.0253095 C40.6358245,72.1379474
+        44.2027191,69.1856702 48.4415003,67.705 C52.7614677,66.1959703 57.3747149,65.7192136
+        61.9119868,66.3128907 L91.2373143,70.1499486 C111.792442,72.839474 131.546967,61.2195013
+        139.18365,41.9470371 L149.578712,15.7133384 C151.281675,11.4156234 154.004147,7.5964633
+        157.5115,4.585 C160.957112,1.6265481 165.348371,0 169.889811,0 L241.446124,0
+        C245.934725,0 250.282177,1.5687841 253.7365,4.435 C257.245602,7.3466683 259.982278,11.0789954
+        261.704008,15.3012287 L272.612929,42.053395 C280.490247,61.3711009 300.470109,72.8820729
+        321.133157,70.007291 L349.370217,66.0787615 C353.899388,65.4486329 358.513486,65.904939
+        362.8315,67.41 C367.070006,68.8873483 370.637029,71.837694 372.883142,75.7238833
+        L408.677035,137.65393 C410.933766,141.558492 411.737607,146.135113 410.9465,150.575
+        C410.140427,155.098876 408.314604,159.379748 405.607548,163.092841 L385.561411,190.588825
+        C373.755974,206.781577 374.583692,228.954539 387.563545,244.222054 L405.168289,264.929585
+        C408.130553,268.41394 410.114244,272.622543 410.9165,277.125 Z\"></path>\n
+        \       </g>\n    </g>\n</svg></span><span class=\"task-link-text\">Configure</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        data-message=\"Delete the Project \u2018test_rename_job2\u2019?\" data-post=\"true\"
+        href=\"#\" class=\"task-link  confirmation-link\" data-url=\"/job/test_rename_job2/doDelete\"><span
+        class=\"task-icon-link\"><svg class=\"icon-edit-delete icon-md\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><path d=\"M112 112l20 320c.95 18.49 14.4 32 32
+        32h184c17.67 0 30.87-13.51 32-32l20-320\" fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M80 112h352\"/><path d=\"M192 112V72h0a23.93 23.93
+        0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8
+        224\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span>Delete Project</span></a><script src='/adjuncts/92a9e902/lib/layout/confirmationLink/adjunct.js'
+        type='text/javascript'></script></span></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/job/test_rename_job2/confirm-rename\"
+        class=\"task-link \"><span class=\"task-icon-link\"><?xml version=\"1.0\"
+        encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\" width=\"512px\"
+        height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <title></title>\n    <g
+        stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n
+        \       <path d=\"M399.608914,57 C413.784791,57 427.960684,62.4078333 438.776426,73.2235621
+        C449.592141,84.0392638 455,98.2149574 455,112.390686 C455,126.566468 449.592105,140.742274
+        438.776426,151.558078 L438.776426,151.558078 L191.040603,399.293596 C182.232434,408.101755
+        171.575528,414.840664 159.841736,419.022244 L159.841736,419.022244 L58.9309718,454.983885
+        C58.3980325,455.005817 57.9083807,454.793595 57.5574476,454.442654 C57.2063668,454.091565
+        56.9941379,453.601684 57.0161199,453.068522 L57.0161199,453.068522 L92.977296,352.157786
+        C97.1588787,340.423838 103.897856,329.766792 112.706129,320.958529 L112.706129,320.958529
+        L360.441401,73.2235621 C371.257143,62.4078333 385.433036,57 399.608914,57
+        Z\" stroke=\"currentColor\" stroke-width=\"32\" fill-rule=\"nonzero\"></path>\n
+        \       <polyline fill=\"currentColor\" transform=\"translate(362.692388,
+        154.192388) rotate(45.000000) translate(-362.692388, -154.192388) \" points=\"308.192388
+        138.192388 359.945436 138.192388 417.192388 138.192388 417.192388 170.192388
+        360.652543 170.192388 308.192388 170.192388\"></polyline>\n    </g>\n</svg></span><span
+        class=\"task-link-text\">Rename</span></a></span></div></div><div page-has-up=\"false\"
+        page-has-down=\"false\" id=\"buildHistoryPage\" page-ajax=\"/job/test_rename_job2/buildHistory/ajax\"
+        page-entry-newest=\"-9223372036854775808\" page-entry-oldest=\"9223372036854775807\"><div
+        id=\"buildHistoryPageNav\"><div class=\"buildHistoryPageNav__item buildHistoryPageNav__item--page-one
+        pageOne\" title=\"Page 1 (Newest/Latest Builds)\"><div class=\"buildHistoryPageNav__item-page-one-top\"></div><svg
+        viewBox=\"0 0 16 16\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/svgs/go-up.svg#arrow\"></use></svg></div><div
+        class=\"buildHistoryPageNav__item pageUp\" title=\"Newer Builds\"><svg viewBox=\"0
+        0 16 16\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/svgs/go-up.svg#arrow\"></use></svg></div><div
+        class=\"buildHistoryPageNav__item pageDown\" title=\"Older Builds\"><svg viewBox=\"0
+        0 16 16\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/svgs/go-down.svg#arrow\"></use></svg></div></div><div
+        id=\"buildHistory\" class=\"container-fluid pane-frame track-mouse expanded\"><div
+        class=\"row\"><div class=\"col-xs-24 pane-header\"><span class=\"pane-header-title\"><div
+        class=\"jenkins-pane__header--build-history\"><div data=\"100\" class=\"jenkins-table__cell--tight
+        jenkins-table__icon healthReport\"><div class=\"jenkins-table__cell__button-wrapper\"><svg
+        viewBox=\"0 0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/build-status/weather-sprite.svg#weather-sunny\"></use></svg></div></div>\n
+        \     Build History\n      <a href=\"/job/test_rename_job2/buildTimeTrend\">trend</a></div></span><a
+        href=\"/toggleCollapse?paneId=buildHistory\" title=\"collapse\" class=\"collapse\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"48\" d=\"M112
+        184l144 144 144-144\"/></svg></a></div></div><div class=\"row pane-content\"><table
+        class=\"pane jenkins-pane stripped\"><tr class=\"build-search-row\"><td><div
+        class=\"jenkins-search\"><input placeholder=\"Filter builds...\" type=\"search\"
+        class=\"jenkins-search__input\"><div class=\"jenkins-search__icon\"><svg class=\"\"
+        class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\"
+        viewBox=\"0 0 512 512\"><title></title><path d=\"M221.09 64a157.09 157.09
+        0 10157.09 157.09A157.1 157.1 0 00221.09 64z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"32\"/><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-miterlimit=\"10\" stroke-width=\"32\" d=\"M338.29
+        338.29L448 448\"/></svg></div></div><div style=\"\" id=\"no-builds\" class=\"jenkins-pane__information\">No
+        builds</div></td></tr><div id=\"properties\" page-next-build=\"1\"></div></table></div><div
+        class=\"row\"><div class=\"col-xs-24 pane-footer\"><span class=\"build-rss-links\"><a
+        href=\"/job/test_rename_job2/rssAll\" class=\"build-rss-all-link\"><span class=\"build-rss-all-icon\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" width=\"460px\" height=\"460px\"
+        viewBox=\"0 0 460 460\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\"><g transform=\"translate(56.440081, 56.222063)\"
+        stroke=\"currentColor\"><path d=\"M51.8355914,263.237609 C60.9709503,263.260732
+        69.2414786,266.967806 75.2384778,272.952922 C81.2358437,278.938404 84.9594026,287.202208
+        85.0001926,296.338927 C84.9725106,305.421743 81.2764727,313.639618 75.3166433,319.590173
+        C69.3466112,325.550914 61.1050301,329.236566 52.0036901,329.237536 C42.9023476,329.238505
+        34.6599806,325.554606 28.6886687,319.595137 C22.7173419,313.635654 19.017079,305.400589
+        18.9999666,296.299365 C18.9829135,287.198016 22.6522367,278.949119 28.6011501,272.967262
+        C34.5402452,266.995277 42.7514145,263.282855 51.8355914,263.237609 Z\" stroke-width=\"38\"
+        fill-rule=\"nonzero\"></path><path d=\"M15.5639188,0 C189.695661,18.9886079
+        327.916779,157.508264 346.44594,331.777403\" stroke-width=\"40\" stroke-linecap=\"round\"></path><path
+        d=\"M16.5639188,121.777403 C126.781388,133.796328 214.269067,221.472967 225.997183,331.777403\"
+        stroke-width=\"40\" stroke-linecap=\"round\"></path></g></g></svg></span>\n
+        \         Atom feed for all\n        </a><a href=\"/job/test_rename_job2/rssFailed\"
+        class=\"build-rss-failed-link\"><span class=\"build-rss-failed-icon\"><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" width=\"460px\" height=\"460px\"
+        viewBox=\"0 0 460 460\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\"><g transform=\"translate(56.440081, 56.222063)\"
+        stroke=\"currentColor\"><path d=\"M51.8355914,263.237609 C60.9709503,263.260732
+        69.2414786,266.967806 75.2384778,272.952922 C81.2358437,278.938404 84.9594026,287.202208
+        85.0001926,296.338927 C84.9725106,305.421743 81.2764727,313.639618 75.3166433,319.590173
+        C69.3466112,325.550914 61.1050301,329.236566 52.0036901,329.237536 C42.9023476,329.238505
+        34.6599806,325.554606 28.6886687,319.595137 C22.7173419,313.635654 19.017079,305.400589
+        18.9999666,296.299365 C18.9829135,287.198016 22.6522367,278.949119 28.6011501,272.967262
+        C34.5402452,266.995277 42.7514145,263.282855 51.8355914,263.237609 Z\" stroke-width=\"38\"
+        fill-rule=\"nonzero\"></path><path d=\"M15.5639188,0 C189.695661,18.9886079
+        327.916779,157.508264 346.44594,331.777403\" stroke-width=\"40\" stroke-linecap=\"round\"></path><path
+        d=\"M16.5639188,121.777403 C126.781388,133.796328 214.269067,221.472967 225.997183,331.777403\"
+        stroke-width=\"40\" stroke-linecap=\"round\"></path></g></g></svg></span>\n
+        \         Atom feed for failures\n        </a></span></div></div></div></div><script
+        src=\"/static/92a9e902/jsbundles/filter-build-history.js\" type=\"text/javascript\"></script></div><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><h1 class=\"job-index-headline
+        page-headline\">Project test<wbr>_rename<wbr>_job2</h1><div id=\"description\"><div></div><div
+        class=\"jenkins-buttons-row jenkins-buttons-row--invert\"><a class=\"yui-button
+        link-button\" id=\"description-link\" href=\"editDescription\" onclick=\"return
+        replaceDescription();\"><span class=\"leading-icon\"><?xml version=\"1.0\"
+        encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\" width=\"512px\"
+        height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <title></title>\n    <g
+        stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n
+        \       <path d=\"M399.608914,57 C413.784791,57 427.960684,62.4078333 438.776426,73.2235621
+        C449.592141,84.0392638 455,98.2149574 455,112.390686 C455,126.566468 449.592105,140.742274
+        438.776426,151.558078 L438.776426,151.558078 L191.040603,399.293596 C182.232434,408.101755
+        171.575528,414.840664 159.841736,419.022244 L159.841736,419.022244 L58.9309718,454.983885
+        C58.3980325,455.005817 57.9083807,454.793595 57.5574476,454.442654 C57.2063668,454.091565
+        56.9941379,453.601684 57.0161199,453.068522 L57.0161199,453.068522 L92.977296,352.157786
+        C97.1588787,340.423838 103.897856,329.766792 112.706129,320.958529 L112.706129,320.958529
+        L360.441401,73.2235621 C371.257143,62.4078333 385.433036,57 399.608914,57
+        Z\" stroke=\"currentColor\" stroke-width=\"32\" fill-rule=\"nonzero\"></path>\n
+        \       <polyline fill=\"currentColor\" transform=\"translate(362.692388,
+        154.192388) rotate(45.000000) translate(-362.692388, -154.192388) \" points=\"308.192388
+        138.192388 359.945436 138.192388 417.192388 138.192388 417.192388 170.192388
+        360.652543 170.192388 308.192388 170.192388\"></polyline>\n    </g>\n</svg></span>Add
+        description</a></div></div><div align=\"right\"><form method=\"post\" id=\"disable-project\"
+        action=\"disable\"><input name=\"Submit\" type=\"submit\" value=\"Disable
+        Project\" class=\"submit-button primary \"></form></div><div style=\"float:right\"></div><table
+        style=\"margin-top: 1em; margin-left:1em;\"><tr class=\"app-summary\"><td><svg
+        class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M440 432H72a40
+        40 0 01-40-40V120a40 40 0 0140-40h75.89a40 40 0 0122.19 6.72l27.84 18.56a40
+        40 0 0022.19 6.72H440a40 40 0 0140 40v240a40 40 0 01-40 40zM32 192h448\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></td><td style=\"vertical-align:middle\"><a href=\"ws/\">Workspace</a></td></tr><tr
+        class=\"app-summary\"><td><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M160 368L32 256l128-112M352 368l128-112-128-112M304
+        96l-96 320\"/></svg></td><td style=\"vertical-align:middle\"><a href=\"changes\">Recent
+        Changes</a></td></tr></table><h2 class=\"permalinks-header\">Permalinks</h2><ul
+        class=\"permalinks-list\"></ul></div></div><footer class=\"page-footer\"><div
+        class=\"container-fluid\"><div class=\"page-footer__flex-row\"><div class=\"page-footer__footer-id-placeholder\"
+        id=\"footer\"></div><link rel='stylesheet' href='/adjuncts/92a9e902/jenkins/management/AdministrativeMonitorsDecorator/resources.css'
+        type='text/css' /><script src='/adjuncts/92a9e902/jenkins/management/AdministrativeMonitorsDecorator/resources.js'
+        type='text/javascript'></script><div id=\"visible-am-container\" class=\"am-container\"><a
+        id=\"visible-am-button\" href=\"#\" title=\"There are 3 active administrative
+        monitors.\" class=\"am-button\" data-href=\"/administrativeMonitorsApi/nonSecurityPopupContent\"><svg
+        viewBox=\"0 0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-social-symbol.svg#ic_notifications_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">3</span></a><div
+        id=\"visible-am-list\" class=\"am-list\"></div></div><div id=\"visible-sec-am-container\"
+        class=\"am-container\"><a id=\"visible-sec-am-button\" href=\"#\" title=\"There
+        are 2 active security administrative monitors.\" class=\"am-button security-am\"
+        data-href=\"/administrativeMonitorsApi/securityPopupContent\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-action-symbol.svg#ic_warning_shield_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">2</span></a><div
+        id=\"visible-sec-am-list\" class=\"am-list\"></div></div><script type=\"text/javascript\">\n
+        \           (function() {\n                var amContainer = document.getElementById(\"visible-am-container\");\n
+        \               var amInsertion = document.getElementById(\"visible-am-insertion\");\n\n
+        \               if (amInsertion) {\n                    amInsertion.appendChild(amContainer);\n
+        \               }\n\n                var secAmContainer = document.getElementById(\"visible-sec-am-container\");\n
+        \               var secAmInsertion = document.getElementById(\"visible-sec-am-insertion\");\n\n
+        \               if (secAmInsertion) {\n                    secAmInsertion.appendChild(secAmContainer);\n
+        \               }\n            })();\n        </script><script type=\"text/javascript\">\n
+        \   var defaultUpdateSiteId = 'default';\n    var setupWizardExtensions =
+        [];\n    var onSetupWizardInitialized = function(extension) {\n      setupWizardExtensions.push(extension);\n
+        \   };\n  </script><script src=\"/static/92a9e902/jsbundles/pluginSetupWizard.js\"
+        type=\"text/javascript\"></script><link rel=\"stylesheet\" href=\"/static/92a9e902/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"><div class=\"page-footer__links rest_api hidden-xs\"><a
+        href=\"api/\">REST API</a></div><div class=\"page-footer__links page-footer__links--white
+        jenkins_ver\"><a rel=\"noopener noreferrer\" href=\"https://www.jenkins.io/\"
+        target=\"_blank\">Jenkins 2.345</a></div></div></div></footer></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:49:55 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1CFIfooRWpcSli0tzcRY8tpw8pNdhaixfM95EtoHSZ6ja1zR5wSTLb/nz0Y3D2nSabgNtGnxW0f0j92YBWpvTOCficKW67g5g8GIeAoig7aci0a3p4kuZbi/p7FTHvkd7QvCx04vWd33o/hUWrpvF6a6QskTksgUOGiEm8Iqq+0BswIm9SFGEqFUgvS+MsqK+Mh5X5bW+CgNz+QtgC/78zhtpAIWZtJJiXonpmzhiymJMspVd/ECSkQDPkrkqA6Nk6CLdJu6NWgttvhTQu4Sw7uJHgiWv8k7kZ1k4CMK2pgeWnLPrDd8SZXg3l6VNSaGXSjfLGvdGJjv/JpGr5ebQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '28529'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:55 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:55 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:55 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:55 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:56 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_rename_job2/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_rename_job2","displayNameOrNull":null,"fullDisplayName":"test_rename_job2","fullName":"test_rename_job2","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:56 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '918'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:56 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:56 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_rename_job2","url":"http://localhost:64171/job/test_rename_job2/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:49:56 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '726'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:56 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      Jenkins-Crumb:
+      - f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_rename_job2/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:57 GMT
+      Location:
+      - http://localhost:64171/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01e74qjyyvy9gr64sep3l5hfyz48.node0
+      Jenkins-Crumb:
+      - f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/92a9e902\" data-rooturl=\"\"
+        data-resurl=\"/static/92a9e902\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/92a9e902/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f85a19b61df6dc7a1a7acd43b1c59a3f36b642f703bde1b29001d875e35174df\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/92a9e902/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/92a9e902/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/92a9e902/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/92a9e902/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/event/event-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/92a9e902/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/92a9e902/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/92a9e902/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:49:57 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1CFIfooRWpcSli0tzcRY8tpw8pNdhaixfM95EtoHSZ6ja1zR5wSTLb/nz0Y3D2nSabgNtGnxW0f0j92YBWpvTOCficKW67g5g8GIeAoig7aci0a3p4kuZbi/p7FTHvkd7QvCx04vWd33o/hUWrpvF6a6QskTksgUOGiEm8Iqq+0BswIm9SFGEqFUgvS+MsqK+Mh5X5bW+CgNz+QtgC/78zhtpAIWZtJJiXonpmzhiymJMspVd/ECSkQDPkrkqA6Nk6CLdJu6NWgttvhTQu4Sw7uJHgiWv8k7kZ1k4CMK2pgeWnLPrDd8SZXg3l6VNSaGXSjfLGvdGJjv/JpGr5ebQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+version: 1

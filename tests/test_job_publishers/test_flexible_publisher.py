@@ -1,3 +1,4 @@
+import pytest
 from pyjen.plugins.runcondition_always import AlwaysRun
 from pyjen.plugins.flexiblepublish import FlexiblePublisher, ConditionalAction
 from pyjen.plugins.artifactarchiver import ArtifactArchiverPublisher
@@ -5,6 +6,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_basic_publisher(jenkins_api):
     upstream_name = "test_basic_publisher"
     jb = jenkins_api.create_job(upstream_name, FreestyleJob)

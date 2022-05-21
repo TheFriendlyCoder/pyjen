@@ -1,8 +1,10 @@
+import pytest
 from pyjen.plugins.buildtriggerpublisher import BuildTriggerPublisher
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_add_build_trigger_publisher(jenkins_api):
     upstream_name = "test_add_build_trigger_publisher1"
     jb = jenkins_api.create_job(upstream_name, FreestyleJob)
@@ -27,6 +29,7 @@ def test_add_build_trigger_publisher(jenkins_api):
             assert names[0] == downstream_name
 
 
+@pytest.mark.vcr()
 def test_one_downstream_job(jenkins_api):
     jb = jenkins_api.create_job("test_one_downstream_job1", FreestyleJob)
     with clean_job(jb):
@@ -44,6 +47,7 @@ def test_one_downstream_job(jenkins_api):
             assert res[0].name == expected_name
 
 
+@pytest.mark.vcr()
 def test_multiple_downstream_jobs(jenkins_api):
     jb = jenkins_api.create_job("test_multiple_downstream_jobs1", FreestyleJob)
     with clean_job(jb):
@@ -66,6 +70,7 @@ def test_multiple_downstream_jobs(jenkins_api):
                 assert res[1].name in all_names
 
 
+@pytest.mark.vcr()
 def test_one_upstream_job(jenkins_api):
     parent_job_name = "test_one_upstream_job1"
     jb = jenkins_api.create_job(parent_job_name, FreestyleJob)
@@ -84,6 +89,7 @@ def test_one_upstream_job(jenkins_api):
             assert res[0].name == parent_job_name
 
 
+@pytest.mark.vcr()
 def test_multiple_upstream_jobs(jenkins_api):
     child_job_name = "test_multiple_upstream_jobs1"
     jb = jenkins_api.create_job(child_job_name, FreestyleJob)

@@ -1,0 +1,154 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/queue/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Queue","discoverableItems":[],"items":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:26:51 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '65'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/queue/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Queue","discoverableItems":[],"items":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:26:51 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '65'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/queue/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Queue","discoverableItems":[],"items":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:48:11 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '65'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/queue/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Queue","discoverableItems":[],"items":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:48:11 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '65'
+    status:
+      code: 200
+      message: OK
+version: 1
