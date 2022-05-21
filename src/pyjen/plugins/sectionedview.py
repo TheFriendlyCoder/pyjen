@@ -54,7 +54,7 @@ class SectionedViewXML(ViewXML):
         view"""
         nodes = self._root.find('sections')
 
-        retval = list()
+        retval = []
         for node in nodes:
             plugin_class = find_plugin(node.tag)
             if plugin_class is None:

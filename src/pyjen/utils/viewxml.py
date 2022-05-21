@@ -1,6 +1,6 @@
 """Abstractions for managing the raw config.xml for a Jenkins view"""
 import logging
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 
 
 class ViewXML:

@@ -1,5 +1,5 @@
 """String build parameter - plugin for parameterized build plugin"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

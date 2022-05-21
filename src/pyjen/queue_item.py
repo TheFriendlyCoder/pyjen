@@ -40,7 +40,7 @@ class QueueItem:
             return self._api.get_api_data()
         except HTTPError as err:
             if err.response.status_code == requests.codes.NOT_FOUND:
-                return dict()
+                return {}
             raise
 
     @property

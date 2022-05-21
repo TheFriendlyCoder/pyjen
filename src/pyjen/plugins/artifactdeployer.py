@@ -1,5 +1,5 @@
 """properties of the 'artifact deployer' publishing plugin"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 
@@ -33,7 +33,7 @@ class ArtifactDeployer(XMLPlugin):
 
         nodes = self._root.find("entries")
 
-        retval = list()
+        retval = []
         for node in nodes:
             retval.append(ArtifactDeployerEntry(node))
 

@@ -1,5 +1,5 @@
 """Trigger configuration for a parameterized build trigger"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import instantiate_xml_plugin
 
@@ -33,7 +33,7 @@ class BuildTriggerConfig(XMLPlugin):
         supporting a different type of custom behavior on how the parameters
         for the downstream job should be created / set.
         """
-        retval = list()
+        retval = []
         node = self.node.find("configs")
         for cur_child in node:
             plugin = instantiate_xml_plugin(cur_child, self)

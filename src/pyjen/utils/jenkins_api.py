@@ -2,7 +2,7 @@
 from urllib.parse import urljoin
 import logging
 import json
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from requests.exceptions import InvalidHeader
 
 
@@ -32,7 +32,7 @@ class JenkinsAPI:
         return self.url
 
     def __repr__(self):
-        return "({0}: {1})".format(type(self), self.url)
+        return f"({type(self)}: {self.url})"
 
     def clone(self, api_url):
         """Creates a copy of this instance, for a new endpoint URL
@@ -96,9 +96,9 @@ class JenkinsAPI:
         if 'x-jenkins' not in self.jenkins_headers:
             raise InvalidHeader("Jenkins header has no x-jenkins metadata "
                                 "attached to it. Can not load version info.")
-        return tuple([
+        return tuple(
             int(i) for i in self.jenkins_headers['x-jenkins'].split(".")
-        ])
+        )
 
     def get_api_data(self, target_url=None, query_params=None):
         """retrieves the Jenkins API specific data from the specified URL
@@ -193,7 +193,7 @@ class JenkinsAPI:
             temp_headers = args["headers"]
             del args["headers"]
         else:
-            temp_headers = dict()
+            temp_headers = {}
 
         if self.jenkins_version >= (2, 0, 0) and self.crumb:
             temp_headers.update(self.crumb)
@@ -201,7 +201,7 @@ class JenkinsAPI:
         req = self._session.post(
             target_url,
             headers=temp_headers,
-            **args if args else dict())
+            **args if args else {})
 
         req.raise_for_status()
         return req

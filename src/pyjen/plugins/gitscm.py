@@ -1,5 +1,5 @@
 """SCM properties for jobs which pull sources from a Git repository"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

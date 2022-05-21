@@ -1,7 +1,7 @@
 """Primitives for controlling plain text view sub-sections on a sectioned view
 
 This is a plugin supported by the SectionedView plugin"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

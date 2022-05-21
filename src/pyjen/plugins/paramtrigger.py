@@ -1,5 +1,5 @@
 """Jenkins post-build publisher of type Parameterized Build Trigger"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import instantiate_xml_plugin
 
@@ -15,7 +15,7 @@ class ParameterizedBuildTrigger(XMLPlugin):
     def triggers(self):
         """list (BuildTriggerConfig): list of trigger operations defined for
         this instance of the plugin"""
-        retval = list()
+        retval = []
         configs_node = self._root.find('configs')
         for cur_node in configs_node:
 

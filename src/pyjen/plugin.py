@@ -85,7 +85,7 @@ class Plugin:
         """
         # Construct an absolute path for our output file based on a meaningful
         # naming convention
-        output_filename = "{0}-{1}.hpi".format(self.short_name, self.version)
+        output_filename = f"{self.short_name}-{self.version}.hpi"
         output_file = os.path.join(output_folder, output_filename)
 
         # See if we need to overwrite the output file or not...

@@ -1,6 +1,6 @@
 """Primitives for operating on Jenkins job builder of type 'Conditional Builder'
 """
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.plugin_api import find_plugin
 from pyjen.utils.xml_plugin import XMLPlugin
 
@@ -95,9 +95,8 @@ class ConditionalBuilder(XMLPlugin):
         plugin = find_plugin(build_step_node.attrib["class"])
         if not plugin:
             raise NotImplementedError(
-                "Build step plugin {0} is not supported by PyJen.".format(
-                    build_step_node.attrib["class"]
-                )
+                f"Build step plugin {build_step_node.attrib['class']} is "
+                f"not supported by PyJen."
             )
 
         # We have to reconstruct the XML for the build step from the

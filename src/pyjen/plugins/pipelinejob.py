@@ -1,5 +1,5 @@
 """Primitives that manage Jenkins job of type 'pipeline'"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin

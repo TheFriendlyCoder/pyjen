@@ -1,5 +1,5 @@
 """Interfaces for interacting with Build Blockers job property plugin"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

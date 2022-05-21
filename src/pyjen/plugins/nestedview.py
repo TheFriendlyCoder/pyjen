@@ -13,7 +13,7 @@ class NestedView(View):
         To get a recursive list of all child views and their children use
         :py:meth:`all_views`.
         """
-        retval = list()
+        retval = []
 
         data = self._api.get_api_data()
 
@@ -40,7 +40,7 @@ class NestedView(View):
             list (View):
                 0 or more views with the given name
         """
-        retval = list()
+        retval = []
         for cur_view in self.views:
             if cur_view.name == view_name:
                 retval.append(cur_view)
@@ -50,7 +50,7 @@ class NestedView(View):
     @property
     def all_views(self):
         """list (View): all views contained within this view, recursively"""
-        retval = list()
+        retval = []
         for cur_view in self.views:
 
             retval.append(cur_view)
@@ -81,7 +81,7 @@ class NestedView(View):
             list (View):
                 0 or more views with the given name
         """
-        retval = list()
+        retval = []
         for cur_view in self.all_views:
             if cur_view.name == view_name:
                 retval.append(cur_view)

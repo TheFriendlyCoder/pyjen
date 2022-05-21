@@ -291,7 +291,7 @@ class View:
     def get_supported_plugins(cls):
         """list: list of PyJen plugin classes that may be used to instantiate
         views on this Jenkins instance"""
-        retval = list()
+        retval = []
         for cur_plugin in get_all_plugins():
             if issubclass(cur_plugin, cls):
                 retval.append(cur_plugin)
