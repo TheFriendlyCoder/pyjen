@@ -63,6 +63,11 @@ def pytest_addoption(parser):
              "test run has completed"
     )
     parser.addoption(
+        "--regenerate",
+        action="store_true",
+        help="Regenerates the stored HTTP responses used by the tests"
+    )
+    parser.addoption(
         "--jenkins-version",
         action="store",
         default=DEFAULT_JENKINS_VERSION,
@@ -395,3 +400,25 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "jenkins_env" in item.fixturenames:
             item.add_marker(skip_jenkins)
+
+
+@pytest.fixture(scope='module')
+def vcr_config(request):
+    record_mode = "all" if request.config.getoption("--regenerate") else "once"
+    return {
+        # Replace the Authorization request header with "DUMMY" in cassettes
+        "filter_headers": [('authorization', 'DUMMY')],
+        "record_mode": record_mode,
+        # remove the "port" parameter from the match criteria so every time
+        # we rerun these tests against a new container the cassettes will
+        # still get matched properly
+        "match_on": ['method', 'scheme', 'host', 'path', 'query'],
+        "decode_compressed_response": True
+    }
+
+
+@pytest.fixture(scope='module')
+def vcr_cassette_dir(request):
+    # Put all cassettes in tests/cassettes/{module}/{test}.yaml
+    module_name = ".".join(request.module.__name__.split(".")[1:])
+    return os.path.join('tests/cassettes', module_name)
