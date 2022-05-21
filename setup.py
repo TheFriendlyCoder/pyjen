@@ -194,6 +194,8 @@ def get_version_number(project):
     retval += ".dev"
     if 'TRAVIS_BUILD_NUMBER' in os.environ:
         retval += os.environ['TRAVIS_BUILD_NUMBER']
+    elif 'GITHUB_RUN_ID' in os.environ:
+        retval += os.environ['GITHUB_RUN_ID']
     else:
         retval += "0"
 
