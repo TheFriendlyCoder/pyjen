@@ -5,6 +5,7 @@ import io
 import json
 import pytest
 import logging
+import warnings
 import docker
 import multiprocessing
 from docker.errors import DockerException
@@ -175,6 +176,8 @@ def configure_logger():
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(fmt)
     global_log.addHandler(file_handler)
+    # Disable distutils warnings produced by the Python Docker library
+    warnings.filterwarnings("ignore", ".*distutils.*")
 
 
 @pytest.fixture(scope="session")

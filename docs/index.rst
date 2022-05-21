@@ -26,8 +26,8 @@ PyJen - Jenkins CI Python library
     :target: https://pypi.python.org/pypi/pyjen/
     :alt: Latest Version
 
-.. image:: https://api.travis-ci.org/TheFriendlyCoder/pyjen.svg?branch=master
-    :target: https://travis-ci.org/TheFriendlyCoder/pyjen
+.. image:: https://github.com/TheFriendlyCoder/pyjen/actions/workflows/github-actions.yml/badge.svg?branch=main
+    :target: https://github.com/TheFriendlyCoder/pyjen/actions/workflows/github-actions.yml
     :alt: Build status
 
 

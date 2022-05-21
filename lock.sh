@@ -13,17 +13,19 @@
 rm -rf src/*.egg-info
 rm -rf build
 rm -rf dist
-virtualenv -p `which python3` tmp
+virtualenv -p `pyenv which python3` tmp
 source ./tmp/bin/activate
+pip install --upgrade pip
 pip install -e ".[dev]"
-pip freeze --exclude-editable > ./requirements.txt
+pip freeze --exclude-editable --all > ./requirements.txt
 deactivate
 rm -rf tmp
 
 # Update dependencies specific for ReadTheDocs
-virtualenv -p `which python3` tmp
+virtualenv -p `pyenv which python3` tmp
 source ./tmp/bin/activate
+pip install --upgrade pip
 pip install sphinx sphinxcontrib-apidoc sphinx-rtd-theme
-pip freeze > ./docs/requirements.txt
+pip freeze --all > ./docs/requirements.txt
 deactivate
 rm -rf tmp
