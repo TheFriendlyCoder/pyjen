@@ -123,7 +123,7 @@ class Jenkins:
     @property
     def views(self):
         """list (View): all views directly managed by this Jenkins instance"""
-        retval = list()
+        retval = []
 
         data = self._api.get_api_data()
 
@@ -137,7 +137,7 @@ class Jenkins:
         """list (Job): all jobs managed by this Jenkins instance"""
         data = self._api.get_api_data(query_params="depth=0")
 
-        retval = list()
+        retval = []
         for j in data['jobs']:
             retval.append(Job.instantiate(j, self._api))
 
@@ -157,7 +157,7 @@ class Jenkins:
             list (Job):
                 list of jobs nested within other jobs, recursively
         """
-        retval = list()
+        retval = []
         for cur_job in obj.jobs:
             retval.append(cur_job)
             if isinstance(getattr(type(cur_job), "jobs", None), property):

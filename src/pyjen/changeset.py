@@ -88,7 +88,7 @@ class ChangesetItem(object):
     @property
     def affected_files(self):
         """list (str): list of files modified in this commit"""
-        retval = list()
+        retval = []
         for cur_item in self._data["paths"]:
             retval.append(cur_item["file"])
         return retval

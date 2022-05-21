@@ -40,17 +40,15 @@ def load_console_scripts(project):
     if not os.path.exists(scripts_path):
         return []
 
-    scripts_namespace = "{0}.scripts".format(project)
+    scripts_namespace = f"{project}.scripts"
     retval = []
 
     py_scripts = os.listdir(scripts_path)
     for py_file in py_scripts:
         file_parts = os.path.splitext(py_file)
         if file_parts[1] == ".py" and file_parts[0] != '__init__':
-            script_config = "{0}={1}.{0}:main".format(
-                file_parts[0],
-                scripts_namespace
-            )
+            script_config = \
+                f"{file_parts[0]}={scripts_namespace}.{file_parts[0]}:main"
             retval.append(script_config)
 
     return retval
@@ -87,17 +85,16 @@ def load_plugins(project):
     if not os.path.exists(plugins_path):
         return []
 
-    plugins_namespace = "{0}.plugins".format(project)
+    plugins_namespace = f"{project}.plugins"
     retval = []
 
     py_scripts = os.listdir(plugins_path)
     for py_file in py_scripts:
         file_parts = os.path.splitext(py_file)
         if file_parts[1] == ".py" and file_parts[0] != '__init__':
-            script_config = "{0}={1}.{0}:PluginClass".format(
-                file_parts[0],
-                plugins_namespace
-            )
+            script_config = \
+                f"{file_parts[0]}={plugins_namespace}.{file_parts[0]}:" \
+                f"PluginClass"
             retval.append(script_config)
 
     return retval
@@ -141,7 +138,7 @@ def _src_version(project):
     ver_path = os.path.join(root_dir, 'src', project, 'version.py')
     assert os.path.exists(ver_path)
 
-    with open(ver_path) as prop_file:
+    with open(ver_path, encoding="utf-8") as prop_file:
         data = ast.parse(prop_file.read())
 
     # The version.py file is expected to contain only a single statement
@@ -183,10 +180,8 @@ def get_version_number(project):
 
         # make sure the tag name matches our version number
         if not os.environ['TRAVIS_TAG'] == retval:
-            raise Exception("Tag {0} is expected to be {1}".format(
-                os.environ['TRAVIS_TAG'],
-                retval
-            ))
+            raise Exception(f"Tag {os.environ['TRAVIS_TAG']} is "
+                            f"expected to be {retval}")
         # If we build from a tag, just use the version number verbatim
         return retval
 
@@ -229,76 +224,68 @@ def generate_readme(project, repo=None, version=None):
     else:
         branch = "tag=" + version
 
-    headers = list()
+    headers = []
     headers.append({
         "image":
-            "https://travis-ci.org/TheFriendlyCoder/{0}.svg?{1}".
-            format(repo, branch),
+            f"https://travis-ci.org/TheFriendlyCoder/{repo}.svg?{branch}",
         "target":
-            "https://travis-ci.org/TheFriendlyCoder/{0}".
-            format(repo),
+            f"https://travis-ci.org/TheFriendlyCoder/{repo}",
         "text": "Build Automation"
     })
     headers.append({
-        "image": "https://coveralls.io/repos/github/TheFriendlyCoder/{0}/"
-                 "badge.svg?{1}".format(repo, branch),
+        "image": f"https://coveralls.io/repos/github/TheFriendlyCoder/{repo}/"
+                 f"badge.svg?{branch}",
         "target":
-            "https://coveralls.io/github/TheFriendlyCoder/{0}?{1}".
-            format(repo, branch),
+            f"https://coveralls.io/github/TheFriendlyCoder/{repo}?{branch}",
         "text": "Test Coverage"
     })
     headers.append({
         "image":
-            "https://img.shields.io/pypi/pyversions/{0}.svg".
-            format(project),
-        "target": "https://pypi.python.org/pypi/{0}".format(project),
+            f"https://img.shields.io/pypi/pyversions/{project}.svg",
+        "target": f"https://pypi.python.org/pypi/{project}",
         "text": "Python Versions"
     })
     headers.append({
-        "image":
-            "https://readthedocs.org/projects/{0}/badge/?version={1}".
-            format(project, version),
-        "target": "http://{0}.readthedocs.io/en/{1}".format(project, version),
+        "image": f"https://readthedocs.org/projects/{project}/badge/"
+                 f"?version={version}",
+        "target": f"http://{project}.readthedocs.io/en/{version}",
         "text": "Documentation Status"
     })
     headers.append({
         "image":
-            "https://requires.io/github/TheFriendlyCoder/{0}/"
-            "requirements.svg?{1}".format(repo, branch),
+            f"https://requires.io/github/TheFriendlyCoder/{repo}/"
+            f"requirements.svg?{branch}",
         "target":
-            "https://requires.io/github/TheFriendlyCoder/{0}/"
-            "requirements/?{1}".format(repo, branch),
+            f"https://requires.io/github/TheFriendlyCoder/{repo}/"
+            f"requirements/?{branch}",
         "text": "Requirements Status"
     })
     headers.append({
-        "image": "https://img.shields.io/pypi/format/{0}.svg".format(project),
-        "target": "https://pypi.python.org/pypi/{0}/".format(project),
+        "image": f"https://img.shields.io/pypi/format/{project}.svg",
+        "target": f"https://pypi.python.org/pypi/{project}/",
         "text": "Package Format"
     })
     headers.append({
-        "image": "https://img.shields.io/pypi/dm/{0}.svg".format(project),
-        "target": "https://pypi.python.org/pypi/{0}/".format(project),
+        "image": f"https://img.shields.io/pypi/dm/{project}.svg",
+        "target": f"https://pypi.python.org/pypi/{project}/",
         "text": "Download Count"
     })
     headers.append({
-        "image": "https://img.shields.io/pypi/l/{0}.svg".format(project),
+        "image": f"https://img.shields.io/pypi/l/{project}.svg",
         "target": "https://www.apache.org/licenses/LICENSE-2.0.txt",
         "text": "Apache License 2.0"
     })
 
-    header_template = """.. image:: {0}
-    :target: {1}
-    :alt: {2}
-
-    """
-
     retval = ""
     for cur_header in headers:
-        retval += header_template.format(
-            cur_header["image"], cur_header["target"], cur_header["text"])
+        retval += f""".. image:: {cur_header["image"]}
+    :target: {cur_header["target"]}
+    :alt: {cur_header["text"]}
+
+    """
         retval += "\n"
 
-    with open('README.rst') as readme:
+    with open('README.rst', encoding="utf-8") as readme:
         retval += readme.read()
 
     return retval
@@ -310,7 +297,8 @@ def load_project_properties():
         dict: project specific properties from the project.prop file
     """
     src_path = os.path.dirname(__file__)
-    with open(os.path.join(src_path, 'project.prop')) as prop_file:
+    filename = os.path.join(src_path, 'project.prop')
+    with open(filename, encoding="utf-8") as prop_file:
         props = prop_file.read()
     return ast.literal_eval(props)
 
@@ -318,10 +306,7 @@ def load_project_properties():
 def main():
     """main entrypoint function"""
     PROJECT["VERSION"] = get_version_number(PROJECT["NAME"])
-    _plugin_namespace = "{0}.plugins.v{1}".format(
-        PROJECT["NAME"],
-        PROJECT["PLUGIN_VER"]
-    )
+    _plugin_namespace = f"{PROJECT['NAME']}.plugins.v{PROJECT['PLUGIN_VER']}"
     # Execute packaging logic
     setup(
         name=PROJECT["NAME"],
@@ -333,7 +318,7 @@ def main():
         description=PROJECT["DESCRIPTION"],
         long_description=
         generate_readme(PROJECT["NAME"], PROJECT["REPO"], PROJECT["VERSION"]),
-        url='https://github.com/TheFriendlyCoder/' + PROJECT["NAME"],
+        url=f'https://github.com/TheFriendlyCoder/{PROJECT["NAME"]}',
         keywords=PROJECT["KEYWORDS"],
         entry_points={
             _plugin_namespace: load_plugins(PROJECT["NAME"]),

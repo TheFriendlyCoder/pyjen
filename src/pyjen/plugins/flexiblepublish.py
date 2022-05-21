@@ -1,5 +1,5 @@
 """Primitives for operating on job publishers of type 'Flexible Publisher'"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import instantiate_xml_plugin
 
@@ -16,7 +16,7 @@ class FlexiblePublisher(XMLPlugin):
          this publisher"""
         nodes = self._root.find("publishers")
 
-        retval = list()
+        retval = []
         for cur_node in nodes:
             temp = ConditionalAction(cur_node)
             temp.parent = self
@@ -70,7 +70,7 @@ class ConditionalAction(XMLPlugin):
         """list (XMLPlugin): publishers to run should the conditions associated
         with this action are met"""
         nodes = self._root.find("publisherList")
-        retval = list()
+        retval = []
         for cur_node in nodes:
             plugin = instantiate_xml_plugin(cur_node, self)
             if plugin:

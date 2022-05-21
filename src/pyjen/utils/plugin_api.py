@@ -27,7 +27,7 @@ def find_plugin(plugin_name):
 
     log = logging.getLogger(__name__)
 
-    supported_plugins = list()
+    supported_plugins = []
     for cur_plugin in get_all_plugins():
         if getattr(cur_plugin, PLUGIN_METHOD_NAME)() == formatted_plugin_name:
             supported_plugins.append(cur_plugin)
@@ -51,12 +51,12 @@ def get_all_plugins():
     """
     log = logging.getLogger(__name__)
     # First load all libraries that are registered with the PyJen plugin API
-    all_plugins = list()
+    all_plugins = []
     for entry_point in iter_entry_points(group=PLUGIN_ENTRYPOINT_NAME):
         all_plugins.append(entry_point.load())
 
     # Next, filter out those that don't support the current version of our API
-    retval = list()
+    retval = []
     for cur_plugin in all_plugins:
         if not hasattr(cur_plugin, PLUGIN_METHOD_NAME):
             log.debug(

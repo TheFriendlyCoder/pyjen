@@ -142,7 +142,7 @@ class Job:
 
         builds = data['builds']
 
-        retval = list()
+        retval = []
         for cur_build in builds:
             temp_build = Build(self._api.clone(cur_build['url']))
             retval.append(temp_build)
@@ -156,7 +156,7 @@ class Job:
 
         builds = data['allBuilds']
 
-        retval = list()
+        retval = []
         for cur_build in builds:
             temp_build = Build(self._api.clone(cur_build['url']))
             retval.append(temp_build)
@@ -258,7 +258,7 @@ class Job:
         """
         data = {
             "tree": "builds[url,queueId]",
-            "xpath": "//build[queueId={0}]".format(queue_id)
+            "xpath": f"//build[queueId={queue_id}]"
         }
         try:
             root_node = self._api.get_api_xml(params=data)
@@ -372,7 +372,7 @@ class Job:
         if start_time > end_time:
             end_time, start_time = start_time, end_time
 
-        builds = list()
+        builds = []
 
         for run in self.all_builds:
             if run.start_time < start_time:
@@ -525,7 +525,7 @@ class Job:
     @classmethod
     def get_supported_plugins(cls):
         """list: list of PyJen plugin classes that derive from this class"""
-        retval = list()
+        retval = []
         for cur_plugin in get_all_plugins():
             if issubclass(cur_plugin, cls):
                 retval.append(cur_plugin)

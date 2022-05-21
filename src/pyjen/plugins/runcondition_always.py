@@ -1,6 +1,6 @@
 """Condition for the run condition plugin that will always produce a true result
 """
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

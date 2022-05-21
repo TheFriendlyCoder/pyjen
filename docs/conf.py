@@ -20,12 +20,13 @@ sys.path.insert(0, _src_dir)
 
 # -- Project information -----------------------------------------------------
 
-copyright = '2020, Kevin S. Phillips'  # pylint: disable=redefined-builtin
+copyright = '2022, Kevin S. Phillips'  # pylint: disable=redefined-builtin
 author = 'Kevin S. Phillips'
-_proj_props = ast.literal_eval(open('../project.prop').read())
+with open('../project.prop', encoding="utf-8") as prop_file:
+    _proj_props = ast.literal_eval(prop_file.read())
 _proj_dir = os.path.join(_src_dir, _proj_props["NAME"])
-with open(os.path.join(_proj_dir, "version.py")) as prop_file:
-    _data = ast.parse(prop_file.read())
+with open(os.path.join(_proj_dir, "version.py"), encoding="utf-8") as ver_file:
+    _data = ast.parse(ver_file.read())
     _proj_props["VERSION"] = _data.body[0].value.s
 
 project = _proj_props["NAME"]
@@ -112,15 +113,12 @@ def add_intersphinx_aliases_to_inv(app):
     for domain, mapping in app.config.intersphinx_aliases.items():
         if domain not in inventories.main_inventory:
             raise NotImplementedError(
-                "Domain {0} not found in Sphinx inventory".format(domain)
+                f"Domain {domain} not found in Sphinx inventory"
             )
         for source, target in mapping.items():
             if source not in inventories.main_inventory[domain]:
-                raise NotImplementedError(
-                    "Source object {0} not found in Sphinx domain {1}".format(
-                        source, domain
-                    )
-                )
+                raise NotImplementedError(f"Source object {source} not found "
+                                          f"in Sphinx domain {domain}")
             inventories.main_inventory[domain][target] = \
                 inventories.main_inventory[domain][source]
 

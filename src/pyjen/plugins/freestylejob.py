@@ -1,5 +1,5 @@
 """Primitives that manage Jenkins job of type 'Freestyle'"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.job import Job
 from pyjen.utils.jobxml import JobXML
 from pyjen.utils.plugin_api import find_plugin
@@ -125,7 +125,7 @@ class FreestyleJob(Job):
 
         jobs = data['upstreamProjects']
 
-        retval = list()
+        retval = []
 
         for j in jobs:
             retval.append(Job.instantiate(j, self._api))
@@ -152,7 +152,7 @@ class FreestyleJob(Job):
 
         jobs = data['downstreamProjects']
 
-        retval = list()
+        retval = []
 
         for j in jobs:
             retval.append(Job.instantiate(j, self._api))
@@ -222,7 +222,7 @@ class FreestyleXML(JobXML):
         post-build publishers associated with this job. Each element will be an
         instance of a compatible PyJen plugin for each publisher. Publishers
         with no valid PyJen plugin installed will be ignored"""
-        retval = list()
+        retval = []
         nodes = self._root.find('publishers')
         for node in nodes:
             plugin_class = find_plugin(node.tag)
@@ -282,7 +282,7 @@ class FreestyleXML(JobXML):
         """list (XMLPlugin): PyJen plugins that manage the various 'builders'
         for this job
         """
-        retval = list()
+        retval = []
         nodes = self._root.find('builders')
         for node in nodes:
             plugin_class = find_plugin(node.tag)

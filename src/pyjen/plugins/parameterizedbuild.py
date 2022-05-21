@@ -1,5 +1,5 @@
 """Implementation for the parameterized build plugin"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 from pyjen.utils.plugin_api import instantiate_xml_plugin
 
@@ -13,7 +13,7 @@ class ParameterizedBuild(XMLPlugin):
         job"""
         params_node = self._root.find("parameterDefinitions")
         assert params_node is not None
-        retval = list()
+        retval = []
         for cur_param in params_node:
             plugin = instantiate_xml_plugin(cur_param, self)
             if plugin:

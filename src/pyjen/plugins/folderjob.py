@@ -10,7 +10,7 @@ class FolderJob(Job):
         """list (Job): list of all jobs contained inthis folder"""
         data = self._api.get_api_data()
 
-        retval = list()
+        retval = []
         for tjob in data['jobs']:
             retval.append(Job.instantiate(tjob, self._api))
 

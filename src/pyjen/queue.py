@@ -24,7 +24,7 @@ class Queue:
     @property
     def items(self):
         """list (QueueItem): list of scheduled builds waiting in the queue"""
-        retval = list()
+        retval = []
         for cur_item in self._data["items"]:
             queue_api = self._api.clone(self._api.root_url + cur_item["url"])
             retval.append(QueueItem(queue_api))

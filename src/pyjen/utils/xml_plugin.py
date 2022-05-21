@@ -1,6 +1,6 @@
 """Primitives common to all PyJen plugins that extend Jenkins config.xml"""
 import logging
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 
 
 class XMLPlugin:

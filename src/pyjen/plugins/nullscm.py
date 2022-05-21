@@ -1,5 +1,5 @@
 """SCM properties of Jenkins jobs with no source control configuration"""
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

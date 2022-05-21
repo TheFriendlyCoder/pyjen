@@ -1,6 +1,6 @@
 """Abstractions for managing the raw config.xml for a Jenkins job"""
 import logging
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.plugin_api import find_plugin
 
 
@@ -66,7 +66,7 @@ class JobXML:
         able to manipulate each job property. Any properties not supported by
         the PyJen plugins currently installed will be ignored.
         """
-        retval = list()
+        retval = []
         nodes = self._root.find('properties')
         for node in nodes:
             plugin = find_plugin(node.tag)

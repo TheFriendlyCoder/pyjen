@@ -11,7 +11,7 @@ class MultibranchPipelineJob(Job):
         pipeline"""
         data = self._api.get_api_data(query_params="depth=0")
 
-        retval = list()
+        retval = []
         for j in data["jobs"]:
             retval.append(Job.instantiate(j, self._api))
 

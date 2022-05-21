@@ -1,7 +1,7 @@
 """Condition for the run condition plugin that performs a logical AND operation
 on other build conditions
 """
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 from pyjen.utils.xml_plugin import XMLPlugin
 
 

@@ -12,7 +12,7 @@ class Subversion(XMLPlugin):
     def locations(self):
         """list (ModuleLocation): set of 0 or more ModuleLocation objects
         describing the SVN parameters for this module."""
-        retval = list()
+        retval = []
 
         locations_node = self._root.find("locations")
         for loc in locations_node:
