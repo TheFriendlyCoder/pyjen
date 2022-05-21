@@ -1,8 +1,10 @@
+import pytest
 from .utils import clean_view, clean_job
 from pyjen.plugins.listview import ListView
 from pyjen.plugins.freestylejob import FreestyleJob
 
 
+@pytest.mark.vcr()
 def test_delete_view(jenkins_api):
     expected_view_name = "test_delete_view"
     vw = jenkins_api.create_view(expected_view_name, ListView)
