@@ -1,7 +1,9 @@
+import pytest
 from pyjen.plugins.myview import MyView
 from ..utils import clean_view
 
 
+@pytest.mark.vcr()
 def test_create_my_view(jenkins_api):
     expected_view_name = "test_create_my_view"
     v = jenkins_api.create_view(expected_view_name, MyView)

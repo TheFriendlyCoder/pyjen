@@ -1,9 +1,11 @@
+import pytest
 from pyjen.plugins.artifactarchiver import ArtifactArchiverPublisher
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_add_artifact_archiver_publisher(jenkins_api):
     job_name = "test_add_artifact_archiver_publisher_job"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -23,6 +25,7 @@ def test_add_artifact_archiver_publisher(jenkins_api):
         assert pubs[0].artifact_regex == expected_regex
 
 
+@pytest.mark.vcr()
 def test_artifacts_archived(jenkins_api):
     job_name = "test_artifacts_archived_job"
     jb = jenkins_api.create_job(job_name, FreestyleJob)

@@ -1,8 +1,10 @@
+import pytest
 from .utils import clean_job, async_assert
 from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.freestylejob import FreestyleJob
 
 
+@pytest.mark.vcr()
 def test_get_nodes(jenkins_api):
     result = jenkins_api.nodes
 
@@ -11,6 +13,7 @@ def test_get_nodes(jenkins_api):
     assert len(result) == 1
 
 
+@pytest.mark.vcr()
 def test_find_node(jenkins_api):
     expected_name = "Built-In Node"
     result = jenkins_api.find_node(expected_name)
@@ -19,12 +22,14 @@ def test_find_node(jenkins_api):
     assert result.name == expected_name
 
 
+@pytest.mark.vcr()
 def test_node_online(jenkins_api):
     node = jenkins_api.nodes[0]
 
     assert node.is_offline is False
 
 
+@pytest.mark.vcr()
 def test_toggle_offline(jenkins_api):
     node = jenkins_api.nodes[0]
 
@@ -35,6 +40,7 @@ def test_toggle_offline(jenkins_api):
     assert node.is_offline is False
 
 
+@pytest.mark.vcr()
 def test_toggle_offline_with_message(jenkins_api):
     node = jenkins_api.nodes[0]
 
@@ -45,12 +51,14 @@ def test_toggle_offline_with_message(jenkins_api):
     assert node.is_offline is False
 
 
+@pytest.mark.vcr()
 def test_is_idle(jenkins_api):
     node = jenkins_api.nodes[0]
 
     assert node.is_idle is True
 
 
+@pytest.mark.vcr()
 def test_node_busy(jenkins_api):
     node = jenkins_api.nodes[0]
     expected_job_name = "test_node_busy_job"
@@ -78,6 +86,7 @@ def test_node_busy(jenkins_api):
         async_assert(lambda: jb.last_good_build)
 
 
+@pytest.mark.vcr()
 def test_wait_for_idle(jenkins_api):
     node = jenkins_api.nodes[0]
     expected_job_name = "test_wait_for_idle_job"
@@ -104,6 +113,7 @@ def test_wait_for_idle(jenkins_api):
         assert node.is_idle
 
 
+@pytest.mark.vcr()
 def test_wait_for_idle_timeout(jenkins_api):
     node = jenkins_api.nodes[0]
     expected_job_name = "test_wait_for_idle_timeout_job"

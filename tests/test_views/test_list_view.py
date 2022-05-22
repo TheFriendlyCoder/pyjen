@@ -1,7 +1,9 @@
+import pytest
 from pyjen.plugins.listview import ListView
 from ..utils import clean_view
 
 
+@pytest.mark.vcr()
 def test_create_list_view(jenkins_api):
     expected_view_name = "test_create_list_view"
     v = jenkins_api.create_view(expected_view_name, ListView)

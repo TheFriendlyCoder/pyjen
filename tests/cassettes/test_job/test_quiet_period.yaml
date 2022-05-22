@@ -1,0 +1,2347 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:47:38 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:39 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions/>\n    <description/>\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties/>\n    <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+      \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '486'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/createItem?name=test_quiet_period
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:47:39 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:39 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '728'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+        \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Content-Length:
+      - '524'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 19:47:39 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:62540/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 19:47:39 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '728'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:40 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders
+      />\n    <publishers />\n    <buildWrappers />\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '522'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:47:40 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders
+      />\n    <publishers />\n    <buildWrappers />\n<quietPeriod>10</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '523'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:47:40 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>echo
+      Testing my quiet period</command></hudson.tasks.Shell></builders>\n    <publishers
+      />\n    <buildWrappers />\n<quietPeriod>10</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '620'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:47:40 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_quiet_period/build
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:47:40 GMT
+      Location:
+      - http://localhost:62540/queue/item/10/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 9.7 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:41 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 8.5 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:42 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 7.3 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:43 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 6.1 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:44 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 4.9 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:46 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 3.7 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:47 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 2.4 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:48 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 1.2 sec","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:49 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":10,"inQueueSince":1653162461163,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/"},"url":"queue/item/10/","why":"In
+        the quiet period. Expires in 50 ms","timestamp":1653162471163},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:50 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1284'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"}],"color":"notbuilt_anime","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"healthReport":[],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:52 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1242'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:52 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1679'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:62540/job/test_quiet_period/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:62540/job/test_quiet_period/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:52 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1679'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/job/test_quiet_period/1/consoleText
+  response:
+    body:
+      string: 'Started by user admin
+
+        Running as SYSTEM
+
+        [EnvInject] - Loading node environment variables.
+
+        Building in workspace /var/jenkins_home/workspace/test_quiet_period
+
+        [test_quiet_period] $ /bin/sh -xe /tmp/jenkins11466995838130456791.sh
+
+        + echo Testing my quiet period
+
+        Testing my quiet period
+
+        Finished: SUCCESS
+
+        '
+    headers:
+      Content-Type:
+      - text/plain;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:47:52 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      content-length:
+      - '301'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:62540/job/test_quiet_period/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 19:47:53 GMT
+      Location:
+      - http://localhost:62540/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.158aa2cd=node01f7gr4mnd7n48eb6uojvhu4ny54.node0
+      Jenkins-Crumb:
+      - eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/a2435505\" data-rooturl=\"\"
+        data-resurl=\"/static/a2435505\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/a2435505/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"eab007653550689df0cabc8926d249a0129d5204fdff4af2eee111b88b5a1d62\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/a2435505/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/a2435505/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/a2435505/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/a2435505/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/a2435505/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/a2435505/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/a2435505/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/event/event-min.js\"></script><script src=\"/static/a2435505/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/a2435505/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/a2435505/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/a2435505/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/a2435505/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/a2435505/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/a2435505/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/a2435505/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/a2435505/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/a2435505/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 19:47:53 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA41bTk0LdefFLdGHNus3YOYPK43Xr3bL/YpZOPCQ9Jyam/bxrxAbu/WqPI0DosgkRs92muO32leUlzLyIB4lqGlUIxP9UIrpBZe2RwF1KoPIuun2XpUINfH2HwJ/ck1HBXrI1NfeyqMVRF++g9xP7Ipn77hCN1DjFWH0aAHtiUGIQ1QTltVfu1p66qDNN5rAhE5EW9gfNKkc09f4LX+fSPuXM3re9JOQjBOWmZqepGadu3yrDLdeCTBi+S6cjxarFQ9O3xrFuBEGRDJITWUtxbtwU+KByneBMmQGnVIsFBdqT2RWEW/66IJFjDQuDZiESCaPD/phCKt6TgFVYm3qo0wIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:49:11 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:11 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions/>\n    <description/>\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties/>\n    <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+      \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '486'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/createItem?name=test_quiet_period
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:11 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '728'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>\n    <actions/>\n
+        \   <description/>\n    <keepDependencies>false</keepDependencies>\n    <properties/>\n
+        \   <scm class=\"hudson.scm.NullSCM\"/>\n    <canRoam>true</canRoam>\n    <disabled>false</disabled>\n
+        \   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+        \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+        \   <triggers/>\n    <concurrentBuild>false</concurrentBuild>\n    <builders/>\n
+        \   <publishers/>\n    <buildWrappers/>\n</project>"
+    headers:
+      Content-Length:
+      - '524'
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 20:49:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","color":"notbuilt"}],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:49:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '728'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders
+      />\n    <publishers />\n    <buildWrappers />\n<quietPeriod>0</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '522'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders
+      />\n    <publishers />\n    <buildWrappers />\n<quietPeriod>10</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '523'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:12 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<project>\n    <actions />\n    <description />\n    <keepDependencies>false</keepDependencies>\n
+      \   <properties />\n    <scm class=\"hudson.scm.NullSCM\" />\n    <canRoam>true</canRoam>\n
+      \   <disabled>false</disabled>\n    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>\n
+      \   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>\n
+      \   <triggers />\n    <concurrentBuild>false</concurrentBuild>\n    <builders><hudson.tasks.Shell><command>echo
+      Testing my quiet period</command></hudson.tasks.Shell></builders>\n    <publishers
+      />\n    <buildWrappers />\n<quietPeriod>10</quietPeriod></project>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '620'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_quiet_period/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:13 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_quiet_period/build
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:13 GMT
+      Location:
+      - http://localhost:64171/queue/item/21/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 9.8 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:13 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 8.6 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:14 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 7.4 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:15 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 6.3 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:17 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 5.1 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:18 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 3.9 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:19 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 2.7 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:20 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 1.6 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:21 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1286'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"In
+        the quiet period. Expires in 0.43 sec","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:22 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1287'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"Finished
+        waiting","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:24 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1263'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[],"color":"notbuilt","firstBuild":null,"healthReport":[],"inQueue":true,"keepDependencies":false,"lastBuild":null,"lastCompletedBuild":null,"lastFailedBuild":null,"lastStableBuild":null,"lastSuccessfulBuild":null,"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":1,"property":[],"queueItem":{"_class":"hudson.model.Queue$WaitingItem","blocked":false,"buildable":false,"id":21,"inQueueSince":1653166153449,"params":"","stuck":false,"task":{"_class":"hudson.model.FreeStyleProject","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/"},"url":"queue/item/21/","why":"Finished
+        waiting","timestamp":1653166163449},"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:25 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1263'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:26 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1679'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:26 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1679'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"test_quiet_period","displayNameOrNull":null,"fullDisplayName":"test_quiet_period","fullName":"test_quiet_period","name":"test_quiet_period","url":"http://localhost:64171/job/test_quiet_period/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/test_quiet_period/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:26 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1679'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/test_quiet_period/1/consoleText
+  response:
+    body:
+      string: 'Started by user admin
+
+        Running as SYSTEM
+
+        [EnvInject] - Loading node environment variables.
+
+        Building in workspace /var/jenkins_home/workspace/test_quiet_period
+
+        [test_quiet_period] $ /bin/sh -xe /tmp/jenkins17417946158234836428.sh
+
+        + echo Testing my quiet period
+
+        Testing my quiet period
+
+        Finished: SUCCESS
+
+        '
+    headers:
+      Content-Type:
+      - text/plain;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:49:26 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      content-length:
+      - '301'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/job/test_quiet_period/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:49:27 GMT
+      Location:
+      - http://localhost:64171/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0idbcdh6berta1qdphj3xyw3bw38.node0
+      Jenkins-Crumb:
+      - 30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/92a9e902\" data-rooturl=\"\"
+        data-resurl=\"/static/92a9e902\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/92a9e902/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"30dff7c1a3303e7418ae5fefa33321f54630e8fee8007a097dad9e9c99805dae\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/92a9e902/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/92a9e902/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/92a9e902/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/92a9e902/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/event/event-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/92a9e902/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/92a9e902/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/92a9e902/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:49:27 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1CFIfooRWpcSli0tzcRY8tpw8pNdhaixfM95EtoHSZ6ja1zR5wSTLb/nz0Y3D2nSabgNtGnxW0f0j92YBWpvTOCficKW67g5g8GIeAoig7aci0a3p4kuZbi/p7FTHvkd7QvCx04vWd33o/hUWrpvF6a6QskTksgUOGiEm8Iqq+0BswIm9SFGEqFUgvS+MsqK+Mh5X5bW+CgNz+QtgC/78zhtpAIWZtJJiXonpmzhiymJMspVd/ECSkQDPkrkqA6Nk6CLdJu6NWgttvhTQu4Sw7uJHgiWv8k7kZ1k4CMK2pgeWnLPrDd8SZXg3l6VNSaGXSjfLGvdGJjv/JpGr5ebQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+version: 1

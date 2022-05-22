@@ -11,12 +11,14 @@ from pyjen.plugins.shellbuilder import ShellBuilder
 from pyjen.plugins.nullscm import NullSCM
 
 
+@pytest.mark.vcr()
 def test_create_freestyle_job(jenkins_api):
     jb = jenkins_api.create_job("test_create_freestyle_job", FreestyleJob)
     with clean_job(jb):
         assert jb is not None
 
 
+@pytest.mark.vcr()
 def test_delete_job(jenkins_api):
     expected_name = "test_delete_job"
     jb = jenkins_api.create_job(expected_name, FreestyleJob)
@@ -25,6 +27,7 @@ def test_delete_job(jenkins_api):
     assert res is None
 
 
+@pytest.mark.vcr()
 def test_start_build(jenkins_api):
     jb = jenkins_api.create_job("test_start_build", FreestyleJob)
     with clean_job(jb):
@@ -32,6 +35,7 @@ def test_start_build(jenkins_api):
         jb.start_build()
 
 
+@pytest.mark.vcr()
 @pytest.mark.usefixtures('test_job')
 class TestJobReadOperations(object):
     def test_get_job_name(self):
@@ -147,6 +151,7 @@ class TestJobReadOperations(object):
         assert isinstance(result, NullSCM)
 
 
+@pytest.mark.vcr()
 def test_get_all_builds(jenkins_api):
     jb = jenkins_api.create_job("test_get_all_builds", FreestyleJob)
     with clean_job(jb):
@@ -160,6 +165,7 @@ def test_get_all_builds(jenkins_api):
         assert builds[0].number == 1
 
 
+@pytest.mark.vcr()
 def test_disable(jenkins_api):
     jb = jenkins_api.create_job("test_disable", FreestyleJob)
     with clean_job(jb):
@@ -167,6 +173,7 @@ def test_disable(jenkins_api):
         assert jb.is_disabled
 
 
+@pytest.mark.vcr()
 def test_enable(jenkins_api):
     jb = jenkins_api.create_job("test_enable", FreestyleJob)
     with clean_job(jb):
@@ -175,6 +182,7 @@ def test_enable(jenkins_api):
         assert not jb.is_disabled
 
 
+@pytest.mark.vcr()
 def test_multiple_downstream_jobs_recursive(jenkins_api):
     jb = jenkins_api.create_job("test_multiple_downstream_jobs_recursive1", FreestyleJob)
     with clean_job(jb):
@@ -202,6 +210,7 @@ def test_multiple_downstream_jobs_recursive(jenkins_api):
                 assert isinstance(res[1], FreestyleJob)
 
 
+@pytest.mark.vcr()
 def test_multiple_upstream_jobs_recursive(jenkins_api):
     parent_job_name = "test_multiple_upstream_jobs_recursive1"
     jb = jenkins_api.create_job(parent_job_name, FreestyleJob)
@@ -230,6 +239,7 @@ def test_multiple_upstream_jobs_recursive(jenkins_api):
                 assert isinstance(res[1], FreestyleJob)
 
 
+@pytest.mark.vcr()
 @pytest.mark.usefixtures('test_builds')
 class TestJobBuilds:
 
@@ -334,6 +344,7 @@ class TestJobBuilds:
         assert builds[0].number == bld.number
 
 
+@pytest.mark.vcr()
 def test_get_last_failed_build(jenkins_api):
     jb = jenkins_api.create_job("test_get_last_failed_build", FreestyleJob)
     with clean_job(jb):
@@ -352,6 +363,7 @@ def test_get_last_failed_build(jenkins_api):
         assert bld.result == "FAILURE"
 
 
+@pytest.mark.vcr()
 def test_get_last_unsuccessful_build(jenkins_api):
     jb = jenkins_api.create_job("test_get_last_unsuccessful_build", FreestyleJob)
     with clean_job(jb):
@@ -372,6 +384,7 @@ def test_get_last_unsuccessful_build(jenkins_api):
         assert bld.result == "UNSTABLE"
 
 
+@pytest.mark.vcr()
 def test_is_unstable(jenkins_api):
     jb = jenkins_api.create_job("test_is_unstable_job", FreestyleJob)
     with clean_job(jb):
@@ -388,6 +401,7 @@ def test_is_unstable(jenkins_api):
         assert jb.is_unstable
 
 
+@pytest.mark.vcr()
 def test_get_builds_in_time_range_no_builds(jenkins_api):
     jb = jenkins_api.create_job("test_get_builds_in_time_range_no_builds", FreestyleJob)
     with clean_job(jb):
@@ -399,6 +413,7 @@ def test_get_builds_in_time_range_no_builds(jenkins_api):
         assert len(builds) == 0
 
 
+@pytest.mark.vcr()
 def test_no_quiet_period(jenkins_api):
     jb = jenkins_api.create_job("test_no_quiet_period", FreestyleJob)
     with clean_job(jb):
@@ -406,6 +421,7 @@ def test_no_quiet_period(jenkins_api):
         assert jb.quiet_period == -1
 
 
+@pytest.mark.vcr()
 def test_quiet_period(jenkins_api):
     jb = jenkins_api.create_job("test_quiet_period", FreestyleJob)
     with clean_job(jb):
@@ -427,12 +443,13 @@ def test_quiet_period(jenkins_api):
         jb.start_build()
         async_assert(lambda: jb.last_build, expected_duration + 5)
         duration = timeit.default_timer() - start
-        assert duration >= expected_duration
+        assert float(expected_duration) == pytest.approx(duration, 0.8)
 
         bld = jb.last_build
         assert expected_output in bld.console_output
 
 
+@pytest.mark.vcr()
 def test_disable_quiet_period(jenkins_api):
     jb = jenkins_api.create_job("test_disable_quiet_period", FreestyleJob)
     with clean_job(jb):
@@ -444,6 +461,7 @@ def test_disable_quiet_period(jenkins_api):
         assert jb2.quiet_period_enabled is False
 
 
+@pytest.mark.vcr()
 def test_no_custom_workspace(jenkins_api):
     jb = jenkins_api.create_job("test_no_custom_workspace", FreestyleJob)
     with clean_job(jb):
@@ -451,6 +469,7 @@ def test_no_custom_workspace(jenkins_api):
         assert jb.custom_workspace == ""
 
 
+@pytest.mark.vcr()
 def test_custom_workspace(jenkins_api):
     jb = jenkins_api.create_job("test_custom_workspace", FreestyleJob)
     with clean_job(jb):
@@ -462,6 +481,7 @@ def test_custom_workspace(jenkins_api):
         assert jb2.custom_workspace == expected_workspace
 
 
+@pytest.mark.vcr()
 def test_disable_custom_workspace(jenkins_api):
     jb = jenkins_api.create_job("test_disable_custom_workspace", FreestyleJob)
     with clean_job(jb):
@@ -472,6 +492,7 @@ def test_disable_custom_workspace(jenkins_api):
         assert jb2.custom_workspace_enabled is False
 
 
+@pytest.mark.vcr()
 def test_no_assigned_node(jenkins_api):
     jb = jenkins_api.create_job("test_no_assigned_node", FreestyleJob)
     with clean_job(jb):
@@ -479,6 +500,7 @@ def test_no_assigned_node(jenkins_api):
         assert jb.assigned_node == ""
 
 
+@pytest.mark.vcr()
 def test_assigned_node(jenkins_api):
     jb = jenkins_api.create_job("test_assigned_node", FreestyleJob)
     with clean_job(jb):
@@ -490,6 +512,7 @@ def test_assigned_node(jenkins_api):
         assert jb2.assigned_node == expected_label
 
 
+@pytest.mark.vcr()
 def test_disable_assigned_node(jenkins_api):
     jb = jenkins_api.create_job("test_disable_assigned_node", FreestyleJob)
     with clean_job(jb):
@@ -500,6 +523,7 @@ def test_disable_assigned_node(jenkins_api):
         assert jb2.assigned_node_enabled is False
 
 
+@pytest.mark.vcr()
 def test_clone_job(jenkins_api):
     jb = jenkins_api.create_job("test_clone_job", FreestyleJob)
     with clean_job(jb):
@@ -526,6 +550,7 @@ def test_clone_job(jenkins_api):
             assert results[0].script == expected_script
 
 
+@pytest.mark.vcr()
 def test_clone_job_enabled(jenkins_api):
     jb = jenkins_api.create_job("test_clone_job_enabled", FreestyleJob)
     with clean_job(jb):
@@ -535,6 +560,7 @@ def test_clone_job_enabled(jenkins_api):
             assert jb_clone.is_disabled is False
 
 
+@pytest.mark.vcr()
 def test_rename_job(jenkins_api):
     original_job_name = "test_rename_job1"
     new_job_name = "test_rename_job2"
@@ -556,6 +582,7 @@ def test_rename_job(jenkins_api):
             tmp.delete()
 
 
+@pytest.mark.vcr()
 def test_find_build_by_queue_id_match(jenkins_api):
     jb = jenkins_api.create_job("test_find_build_by_queue_id_match", FreestyleJob)
     with clean_job(jb):
@@ -569,6 +596,7 @@ def test_find_build_by_queue_id_match(jenkins_api):
         assert bld1 == bld2
 
 
+@pytest.mark.vcr()
 def test_find_build_by_queue_id_no_match(jenkins_api):
     jb = jenkins_api.create_job("test_find_build_by_queue_id_no_match", FreestyleJob)
     with clean_job(jb):

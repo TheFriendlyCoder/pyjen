@@ -1,8 +1,10 @@
+import pytest
 from pyjen.plugins.artifactdeployer import ArtifactDeployer, ArtifactDeployerEntry
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_add_artifact_deployer_publisher(jenkins_api):
     job_name = "test_add_artifact_deployer_publisher"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
@@ -22,6 +24,7 @@ def test_add_artifact_deployer_publisher(jenkins_api):
         assert len(pubs[0].entries) == 0
 
 
+@pytest.mark.vcr()
 def test_add_artifact_deployer_publisher_entry(jenkins_api):
     job_name = "test_add_artifact_deployer_publisher_entry"
     jb = jenkins_api.create_job(job_name, FreestyleJob)

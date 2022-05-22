@@ -1,0 +1,162 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/computer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.ComputerSet","busyExecutors":0,"computer":[{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":true,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":267075584,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818239,"path":"/tmp","size":53007716352},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818259,"path":"/var/jenkins_home","size":53007716352},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653160818257,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}],"displayName":"Nodes","totalExecutors":2}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:42:54 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1521'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:62540/computer/(built-in)/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":true,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":267075584,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818239,"path":"/tmp","size":53007716352},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653160818259,"path":"/var/jenkins_home","size":53007716352},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653160818257,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 19:42:54 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - a2435505
+      content-length:
+      - '1411'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/computer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.ComputerSet","busyExecutors":0,"computer":[{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":true,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":991535104,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981567,"path":"/tmp","size":53735116800},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981581,"path":"/var/jenkins_home","size":53735116800},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653165981574,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}],"displayName":"Nodes","totalExecutors":2}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:03 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1521'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/computer/(built-in)/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson$MasterComputer","actions":[],"assignedLabels":[{"name":"built-in"}],"description":"the
+        Jenkins controller''s built-in node","displayName":"Built-In Node","executors":[{},{}],"icon":"symbol-computer","iconClassName":"symbol-computer","idle":true,"jnlpAgent":false,"launchSupported":true,"loadStatistics":{"_class":"hudson.model.Label$1"},"manualLaunchAllowed":true,"monitorData":{"hudson.node_monitors.SwapSpaceMonitor":{"_class":"hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2","availablePhysicalMemory":991535104,"availableSwapSpace":1073737728,"totalPhysicalMemory":4125892608,"totalSwapSpace":1073737728},"hudson.node_monitors.TemporarySpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981567,"path":"/tmp","size":53735116800},"hudson.node_monitors.DiskSpaceMonitor":{"_class":"hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace","timestamp":1653165981581,"path":"/var/jenkins_home","size":53735116800},"hudson.node_monitors.ArchitectureMonitor":"Linux
+        (amd64)","hudson.node_monitors.ResponseTimeMonitor":{"_class":"hudson.node_monitors.ResponseTimeMonitor$Data","timestamp":1653165981574,"average":0},"hudson.node_monitors.ClockMonitor":{"_class":"hudson.util.ClockDifference","diff":0}},"numExecutors":2,"offline":false,"offlineCause":null,"offlineCauseReason":"","oneOffExecutors":[],"temporarilyOffline":false}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:50:03 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1411'
+    status:
+      code: 200
+      message: OK
+version: 1

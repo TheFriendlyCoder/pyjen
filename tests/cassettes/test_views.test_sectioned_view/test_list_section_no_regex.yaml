@@ -1,0 +1,1990 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:63499/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:63499/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:37:18 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:37:19 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: name=test_list_section_no_regex&mode=hudson.plugins.sectioned_view.SectionedView&Submit=OK&json=%7B%22name%22%3A+%22test_list_section_no_regex%22%2C+%22mode%22%3A+%22hudson.plugins.sectioned_view.SectionedView%22%7D
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '215'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      Jenkins-Crumb:
+      - 3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:63499/createView
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:37:19 GMT
+      Location:
+      - http://localhost:63499/view/test_list_section_no_regex/configure
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      Jenkins-Crumb:
+      - 3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/view/test_list_section_no_regex/configure
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/1788978e\" data-rooturl=\"\"
+        data-resurl=\"/static/1788978e\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/1788978e/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912\">\n
+        \   \n    \n\n    <title>Edit View [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/1788978e/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/1788978e/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/1788978e/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/1788978e/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/1788978e/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/1788978e/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/1788978e/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/1788978e/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/event/event-min.js\"></script><script src=\"/static/1788978e/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/1788978e/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/1788978e/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/1788978e/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/1788978e/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/1788978e/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssAll\"
+        title=\"Jenkins:test_list_section_no_regex (all builds)\" type=\"application/atom+xml\"><link
+        rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssAll?flavor=rss20\"
+        title=\"Jenkins:test_list_section_no_regex (all builds) (RSS 2.0)\" type=\"application/rss+xml\"><link
+        rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssFailed\" title=\"Jenkins:test_list_section_no_regex
+        (failed builds)\" type=\"application/atom+xml\"><link rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssFailed?flavor=rss20\"
+        title=\"Jenkins:test_list_section_no_regex (failed builds) (RSS 2.0)\" type=\"application/rss+xml\"><link
+        rel=\"stylesheet\" href=\"/static/1788978e/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/1788978e/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"hudson.plugins.sectioned_view.SectionedView\" id=\"jenkins\"
+        class=\"yui-skin-sam two-column jenkins-2.345\" data-version=\"2.345\"><a
+        href=\"#skip2content\" class=\"skiplink\">Skip to content</a><header id=\"page-header\"
+        class=\"page-header\"><div class=\"page-header__brand\"><div class=\"logo\"><a
+        id=\"jenkins-home-link\" href=\"/\"><img src=\"/static/1788978e/images/svgs/logo.svg\"
+        alt=\"[Jenkins]\" id=\"jenkins-head-icon\"><img src=\"/static/1788978e/images/title.svg\"
+        alt=\"Jenkins\" width=\"139\" id=\"jenkins-name-icon\" height=\"34\"></a></div><a
+        href=\"/\" class=\"page-header__brand-link\"><img src=\"/static/1788978e/images/svgs/logo.svg\"
+        alt=\"[Jenkins]\" class=\"page-header__brand-image\"><span class=\"page-header__brand-name\">Jenkins</span></a></div><div
+        class=\"searchbox hidden-xs\"><form role=\"search\" method=\"get\" name=\"search\"
+        action=\"/view/test_list_section_no_regex/search/\" style=\"position:relative;\"
+        class=\"no-json\"><div id=\"search-box-sizer\"></div><div id=\"searchform\"><input
+        role=\"searchbox\" name=\"q\" placeholder=\"Search\" id=\"search-box\" class=\"main-search__input\"><span
+        class=\"main-search__icon-leading\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><title></title><path
+        d=\"M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z\"
+        fill=\"none\" stroke=\"currentColor\" stroke-miterlimit=\"10\" stroke-width=\"32\"/><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M338.29 338.29L448 448\"/></svg></span><a href=\"https://www.jenkins.io/redirect/search-box\"
+        class=\"main-search__icon-trailing\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path d=\"M256
+        40a216 216 0 10216 216A216 216 0 00256 40z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"38\"/><path d=\"M200 202.29s.84-17.5
+        19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45
+        10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296\"
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"38\"/><circle cx=\"250\" cy=\"360\" r=\"25\" fill=\"currentColor\"/></svg></a><div
+        id=\"search-box-completion\"></div><script>createSearchBox(\"/view/test_list_section_no_regex/search/\");</script></div></form></div><div
+        class=\"login page-header__hyperlinks\"><div id=\"visible-am-insertion\" class=\"page-header__am-wrapper\"></div><div
+        id=\"visible-sec-am-insertion\" class=\"page-header__am-wrapper\"></div><a
+        href=\"/user/admin\" class=\"model-link\"><svg viewBox=\"0 0 24 24\" focusable=\"false\"
+        class=\"svg-icon am-monitor-icon\"><use href=\"/static/1788978e/images/material-icons/svg-sprite-social-symbol.svg#ic_person_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">admin</span></a><a href=\"/logout\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/1788978e/images/material-icons/svg-sprite-action-symbol.svg#ic_input_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">log out</span></a></div></header><div id=\"breadcrumbBar\"><script
+        src='/adjuncts/1788978e/lib/layout/breadcrumbs.js' type='text/javascript'></script><div
+        class=\"top-sticker noedge\"><div class=\"top-sticker-inner\"><div class=\"jenkins-breadcrumbs\"><ul
+        id=\"breadcrumbs\"><li class=\"item\"><a href=\"/\" class=\"model-link\">Dashboard</a></li><li
+        href=\"/\" class=\"children\"></li><li class=\"item\"><a href=\"/view/test_list_section_no_regex/\">test_list_section_no_regex</a></li><li
+        href=\"/view/test_list_section_no_regex/\" class=\"children\"></li></ul><div
+        id=\"breadcrumb-menu-target\"></div></div></div></div></div><div id=\"page-body\"
+        class=\"clear\"><div id=\"side-panel\"><div id=\"tasks\"><div class=\"task
+        \"><span class=\"task-link-wrapper \">\n            \n            <a href=\"/view/test_list_section_no_regex/newJob\"
+        class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M256 112v288M400 256H112\"/></svg></span><span
+        class=\"task-link-text\">New Item</span></a></span></div><div class=\"task
+        \"><span class=\"task-link-wrapper \">\n            \n            <a href=\"/view/test_list_section_no_regex/asynchPeople/\"
+        class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"icon-user
+        icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><path d=\"M402 168c-2.93 40.67-33.1 72-66
+        72s-63.12-31.32-66-72c-3-42.31 26.37-72 66-72s69 30.46 66 72z\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/><path d=\"M336 304c-65.17 0-127.84 32.37-143.54 95.41-2.08
+        8.34 3.15 16.59 11.72 16.59h263.65c8.57 0 13.77-8.25 11.72-16.59C463.85 335.36
+        401.18 304 336 304z\" fill=\"none\" stroke=\"currentColor\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\"/><path d=\"M200 185.94c-2.34 32.48-26.72 58.06-53 58.06s-50.7-25.57-53-58.06C91.61
+        152.15 115.34 128 147 128s55.39 24.77 53 57.94z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        d=\"M206 306c-18.05-8.27-37.93-11.45-59-11.45-52 0-102.1 25.85-114.65 76.2-1.65
+        6.66 2.53 13.25 9.37 13.25H154\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-miterlimit=\"10\" stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">People</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/view/test_list_section_no_regex/builds\" class=\"task-link \"><span
+        class=\"task-icon-link\"><svg class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M384 80H128c-26
+        0-43 14-48 40L48 272v112a48.14 48.14 0 0048 48h320a48.14 48.14 0 0048-48V272l-32-152c-5-27-23-40-48-40z\"
+        fill=\"none\" stroke=\"currentColor\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M48 272h144M320 272h144M192 272a64 64 0 00128 0M144
+        144h224M128 208h256\"/></svg></span><span class=\"task-link-text\">Build History</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/view/test_list_section_no_regex/configure\" class=\"task-link task-link--active\"><span
+        class=\"task-icon-link\"><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg
+        class=\"\" class=\"\" aria-hidden=\"true\" width=\"512px\" height=\"512px\"
+        viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\">\n        <g transform=\"translate(50.378500,
+        42.000000)\" stroke=\"currentColor\" stroke-width=\"32\">\n            <path
+        d=\"M211.9115,150.31 C185.005783,147.652748 159.332619,162.189611 147.769706,186.628874
+        C136.206793,211.068138 141.24875,240.137201 160.366525,259.254975 C179.484299,278.37275
+        208.553362,283.414707 232.992626,271.851794 C257.431889,260.288881 271.968752,234.615717
+        269.3115,207.71 C266.263249,177.360931 242.260569,153.358251 211.9115,150.31
+        L211.9115,150.31 Z M410.9165,277.125 C411.707607,281.564887 410.903766,286.141508
+        408.647035,290.04607 L372.853966,351.97469 C370.607176,355.862053 367.040281,358.81433
+        362.8015,360.295 C358.482479,361.803699 353.868429,362.272089 349.334332,361.662103
+        L320.522752,357.785994 C299.879684,355.00882 279.988607,366.61094 272.243485,385.946453
+        L261.688643,412.296365 C259.969284,416.588704 257.239668,420.402837 253.7315,423.415
+        C250.285888,426.373452 245.894629,428 241.353189,428 L169.796876,428 C165.308275,428
+        160.960823,426.431216 157.5065,423.565 C153.996701,420.652754 151.25415,416.924675
+        149.518855,412.70702 L138.358864,385.582532 C130.453683,366.368896 110.519057,354.968685
+        89.9503733,357.89869 L61.8696222,361.898788 C57.3434346,362.543543 52.7286498,362.09476
+        48.4115003,360.59 C44.1729946,359.112652 40.6059709,356.162306 38.3598585,352.276117
+        L2.56596537,290.34607 C0.309233973,286.441508 -0.494606827,281.864887 0.296500273,277.425
+        C1.10103427,272.909758 2.99390287,268.65863 5.81124857,265.039618 L23.4896432,242.330895
+        C36.4067894,225.738218 36.3997393,202.490855 23.4725314,185.906016 L5.73914207,163.155131
+        C2.93726987,159.560495 1.06449867,155.330725 0.286500273,150.84 C-0.479118527,146.420732
+        0.330889273,141.87293 2.57525137,137.989769 L38.3890342,76.0253095 C40.6358245,72.1379474
+        44.2027191,69.1856702 48.4415003,67.705 C52.7614677,66.1959703 57.3747149,65.7192136
+        61.9119868,66.3128907 L91.2373143,70.1499486 C111.792442,72.839474 131.546967,61.2195013
+        139.18365,41.9470371 L149.578712,15.7133384 C151.281675,11.4156234 154.004147,7.5964633
+        157.5115,4.585 C160.957112,1.6265481 165.348371,0 169.889811,0 L241.446124,0
+        C245.934725,0 250.282177,1.5687841 253.7365,4.435 C257.245602,7.3466683 259.982278,11.0789954
+        261.704008,15.3012287 L272.612929,42.053395 C280.490247,61.3711009 300.470109,72.8820729
+        321.133157,70.007291 L349.370217,66.0787615 C353.899388,65.4486329 358.513486,65.904939
+        362.8315,67.41 C367.070006,68.8873483 370.637029,71.837694 372.883142,75.7238833
+        L408.677035,137.65393 C410.933766,141.558492 411.737607,146.135113 410.9465,150.575
+        C410.140427,155.098876 408.314604,159.379748 405.607548,163.092841 L385.561411,190.588825
+        C373.755974,206.781577 374.583692,228.954539 387.563545,244.222054 L405.168289,264.929585
+        C408.130553,268.41394 410.114244,272.622543 410.9165,277.125 Z\"></path>\n
+        \       </g>\n    </g>\n</svg></span><span class=\"task-link-text\">Edit View</span></a></span><div
+        class=\"subtasks\"></div></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"delete\" class=\"task-link \"><span
+        class=\"task-icon-link\"><svg class=\"icon-edit-delete icon-md\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><path d=\"M112 112l20 320c.95 18.49 14.4 32 32
+        32h184c17.67 0 30.87-13.51 32-32l20-320\" fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M80 112h352\"/><path d=\"M192 112V72h0a23.93 23.93
+        0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8
+        224\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">Delete View</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/manage\" class=\"task-link \"><span class=\"task-icon-link\"><?xml
+        version=\"1.0\" encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\"
+        width=\"512px\" height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\">\n        <g transform=\"translate(50.378500,
+        42.000000)\" stroke=\"currentColor\" stroke-width=\"32\">\n            <path
+        d=\"M211.9115,150.31 C185.005783,147.652748 159.332619,162.189611 147.769706,186.628874
+        C136.206793,211.068138 141.24875,240.137201 160.366525,259.254975 C179.484299,278.37275
+        208.553362,283.414707 232.992626,271.851794 C257.431889,260.288881 271.968752,234.615717
+        269.3115,207.71 C266.263249,177.360931 242.260569,153.358251 211.9115,150.31
+        L211.9115,150.31 Z M410.9165,277.125 C411.707607,281.564887 410.903766,286.141508
+        408.647035,290.04607 L372.853966,351.97469 C370.607176,355.862053 367.040281,358.81433
+        362.8015,360.295 C358.482479,361.803699 353.868429,362.272089 349.334332,361.662103
+        L320.522752,357.785994 C299.879684,355.00882 279.988607,366.61094 272.243485,385.946453
+        L261.688643,412.296365 C259.969284,416.588704 257.239668,420.402837 253.7315,423.415
+        C250.285888,426.373452 245.894629,428 241.353189,428 L169.796876,428 C165.308275,428
+        160.960823,426.431216 157.5065,423.565 C153.996701,420.652754 151.25415,416.924675
+        149.518855,412.70702 L138.358864,385.582532 C130.453683,366.368896 110.519057,354.968685
+        89.9503733,357.89869 L61.8696222,361.898788 C57.3434346,362.543543 52.7286498,362.09476
+        48.4115003,360.59 C44.1729946,359.112652 40.6059709,356.162306 38.3598585,352.276117
+        L2.56596537,290.34607 C0.309233973,286.441508 -0.494606827,281.864887 0.296500273,277.425
+        C1.10103427,272.909758 2.99390287,268.65863 5.81124857,265.039618 L23.4896432,242.330895
+        C36.4067894,225.738218 36.3997393,202.490855 23.4725314,185.906016 L5.73914207,163.155131
+        C2.93726987,159.560495 1.06449867,155.330725 0.286500273,150.84 C-0.479118527,146.420732
+        0.330889273,141.87293 2.57525137,137.989769 L38.3890342,76.0253095 C40.6358245,72.1379474
+        44.2027191,69.1856702 48.4415003,67.705 C52.7614677,66.1959703 57.3747149,65.7192136
+        61.9119868,66.3128907 L91.2373143,70.1499486 C111.792442,72.839474 131.546967,61.2195013
+        139.18365,41.9470371 L149.578712,15.7133384 C151.281675,11.4156234 154.004147,7.5964633
+        157.5115,4.585 C160.957112,1.6265481 165.348371,0 169.889811,0 L241.446124,0
+        C245.934725,0 250.282177,1.5687841 253.7365,4.435 C257.245602,7.3466683 259.982278,11.0789954
+        261.704008,15.3012287 L272.612929,42.053395 C280.490247,61.3711009 300.470109,72.8820729
+        321.133157,70.007291 L349.370217,66.0787615 C353.899388,65.4486329 358.513486,65.904939
+        362.8315,67.41 C367.070006,68.8873483 370.637029,71.837694 372.883142,75.7238833
+        L408.677035,137.65393 C410.933766,141.558492 411.737607,146.135113 410.9465,150.575
+        C410.140427,155.098876 408.314604,159.379748 405.607548,163.092841 L385.561411,190.588825
+        C373.755974,206.781577 374.583692,228.954539 387.563545,244.222054 L405.168289,264.929585
+        C408.130553,268.41394 410.114244,272.622543 410.9165,277.125 Z\"></path>\n
+        \       </g>\n    </g>\n</svg></span><span class=\"task-link-text\">Manage
+        Jenkins</span></a></span></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/me/my-views\" class=\"task-link
+        \"><span class=\"task-icon-link\"><svg class=\"icon-user icon-md\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><path d=\"M402 168c-2.93 40.67-33.1 72-66 72s-63.12-31.32-66-72c-3-42.31
+        26.37-72 66-72s69 30.46 66 72z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\"/><path d=\"M336 304c-65.17 0-127.84
+        32.37-143.54 95.41-2.08 8.34 3.15 16.59 11.72 16.59h263.65c8.57 0 13.77-8.25
+        11.72-16.59C463.85 335.36 401.18 304 336 304z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"32\"/><path d=\"M200 185.94c-2.34
+        32.48-26.72 58.06-53 58.06s-50.7-25.57-53-58.06C91.61 152.15 115.34 128 147
+        128s55.39 24.77 53 57.94z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\"/><path d=\"M206 306c-18.05-8.27-37.93-11.45-59-11.45-52
+        0-102.1 25.85-114.65 76.2-1.65 6.66 2.53 13.25 9.37 13.25H154\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">My Views</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/newView\" class=\"task-link \"><span class=\"task-icon-link\"><svg
+        class=\"icon-folder icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M440 432H72a40
+        40 0 01-40-40V120a40 40 0 0140-40h75.89a40 40 0 0122.19 6.72l27.84 18.56a40
+        40 0 0022.19 6.72H440a40 40 0 0140 40v240a40 40 0 01-40 40zM32 192h448\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">New View</span></a></span></div></div><div
+        id=\"buildQueue\" class=\"container-fluid pane-frame track-mouse expanded\"><div
+        class=\"row\"><div class=\"col-xs-24 pane-header\"><span class=\"pane-header-title\">Build
+        Queue</span><a href=\"/toggleCollapse?paneId=buildQueue\" title=\"collapse\"
+        class=\"collapse\"><svg class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"48\" d=\"M112
+        184l144 144 144-144\"/></svg></a></div></div><div class=\"row pane-content\"><table
+        class=\"pane \"><script src='/adjuncts/1788978e/lib/form/link/link.js' type='text/javascript'></script><tr><td
+        class=\"pane\" colspan=\"2\">No builds in the queue.</td></tr></table></div></div><script
+        defer=\"defer\">refreshPart('buildQueue',\"/view/test_list_section_no_regex/ajaxBuildQueue\");</script><div
+        id=\"executors\" class=\"container-fluid pane-frame track-mouse expanded\"><div
+        class=\"row\"><div class=\"col-xs-24 pane-header\"><span class=\"pane-header-title\"><a
+        href='/computer/'>Build Executor Status</a></span><a href=\"/toggleCollapse?paneId=executors\"
+        title=\"collapse\" class=\"collapse\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><title></title><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"48\" d=\"M112 184l144 144 144-144\"/></svg></a></div></div><div
+        class=\"row pane-content\"><table class=\"pane \"><colgroup><col width=\"30\"><col
+        width=\"200*\"><col width=\"24\"></colgroup><tr></tr><tr><td class=\"pane\"
+        align=\"right\" style=\"vertical-align: top\">1</td><td class=\"pane\">Idle</td><td
+        class=\"pane\"></td><td class=\"pane\"></td></tr><tr><td class=\"pane\" align=\"right\"
+        style=\"vertical-align: top\">2</td><td class=\"pane\">Idle</td><td class=\"pane\"></td><td
+        class=\"pane\"></td></tr></table></div></div><script defer=\"defer\">refreshPart('executors',\"/view/test_list_section_no_regex/ajaxExecutors\");</script></div><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><form method=\"post\" autocomplete=\"off\"
+        name=\"viewConfig\" action=\"configSubmit\"><div width=\"100%\"><div class=\"jenkins-form-item
+        tr \"><div class=\"jenkins-form-label help-sibling\">Name</div><div class=\"setting-main\">\n
+        \  \n\n  \n  <input autocomplete=\"on\" name=\"name\" placeholder=\"\" type=\"text\"
+        class=\"jenkins-input   \" value=\"test_list_section_no_regex\"></div><div
+        class=\"validation-error-area tr\"><div colspan=\"2\"></div><div></div><div></div></div></div><div
+        class=\"jenkins-form-item tr \"><div class=\"jenkins-form-label help-sibling\">Description<a
+        tooltip=\"Help for feature: Description\" helpURL=\"/help/view-config/description.html\"
+        href=\"#\" class=\"jenkins-help-button\"><span>?</span></a></div><div class=\"setting-main\"><link
+        rel='stylesheet' href='/adjuncts/1788978e/lib/form/textarea/textarea.css'
+        type='text/css' /><script src='/adjuncts/1788978e/lib/form/textarea/textarea.js'
+        type='text/javascript'></script><textarea name=\"description\" rows=\"5\"
+        class=\"jenkins-input   \"></textarea><div class=\"textarea-handle\"></div><div
+        class=\"textarea-preview-container\">\n        [Plain text]\_<a previewEndpoint=\"/markupFormatter/previewDescription\"
+        href=\"#\" class=\"textarea-show-preview\">Preview</a>\_<a href=\"#\" class=\"textarea-hide-preview\">Hide
+        preview</a><div class=\"textarea-preview\"></div></div></div><div class=\"validation-error-area
+        tr\"><div colspan=\"2\"></div><div></div><div></div></div><div class=\"help-area
+        tr\"><div class=\"help\"><p class=\"jenkins-spinner\">Loading...</div></div></div><div
+        class=\"jenkins-form-item tr \"><div class=\"setting-main help-sibling\"><span
+        class=\"jenkins-checkbox\"><input name=\"filterQueue\" type=\"checkbox\" class=\"
+        \ \"><label class=\"attach-previous \">Filter build queue</label></span></div><div
+        class=\"validation-error-area tr\"><div colspan=\"2\"></div><div></div><div></div></div><div
+        class=\"help-area tr\"><div class=\"help\"><p class=\"jenkins-spinner\">Loading...</div></div></div><div
+        class=\"jenkins-form-item tr \"><div class=\"setting-main help-sibling\"><span
+        class=\"jenkins-checkbox\"><input name=\"filterExecutors\" type=\"checkbox\"
+        class=\"  \"><label class=\"attach-previous \">Filter build executors</label></span></div><div
+        class=\"validation-error-area tr\"><div colspan=\"2\"></div><div></div><div></div></div><div
+        class=\"help-area tr\"><div class=\"help\"><p class=\"jenkins-spinner\">Loading...</div></div></div><script
+        src=\"/static/1788978e/scripts/yui/treeview/treeview-min.js\"></script><link
+        rel=\"stylesheet\" href=\"/scripts/yui/treeview/assets/skins/sam/treeview.css\"
+        type=\"text/css\"><script src='/adjuncts/1788978e/lib/form/section_.js' type='text/javascript'></script><div
+        class=\"jenkins-section\"><div class=\"jenkins-section__title\">Sections</div><div
+        class=\"tr\"><div colspan=\"4\"><script src='/adjuncts/1788978e/lib/form/filter-menu-button/filter-menu-button.js'
+        type='text/javascript'></script><script src='/adjuncts/1788978e/lib/form/hetero-list/hetero-list.js'
+        type='text/javascript'></script><div class=\"jenkins-form-item hetero-list-container
+        with-drag-drop  \"><div class=\"repeatable-insertion-point\"></div><div class=\"prototypes
+        to-be-removed\"><div descriptorId=\"hudson.plugins.sectioned_view.FolderViewSection\"
+        name=\"sections\" title=\"Folder Listing Section\"><div class=\"help-sibling\"
+        style=\"width:100%\"><div class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n
+        \         Folder Listing Section\n\n          <script src='/adjuncts/1788978e/lib/form/repeatable/repeatable.js'
+        type='text/javascript'></script><button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.FolderViewSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.FolderViewSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/0fecf3b8-86f0-492f-add4-e6d47d817286','3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.JobGraphsSection\" name=\"sections\"
+        title=\"Job Graphs Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          Job
+        Graphs Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.JobGraphsSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.JobGraphsSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/1eb64e8c-4be9-4f77-939b-23c86665910a','3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.ListViewSection\" name=\"sections\"
+        title=\"List View Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          List
+        View Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.ListViewSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.ListViewSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/dc359dd6-a9da-4dd6-8476-307cf61ea340','3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.TestResultViewSection\" name=\"sections\"
+        title=\"Test Result Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          Test
+        Result Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.TestResultViewSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.TestResultViewSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/33d06ec0-7b45-41f9-b948-543e288150cf','3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.TextSection\" name=\"sections\"
+        title=\"Text Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          Text
+        Section\n\n          <button tooltip=\"Delete section\" type=\"button\" class=\"repeatable-delete
+        danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M368
+        368L144 144M368 144L144 368\"/></svg></button></div><div style=\"display:none\"
+        class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\" value=\"hudson.plugins.sectioned_view.TextSection\"><input
+        name=\"$class\" type=\"hidden\" value=\"hudson.plugins.sectioned_view.TextSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/5a846785-7728-4ad0-adfe-7148279a5a08','3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.ViewListingSection\" name=\"sections\"
+        title=\"View Listing Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          View
+        Listing Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.ViewListingSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.ViewListingSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/128c3c69-d8ac-4ead-a8f5-4549670462e8','3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912',['render'])\"></div></div></div></div><div><input
+        type=\"button\" suffix=\"sections\" value=\"Add Section\" class=\"hetero-list-add\"></div></div></div></div></div><div
+        id=\"bottom-sticker\"><div class=\"bottom-sticker-inner\"><input name=\"Submit\"
+        type=\"submit\" value=\"OK\" class=\"submit-button primary \"><script src='/adjuncts/1788978e/lib/form/apply/apply.js'
+        type='text/javascript'></script><input type=\"hidden\" name=\"core:apply\"
+        value=\"\"><input name=\"Apply\" type=\"button\" value=\"Apply\" class=\"apply-button
+        applyButton \"></div></div></div></form><script src='/adjuncts/1788978e/lib/form/confirm.js'
+        type='text/javascript'></script></div></div><footer class=\"page-footer\"><div
+        class=\"container-fluid\"><div class=\"page-footer__flex-row\"><div class=\"page-footer__footer-id-placeholder\"
+        id=\"footer\"></div><link rel='stylesheet' href='/adjuncts/1788978e/jenkins/management/AdministrativeMonitorsDecorator/resources.css'
+        type='text/css' /><script src='/adjuncts/1788978e/jenkins/management/AdministrativeMonitorsDecorator/resources.js'
+        type='text/javascript'></script><div id=\"visible-am-container\" class=\"am-container\"><a
+        id=\"visible-am-button\" href=\"#\" title=\"There are 3 active administrative
+        monitors.\" class=\"am-button\" data-href=\"/administrativeMonitorsApi/nonSecurityPopupContent\"><svg
+        viewBox=\"0 0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/1788978e/images/material-icons/svg-sprite-social-symbol.svg#ic_notifications_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">3</span></a><div
+        id=\"visible-am-list\" class=\"am-list\"></div></div><div id=\"visible-sec-am-container\"
+        class=\"am-container\"><a id=\"visible-sec-am-button\" href=\"#\" title=\"There
+        are 2 active security administrative monitors.\" class=\"am-button security-am\"
+        data-href=\"/administrativeMonitorsApi/securityPopupContent\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/1788978e/images/material-icons/svg-sprite-action-symbol.svg#ic_warning_shield_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">2</span></a><div
+        id=\"visible-sec-am-list\" class=\"am-list\"></div></div><script type=\"text/javascript\">\n
+        \           (function() {\n                var amContainer = document.getElementById(\"visible-am-container\");\n
+        \               var amInsertion = document.getElementById(\"visible-am-insertion\");\n\n
+        \               if (amInsertion) {\n                    amInsertion.appendChild(amContainer);\n
+        \               }\n\n                var secAmContainer = document.getElementById(\"visible-sec-am-container\");\n
+        \               var secAmInsertion = document.getElementById(\"visible-sec-am-insertion\");\n\n
+        \               if (secAmInsertion) {\n                    secAmInsertion.appendChild(secAmContainer);\n
+        \               }\n            })();\n        </script><script type=\"text/javascript\">\n
+        \   var defaultUpdateSiteId = 'default';\n    var setupWizardExtensions =
+        [];\n    var onSetupWizardInitialized = function(extension) {\n      setupWizardExtensions.push(extension);\n
+        \   };\n  </script><script src=\"/static/1788978e/jsbundles/pluginSetupWizard.js\"
+        type=\"text/javascript\"></script><link rel=\"stylesheet\" href=\"/static/1788978e/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"><div class=\"page-footer__links rest_api hidden-xs\"><a
+        href=\"api/\">REST API</a></div><div class=\"page-footer__links page-footer__links--white
+        jenkins_ver\"><a rel=\"noopener noreferrer\" href=\"https://www.jenkins.io/\"
+        target=\"_blank\">Jenkins 2.345</a></div></div></div></footer></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:37:20 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsZG+p64aJPU4+31tOsnx4XOs4yQ8cSF1ot9h1twLH3zHONcyHZiOfmbckOhUWC5KeXYngTegrGtgCUVYiMduJhecqsPuTbGOFA05g1yaWRWFCaMJurBqKXUek35xryFfYDHsjXgiAEq1oc67F1cOJ3xYSypqQGfSuf/va90lkWL7OymlxjFiSYn7ySYXTM7OGFsi8r/53vzfZZ28mjTNgl1UsSJmVUFM4BOQSTqCsdAYlyFnw9YMdAb8DB4zWMraz5VjFTSBqfB8slJYp067ql/o4rPIDFOnhIPph8k8W/hHvNqVKTxytFTo4ACGb82e/6kruy4LX5yRPgrcs70sPQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '34669'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:63499/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:63499/"},{"_class":"hudson.plugins.sectioned_view.SectionedView","name":"test_list_section_no_regex","url":"http://localhost:63499/view/test_list_section_no_regex/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:37:20 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '743'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/view/all/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.AllView","description":null,"jobs":[],"name":"all","property":[],"url":"http://localhost:63499/"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:37:20 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '121'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/view/test_list_section_no_regex/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.plugins.sectioned_view.SectionedView","description":null,"jobs":[],"name":"test_list_section_no_regex","property":[],"url":"http://localhost:63499/view/test_list_section_no_regex/"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:37:20 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '199'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/view/test_list_section_no_regex/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.1\" encoding=\"UTF-8\"?>\n<hudson.plugins.sectioned__view.SectionedView
+        plugin=\"sectioned-view@1.25\">\n  <name>test_list_section_no_regex</name>\n
+        \ <filterExecutors>false</filterExecutors>\n  <filterQueue>false</filterQueue>\n
+        \ <properties class=\"hudson.model.View$PropertyList\"/>\n  <sections/>\n</hudson.plugins.sectioned__view.SectionedView>"
+    headers:
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 20:37:21 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:63499/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:63499/"},{"_class":"hudson.plugins.sectioned_view.SectionedView","name":"test_list_section_no_regex","url":"http://localhost:63499/view/test_list_section_no_regex/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:37:21 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '743'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:37:21 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<hudson.plugins.sectioned__view.SectionedView plugin=\"sectioned-view@1.25\">\n
+      \ <name>test_list_section_no_regex</name>\n  <filterExecutors>false</filterExecutors>\n
+      \ <filterQueue>false</filterQueue>\n  <properties class=\"hudson.model.View$PropertyList\"
+      />\n  <sections><hudson.plugins.sectioned__view.ListViewSection>\n    <jobNames>\n
+      \       <comparator class=\"hudson.util.CaseInsensitiveComparator\" />\n    </jobNames>\n
+      \   <jobFilters />\n    <width>FULL</width>\n    <alignment>CENTER</alignment>\n
+      \   <columns>\n        <hudson.views.StatusColumn />\n        <hudson.views.WeatherColumn
+      />\n        <hudson.views.JobColumn />\n        <hudson.views.LastSuccessColumn
+      />\n        <hudson.views.LastFailureColumn />\n        <hudson.views.LastDurationColumn
+      />\n        <hudson.views.BuildButtonColumn />\n    </columns>\n<name>MyNewSection</name></hudson.plugins.sectioned__view.ListViewSection></sections>\n</hudson.plugins.sectioned__view.SectionedView>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '937'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      Jenkins-Crumb:
+      - 3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:63499/view/test_list_section_no_regex/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:37:21 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      Jenkins-Crumb:
+      - 3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:63499/view/test_list_section_no_regex/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:37:21 GMT
+      Location:
+      - http://localhost:63499/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0m1bixtphufwl1e2triwt6p4fp53.node0
+      Jenkins-Crumb:
+      - 3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/1788978e\" data-rooturl=\"\"
+        data-resurl=\"/static/1788978e\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/1788978e/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"3cbfa7227754f216df9cb09235f0047a9958c5dfc6afa9750a5531df2ef77912\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/1788978e/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/1788978e/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/1788978e/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/1788978e/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/1788978e/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/1788978e/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/1788978e/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/1788978e/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/event/event-min.js\"></script><script src=\"/static/1788978e/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/1788978e/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/1788978e/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/1788978e/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/1788978e/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/1788978e/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/1788978e/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/1788978e/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/1788978e/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/1788978e/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/1788978e/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/1788978e/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:37:21 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsZG+p64aJPU4+31tOsnx4XOs4yQ8cSF1ot9h1twLH3zHONcyHZiOfmbckOhUWC5KeXYngTegrGtgCUVYiMduJhecqsPuTbGOFA05g1yaWRWFCaMJurBqKXUek35xryFfYDHsjXgiAEq1oc67F1cOJ3xYSypqQGfSuf/va90lkWL7OymlxjFiSYn7ySYXTM7OGFsi8r/53vzfZZ28mjTNgl1UsSJmVUFM4BOQSTqCsdAYlyFnw9YMdAb8DB4zWMraz5VjFTSBqfB8slJYp067ql/o4rPIDFOnhIPph8k8W/hHvNqVKTxytFTo4ACGb82e/6kruy4LX5yRPgrcs70sPQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:54:47 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '586'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:54:47 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Set-Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: name=test_list_section_no_regex&mode=hudson.plugins.sectioned_view.SectionedView&Submit=OK&json=%7B%22name%22%3A+%22test_list_section_no_regex%22%2C+%22mode%22%3A+%22hudson.plugins.sectioned_view.SectionedView%22%7D
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '215'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      Jenkins-Crumb:
+      - f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/createView
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:54:47 GMT
+      Location:
+      - http://localhost:64171/view/test_list_section_no_regex/configure
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      Jenkins-Crumb:
+      - f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/view/test_list_section_no_regex/configure
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/92a9e902\" data-rooturl=\"\"
+        data-resurl=\"/static/92a9e902\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/92a9e902/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85\">\n
+        \   \n    \n\n    <title>Edit View [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/92a9e902/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/92a9e902/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/92a9e902/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/92a9e902/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/event/event-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssAll\"
+        title=\"Jenkins:test_list_section_no_regex (all builds)\" type=\"application/atom+xml\"><link
+        rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssAll?flavor=rss20\"
+        title=\"Jenkins:test_list_section_no_regex (all builds) (RSS 2.0)\" type=\"application/rss+xml\"><link
+        rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssFailed\" title=\"Jenkins:test_list_section_no_regex
+        (failed builds)\" type=\"application/atom+xml\"><link rel=\"alternate\" href=\"/view/test_list_section_no_regex/rssFailed?flavor=rss20\"
+        title=\"Jenkins:test_list_section_no_regex (failed builds) (RSS 2.0)\" type=\"application/rss+xml\"><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/92a9e902/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"hudson.plugins.sectioned_view.SectionedView\" id=\"jenkins\"
+        class=\"yui-skin-sam two-column jenkins-2.345\" data-version=\"2.345\"><a
+        href=\"#skip2content\" class=\"skiplink\">Skip to content</a><header id=\"page-header\"
+        class=\"page-header\"><div class=\"page-header__brand\"><div class=\"logo\"><a
+        id=\"jenkins-home-link\" href=\"/\"><img src=\"/static/92a9e902/images/svgs/logo.svg\"
+        alt=\"[Jenkins]\" id=\"jenkins-head-icon\"><img src=\"/static/92a9e902/images/title.svg\"
+        alt=\"Jenkins\" width=\"139\" id=\"jenkins-name-icon\" height=\"34\"></a></div><a
+        href=\"/\" class=\"page-header__brand-link\"><img src=\"/static/92a9e902/images/svgs/logo.svg\"
+        alt=\"[Jenkins]\" class=\"page-header__brand-image\"><span class=\"page-header__brand-name\">Jenkins</span></a></div><div
+        class=\"searchbox hidden-xs\"><form role=\"search\" method=\"get\" name=\"search\"
+        action=\"/view/test_list_section_no_regex/search/\" style=\"position:relative;\"
+        class=\"no-json\"><div id=\"search-box-sizer\"></div><div id=\"searchform\"><input
+        role=\"searchbox\" name=\"q\" placeholder=\"Search\" id=\"search-box\" class=\"main-search__input\"><span
+        class=\"main-search__icon-leading\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><title></title><path
+        d=\"M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z\"
+        fill=\"none\" stroke=\"currentColor\" stroke-miterlimit=\"10\" stroke-width=\"32\"/><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M338.29 338.29L448 448\"/></svg></span><a href=\"https://www.jenkins.io/redirect/search-box\"
+        class=\"main-search__icon-trailing\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path d=\"M256
+        40a216 216 0 10216 216A216 216 0 00256 40z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"38\"/><path d=\"M200 202.29s.84-17.5
+        19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45
+        10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296\"
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"38\"/><circle cx=\"250\" cy=\"360\" r=\"25\" fill=\"currentColor\"/></svg></a><div
+        id=\"search-box-completion\"></div><script>createSearchBox(\"/view/test_list_section_no_regex/search/\");</script></div></form></div><div
+        class=\"login page-header__hyperlinks\"><div id=\"visible-am-insertion\" class=\"page-header__am-wrapper\"></div><div
+        id=\"visible-sec-am-insertion\" class=\"page-header__am-wrapper\"></div><a
+        href=\"/user/admin\" class=\"model-link\"><svg viewBox=\"0 0 24 24\" focusable=\"false\"
+        class=\"svg-icon am-monitor-icon\"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-social-symbol.svg#ic_person_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">admin</span></a><a href=\"/logout\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-action-symbol.svg#ic_input_24px\"></use></svg><span
+        class=\"hidden-xs hidden-sm\">log out</span></a></div></header><div id=\"breadcrumbBar\"><script
+        src='/adjuncts/92a9e902/lib/layout/breadcrumbs.js' type='text/javascript'></script><div
+        class=\"top-sticker noedge\"><div class=\"top-sticker-inner\"><div class=\"jenkins-breadcrumbs\"><ul
+        id=\"breadcrumbs\"><li class=\"item\"><a href=\"/\" class=\"model-link\">Dashboard</a></li><li
+        href=\"/\" class=\"children\"></li><li class=\"item\"><a href=\"/view/test_list_section_no_regex/\">test_list_section_no_regex</a></li><li
+        href=\"/view/test_list_section_no_regex/\" class=\"children\"></li></ul><div
+        id=\"breadcrumb-menu-target\"></div></div></div></div></div><div id=\"page-body\"
+        class=\"clear\"><div id=\"side-panel\"><div id=\"tasks\"><div class=\"task
+        \"><span class=\"task-link-wrapper \">\n            \n            <a href=\"/view/test_list_section_no_regex/newJob\"
+        class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M256 112v288M400 256H112\"/></svg></span><span
+        class=\"task-link-text\">New Item</span></a></span></div><div class=\"task
+        \"><span class=\"task-link-wrapper \">\n            \n            <a href=\"/view/test_list_section_no_regex/asynchPeople/\"
+        class=\"task-link \"><span class=\"task-icon-link\"><svg class=\"icon-user
+        icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><path d=\"M402 168c-2.93 40.67-33.1 72-66
+        72s-63.12-31.32-66-72c-3-42.31 26.37-72 66-72s69 30.46 66 72z\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/><path d=\"M336 304c-65.17 0-127.84 32.37-143.54 95.41-2.08
+        8.34 3.15 16.59 11.72 16.59h263.65c8.57 0 13.77-8.25 11.72-16.59C463.85 335.36
+        401.18 304 336 304z\" fill=\"none\" stroke=\"currentColor\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\"/><path d=\"M200 185.94c-2.34 32.48-26.72 58.06-53 58.06s-50.7-25.57-53-58.06C91.61
+        152.15 115.34 128 147 128s55.39 24.77 53 57.94z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        d=\"M206 306c-18.05-8.27-37.93-11.45-59-11.45-52 0-102.1 25.85-114.65 76.2-1.65
+        6.66 2.53 13.25 9.37 13.25H154\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-miterlimit=\"10\" stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">People</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/view/test_list_section_no_regex/builds\" class=\"task-link \"><span
+        class=\"task-icon-link\"><svg class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M384 80H128c-26
+        0-43 14-48 40L48 272v112a48.14 48.14 0 0048 48h320a48.14 48.14 0 0048-48V272l-32-152c-5-27-23-40-48-40z\"
+        fill=\"none\" stroke=\"currentColor\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M48 272h144M320 272h144M192 272a64 64 0 00128 0M144
+        144h224M128 208h256\"/></svg></span><span class=\"task-link-text\">Build History</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/view/test_list_section_no_regex/configure\" class=\"task-link task-link--active\"><span
+        class=\"task-icon-link\"><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg
+        class=\"\" class=\"\" aria-hidden=\"true\" width=\"512px\" height=\"512px\"
+        viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\">\n        <g transform=\"translate(50.378500,
+        42.000000)\" stroke=\"currentColor\" stroke-width=\"32\">\n            <path
+        d=\"M211.9115,150.31 C185.005783,147.652748 159.332619,162.189611 147.769706,186.628874
+        C136.206793,211.068138 141.24875,240.137201 160.366525,259.254975 C179.484299,278.37275
+        208.553362,283.414707 232.992626,271.851794 C257.431889,260.288881 271.968752,234.615717
+        269.3115,207.71 C266.263249,177.360931 242.260569,153.358251 211.9115,150.31
+        L211.9115,150.31 Z M410.9165,277.125 C411.707607,281.564887 410.903766,286.141508
+        408.647035,290.04607 L372.853966,351.97469 C370.607176,355.862053 367.040281,358.81433
+        362.8015,360.295 C358.482479,361.803699 353.868429,362.272089 349.334332,361.662103
+        L320.522752,357.785994 C299.879684,355.00882 279.988607,366.61094 272.243485,385.946453
+        L261.688643,412.296365 C259.969284,416.588704 257.239668,420.402837 253.7315,423.415
+        C250.285888,426.373452 245.894629,428 241.353189,428 L169.796876,428 C165.308275,428
+        160.960823,426.431216 157.5065,423.565 C153.996701,420.652754 151.25415,416.924675
+        149.518855,412.70702 L138.358864,385.582532 C130.453683,366.368896 110.519057,354.968685
+        89.9503733,357.89869 L61.8696222,361.898788 C57.3434346,362.543543 52.7286498,362.09476
+        48.4115003,360.59 C44.1729946,359.112652 40.6059709,356.162306 38.3598585,352.276117
+        L2.56596537,290.34607 C0.309233973,286.441508 -0.494606827,281.864887 0.296500273,277.425
+        C1.10103427,272.909758 2.99390287,268.65863 5.81124857,265.039618 L23.4896432,242.330895
+        C36.4067894,225.738218 36.3997393,202.490855 23.4725314,185.906016 L5.73914207,163.155131
+        C2.93726987,159.560495 1.06449867,155.330725 0.286500273,150.84 C-0.479118527,146.420732
+        0.330889273,141.87293 2.57525137,137.989769 L38.3890342,76.0253095 C40.6358245,72.1379474
+        44.2027191,69.1856702 48.4415003,67.705 C52.7614677,66.1959703 57.3747149,65.7192136
+        61.9119868,66.3128907 L91.2373143,70.1499486 C111.792442,72.839474 131.546967,61.2195013
+        139.18365,41.9470371 L149.578712,15.7133384 C151.281675,11.4156234 154.004147,7.5964633
+        157.5115,4.585 C160.957112,1.6265481 165.348371,0 169.889811,0 L241.446124,0
+        C245.934725,0 250.282177,1.5687841 253.7365,4.435 C257.245602,7.3466683 259.982278,11.0789954
+        261.704008,15.3012287 L272.612929,42.053395 C280.490247,61.3711009 300.470109,72.8820729
+        321.133157,70.007291 L349.370217,66.0787615 C353.899388,65.4486329 358.513486,65.904939
+        362.8315,67.41 C367.070006,68.8873483 370.637029,71.837694 372.883142,75.7238833
+        L408.677035,137.65393 C410.933766,141.558492 411.737607,146.135113 410.9465,150.575
+        C410.140427,155.098876 408.314604,159.379748 405.607548,163.092841 L385.561411,190.588825
+        C373.755974,206.781577 374.583692,228.954539 387.563545,244.222054 L405.168289,264.929585
+        C408.130553,268.41394 410.114244,272.622543 410.9165,277.125 Z\"></path>\n
+        \       </g>\n    </g>\n</svg></span><span class=\"task-link-text\">Edit View</span></a></span><div
+        class=\"subtasks\"></div></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"delete\" class=\"task-link \"><span
+        class=\"task-icon-link\"><svg class=\"icon-edit-delete icon-md\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><title></title><path d=\"M112 112l20 320c.95 18.49 14.4 32 32
+        32h184c17.67 0 30.87-13.51 32-32l20-320\" fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\"/><path
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\" d=\"M80 112h352\"/><path d=\"M192 112V72h0a23.93 23.93
+        0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8
+        224\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">Delete View</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/manage\" class=\"task-link \"><span class=\"task-icon-link\"><?xml
+        version=\"1.0\" encoding=\"UTF-8\"?>\n<svg class=\"\" class=\"\" aria-hidden=\"true\"
+        width=\"512px\" height=\"512px\" viewBox=\"0 0 512 512\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"
+        xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <g stroke=\"none\" stroke-width=\"1\"
+        fill=\"none\" fill-rule=\"evenodd\">\n        <g transform=\"translate(50.378500,
+        42.000000)\" stroke=\"currentColor\" stroke-width=\"32\">\n            <path
+        d=\"M211.9115,150.31 C185.005783,147.652748 159.332619,162.189611 147.769706,186.628874
+        C136.206793,211.068138 141.24875,240.137201 160.366525,259.254975 C179.484299,278.37275
+        208.553362,283.414707 232.992626,271.851794 C257.431889,260.288881 271.968752,234.615717
+        269.3115,207.71 C266.263249,177.360931 242.260569,153.358251 211.9115,150.31
+        L211.9115,150.31 Z M410.9165,277.125 C411.707607,281.564887 410.903766,286.141508
+        408.647035,290.04607 L372.853966,351.97469 C370.607176,355.862053 367.040281,358.81433
+        362.8015,360.295 C358.482479,361.803699 353.868429,362.272089 349.334332,361.662103
+        L320.522752,357.785994 C299.879684,355.00882 279.988607,366.61094 272.243485,385.946453
+        L261.688643,412.296365 C259.969284,416.588704 257.239668,420.402837 253.7315,423.415
+        C250.285888,426.373452 245.894629,428 241.353189,428 L169.796876,428 C165.308275,428
+        160.960823,426.431216 157.5065,423.565 C153.996701,420.652754 151.25415,416.924675
+        149.518855,412.70702 L138.358864,385.582532 C130.453683,366.368896 110.519057,354.968685
+        89.9503733,357.89869 L61.8696222,361.898788 C57.3434346,362.543543 52.7286498,362.09476
+        48.4115003,360.59 C44.1729946,359.112652 40.6059709,356.162306 38.3598585,352.276117
+        L2.56596537,290.34607 C0.309233973,286.441508 -0.494606827,281.864887 0.296500273,277.425
+        C1.10103427,272.909758 2.99390287,268.65863 5.81124857,265.039618 L23.4896432,242.330895
+        C36.4067894,225.738218 36.3997393,202.490855 23.4725314,185.906016 L5.73914207,163.155131
+        C2.93726987,159.560495 1.06449867,155.330725 0.286500273,150.84 C-0.479118527,146.420732
+        0.330889273,141.87293 2.57525137,137.989769 L38.3890342,76.0253095 C40.6358245,72.1379474
+        44.2027191,69.1856702 48.4415003,67.705 C52.7614677,66.1959703 57.3747149,65.7192136
+        61.9119868,66.3128907 L91.2373143,70.1499486 C111.792442,72.839474 131.546967,61.2195013
+        139.18365,41.9470371 L149.578712,15.7133384 C151.281675,11.4156234 154.004147,7.5964633
+        157.5115,4.585 C160.957112,1.6265481 165.348371,0 169.889811,0 L241.446124,0
+        C245.934725,0 250.282177,1.5687841 253.7365,4.435 C257.245602,7.3466683 259.982278,11.0789954
+        261.704008,15.3012287 L272.612929,42.053395 C280.490247,61.3711009 300.470109,72.8820729
+        321.133157,70.007291 L349.370217,66.0787615 C353.899388,65.4486329 358.513486,65.904939
+        362.8315,67.41 C367.070006,68.8873483 370.637029,71.837694 372.883142,75.7238833
+        L408.677035,137.65393 C410.933766,141.558492 411.737607,146.135113 410.9465,150.575
+        C410.140427,155.098876 408.314604,159.379748 405.607548,163.092841 L385.561411,190.588825
+        C373.755974,206.781577 374.583692,228.954539 387.563545,244.222054 L405.168289,264.929585
+        C408.130553,268.41394 410.114244,272.622543 410.9165,277.125 Z\"></path>\n
+        \       </g>\n    </g>\n</svg></span><span class=\"task-link-text\">Manage
+        Jenkins</span></a></span></div><div class=\"task \"><span class=\"task-link-wrapper
+        \">\n            \n            <a href=\"/me/my-views\" class=\"task-link
+        \"><span class=\"task-icon-link\"><svg class=\"icon-user icon-md\" class=\"\"
+        aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0
+        0 512 512\"><path d=\"M402 168c-2.93 40.67-33.1 72-66 72s-63.12-31.32-66-72c-3-42.31
+        26.37-72 66-72s69 30.46 66 72z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\"/><path d=\"M336 304c-65.17 0-127.84
+        32.37-143.54 95.41-2.08 8.34 3.15 16.59 11.72 16.59h263.65c8.57 0 13.77-8.25
+        11.72-16.59C463.85 335.36 401.18 304 336 304z\" fill=\"none\" stroke=\"currentColor\"
+        stroke-miterlimit=\"10\" stroke-width=\"32\"/><path d=\"M200 185.94c-2.34
+        32.48-26.72 58.06-53 58.06s-50.7-25.57-53-58.06C91.61 152.15 115.34 128 147
+        128s55.39 24.77 53 57.94z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\"
+        stroke-linejoin=\"round\" stroke-width=\"32\"/><path d=\"M206 306c-18.05-8.27-37.93-11.45-59-11.45-52
+        0-102.1 25.85-114.65 76.2-1.65 6.66 2.53 13.25 9.37 13.25H154\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-miterlimit=\"10\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">My Views</span></a></span></div><div
+        class=\"task \"><span class=\"task-link-wrapper \">\n            \n            <a
+        href=\"/newView\" class=\"task-link \"><span class=\"task-icon-link\"><svg
+        class=\"icon-folder icon-md\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path d=\"M440 432H72a40
+        40 0 01-40-40V120a40 40 0 0140-40h75.89a40 40 0 0122.19 6.72l27.84 18.56a40
+        40 0 0022.19 6.72H440a40 40 0 0140 40v240a40 40 0 01-40 40zM32 192h448\" fill=\"none\"
+        stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\"/></svg></span><span class=\"task-link-text\">New View</span></a></span></div></div><div
+        id=\"buildQueue\" class=\"container-fluid pane-frame track-mouse expanded\"><div
+        class=\"row\"><div class=\"col-xs-24 pane-header\"><span class=\"pane-header-title\">Build
+        Queue</span><a href=\"/toggleCollapse?paneId=buildQueue\" title=\"collapse\"
+        class=\"collapse\"><svg class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><title></title><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"48\" d=\"M112
+        184l144 144 144-144\"/></svg></a></div></div><div class=\"row pane-content\"><table
+        class=\"pane \"><script src='/adjuncts/92a9e902/lib/form/link/link.js' type='text/javascript'></script><tr><td
+        class=\"pane\" colspan=\"2\">No builds in the queue.</td></tr></table></div></div><script
+        defer=\"defer\">refreshPart('buildQueue',\"/view/test_list_section_no_regex/ajaxBuildQueue\");</script><div
+        id=\"executors\" class=\"container-fluid pane-frame track-mouse expanded\"><div
+        class=\"row\"><div class=\"col-xs-24 pane-header\"><span class=\"pane-header-title\"><a
+        href='/computer/'>Build Executor Status</a></span><a href=\"/toggleCollapse?paneId=executors\"
+        title=\"collapse\" class=\"collapse\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><title></title><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"48\" d=\"M112 184l144 144 144-144\"/></svg></a></div></div><div
+        class=\"row pane-content\"><table class=\"pane \"><colgroup><col width=\"30\"><col
+        width=\"200*\"><col width=\"24\"></colgroup><tr></tr><tr><td class=\"pane\"
+        align=\"right\" style=\"vertical-align: top\">1</td><td class=\"pane\">Idle</td><td
+        class=\"pane\"></td><td class=\"pane\"></td></tr><tr><td class=\"pane\" align=\"right\"
+        style=\"vertical-align: top\">2</td><td class=\"pane\">Idle</td><td class=\"pane\"></td><td
+        class=\"pane\"></td></tr></table></div></div><script defer=\"defer\">refreshPart('executors',\"/view/test_list_section_no_regex/ajaxExecutors\");</script></div><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><form method=\"post\" autocomplete=\"off\"
+        name=\"viewConfig\" action=\"configSubmit\"><div width=\"100%\"><div class=\"jenkins-form-item
+        tr \"><div class=\"jenkins-form-label help-sibling\">Name</div><div class=\"setting-main\">\n
+        \  \n\n  \n  <input autocomplete=\"on\" name=\"name\" placeholder=\"\" type=\"text\"
+        class=\"jenkins-input   \" value=\"test_list_section_no_regex\"></div><div
+        class=\"validation-error-area tr\"><div colspan=\"2\"></div><div></div><div></div></div></div><div
+        class=\"jenkins-form-item tr \"><div class=\"jenkins-form-label help-sibling\">Description<a
+        tooltip=\"Help for feature: Description\" helpURL=\"/help/view-config/description.html\"
+        href=\"#\" class=\"jenkins-help-button\"><span>?</span></a></div><div class=\"setting-main\"><link
+        rel='stylesheet' href='/adjuncts/92a9e902/lib/form/textarea/textarea.css'
+        type='text/css' /><script src='/adjuncts/92a9e902/lib/form/textarea/textarea.js'
+        type='text/javascript'></script><textarea name=\"description\" rows=\"5\"
+        class=\"jenkins-input   \"></textarea><div class=\"textarea-handle\"></div><div
+        class=\"textarea-preview-container\">\n        [Plain text]\_<a previewEndpoint=\"/markupFormatter/previewDescription\"
+        href=\"#\" class=\"textarea-show-preview\">Preview</a>\_<a href=\"#\" class=\"textarea-hide-preview\">Hide
+        preview</a><div class=\"textarea-preview\"></div></div></div><div class=\"validation-error-area
+        tr\"><div colspan=\"2\"></div><div></div><div></div></div><div class=\"help-area
+        tr\"><div class=\"help\"><p class=\"jenkins-spinner\">Loading...</div></div></div><div
+        class=\"jenkins-form-item tr \"><div class=\"setting-main help-sibling\"><span
+        class=\"jenkins-checkbox\"><input name=\"filterQueue\" type=\"checkbox\" class=\"
+        \ \"><label class=\"attach-previous \">Filter build queue</label></span></div><div
+        class=\"validation-error-area tr\"><div colspan=\"2\"></div><div></div><div></div></div><div
+        class=\"help-area tr\"><div class=\"help\"><p class=\"jenkins-spinner\">Loading...</div></div></div><div
+        class=\"jenkins-form-item tr \"><div class=\"setting-main help-sibling\"><span
+        class=\"jenkins-checkbox\"><input name=\"filterExecutors\" type=\"checkbox\"
+        class=\"  \"><label class=\"attach-previous \">Filter build executors</label></span></div><div
+        class=\"validation-error-area tr\"><div colspan=\"2\"></div><div></div><div></div></div><div
+        class=\"help-area tr\"><div class=\"help\"><p class=\"jenkins-spinner\">Loading...</div></div></div><script
+        src=\"/static/92a9e902/scripts/yui/treeview/treeview-min.js\"></script><link
+        rel=\"stylesheet\" href=\"/scripts/yui/treeview/assets/skins/sam/treeview.css\"
+        type=\"text/css\"><script src='/adjuncts/92a9e902/lib/form/section_.js' type='text/javascript'></script><div
+        class=\"jenkins-section\"><div class=\"jenkins-section__title\">Sections</div><div
+        class=\"tr\"><div colspan=\"4\"><script src='/adjuncts/92a9e902/lib/form/filter-menu-button/filter-menu-button.js'
+        type='text/javascript'></script><script src='/adjuncts/92a9e902/lib/form/hetero-list/hetero-list.js'
+        type='text/javascript'></script><div class=\"jenkins-form-item hetero-list-container
+        with-drag-drop  \"><div class=\"repeatable-insertion-point\"></div><div class=\"prototypes
+        to-be-removed\"><div descriptorId=\"hudson.plugins.sectioned_view.FolderViewSection\"
+        name=\"sections\" title=\"Folder Listing Section\"><div class=\"help-sibling\"
+        style=\"width:100%\"><div class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n
+        \         Folder Listing Section\n\n          <script src='/adjuncts/92a9e902/lib/form/repeatable/repeatable.js'
+        type='text/javascript'></script><button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.FolderViewSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.FolderViewSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/53628bc8-5d80-4886-9af8-39ab5135c5f5','f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.JobGraphsSection\" name=\"sections\"
+        title=\"Job Graphs Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          Job
+        Graphs Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.JobGraphsSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.JobGraphsSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/f8211c69-b449-4e22-b32f-e9fac4380092','f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.ListViewSection\" name=\"sections\"
+        title=\"List View Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          List
+        View Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.ListViewSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.ListViewSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/eb49d818-4cc2-48fb-b71d-33241960ec47','f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.TestResultViewSection\" name=\"sections\"
+        title=\"Test Result Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          Test
+        Result Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.TestResultViewSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.TestResultViewSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/d87c60d5-3449-4f04-a3f6-b53f56968740','f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.TextSection\" name=\"sections\"
+        title=\"Text Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          Text
+        Section\n\n          <button tooltip=\"Delete section\" type=\"button\" class=\"repeatable-delete
+        danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"
+        class=\"\" viewBox=\"0 0 512 512\"><path fill=\"none\" stroke=\"currentColor\"
+        stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"32\" d=\"M368
+        368L144 144M368 144L144 368\"/></svg></button></div><div style=\"display:none\"
+        class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\" value=\"hudson.plugins.sectioned_view.TextSection\"><input
+        name=\"$class\" type=\"hidden\" value=\"hudson.plugins.sectioned_view.TextSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/9a1e4966-a932-4d92-bc74-947ec1f3b6c5','f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85',['render'])\"></div></div></div><div
+        descriptorId=\"hudson.plugins.sectioned_view.ViewListingSection\" name=\"sections\"
+        title=\"View Listing Section\"><div class=\"help-sibling\" style=\"width:100%\"><div
+        class=\"repeated-chunk__header\"><div class=\"dd-handle\"></div>\n\n          View
+        Listing Section\n\n          <button tooltip=\"Delete section\" type=\"button\"
+        class=\"repeatable-delete danger\"><svg class=\"\" class=\"\" aria-hidden=\"true\"
+        xmlns=\"http://www.w3.org/2000/svg\" class=\"\" viewBox=\"0 0 512 512\"><path
+        fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"
+        stroke-width=\"32\" d=\"M368 368L144 144M368 144L144 368\"/></svg></button></div><div
+        style=\"display:none\" class=\"tr\"><div><input name=\"stapler-class\" type=\"hidden\"
+        value=\"hudson.plugins.sectioned_view.ViewListingSection\"><input name=\"$class\"
+        type=\"hidden\" value=\"hudson.plugins.sectioned_view.ViewListingSection\"></div></div><div
+        class=\"render-on-demand config-page\" proxy=\"makeStaplerProxy('/$stapler/bound/c018588f-98ca-4f9c-856d-b465e2b97eeb','f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85',['render'])\"></div></div></div></div><div><input
+        type=\"button\" suffix=\"sections\" value=\"Add Section\" class=\"hetero-list-add\"></div></div></div></div></div><div
+        id=\"bottom-sticker\"><div class=\"bottom-sticker-inner\"><input name=\"Submit\"
+        type=\"submit\" value=\"OK\" class=\"submit-button primary \"><script src='/adjuncts/92a9e902/lib/form/apply/apply.js'
+        type='text/javascript'></script><input type=\"hidden\" name=\"core:apply\"
+        value=\"\"><input name=\"Apply\" type=\"button\" value=\"Apply\" class=\"apply-button
+        applyButton \"></div></div></div></form><script src='/adjuncts/92a9e902/lib/form/confirm.js'
+        type='text/javascript'></script></div></div><footer class=\"page-footer\"><div
+        class=\"container-fluid\"><div class=\"page-footer__flex-row\"><div class=\"page-footer__footer-id-placeholder\"
+        id=\"footer\"></div><link rel='stylesheet' href='/adjuncts/92a9e902/jenkins/management/AdministrativeMonitorsDecorator/resources.css'
+        type='text/css' /><script src='/adjuncts/92a9e902/jenkins/management/AdministrativeMonitorsDecorator/resources.js'
+        type='text/javascript'></script><div id=\"visible-am-container\" class=\"am-container\"><a
+        id=\"visible-am-button\" href=\"#\" title=\"There are 3 active administrative
+        monitors.\" class=\"am-button\" data-href=\"/administrativeMonitorsApi/nonSecurityPopupContent\"><svg
+        viewBox=\"0 0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-social-symbol.svg#ic_notifications_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">3</span></a><div
+        id=\"visible-am-list\" class=\"am-list\"></div></div><div id=\"visible-sec-am-container\"
+        class=\"am-container\"><a id=\"visible-sec-am-button\" href=\"#\" title=\"There
+        are 2 active security administrative monitors.\" class=\"am-button security-am\"
+        data-href=\"/administrativeMonitorsApi/securityPopupContent\"><svg viewBox=\"0
+        0 24 24\" focusable=\"false\" class=\"svg-icon \"><use href=\"/static/92a9e902/images/material-icons/svg-sprite-action-symbol.svg#ic_warning_shield_24px\"></use></svg><div
+        class=\"am-monitor__indicator-mobile\"></div><span class=\"am-monitor__count\">2</span></a><div
+        id=\"visible-sec-am-list\" class=\"am-list\"></div></div><script type=\"text/javascript\">\n
+        \           (function() {\n                var amContainer = document.getElementById(\"visible-am-container\");\n
+        \               var amInsertion = document.getElementById(\"visible-am-insertion\");\n\n
+        \               if (amInsertion) {\n                    amInsertion.appendChild(amContainer);\n
+        \               }\n\n                var secAmContainer = document.getElementById(\"visible-sec-am-container\");\n
+        \               var secAmInsertion = document.getElementById(\"visible-sec-am-insertion\");\n\n
+        \               if (secAmInsertion) {\n                    secAmInsertion.appendChild(secAmContainer);\n
+        \               }\n            })();\n        </script><script type=\"text/javascript\">\n
+        \   var defaultUpdateSiteId = 'default';\n    var setupWizardExtensions =
+        [];\n    var onSetupWizardInitialized = function(extension) {\n      setupWizardExtensions.push(extension);\n
+        \   };\n  </script><script src=\"/static/92a9e902/jsbundles/pluginSetupWizard.js\"
+        type=\"text/javascript\"></script><link rel=\"stylesheet\" href=\"/static/92a9e902/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"><div class=\"page-footer__links rest_api hidden-xs\"><a
+        href=\"api/\">REST API</a></div><div class=\"page-footer__links page-footer__links--white
+        jenkins_ver\"><a rel=\"noopener noreferrer\" href=\"https://www.jenkins.io/\"
+        target=\"_blank\">Jenkins 2.345</a></div></div></div></footer></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:54:47 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1CFIfooRWpcSli0tzcRY8tpw8pNdhaixfM95EtoHSZ6ja1zR5wSTLb/nz0Y3D2nSabgNtGnxW0f0j92YBWpvTOCficKW67g5g8GIeAoig7aci0a3p4kuZbi/p7FTHvkd7QvCx04vWd33o/hUWrpvF6a6QskTksgUOGiEm8Iqq+0BswIm9SFGEqFUgvS+MsqK+Mh5X5bW+CgNz+QtgC/78zhtpAIWZtJJiXonpmzhiymJMspVd/ECSkQDPkrkqA6Nk6CLdJu6NWgttvhTQu4Sw7uJHgiWv8k7kZ1k4CMK2pgeWnLPrDd8SZXg3l6VNSaGXSjfLGvdGJjv/JpGr5ebQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '34669'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":null,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":null,"quietingDown":false,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":null,"useCrumbs":true,"useSecurity":true,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},{"_class":"hudson.plugins.sectioned_view.SectionedView","name":"test_list_section_no_regex","url":"http://localhost:64171/view/test_list_section_no_regex/"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:54:48 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '743'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/view/all/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.AllView","description":null,"jobs":[],"name":"all","property":[],"url":"http://localhost:64171/"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:54:48 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '121'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/view/test_list_section_no_regex/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.plugins.sectioned_view.SectionedView","description":null,"jobs":[],"name":"test_list_section_no_regex","property":[],"url":"http://localhost:64171/view/test_list_section_no_regex/"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:54:49 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '199'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/view/test_list_section_no_regex/config.xml
+  response:
+    body:
+      string: "<?xml version=\"1.1\" encoding=\"UTF-8\"?>\n<hudson.plugins.sectioned__view.SectionedView
+        plugin=\"sectioned-view@1.25\">\n  <name>test_list_section_no_regex</name>\n
+        \ <filterExecutors>false</filterExecutors>\n  <filterQueue>false</filterQueue>\n
+        \ <properties class=\"hudson.model.View$PropertyList\"/>\n  <sections/>\n</hudson.plugins.sectioned__view.SectionedView>"
+    headers:
+      Content-Type:
+      - application/xml
+      Date:
+      - Sat, 21 May 2022 20:54:49 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/api/python
+  response:
+    body:
+      string: '{"_class":"hudson.model.Hudson","assignedLabels":[{"name":"built-in"}],"mode":"NORMAL","nodeDescription":"the
+        Jenkins controller''s built-in node","nodeName":"","numExecutors":2,"description":None,"jobs":[],"overallLoad":{},"primaryView":{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},"quietDownReason":None,"quietingDown":False,"slaveAgentPort":50000,"unlabeledLoad":{"_class":"jenkins.model.UnlabeledLoadStatistics"},"url":None,"useCrumbs":True,"useSecurity":True,"views":[{"_class":"hudson.model.AllView","name":"all","url":"http://localhost:64171/"},{"_class":"hudson.plugins.sectioned_view.SectionedView","name":"test_list_section_no_regex","url":"http://localhost:64171/view/test_list_section_no_regex/"}]}'
+    headers:
+      Content-Type:
+      - text/x-python;charset=UTF-8
+      Date:
+      - Sat, 21 May 2022 20:54:49 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '743'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/crumbIssuer/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.security.csrf.DefaultCrumbIssuer","crumb":"f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85","crumbRequestField":"Jenkins-Crumb"}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:54:50 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '163'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: "<hudson.plugins.sectioned__view.SectionedView plugin=\"sectioned-view@1.25\">\n
+      \ <name>test_list_section_no_regex</name>\n  <filterExecutors>false</filterExecutors>\n
+      \ <filterQueue>false</filterQueue>\n  <properties class=\"hudson.model.View$PropertyList\"
+      />\n  <sections><hudson.plugins.sectioned__view.ListViewSection>\n    <jobNames>\n
+      \       <comparator class=\"hudson.util.CaseInsensitiveComparator\" />\n    </jobNames>\n
+      \   <jobFilters />\n    <width>FULL</width>\n    <alignment>CENTER</alignment>\n
+      \   <columns>\n        <hudson.views.StatusColumn />\n        <hudson.views.WeatherColumn
+      />\n        <hudson.views.JobColumn />\n        <hudson.views.LastSuccessColumn
+      />\n        <hudson.views.LastFailureColumn />\n        <hudson.views.LastDurationColumn
+      />\n        <hudson.views.BuildButtonColumn />\n    </columns>\n<name>MyNewSection</name></hudson.plugins.sectioned__view.ListViewSection></sections>\n</hudson.plugins.sectioned__view.SectionedView>"
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '937'
+      Content-Type:
+      - text/xml
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      Jenkins-Crumb:
+      - f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/view/test_list_section_no_regex/config.xml
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:54:50 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      Jenkins-Crumb:
+      - f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: POST
+    uri: http://localhost:64171/view/test_list_section_no_regex/doDelete
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Sat, 21 May 2022 20:54:50 GMT
+      Location:
+      - http://localhost:64171/
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+    status:
+      code: 302
+      message: Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node01epdjesgx8hom16gwtdpuwytmt121.node0
+      Jenkins-Crumb:
+      - f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/
+  response:
+    body:
+      string: "\n  \n  <!DOCTYPE html><html><head resURL=\"/static/92a9e902\" data-rooturl=\"\"
+        data-resurl=\"/static/92a9e902\" data-extensions-available=\"true\" data-unit-test=\"false\"
+        data-imagesurl=\"/static/92a9e902/images\" data-crumb-header=\"Jenkins-Crumb\"
+        data-crumb-value=\"f3aad4804bf5338b74105ecc1c337e0d0498dd3419e58907c23e485f3f03df85\">\n
+        \   \n    \n\n    <title>Setup Wizard [Jenkins]</title><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/jsbundles/styles.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/color.css\" type=\"text/css\"><link rel=\"stylesheet\"
+        href=\"/static/92a9e902/css/responsive-grid.css\" type=\"text/css\"><link
+        rel=\"shortcut icon\" href=\"/static/92a9e902/favicon.ico\" type=\"image/vnd.microsoft.icon\"><script
+        src=\"/static/92a9e902/scripts/prototype.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/behavior.js\" type=\"text/javascript\"></script><script
+        src='/adjuncts/92a9e902/org/kohsuke/stapler/bind.js' type='text/javascript'></script><script
+        src=\"/static/92a9e902/scripts/yui/yahoo/yahoo-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/dom/dom-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/event/event-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/animation/animation-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/dragdrop/dragdrop-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/container/container-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/connection/connection-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/datasource/datasource-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/autocomplete/autocomplete-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/menu/menu-min.js\"></script><script src=\"/static/92a9e902/scripts/yui/element/element-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/button/button-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/yui/storage/storage-min.js\"></script><script
+        src=\"/static/92a9e902/scripts/polyfills.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/hudson-behavior.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/scripts/sortable.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/container/assets/skins/sam/container.css\"
+        type=\"text/css\"><link rel=\"stylesheet\" href=\"/static/92a9e902/scripts/yui/menu/assets/skins/sam/menu.css\"
+        type=\"text/css\"><link rel=\"search\" href=\"/opensearch.xml\" type=\"application/opensearchdescription+xml\"
+        title=\"Jenkins\"><meta name=\"ROBOTS\" content=\"INDEX,NOFOLLOW\"><meta name=\"viewport\"
+        content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"/static/92a9e902/plugin/sectioned-view/sectioned-view.css\"
+        type=\"text/css\"><script src=\"/static/92a9e902/jsbundles/vendors.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/page-init.js\" type=\"text/javascript\"></script><script
+        src=\"/static/92a9e902/jsbundles/sortable-drag-drop.js\" type=\"text/javascript\"></script></head><body
+        data-model-type=\"jenkins.install.SetupWizard\" id=\"jenkins\" class=\"yui-skin-sam
+        full-screen jenkins-2.345\" data-version=\"2.345\"><div id=\"page-body\" class=\"clear\"><div
+        id=\"main-panel\"><a name=\"skip2content\"></a><div class=\"plugin-setup-wizard-container\"></div><script
+        type=\"text/javascript\">\n    var defaultUpdateSiteId = 'default';\n    var
+        setupWizardExtensions = [];\n    var onSetupWizardInitialized = function(extension)
+        {\n      setupWizardExtensions.push(extension);\n    };\n  </script><script
+        src=\"/static/92a9e902/jsbundles/pluginSetupWizard.js\" type=\"text/javascript\"></script><link
+        rel=\"stylesheet\" href=\"/static/92a9e902/jsbundles/pluginSetupWizard.css\"
+        type=\"text/css\"></div></div></body></html>"
+    headers:
+      Cache-Control:
+      - no-cache,no-store,must-revalidate
+      Content-Type:
+      - text/html;charset=utf-8
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Sat, 21 May 2022 20:54:50 GMT
+      Expires:
+      - '0'
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - sameorigin
+      X-Hudson:
+      - '1.395'
+      X-Hudson-Theme:
+      - default
+      X-Instance-Identity:
+      - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr1CFIfooRWpcSli0tzcRY8tpw8pNdhaixfM95EtoHSZ6ja1zR5wSTLb/nz0Y3D2nSabgNtGnxW0f0j92YBWpvTOCficKW67g5g8GIeAoig7aci0a3p4kuZbi/p7FTHvkd7QvCx04vWd33o/hUWrpvF6a6QskTksgUOGiEm8Iqq+0BswIm9SFGEqFUgvS+MsqK+Mh5X5bW+CgNz+QtgC/78zhtpAIWZtJJiXonpmzhiymJMspVd/ECSkQDPkrkqA6Nk6CLdJu6NWgttvhTQu4Sw7uJHgiWv8k7kZ1k4CMK2pgeWnLPrDd8SZXg3l6VNSaGXSjfLGvdGJjv/JpGr5ebQIDAQAB
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '3844'
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,14 +1,17 @@
+import pytest
 from ..utils import clean_job
 from pyjen.plugins.folderjob import FolderJob
 from pyjen.plugins.freestylejob import FreestyleJob
 
 
+@pytest.mark.vcr()
 def test_create_folder_job(jenkins_api):
     jb = jenkins_api.create_job("test_create_folder_job", FolderJob)
     with clean_job(jb):
         assert jb is not None
 
 
+@pytest.mark.vcr()
 def test_create_folder_job_with_subjob(jenkins_api):
     jb = jenkins_api.create_job("test_create_folder_job_with_subjob", FolderJob)
     with clean_job(jb):
@@ -19,6 +22,7 @@ def test_create_folder_job_with_subjob(jenkins_api):
             assert jb2.name == expected_name
 
 
+@pytest.mark.vcr()
 def test_folder_find_job_not_found(jenkins_api):
     jb = jenkins_api.create_job("test_folder_find_job_not_found", FolderJob)
     with clean_job(jb):
@@ -26,6 +30,7 @@ def test_folder_find_job_not_found(jenkins_api):
         assert jb2 is None
 
 
+@pytest.mark.vcr()
 def test_folder_find_job(jenkins_api):
     jb = jenkins_api.create_job("test_folder_find_job", FolderJob)
     with clean_job(jb):
@@ -38,6 +43,7 @@ def test_folder_find_job(jenkins_api):
             assert isinstance(result, type(jb2))
 
 
+@pytest.mark.vcr()
 def test_clone_job_in_folder_job(jenkins_api):
     jb = jenkins_api.create_job("test_clone_job_in_folder_job", FolderJob)
     with clean_job(jb):
@@ -52,6 +58,7 @@ def test_clone_job_in_folder_job(jenkins_api):
                 assert jb2.is_disabled is False
 
 
+@pytest.mark.vcr()
 def test_clone_enabled_job_in_folder_job(jenkins_api):
     jb = jenkins_api.create_job("test_clone_enabled_job_in_folder_job", FolderJob)
     with clean_job(jb):
@@ -66,6 +73,7 @@ def test_clone_enabled_job_in_folder_job(jenkins_api):
                 assert jb2.is_disabled is False
 
 
+@pytest.mark.vcr()
 def test_rename_job(jenkins_api):
     parent = jenkins_api.create_job("test_rename_job_parent", FolderJob)
     with clean_job(parent):

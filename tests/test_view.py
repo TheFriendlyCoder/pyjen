@@ -12,6 +12,7 @@ def test_delete_view(jenkins_api):
     assert jenkins_api.find_view(expected_view_name) is None
 
 
+@pytest.mark.vcr()
 def test_get_name(jenkins_api):
     expected_name = "test_get_name_view"
     vw = jenkins_api.create_view(expected_name, ListView)
@@ -19,6 +20,7 @@ def test_get_name(jenkins_api):
         assert vw.name == expected_name
 
 
+@pytest.mark.vcr()
 def test_get_jobs_no_jobs(jenkins_api):
     vw = jenkins_api.create_view("test_get_jobs_no_jobs_views", ListView)
     with clean_view(vw):
@@ -27,6 +29,7 @@ def test_get_jobs_no_jobs(jenkins_api):
         assert len(jobs) == 0
 
 
+@pytest.mark.vcr()
 def test_get_jobs(jenkins_api):
     expected_job_name = "test_get_jobs_job"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -39,6 +42,7 @@ def test_get_jobs(jenkins_api):
         assert isinstance(all_jobs[0], type(jb))
 
 
+@pytest.mark.vcr()
 def test_delete_all_jobs(jenkins_api):
     expected_job_name = "test_delete_all_jobs_job"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -55,6 +59,7 @@ def test_delete_all_jobs(jenkins_api):
         raise
 
 
+@pytest.mark.vcr()
 def test_disable_all_jobs(jenkins_api):
     expected_job_name = "test_disable_all_jobs_job"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -65,6 +70,7 @@ def test_disable_all_jobs(jenkins_api):
         assert jb.is_disabled
 
 
+@pytest.mark.vcr()
 def test_enable_all_jobs(jenkins_api):
     expected_job_name = "test_enable_all_jobs_job"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -76,10 +82,12 @@ def test_enable_all_jobs(jenkins_api):
         assert jb.is_disabled is False
 
 
+@pytest.mark.vcr()
 def test_get_config_xml(jenkins_api):
     assert jenkins_api.default_view.config_xml
 
 
+@pytest.mark.vcr()
 def test_get_view_metrics(jenkins_api):
     expected_job_name = "test_get_view_metrics_job"
     jb = jenkins_api.create_job(expected_job_name, FreestyleJob)
@@ -105,6 +113,7 @@ def test_get_view_metrics(jenkins_api):
         assert result['disabled_jobs'][0].name == expected_job_name
 
 
+@pytest.mark.vcr()
 def test_clone_view(jenkins_api):
     vw = jenkins_api.create_view("test_clone_view1", ListView)
     with clean_view(vw):
@@ -116,6 +125,7 @@ def test_clone_view(jenkins_api):
             assert isinstance(vw2, type(vw))
 
 
+@pytest.mark.vcr()
 def test_rename_view(jenkins_api):
     original_view_name = "test_rename_view1"
     vw = jenkins_api.create_view(original_view_name, ListView)

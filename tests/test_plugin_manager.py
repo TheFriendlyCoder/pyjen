@@ -2,6 +2,7 @@ import pytest
 import os
 
 
+@pytest.mark.vcr()
 def test_get_plugins(jenkins_env, jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -10,6 +11,7 @@ def test_get_plugins(jenkins_env, jenkins_api):
     assert len(results) >= len(jenkins_env["plugins"])
 
 
+@pytest.mark.vcr()
 def test_plugin_shortname(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -17,6 +19,7 @@ def test_plugin_shortname(jenkins_api):
     assert isinstance(results[0].short_name, type(u""))
 
 
+@pytest.mark.vcr()
 def test_plugin_longname(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -24,6 +27,7 @@ def test_plugin_longname(jenkins_api):
     assert isinstance(results[0].long_name, type(u""))
 
 
+@pytest.mark.vcr()
 def test_plugin_version(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -31,6 +35,7 @@ def test_plugin_version(jenkins_api):
     assert isinstance(results[0].version, type(u""))
 
 
+@pytest.mark.vcr()
 def test_plugin_enabled(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -39,6 +44,7 @@ def test_plugin_enabled(jenkins_api):
     assert results[0].enabled is True
 
 
+@pytest.mark.vcr()
 def test_plugin_download_url(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -48,6 +54,7 @@ def test_plugin_download_url(jenkins_api):
     assert results[0].download_url.endswith(".hpi")
 
 
+@pytest.mark.vcr()
 def test_plugin_latest_download_url(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -57,6 +64,7 @@ def test_plugin_latest_download_url(jenkins_api):
     assert results[0].latest_download_url.endswith(".hpi")
 
 
+@pytest.mark.vcr()
 def test_plugin_info_url(jenkins_api):
     results = jenkins_api.plugin_manager.plugins
 
@@ -64,6 +72,7 @@ def test_plugin_info_url(jenkins_api):
     assert isinstance(results[0].info_url, type(u""))
 
 
+@pytest.mark.vcr()
 def test_plugin_required_dependencies(jenkins_api):
     # HACK: There's no easy way for us to tell which plugins may be installed
     #       by the test framework in the future, so we just "assume" that there
@@ -90,6 +99,7 @@ def test_plugin_required_dependencies(jenkins_api):
     assert isinstance(plugin.required_dependencies[0]["version"], type(u""))
 
 
+@pytest.mark.vcr()
 def test_plugin_no_required_dependencies(jenkins_api):
     # HACK: There's no easy way for us to tell which plugins may be installed
     #       by the test framework in the future, so we just "assume" that there
@@ -110,6 +120,7 @@ def test_plugin_no_required_dependencies(jenkins_api):
     assert len(plugin.required_dependencies) == 0
 
 
+@pytest.mark.vcr()
 def test_find_plugin_by_shortname_doesnt_exist(jenkins_api):
     result = jenkins_api.plugin_manager.find_plugin_by_shortname("should_not_see_me_fubar_asdf")
 
@@ -131,6 +142,7 @@ def test_find_plugin_by_shortname(jenkins_env, jenkins_api):
     assert result.short_name == expected_short_name
 
 
+@pytest.mark.vcr()
 def test_download_plugin(jenkins_api, tmp_path):
     results = jenkins_api.plugin_manager.plugins
 
@@ -144,6 +156,7 @@ def test_download_plugin(jenkins_api, tmp_path):
     assert results[0].version in filename
 
 
+@pytest.mark.vcr()
 def test_download_plugin_new_folder(jenkins_api, tmp_path):
     results = jenkins_api.plugin_manager.plugins
 
@@ -163,6 +176,7 @@ def test_download_plugin_new_folder(jenkins_api, tmp_path):
     assert results[0].version in filename
 
 
+@pytest.mark.vcr()
 def test_download_plugin_no_overwrite(jenkins_api, tmp_path):
     results = jenkins_api.plugin_manager.plugins
 
@@ -173,6 +187,7 @@ def test_download_plugin_no_overwrite(jenkins_api, tmp_path):
         results[0].download(str(tmp_path))
 
 
+@pytest.mark.vcr()
 def test_download_plugin_overwrite(jenkins_api, tmp_path):
     results = jenkins_api.plugin_manager.plugins
 

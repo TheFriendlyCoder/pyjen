@@ -1,0 +1,168 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0um0x1aorq3yq10l0502d5xlni9.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/job/TestJobBuildsJob/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"TestJobBuildsJob","displayNameOrNull":null,"fullDisplayName":"TestJobBuildsJob","fullName":"TestJobBuildsJob","name":"TestJobBuildsJob","url":"http://localhost:63499/job/TestJobBuildsJob/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:63499/job/TestJobBuildsJob/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:63499/job/TestJobBuildsJob/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:63499/job/TestJobBuildsJob/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:63499/job/TestJobBuildsJob/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:63499/job/TestJobBuildsJob/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:63499/job/TestJobBuildsJob/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:19:48 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '1668'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.4dbce368=node0um0x1aorq3yq10l0502d5xlni9.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:63499/job/TestJobBuildsJob/1/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleBuild","actions":[{"_class":"hudson.model.CauseAction","causes":[{"_class":"hudson.model.Cause$UserIdCause","shortDescription":"Started
+        by user admin","userId":"admin","userName":"admin"}]},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.RunDisplayAction"}],"artifacts":[],"building":false,"description":null,"displayName":"#1","duration":113,"estimatedDuration":113,"executor":null,"fullDisplayName":"TestJobBuildsJob
+        #1","id":"1","keepLog":false,"number":1,"queueId":1,"result":"SUCCESS","timestamp":1653164387744,"url":"http://localhost:63499/job/TestJobBuildsJob/1/","builtOn":"","changeSet":{"_class":"hudson.scm.EmptyChangeLogSet","items":[],"kind":null},"culprits":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:19:48 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 1788978e
+      content-length:
+      - '718'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0zx0qoug4x7jf1ultrjeehmnlo32.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/TestJobBuildsJob/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleProject","actions":[{},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"},{"_class":"com.cloudbees.plugins.credentials.ViewCredentialsAction"}],"description":"","displayName":"TestJobBuildsJob","displayNameOrNull":null,"fullDisplayName":"TestJobBuildsJob","fullName":"TestJobBuildsJob","name":"TestJobBuildsJob","url":"http://localhost:64171/job/TestJobBuildsJob/","buildable":true,"builds":[{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/TestJobBuildsJob/1/"}],"color":"blue","firstBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/TestJobBuildsJob/1/"},"healthReport":[{"description":"Build
+        stability: No recent builds failed.","iconClassName":"icon-health-80plus","iconUrl":"health-80plus.png","score":100}],"inQueue":false,"keepDependencies":false,"lastBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/TestJobBuildsJob/1/"},"lastCompletedBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/TestJobBuildsJob/1/"},"lastFailedBuild":null,"lastStableBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/TestJobBuildsJob/1/"},"lastSuccessfulBuild":{"_class":"hudson.model.FreeStyleBuild","number":1,"url":"http://localhost:64171/job/TestJobBuildsJob/1/"},"lastUnstableBuild":null,"lastUnsuccessfulBuild":null,"nextBuildNumber":2,"property":[],"queueItem":null,"concurrentBuild":false,"disabled":false,"downstreamProjects":[],"labelExpression":null,"scm":{"_class":"hudson.scm.NullSCM"},"upstreamProjects":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:48:49 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '1668'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Cookie:
+      - JSESSIONID.00041e4b=node0zx0qoug4x7jf1ultrjeehmnlo32.node0
+      User-Agent:
+      - python-requests/2.27.1
+      authorization:
+      - DUMMY
+    method: GET
+    uri: http://localhost:64171/job/TestJobBuildsJob/1/api/json
+  response:
+    body:
+      string: '{"_class":"hudson.model.FreeStyleBuild","actions":[{"_class":"hudson.model.CauseAction","causes":[{"_class":"hudson.model.Cause$UserIdCause","shortDescription":"Started
+        by user admin","userId":"admin","userName":"admin"}]},{},{"_class":"org.jenkinsci.plugins.displayurlapi.actions.RunDisplayAction"}],"artifacts":[],"building":false,"description":null,"displayName":"#1","duration":5,"estimatedDuration":5,"executor":null,"fullDisplayName":"TestJobBuildsJob
+        #1","id":"1","keepLog":false,"number":1,"queueId":17,"result":"SUCCESS","timestamp":1653166129241,"url":"http://localhost:64171/job/TestJobBuildsJob/1/","builtOn":"","changeSet":{"_class":"hudson.scm.EmptyChangeLogSet","items":[],"kind":null},"culprits":[]}'
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Sat, 21 May 2022 20:48:50 GMT
+      Server:
+      - Jetty(9.4.45.v20220203)
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Jenkins:
+      - '2.345'
+      X-Jenkins-Session:
+      - 92a9e902
+      content-length:
+      - '715'
+    status:
+      code: 200
+      message: OK
+version: 1

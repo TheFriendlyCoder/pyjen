@@ -1,9 +1,11 @@
+import pytest
 from pyjen.plugins.parameterizedbuild import ParameterizedBuild
 from pyjen.plugins.parambuild_string import ParameterizedBuildStringParameter
 from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_add_string_parameter(jenkins_api):
     job_name = "test_add_string_parameter"
     jb = jenkins_api.create_job(job_name, FreestyleJob)

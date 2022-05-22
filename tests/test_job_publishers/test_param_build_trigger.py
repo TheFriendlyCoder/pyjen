@@ -1,3 +1,4 @@
+import pytest
 from pyjen.plugins.paramtrigger import ParameterizedBuildTrigger
 from pyjen.plugins.paramtrigger_currentbuildparams import CurrentBuildParams
 from pyjen.plugins.paramtrigger_buildtrigger import BuildTriggerConfig
@@ -5,6 +6,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from ..utils import async_assert, clean_job
 
 
+@pytest.mark.vcr()
 def test_param_trigger(jenkins_api):
     upstream_name = "test_param_trigger"
     jb = jenkins_api.create_job(upstream_name, FreestyleJob)
@@ -32,6 +34,7 @@ def test_param_trigger(jenkins_api):
         assert triggers[0].condition == "SUCCESS"
 
 
+@pytest.mark.vcr()
 def test_trigger_with_current_build_params(jenkins_api):
     upstream_name = "test_trigger_with_current_build_params"
     jb = jenkins_api.create_job(upstream_name, FreestyleJob)

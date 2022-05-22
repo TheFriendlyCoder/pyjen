@@ -5,6 +5,7 @@ from pyjen.plugins.freestylejob import FreestyleJob
 from .utils import clean_job, async_assert
 
 
+@pytest.mark.vcr()
 def test_add_git_scm(jenkins_api):
     job_name = "test_add_git_scm"
     jb = jenkins_api.create_job(job_name, FreestyleJob)
