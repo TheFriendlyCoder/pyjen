@@ -36,117 +36,77 @@ def test_start_build(jenkins_api):
 
 
 @pytest.mark.vcr()
-@pytest.mark.usefixtures('test_job')
-class TestJobReadOperations(object):
-    def test_get_job_name(self):
-        # NOTE: The test_job fixture injects a Jenkins job named
-        # read_only_test_job into the test server that we can leverage for
-        # this test
-        expected_name = "TestJobReadOperationsJob"
-        assert self.job.name == expected_name
+def test_job_read_operations(jenkins_api):
+    expected_name = "test_job_read_operations"
+    job = jenkins_api.create_job(expected_name, FreestyleJob)
+    with clean_job(job):
+        assert job.name == expected_name
 
-    def test_comparison_operators(self):
-        jb2 = self.jenkins.find_job(self.job.name)
-
-        assert self.job == jb2
-        assert self.job != 10
-        assert not self.job == 10
-
-        jb3 = self.jenkins.create_job("test_comparison_operators", FreestyleJob)
-        with clean_job(jb3):
-            assert self.job != jb3
-
-    def test_find_job(self):
-        jb2 = self.jenkins.find_job(self.job.name)
-
+        jb2 = jenkins_api.find_job(expected_name)
         assert jb2 is not None
-        assert jb2.name == self.job.name
         assert isinstance(jb2, FreestyleJob)
+        assert jb2.name == job.name
 
-    def test_is_disabled_defaults(self):
-        assert not self.job.is_disabled
+        assert job == jb2
+        assert job != 10
+        assert not job == 10
+        jb3 = jenkins_api.create_job("test_comparison_operators", FreestyleJob)
+        with clean_job(jb3):
+            assert job != jb3
 
-    def test_has_not_been_built(self):
-        assert not self.job.has_been_built
-
-    def test_get_config_xml(self):
-        res = self.job.config_xml
+        assert not job.is_disabled
+        assert not job.has_been_built
+        res = job.config_xml
         assert res is not None
         xml = ElementTree.fromstring(res)
         assert xml.tag == "project"
 
-    def test_no_downstream_jobs(self):
-        dependencies = self.job.downstream_jobs
-
+        dependencies = job.downstream_jobs
         assert isinstance(dependencies, list)
         assert len(dependencies) == 0
 
-    def test_no_upstream_jobs(self):
-        dependencies = self.job.upstream_jobs
-
+        dependencies = job.upstream_jobs
         assert isinstance(dependencies, list)
         assert len(dependencies) == 0
 
-    def test_get_no_recent_builds(self):
-        builds = self.job.recent_builds
-
+        builds = job.recent_builds
         assert isinstance(builds, list)
         assert len(builds) == 0
 
-    def test_get_last_good_build_none(self):
-        bld = self.job.last_good_build
-
+        bld = job.last_good_build
         assert bld is None
 
-    def test_get_last_build_none(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         assert bld is None
 
-    def test_get_last_failed_build_none(self):
-        bld = self.job.last_failed_build
-
+        bld = job.last_failed_build
         assert bld is None
 
-    def test_get_last_stable_build_none(self):
-        bld = self.job.last_stable_build
-
+        bld = job.last_stable_build
         assert bld is None
 
-    def test_get_last_unsuccessful_build_none(self):
-        bld = self.job.last_unsuccessful_build
-
+        bld = job.last_unsuccessful_build
         assert bld is None
 
-    def test_get_build_by_number_non_existent(self):
-        bld = self.job.get_build_by_number(1024)
-
+        bld = job.get_build_by_number(1024)
         assert bld is None
 
-    def test_no_build_health(self):
-        score = self.job.build_health
+        score = job.build_health
         assert score == 0
 
-    def test_no_publishers(self):
-        pubs = self.job.publishers
-
+        pubs = job.publishers
         assert isinstance(pubs, list)
         assert len(pubs) == 0
 
-    def test_no_builders(self):
-        builders = self.job.builders
-
+        builders = job.builders
         assert isinstance(builders, list)
         assert len(builders) == 0
 
-    def test_no_properties(self):
-        props = self.job.properties
-
+        props = job.properties
         assert isinstance(props, list)
         assert len(props) == 0
 
-    def test_null_scm(self):
-        result = self.job.scm
+        result = job.scm
         assert result is not None
         assert isinstance(result, NullSCM)
 
@@ -240,105 +200,80 @@ def test_multiple_upstream_jobs_recursive(jenkins_api):
 
 
 @pytest.mark.vcr()
-@pytest.mark.usefixtures('test_builds')
-class TestJobBuilds:
+def test_job_builds(jenkins_api):
+    job = jenkins_api.create_job("test_job_builds", FreestyleJob)
+    with clean_job(job):
+        job.quiet_period = 0
+        job.start_build()
 
-    def test_get_one_recent_build(self):
-        builds = self.job.recent_builds
+        async_assert(lambda: job.last_good_build)
+
+        builds = job.recent_builds
 
         assert len(builds) == 1
         assert isinstance(builds[0], Build)
         assert builds[0].number == 1
 
-    def test_get_last_good_build(self):
-        bld = self.job.last_good_build
-
+        bld = job.last_good_build
         assert isinstance(bld, Build)
         assert bld.number == 1
 
-    def test_get_last_build(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         assert isinstance(bld, Build)
         assert bld.number == 1
 
-    def test_get_last_stable_build(self):
-        bld = self.job.last_stable_build
-
+        bld = job.last_stable_build
         assert isinstance(bld, Build)
         assert bld.number == 1
 
-    def test_build_health(self):
-        assert self.job.build_health == 100
+        assert job.build_health == 100
+        assert job.has_been_built
 
-    def test_has_been_built(self):
-        assert self.job.has_been_built
-
-    def test_get_build_by_number(self):
-        bld = self.job.get_build_by_number(1)
-
+        bld = job.get_build_by_number(1)
         assert bld is not None
         assert bld.number == 1
 
-    def test_get_builds_in_time_range(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         start_time = bld.start_time - timedelta(days=1)
         end_time = bld.start_time + timedelta(days=1)
-        builds = self.job.get_builds_in_time_range(start_time, end_time)
+        builds = job.get_builds_in_time_range(start_time, end_time)
 
         assert len(builds) == 1
         assert isinstance(builds[0], Build)
         assert builds[0].number == bld.number
 
-    def test_get_builds_in_time_range_no_builds_too_new(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         start_time = bld.start_time - timedelta(days=2)
         end_time = bld.start_time - timedelta(days=1)
-        builds = self.job.get_builds_in_time_range(start_time, end_time)
-
+        builds = job.get_builds_in_time_range(start_time, end_time)
         assert len(builds) == 0
 
-    def test_get_builds_in_time_range_no_builds_too_old(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         start_time = bld.start_time + timedelta(days=1)
         end_time = bld.start_time + timedelta(days=2)
-        builds = self.job.get_builds_in_time_range(start_time, end_time)
-
+        builds = job.get_builds_in_time_range(start_time, end_time)
         assert len(builds) == 0
 
-    def test_get_builds_in_time_range_upper_bound(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         start_time = bld.start_time - timedelta(days=1)
         end_time = bld.start_time
-        builds = self.job.get_builds_in_time_range(start_time, end_time)
-
+        builds = job.get_builds_in_time_range(start_time, end_time)
         assert len(builds) == 1
         assert isinstance(builds[0], Build)
         assert builds[0].number == bld.number
 
-    def test_get_builds_in_time_range_lower_bound(self):
-        bld = self.job.last_build
-
+        bld = job.last_build
         start_time = bld.start_time
         end_time = bld.start_time + timedelta(days=1)
-        builds = self.job.get_builds_in_time_range(start_time, end_time)
-
+        builds = job.get_builds_in_time_range(start_time, end_time)
         assert len(builds) == 1
         assert isinstance(builds[0], Build)
         assert builds[0].number == bld.number
 
-    def test_get_builds_in_time_range_inverted_parameters(self):
-
-        bld = self.job.last_build
-
+        bld = job.last_build
         start_time = bld.start_time
         end_time = bld.start_time + timedelta(days=1)
-        builds = self.job.get_builds_in_time_range(end_time, start_time)
-
+        builds = job.get_builds_in_time_range(end_time, start_time)
         assert len(builds) == 1
         assert isinstance(builds[0], Build)
         assert builds[0].number == bld.number

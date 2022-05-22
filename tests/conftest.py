@@ -8,12 +8,14 @@ import logging
 import warnings
 import docker
 import multiprocessing
+import inspect
+from pathlib import Path
 from docker.errors import DockerException
 from pyjen.jenkins import Jenkins
-from pyjen.plugins.freestylejob import FreestyleJob
-from pyjen.plugins.gitscm import GitSCM
-from .utils import async_assert
 
+# Boolean flag indicating whether or not a Dockerized test environment should
+# be used. See the pytest_collection_modifyitems helper for details
+NEEDS_DOCKER = False
 
 # Default Docker container to use for testing
 # May be overloaded from the command prompt using '--jenkins-version'
@@ -195,6 +197,16 @@ def jenkins_env(request, configure_logger):
         raise Exception(
             "Skipping Docker setup logic. Previous attempt failed.")
 
+    if not NEEDS_DOCKER:
+        data = {
+            "url": "http://localhost:8080",
+            "admin_user": "admin",
+            "admin_token": "password",
+            "plugins": JENKINS_PLUGINS[:],
+        }
+        yield data
+        return
+
     image_name = request.config.getoption("--jenkins-version")
     log.info("Using Jenkins docker container '{0}'".format(image_name))
     preserve_container = request.config.getoption("--preserve")
@@ -346,51 +358,6 @@ def jenkins_api(jenkins_env):
     yield jk
 
 
-@pytest.fixture(scope="class")
-def test_job(request, jenkins_env):
-    """Test fixture that creates a Jenkins Freestyle job for testing purposes
-
-    The generated job is automatically cleaned up at the end of the test
-    suite, which is defined as all of the methods contained within the same
-    class.
-
-    The expectation here is that tests that share this generated job will
-    only perform read operations on the job and will not change it's state.
-    This will ensure the tests within the suite don't affect one another.
-    """
-    jk = Jenkins.basic_auth(jenkins_env["url"], (jenkins_env["admin_user"], jenkins_env["admin_token"]))
-    request.cls.jenkins = jk
-    request.cls.job = jk.create_job(request.cls.__name__ + "Job", FreestyleJob)
-    assert request.cls.job is not None
-
-    yield
-
-    request.cls.job.delete()
-
-
-@pytest.fixture(scope="class")
-def test_builds(request, test_job):
-    """Helper fixture that creates a job with a sample good build for testing"""
-    request.cls.job.quiet_period = 0
-    request.cls.job.start_build()
-
-    async_assert(lambda: request.cls.job.last_good_build)
-
-
-@pytest.fixture(scope="class")
-def test_builds_with_git(request, test_job):
-    """Helper fixture that creates a job with a sample build with Git sources for testing"""
-    expected_url = "https://github.com/TheFriendlyCoder/pyjen.git"
-    test_scm = GitSCM.instantiate(expected_url)
-    request.cls.job.scm = test_scm
-
-    request.cls.job.quiet_period = 0
-    async_assert(lambda: isinstance(request.cls.job.scm, GitSCM))
-
-    request.cls.job.start_build()
-    async_assert(lambda: request.cls.job.last_good_build is not None)
-
-
 def pytest_collection_modifyitems(config, items):
     """Applies command line customizations to filter tests to be run"""
     if not config.getoption("--skip-docker"):
@@ -404,7 +371,9 @@ def pytest_collection_modifyitems(config, items):
 
 @pytest.fixture(scope='module')
 def vcr_config(request):
-    record_mode = "all" if request.config.getoption("--regenerate") else "once"
+    # TODO: default to "none" if the block network access flag is passed
+    #       or maybe only default to "once" if a test has no cassette at all
+    record_mode = "rewrite" if request.config.getoption("--regenerate") else "once"
     return {
         # Replace the Authorization request header with "DUMMY" in cassettes
         "filter_headers": [('authorization', 'DUMMY')],
@@ -419,6 +388,49 @@ def vcr_config(request):
 
 @pytest.fixture(scope='module')
 def vcr_cassette_dir(request):
-    # Put all cassettes in tests/cassettes/{module}/{test}.yaml
+    # Put all cassettes in ./tests/cassettes/{module}/{test}.yaml
+    cur_dir = Path(__file__).absolute().parent
+    cas_dir = cur_dir / "cassettes"
     module_name = ".".join(request.module.__name__.split(".")[1:])
-    return os.path.join('tests/cassettes', module_name)
+    mod_dir = cas_dir / module_name
+    return str(mod_dir)
+
+
+def pytest_collection_modifyitems(config, items):
+    global NEEDS_DOCKER
+
+    for cur_item in items:
+        #vcr_marker = "vcr" in [x.name for x in cur_item.own_markers]
+        is_skip = "skip" in [x.name for x in cur_item.own_markers]
+        if is_skip:
+            continue
+
+        # nodeid looks like tests/module/submodule.py::test_function
+        # generate full path to the cassette which is of the form:
+        #   tests/cassettes/<module_name>/<test_function>.yaml
+        # for cases when there are multiple module folders containing tests
+        # the subfolder for tests will be dot-separated folder name as in:
+        #   module1.module2
+        # example:
+        #   tests/cassettes/module1.module2/test_function.yaml
+        node_path = Path(cur_item.nodeid.split("::")[0].replace(".py", ""))
+        sub_dir = ".".join(node_path.parts[1:])
+
+        test_dir = Path(__file__).parent
+        cassette_file = test_dir / "cassettes" / sub_dir / Path(f"{cur_item.name}.yaml")
+
+        spec = inspect.getfullargspec(cur_item.obj)
+        test_fixtures = ["test_builds_with_git", "test_builds", "test_job", "jenkins_api"]
+        depends_on_jenkins = False
+        for cur_fixture in test_fixtures:
+            if cur_fixture in spec.args:
+                depends_on_jenkins = True
+                break
+
+        if depends_on_jenkins and not cassette_file.exists():
+            print(f"Launching Docker because of test {cur_item.name}")
+            NEEDS_DOCKER = True
+            return
+    # If we see no other reason to use Docker from the logic above,
+    # see if the caller has explicitly asked to use the container
+    NEEDS_DOCKER = config.getoption("--regenerate")

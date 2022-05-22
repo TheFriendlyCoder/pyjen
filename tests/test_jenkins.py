@@ -169,13 +169,6 @@ def test_find_user_not_exists(jenkins_api):
 
 
 @pytest.mark.vcr()
-def test_get_plugin_manager(jenkins_api):
-    pm = jenkins_api.plugin_manager
-
-    assert pm is not None
-
-
-@pytest.mark.vcr()
 def test_get_no_jobs(jenkins_api):
     res = jenkins_api.jobs
 

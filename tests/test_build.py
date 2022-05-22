@@ -6,40 +6,30 @@ from pyjen.plugins.freestylejob import FreestyleJob
 
 
 @pytest.mark.vcr()
-@pytest.mark.usefixtures('test_builds')
-class TestSingleBuild:
-    def test_build_number(self):
-        bld = self.job.last_build
-        assert bld.number == 1
+def test_single_build(jenkins_api):
+    job = jenkins_api.create_job("test_single_build_job", FreestyleJob)
+    with clean_job(job):
+        job.quiet_period = 0
+        job.start_build()
 
-    def test_is_not_building(self):
-        bld = self.job.last_build
-        assert bld.is_building is False
+        async_assert(lambda: job.last_good_build)
+        last_build = job.last_build
+        assert last_build.number == 1
+        assert last_build.is_building is False
+        assert last_build.description == ''
 
-    def test_build_no_description(self):
-        bld = self.job.last_build
-        assert bld.description == ''
-
-    def test_build_description_setter(self):
         expected_description = 'Test description'
-        bld = self.job.last_build
-        bld.description = expected_description
-        assert bld.description == expected_description
+        last_build.description = expected_description
+        assert last_build.description == expected_description
 
-    def test_build_result(self):
-        bld = self.job.last_good_build
-        assert bld.result == "SUCCESS"
+        last_good_build = job.last_good_build
+        assert last_good_build.result == "SUCCESS"
+        assert last_build.uid == '1'
 
-    def test_build_id(self):
-        bld = self.job.last_build
-        assert bld.uid == '1'
+        bld1 = job.all_builds[0]
 
-    def test_build_equality(self):
-        bld1 = self.job.all_builds[0]
-        bld2 = self.job.last_build
-
-        assert bld1 == bld2
-        assert not bld1 != bld2
+        assert bld1 == last_good_build
+        assert not bld1 != last_good_build
 
 
 @pytest.mark.skip(reason="To be fixed")
